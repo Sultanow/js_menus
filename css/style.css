@@ -1,0 +1,49 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box; }
+
+.container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  min-width: 100vw;
+  min-height: 100vh;
+  background-image: url('../img/tanner-boriack-538052-unsplash.jpg');
+  background-size: cover;
+  background-position: center center;
+  padding: 24px; }
+
+.menu {
+  width: 100%;
+  height: auto;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  max-width: 792px;
+  max-height: 100%; }
+  @media screen and (min-width: 512px) {
+    .menu {
+      max-width: 65vw;
+      max-height: 65vh; } }
+
+.main-menu {
+  cursor: pointer; }
+  .main-menu circle {
+    transition: opacity 250ms; }
+    .main-menu circle:hover {
+      opacity: 1; }
+  .main-menu.is-active > circle {
+    opacity: 1; }
+
+[class$="-button"] {
+  cursor: pointer; }
+  [class$="-button"] circle {
+    opacity: 0;
+    transition: opacity 250ms; }
+    [class$="-button"] circle:hover {
+      opacity: 0.6; }
+  [class$="-button"] path {
+    pointer-events: none; }
