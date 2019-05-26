@@ -52,7 +52,7 @@ div#content {
 
 [class$="-button"] {
   cursor: pointer; }
-  [class$="-button"] circle {
+  [class$="-button"] > circle {
     opacity: 0;
     transition: opacity 250ms; }
     [class$="-button"] circle:hover {
