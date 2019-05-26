@@ -3,6 +3,18 @@
   margin: 0;
   box-sizing: border-box; }
 
+div#content {
+  position: absolute;
+  width: 260px;
+  height: 600px;
+  color: #fff;
+  background: rgba(0,0,0,0.7);
+  border: 2px solid #fff;
+  left: 100px;
+  top: 100px;
+  display: none;
+}
+
 .container {
   position: relative;
   display: flex;
@@ -12,7 +24,7 @@
   height: 100vh;
   min-width: 100vw;
   min-height: 100vh;
-  background-image: url('../img/tanner-boriack-538052-unsplash.jpg');
+  background-image: url('../img/585929349-datacenter-wallpaper.jpg');
   background-size: cover;
   background-position: center center;
   padding: 24px; }

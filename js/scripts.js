@@ -254,6 +254,12 @@ $('.more-button').click(function() {
 	
 });
 
+// Portfolio Button
+$('.portfolio-button').click(function() {
+	$('div#content').html("Alle Batches sind durchgelaufen");
+	$('div#content').show();
+});
+
 // Middle Layer Active States
 $('.middle-layer [class*="-button"]').click(function(){
 
