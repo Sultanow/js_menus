@@ -30,44 +30,44 @@ animate_outside
 	}, 0, 0)
 ;
 
-// Home Buttons
-var animate_home = new TimelineLite({paused: true});
+// Environments Buttons
+var animate_environments = new TimelineLite({paused: true});
 
-animate_home
-	.staggerFrom(".home-menu g", 0.5, {
+animate_environments
+	.staggerFrom(".environments-menu g", 0.5, {
 		transformOrigin:"50% 50%",
 		opacity: "0",
 		scale: "0"
 	}, 0.125, 0.25)
 ;
 
-// More Buttons
-var animate_more = new TimelineLite({paused: true});
+// Alerts Buttons
+var animate_alert = new TimelineLite({paused: true});
 
-animate_more
-	.staggerFrom(".more-menu g", 0.5, {
+animate_alert
+	.staggerFrom(".alerts-menu g", 0.5, {
 		transformOrigin:"50% 50%",
 		opacity: "0",
 		scale: "0"
 	}, 0.125, 0.25)
 ;
 
-// Settings Buttons
-var animate_settings = new TimelineLite({paused: true});
+// Summary Buttons
+var animate_summary = new TimelineLite({paused: true});
 
-animate_settings
-	.staggerFrom(".settings-menu g", 0.5, {
+animate_summary
+	.staggerFrom(".summary-menu g", 0.5, {
 		transformOrigin:"50% 50%",
 		opacity: "0",
 		scale: "0"
 	}, 0.125, 0.25)
 ;
 
-// FAQ Buttons
-var animate_faq = new TimelineLite({paused: true});
+// Platforms Buttons
+var animate_platforms = new TimelineLite({paused: true});
 
-animate_faq
-	.staggerFrom(".faq-menu g", 0.5, {
+animate_platforms
+	.staggerFrom(".platforms-menu g", 0.5, {
 		transformOrigin:"50% 50%",
 		opacity: "0",
 		scale: "0"
@@ -79,10 +79,10 @@ animate_faq
 // Variables
 var menuOpen = false;
 var outsideCircleOpen = false;
-var homeOpen = false;
-var faqOpen = false;
-var settingsOpen = false;
-var moreOpen = false;
+var environmentsOpen = false;
+var platformsOpen = false;
+var summaryOpen = false;
+var alertsOpen = false;
 
 // Main (Center) Button
 $('.main-menu').click(function() {
@@ -105,157 +105,157 @@ $('.main-menu').click(function() {
 		animate_middle.reverse();
 		animate_outside.reverse();
 
-		animate_home.reverse();
-		animate_faq.reverse();
-		animate_settings.reverse();
-		animate_more.reverse();
+		animate_environments.reverse();
+		animate_platforms.reverse();
+		animate_summary.reverse();
+		animate_alert.reverse();
 		
 		// reset all variables
 		menuOpen = false;
 		outsideCircleOpen = false;
-		homeOpen = false;
-		faqOpen = false;
-		settingsOpen = false;
-		moreOpen = false;
+		environmentsOpen = false;
+		platformsOpen = false;
+		summaryOpen = false;
+		alertsOpen = false;
 	
 	}
 	
 });
 
-// Home Button
-$('.home-button').click(function() {
+// Environments Button
+$('.environments-button').click(function() {
 	
-	if(homeOpen == false) {
+	if(environmentsOpen == false) {
 		
 		if(outsideCircleOpen == false) {
 			animate_outside.play();
 		}
 		
-		animate_home.play();
+		animate_environments.play();
 
 		outsideCircleOpen = true;
-		homeOpen = true;
+		environmentsOpen = true;
 
-		animate_faq.reverse();
-		animate_settings.reverse();
-		animate_more.reverse();
+		animate_platforms.reverse();
+		animate_summary.reverse();
+		animate_alert.reverse();
 
 		$(this).addClass('is-active');
 		
 	} else {
-		homeOpen = false;
+		environmentsOpen = false;
 		outsideCircleOpen = false;
 		animate_outside.reverse();
-		animate_home.reverse();
+		animate_environments.reverse();
 	}
 
-	faqOpen = false;
-	settingsOpen = false;
-	moreOpen = false;
+	platformsOpen = false;
+	summaryOpen = false;
+	alertsOpen = false;
 	
 });
 
-// FAQ Button
-$('.faq-button').click(function() {
+// Platforms Button
+$('.platforms-button').click(function() {
 
-	if(faqOpen == false) {
+	if(platformsOpen == false) {
 		
 		if(outsideCircleOpen == false) {
 			animate_outside.play();
 		}
 
-		animate_faq.play()
+		animate_platforms.play()
 		
 		outsideCircleOpen = true;
-		faqOpen = true;
+		platformsOpen = true;
 
-		animate_home.reverse();
-		animate_settings.reverse();
-		animate_more.reverse();
+		animate_environments.reverse();
+		animate_summary.reverse();
+		animate_alert.reverse();
 
 		$(this).addClass('is-active');
 		
 	} else {
-		faqOpen = false;
+		platformsOpen = false;
 		outsideCircleOpen = false;
 		animate_outside.reverse();
-		animate_faq.reverse();
+		animate_platforms.reverse();
 	}
 	
-	homeOpen = false;
-	settingsOpen = false;
-	moreOpen = false;
+	environmentsOpen = false;
+	summaryOpen = false;
+	alertsOpen = false;
 
 });
 
-// Settings Button
-$('.settings-button').click(function() {
+// Summary Button
+$('.summary-button').click(function() {
 
-	if(settingsOpen == false) {
+	if(summaryOpen == false) {
 		
 		if(outsideCircleOpen == false) {
 			animate_outside.play();
 		}
 		
-		animate_settings.play();
+		animate_summary.play();
 
 		outsideCircleOpen = true;
-		settingsOpen = true;
+		summaryOpen = true;
 		
-		animate_faq.reverse();
-		animate_home.reverse();
-		animate_more.reverse();
+		animate_platforms.reverse();
+		animate_environments.reverse();
+		animate_alert.reverse();
 
 		$(this).addClass('is-active');
 
 	} else {
-		settingsOpen = false;
+		summaryOpen = false;
 		outsideCircleOpen = false;
 		animate_outside.reverse();
-		animate_settings.reverse();
+		animate_summary.reverse();
 	}
 	
-	homeOpen = false;
-	faqOpen = false;
-	moreOpen = false;
+	environmentsOpen = false;
+	platformsOpen = false;
+	alertsOpen = false;
 	
 });
 
-// More Button
-$('.more-button').click(function() {
+// Alerts Button
+$('.alerts-button').click(function() {
 
-	if(moreOpen == false) {
+	if(alertsOpen == false) {
 		
 		if(outsideCircleOpen == false) {
 			animate_outside.play();
 		}
 
-		animate_more.play();
+		animate_alert.play();
 		
 		outsideCircleOpen = true;
-		moreOpen = true;
+		alertsOpen = true;
 
-		animate_faq.reverse();
-		animate_home.reverse();
-		animate_settings.reverse();
+		animate_platforms.reverse();
+		animate_environments.reverse();
+		animate_summary.reverse();
 
 		$(this).addClass('is-active');
 		
 	} else {
-		moreOpen = false;
+		alertsOpen = false;
 		outsideCircleOpen = false;
 		animate_outside.reverse();
-		animate_more.reverse();
+		animate_alert.reverse();
 	}
 	
-	homeOpen = false;
-	settingsOpen = false;
-	faqOpen = false;
+	environmentsOpen = false;
+	summaryOpen = false;
+	platformsOpen = false;
 	
 });
 
-// Portfolio Button
-$('.portfolio-button').click(function() {
+// Test Button
+$('.test-button').click(function() {
 	$('div#content div#content-body').html("Alle Batches sind durchgelaufen");
 	$('div#content').show();
 });
