@@ -15,6 +15,14 @@ div#content {
   display: none;
 }
 
+div#content div#content-header {
+  top: 0px;
+  position: relative;
+  height: 40px;
+  background-color: #fff;
+  color: #000;
+}
+
 .container {
   position: relative;
   display: flex;

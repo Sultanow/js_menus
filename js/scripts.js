@@ -256,7 +256,7 @@ $('.more-button').click(function() {
 
 // Portfolio Button
 $('.portfolio-button').click(function() {
-	$('div#content').html("Alle Batches sind durchgelaufen");
+	$('div#content div#content-body').html("Alle Batches sind durchgelaufen");
 	$('div#content').show();
 });
 
@@ -274,5 +274,13 @@ $('.outside-layer [class*="-button"]').click(function(){
 
 	$('.outside-layer [class*="-button"]').removeClass('is-active');
 	$(this).addClass('is-active');
-
 });
+
+$(document).mouseup(function (e) { 
+	if ($(e.target).closest("div#content").length === 0) { 
+		if ($('div#content').is(":visible")) {
+			$('div#content').hide();
+		} 
+	} 
+}); 
+
