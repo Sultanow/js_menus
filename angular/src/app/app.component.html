@@ -7,10 +7,10 @@
       <g class="menu" transform="translate(571 143)">
         <g class="outside-layer">
           <circle class="outer-cirlce-background" cx="396" cy="396" r="396" fill="#000" fill-opacity=".4"/>
-          <g o-north-menu></g>
-          <g o-east-menu></g>
-          <g o-south-menu></g>
-          <g o-west-menu></g>
+          <g o-north-menu [isOpen]="northOpen"></g>
+          <g o-east-menu [isOpen]="eastOpen"></g>
+          <g o-south-menu [isOpen]="southOpen"></g>
+          <g o-west-menu [isOpen]="westOpen"></g>
         </g> <!-- ./outside layer -->
         <g class="middle-layer" transform="translate(132 132)">
           <circle class="middle-circle-backgroud" cx="264" cy="264" r="264" fill="#000" fill-opacity=".4"/>

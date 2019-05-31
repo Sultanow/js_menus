@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'g[o-east-menu]',
   templateUrl: './east-menu.component.html'
 })
 export class EastMenuComponent implements OnInit {
+
+  @Input() isOpen: boolean;
 
   constructor() { }
 

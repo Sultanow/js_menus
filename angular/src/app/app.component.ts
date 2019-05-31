@@ -90,7 +90,14 @@ export class AppComponent {
 				this.animate_outside.reverse();
 				this.outsideCircleOpen = false;
 			}
+
 		}
+
+		// reset all
+		this.northOpen = false;
+		this.southOpen = false;
+		this.westOpen = false;
+		this.eastOpen = false;
 	}
 
 	openNorthMenu(){

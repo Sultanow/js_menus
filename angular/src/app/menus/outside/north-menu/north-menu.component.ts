@@ -6,6 +6,8 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class NorthMenuComponent implements OnInit {
   
+  @Input() isOpen: boolean;
+  
   constructor() { }
 
   ngOnInit() {
