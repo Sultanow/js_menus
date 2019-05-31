@@ -3,7 +3,7 @@
     padding: 0;
     margin: 0;
     -webkit-box-sizing: border-box;
-            box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 @font-face {
@@ -16,4 +16,42 @@
 
 body {
     font-family: 'Open Sans', sans-serif;
+}
+ 
+.container {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    min-width: 100vw;
+    min-height: 100vh;
+    background-image: url("/assets/img/585929349-datacenter-wallpaper.jpg");
+    background-size: cover;
+    background-position: center center;
+}
+
+[class$="-button"] {
+    cursor: pointer;
+}
+  
+[class$="-button"] > circle {
+    opacity: 0;
+    -webkit-transition: opacity 250ms;
+    transition: opacity 250ms;
+}
+
+[class$="-button"]:hover > circle {
+    opacity: 0.6;
+}
+
+[class$="-button"] path {
+    pointer-events: none;
 }

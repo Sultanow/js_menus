@@ -18,26 +18,6 @@ div#content {
     color: #000;
   }
   
-  .container {
-    position: relative;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
-    -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
-    width: 100vw;
-    height: 100vh;
-    min-width: 100vw;
-    min-height: 100vh;
-    background-image: url("/assets/img/585929349-datacenter-wallpaper.jpg");
-    background-size: cover;
-    background-position: center center;
-  }
-  
   .menu {
     width: 100%;
     height: auto;
@@ -71,21 +51,5 @@ div#content {
     opacity: 1;
   }
   
-  [class$="-button"] {
-    cursor: pointer;
-  }
-  
-  [class$="-button"] > circle {
-    opacity: 0;
-    -webkit-transition: opacity 250ms;
-    transition: opacity 250ms;
-  }
-  
-  [class$="-button"]:hover > circle {
-    opacity: 0.6;
-  }
-  
-  [class$="-button"] path {
-    pointer-events: none;
-  }
+ 
   

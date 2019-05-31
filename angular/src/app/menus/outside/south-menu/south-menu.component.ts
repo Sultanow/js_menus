@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'g[o-south-menu]',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SouthMenuComponent implements OnInit {
 
+  @Input() isOpen: boolean;
+  
   constructor() { }
 
   ngOnInit() {
