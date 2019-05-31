@@ -6,13 +6,13 @@ import java.util.stream.Stream;
 
 public class ConfigurationService {
 
-	private static Map<String, String> map = Stream.of(new String[][] { { "Hello", "World" }, { "John", "Doe" }, })
+	private static Map<String, String> CONFIGURATION = Stream.of(new String[][] { { "key1", "val1" }, { "key2", "val2" }, })
 			.collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
 	@GET
 	@Path("/configuration")
 	public Map<String, String> getConfiguration() {
-		return "Hello World!";
+		return CONFIGURATION;
 	}
 
 }

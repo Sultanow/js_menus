@@ -1,108 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
+<!-- Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved. 
+	Licensed under the Apache License, Version 2.0 (the "License"); you may not 
+	use this file except in compliance with the License. You may obtain a copy 
+	of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+	<groupId>io.helidon.archetypes</groupId>
+	<artifactId>helidon-quickstart-mp</artifactId>
+	<version>1.1.1</version>
+	<packaging>maven-archetype</packaging>
 
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
+	<name>Helidon Quickstart MP Archetype</name>
 
-        http://www.apache.org/licenses/LICENSE-2.0
+	<description>Helidon MP Architecture Stack for Hackathon</description>
 
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+	<properties>
+		<mainClass>io.helidon.microprofile.server.Main</mainClass>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
 
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+	<url>https://helidon.io</url>
 
-    <groupId>io.helidon.archetypes</groupId>
-    <artifactId>helidon-quickstart-mp</artifactId>
-    <version>1.1.1</version>
-    <packaging>maven-archetype</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>io.helidon.microprofile.bundles</groupId>
+			<artifactId>helidon-microprofile-1.2</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-    <name>Helidon Quickstart MP Archetype</name>
+		<dependency>
+			<groupId>io.helidon.microprofile.bundles</groupId>
+			<artifactId>internal-test-libs</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-    <description>Quickstart archetype for Helidon MP</description>
+		<dependency>
+			<groupId>org.jboss</groupId>
+			<artifactId>jandex</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
 
-    <url>https://helidon.io</url>
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>javax.activation-api</artifactId>
+		</dependency>
 
-    <organization>
-        <name>Oracle Corporation</name>
-        <url>http://www.oracle.com/</url>
-    </organization>
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
-    <licenses>
-        <license>
-            <name>Apache 2.0</name>
-            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
-        </license>
-    </licenses>
+		<dependency>
+			<groupId>org.glassfish.jersey.inject</groupId>
+			<artifactId>jersey-hk2</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
-    <developers>
-        <developer>
-            <name>Tomas Langer</name>
-            <email>tomas.langer@oracle.com</email>
-            <organization>Oracle Corporation</organization>
-        </developer>
-        <developer>
-            <name>Tim Quinn</name>
-            <email>tim.quinn@oracle.com</email>
-            <organization>Oracle Corporation</organization>
-        </developer>
-        <developer>
-            <name>Romain Grecourt</name>
-            <email>romain.grecourt@oracle.com</email>
-            <organization>Oracle Corporation</organization>
-        </developer>
-        <developer>
-            <name>Laird Jarrett Nelson</name>
-            <email>laird.nelson@oracle.com</email>
-            <organization>Oracle Corporation</organization>
-        </developer>
-        <developer>
-            <name>Santiago Pericas-Geertsen</name>
-            <email>santiago.pericasgeertsen@oracle.com</email>
-            <organization>Oracle Corporation</organization>
-        </developer>
-        <developer>
-            <name>Bryan Atsatt</name>
-            <email>bryan.atsatt@oracle.com</email>
-            <organization>Oracle Corporation</organization>
-        </developer>
-    </developers>
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
-    <scm>
-        <developerConnection>scm:git:git@github.com:oracle/helidon.git</developerConnection>
-        <connection>scm:git:git@github.com:oracle/helidon.git</connection>
-        <tag>HEAD</tag>
-        <url>https://github.com/oracle/helidon</url>
-    </scm>
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-server</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
+	<build>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.archetype</groupId>
+				<artifactId>archetype-packaging</artifactId>
+				<version>3.0.1</version>
+			</extension>
+		</extensions>
 
-    <build>
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.archetype</groupId>
-                <artifactId>archetype-packaging</artifactId>
-                <version>3.0.1</version>
-            </extension>
-        </extensions>
-
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-archetype-plugin</artifactId>
-                    <version>3.0.1</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-archetype-plugin</artifactId>
+					<version>3.0.1</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>
