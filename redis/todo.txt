@@ -1,0 +1,4 @@
+add Infrastructure-as-Code here for
+- installing Redis
+- bundling it into a Container
+- Deploying it to Kubernetes
