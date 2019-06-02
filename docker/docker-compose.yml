@@ -1,0 +1,14 @@
+version: '3'
+services:
+  helidon:
+    build:
+         context: ../
+         dockerfile: docker/helidon/Dockerfile
+    container_name: hackathon-helidon-mp
+    ports:
+    - "8080:8080"
+    links:
+    - redis
+  redis:
+    image: redis
+    container_name: hackathon-redis
