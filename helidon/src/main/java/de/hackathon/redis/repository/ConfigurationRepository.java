@@ -1,9 +1,16 @@
 package de.hackathon.redis.repository;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-import de.hackathon.redis.data.Configuration;
- 
-@Repository
-public interface ConfigurationRepository extends CrudRepository<Configuration, String> {}
+import redis.clients.jedis.JedisPool;
+
+public class ConfigurationRepository {
+
+	@Inject
+	@Named("configuration")
+	private JedisPool configurationPool;
+
+	
+}
+
