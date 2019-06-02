@@ -51,6 +51,13 @@
 			<artifactId>spring-data-redis</artifactId>
 			<version>2.1.8.RELEASE</version>
 		</dependency>
+
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>3.1.0-m1</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
