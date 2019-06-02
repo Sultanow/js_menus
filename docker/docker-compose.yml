@@ -6,7 +6,7 @@ services:
          dockerfile: docker/helidon/Dockerfile
     container_name: hackathon-helidon-mp
     ports:
-    - "127.0.0.1:8080:8080"
+    - "8080:8080"
     links:
     - redis
     networks:
@@ -16,8 +16,9 @@ services:
     command: redis-server --requirepass password #set custom password
     container_name: hackathon-redis
     ports:
-    - "127.0.0.1:6379:6379"
+    - "6379:6379"
     networks:
       - helidon-net 
 networks:
-  helidon-net:  
+  helidon-net:
+    driver: "bridge"
