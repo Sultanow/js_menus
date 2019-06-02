@@ -13,7 +13,7 @@
 
 	<artifactId>helidon</artifactId>
 	<packaging>jar</packaging>
-	
+
 	<name>Helidon MP Microservice</name>
 	<description>Helidon MP Architecture Stack for Hackathon</description>
 
