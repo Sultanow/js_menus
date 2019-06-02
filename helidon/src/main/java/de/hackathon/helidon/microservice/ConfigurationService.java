@@ -12,6 +12,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.google.gson.Gson;
+
 import de.hackathon.redis.data.Configuration;
 import de.hackathon.redis.repository.ConfigurationRepository;
 
@@ -34,8 +36,10 @@ public class ConfigurationService {
 	
 	@GET
 	@Path("/static/configuration")
-	public Map<String, String> getConfiguration() {
-		return CONFIGURATION; // not working - TODO: convert to json
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getConfiguration() {
+		Gson gson = new Gson(); 
+		return gson.toJson(CONFIGURATION);
 	}
 	
 	@GET
