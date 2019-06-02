@@ -4,14 +4,21 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.google.gson.Gson;
 
 import de.hackathon.redis.data.Configuration;
 import de.hackathon.redis.repository.ConfigurationRepository;
 
+@Path("/")
+@RequestScoped
 public class ConfigurationService {
 
 	@Autowired
@@ -21,9 +28,18 @@ public class ConfigurationService {
 			.collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
 	@GET
+	@Path("/static/hello")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getHello() {
+		return "Hello World!"; // working
+	}
+	
+	@GET
 	@Path("/static/configuration")
-	public Map<String, String> getConfiguration() {
-		return CONFIGURATION;
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getConfiguration() {
+		Gson gson = new Gson(); 
+		return gson.toJson(CONFIGURATION);
 	}
 	
 	@GET

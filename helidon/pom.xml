@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://maven.apache.org/POM/4.0.0"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>de.hackathon-js-menus</groupId>
@@ -10,26 +11,24 @@
 		<version>1.1.1</version>
 	</parent>
 
-	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>de.hackathon-js-menus.helidon</groupId>
 	<artifactId>helidon</artifactId>
-	<version>1.1.1</version>
 	<packaging>jar</packaging>
 
 	<name>Helidon MP Microservice</name>
-
 	<description>Helidon MP Architecture Stack for Hackathon</description>
 
+
 	<properties>
+		<helidon.version>1.1.1</helidon.version>
 		<mainClass>io.helidon.microprofile.server.Main</mainClass>
+		<exec.mainClass>${mainClass}</exec.mainClass>
+		<libs.classpath.prefix>libs</libs.classpath.prefix>
+		<copied.libs.dir>${project.build.directory}/${libs.classpath.prefix}</copied.libs.dir>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
 	<build>
-		<finalName>${project.artifactId}</finalName>
-
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -37,38 +36,16 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.1</version>
 				</plugin>
-
-				<plugin>
-					<groupId>org.jboss.jandex</groupId>
-					<artifactId>jandex-maven-plugin</artifactId>
-					<version>1.0.6</version>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.19.1</version>
-					<dependencies>
-						<dependency>
-							<groupId>org.junit.platform</groupId>
-							<artifactId>junit-platform-surefire-provider</artifactId>
-							<version>1.1.0</version>
-						</dependency>
-					</dependencies>
-				</plugin>
-
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-dependency-plugin</artifactId>
 					<version>2.9</version>
 				</plugin>
-
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
 					<version>3.0.2</version>
 				</plugin>
-
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
@@ -86,7 +63,6 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
-
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -108,49 +84,6 @@
 							<excludeScope>test</excludeScope>
 						</configuration>
 					</execution>
-				</executions>
-			</plugin>
-
-			<!-- Do we need this junky stuff? -->
-			<plugin>
-				<groupId>org.jboss.jandex</groupId>
-				<artifactId>jandex-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>make-index</id>
-						<goals>
-							<goal>jandex</goal>
-						</goals>
-						<phase>process-classes</phase>
-					</execution>
-				</executions>
-			</plugin>
-			
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>3.1.1</version>
-				
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-
-					<archive>
-					  <manifest>
-						<mainClass>io.helidon.microprofile.server.Main</mainClass>
-					  </manifest>
-					</archive>
-				</configuration>
-				
-				<executions>
-				  <execution>
-					<id>make-assembly</id>
-					<phase>package</phase> 
-					<goals>
-						<goal>single</goal>
-					</goals>
-				  </execution>
 				</executions>
 			</plugin>
 		</plugins>
