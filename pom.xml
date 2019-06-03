@@ -12,25 +12,49 @@
 	<name>Hackathon Parent Project</name>
 
 	<description>Helidon MP Architecture Stack for Hackathon</description>
-
-	<!-- - TODO: Specify these in the child pom only using dependencyManagement 
-		mechanism -->
 	
+	<properties>
+		<maven.compiler.source>1.10</maven.compiler.source>
+		<maven.compiler.target>1.10</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
 
 	<modules>
 		<module>helidon</module>
 	</modules>
-
+	
 	<build>
-		<directory>../target/helidon</directory> <!-- Target in root -->
-		<pluginManagement>
+			<pluginManagement>
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.9</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>3.0.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.5</version>
 					<configuration>
-						<source>10</source>
-						<target>10</target>
+						<archive>
+							<manifest>
+								<addClasspath>true</addClasspath>
+								<classpathPrefix>${libs.classpath.prefix}</classpathPrefix>
+								<mainClass>${mainClass}</mainClass>
+								<useUniqueVersions>false</useUniqueVersions>
+							</manifest>
+						</archive>
 					</configuration>
 				</plugin>
 			</plugins>
