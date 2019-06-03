@@ -15,7 +15,6 @@ import { NorthMenuComponent as O_NorthMenuComponent } from './menus/outside/nort
 import { EastMenuComponent as O_EastMenuComponent} from './menus/outside/east-menu/east-menu.component';
 import { SouthMenuComponent as O_SouthMenuComponent } from './menus/outside/south-menu/south-menu.component';
 import { WestMenuComponent as O_WestMenuComponent} from './menus/outside/west-menu/west-menu.component';
-import { DetailsComponent } from './details/details/details.component';
 
 // Configuration Service
 import { ConfigurationService } from './services/configuration.service';
@@ -32,8 +31,7 @@ import { ConfigurationService } from './services/configuration.service';
     O_NorthMenuComponent,
     O_EastMenuComponent,
     O_SouthMenuComponent,
-    O_WestMenuComponent,
-    DetailsComponent
+    O_WestMenuComponent
   ],
   imports: [
     BrowserModule,
