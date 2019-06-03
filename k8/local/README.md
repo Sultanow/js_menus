@@ -21,17 +21,17 @@ Nach diesem Buildbefehl ist das Image lokal unter dem Namen **hackathon-helidon-
 #### 3.2. Bauen der Angular Awendung
 ``docker build -f docker/angular/Dockerfile -t hackathon-angular:v1 .``
 
-Nach diesem Buildbefehl ist das Image lokal unter dem Namen **hackathon-helidon-mp:v1** verfügbar. Der Name ist entscheidend für das erfolgreiche Bereitstellen in k8.
+Nach diesem Buildbefehl ist das Image lokal unter dem Namen **hackathon-angular:v1** verfügbar. Der Name ist entscheidend für das erfolgreiche Bereitstellen in k8.
 
-#### 3.2. Redis
+#### 3.3. Redis
 Für Redis ist kein Build erforderlich, es wird stattdessen aus dem Docker-Hub-Registry bezogen.
 
 ## Bereitstellen in Kubernetes
 Für das lokale Deployment stehen .yml-Datein für K8 zur Verfügung: ./k8/local/
 
 #### 3.1. Bereitstellen der Anwendung
-``kubectl apply -f helidon.yml ``
-``kubectl apply -f angular.yml ``
+``kubectl apply -f helidon.yml ``  
+``kubectl apply -f angular.yml ``  
 ``kubectl apply -f redis.yml ``
 
 
