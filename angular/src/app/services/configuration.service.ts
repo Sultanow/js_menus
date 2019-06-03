@@ -1,21 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, RequestOptions, Headers } from '@angular/http';
+import { Http } from '@angular/http';
 
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/toPromise';
 
 import { Configuration } from '../model/configuration';
+import { ServerConfiguration } from 'src/config/ServerConfiguration';
 
 @Injectable()
 export class ConfigurationService {
 
-    getConfigurations(): Observable<string> {
-        return this.http.get(  this.config.SERVER_URL + "/rs/resin/getall" ).map( res => res.json() );
-    }
+    constructor(private http: Http) { }
 
     getConfiguration(key): Promise<Configuration> {
-        return this.http.get( SERVER_URL + "/rs/resin/get" )
+        return this.http.get( ServerConfiguration.SERVICE_URL + "/static/configuration" )
             .toPromise()
             .then( response => response.json() as Configuration )
     }    
