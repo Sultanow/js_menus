@@ -15,14 +15,18 @@ spec:
           imagePullPolicy: Never
           ports:
             - containerPort: 8080
-
+        - name: hackathon-redis-service
+          image: redis
+          ports:
+            - containerPort: 6379
+          command: ["sh", "-c", "exec redis-server --requirepass password"]   
 ---
 kind: Service
 apiVersion: v1
 metadata:
-  name: hackathon-helidon-service
+  name: hackathon-service
   labels:
-    name: hackathon-helidon-service
+    name: hackathon-service
 spec:
   ports:
     - port: 8080

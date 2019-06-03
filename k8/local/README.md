@@ -1,4 +1,4 @@
-# Hackathon - Deployment mit lokalem Kubernetes (Docker-For-Desktop)
+﻿# Hackathon - Deployment mit lokalem Kubernetes (Docker-For-Desktop)
 
 ## Voraussetzungen:  
 Erfolgreiche Installation von:  
@@ -28,10 +28,11 @@ Für Redis ist kein Build erforderlich, es wird stattdessen aus dem Docker-Hub-R
 
 ## Bereitstellen in Kubernetes
 Für das lokale Deployment stehen .yml-Datein für K8 zur Verfügung: ./k8/local/
+Helidon und Redis werden im gleichen Pod bereitgestellt. Dies hat den Vorteil, dass eine Kommunikation einfach über localhost möglich ist.
+Zudem hält der Microservice seine Daten selbst.
 
 #### 3.1. Bereitstellen der Anwendung
-``kubectl apply -f helidon.yml ``  
-``kubectl apply -f angular.yml ``  
-``kubectl apply -f redis.yml ``
+``kubectl apply -f helidon_w_redis.yml ``  
+``kubectl apply -f angular.yml ``
 
 
