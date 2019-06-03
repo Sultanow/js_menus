@@ -18,6 +18,7 @@ import { WestMenuComponent as O_WestMenuComponent} from './menus/outside/west-me
 
 // Configuration Service
 import { ConfigurationService } from './services/configuration.service';
+import { DetailsComponent } from './details/details.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { ConfigurationService } from './services/configuration.service';
     O_NorthMenuComponent,
     O_EastMenuComponent,
     O_SouthMenuComponent,
-    O_WestMenuComponent
+    O_WestMenuComponent,
+    DetailsComponent
   ],
   imports: [
     BrowserModule,

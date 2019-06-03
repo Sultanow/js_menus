@@ -33,13 +33,24 @@ export class AppComponent {
 	southOpen = false;
 	westOpen = false;
 
+	// Show Details?
+	showDetails = false;
+
   ngOnInit() { 
     this.initAnimations();
     this.initAnimationButton(this.animate_north, "north-menu");
     this.initAnimationButton(this.animate_east, "east-menu");
     this.initAnimationButton(this.animate_south, "south-menu");
     this.initAnimationButton(this.animate_west, "west-menu");    
-  }
+	}
+	
+	onNotifyDetailsOpen(){
+		this.showDetails = true;
+	}
+
+	onNotifyDetailsClose(){
+		this.showDetails = false;
+	}
 
   initAnimations(){
       // Middle
@@ -203,37 +214,5 @@ export class AppComponent {
 		this.eastOpen = false;
 		this.southOpen = false;
 	}
-
-/* 
-// Test Button
-$('.test-button').click(function() {
-	$('div#content div#content-body').html("Alle Batches sind durchgelaufen");
-	$('div#content').show();
-});
-
-// Middle Layer Active States
-$('.middle-layer [class*="-button"]').click(function(){
-
-	$('.middle-layer [class*="-button"]').removeClass('is-active');
-	$('.outside-layer [class*="-button"]').removeClass('is-active');
-	$(this).addClass('is-active');
-
-});
-
-//Outside Layer Active States
-$('.outside-layer [class*="-button"]').click(function(){
-
-	$('.outside-layer [class*="-button"]').removeClass('is-active');
-	$(this).addClass('is-active');
-});
-
-$(document).mouseup(function (e) { 
-	if ($(e.target).closest("div#content").length === 0) { 
-		if ($('div#content').is(":visible")) {
-			$('div#content').hide();
-		} 
-	} 
-}); 
-*/
 
 }

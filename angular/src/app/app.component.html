@@ -7,7 +7,7 @@
       <g class="menu" transform="translate(571 143)">
         <g class="outside-layer">
           <circle class="outer-cirlce-background" cx="396" cy="396" r="396" fill="#000" fill-opacity=".4"/>
-          <g o-north-menu [isOpen]="northOpen"></g>
+          <g o-north-menu (notifyDetailsOpen)="onNotifyDetailsOpen()" [isOpen]="northOpen"></g>
           <g o-east-menu [isOpen]="eastOpen"></g>
           <g o-south-menu [isOpen]="southOpen"></g>
           <g o-west-menu [isOpen]="westOpen"></g>
@@ -31,4 +31,7 @@
       </g>
     </g>
   </svg>
+ 
+  <app-details (notifyDetailsClose)="onNotifyDetailsClose()" [showDetails]="showDetails"></app-details>
+
 </div>

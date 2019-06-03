@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Inject } from '@angular/core';
+import { Component, OnInit, Input, Inject, EventEmitter, Output } from '@angular/core';
 import { ConfigurationService } from 'src/app/services/configuration.service';
 import { Configuration } from 'src/app/model/configuration';
 
@@ -9,19 +9,23 @@ import { Configuration } from 'src/app/model/configuration';
 export class NorthMenuComponent implements OnInit {
   
   @Input() isOpen: boolean;
-  
+
+  // Notify parent (app) when details box should open
+  @Output() notifyDetailsOpen = new EventEmitter<boolean>();
+
   constructor(private configService: ConfigurationService) { }
+
+  openDetails() {
+      this.notifyDetailsOpen.emit(true);
+  }
+  
 
   ngOnInit() {
   }
 
-  openDetails(){
-    var config = this.configService.getConfiguration("test");
+  /* openDetails(){
+    var config = this.configService.getRedisConfiguration("testkey");
     config.then(resolved => console.log(resolved), error => console.error(error));
-  }
-
-  test(){
-    console.log("test");
-  }
+  } */
 
 }

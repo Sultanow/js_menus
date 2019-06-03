@@ -1,0 +1,19 @@
+div#details-box {
+    position: absolute;
+    width: 260px;
+    height: 600px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #fff;
+    left: 100px;
+    top: 100px;
+}
+
+div > header {
+    top: 0px;
+    position: relative;
+    height: 40px;
+    background-color: #fff;
+    color: #000;
+}
+  
