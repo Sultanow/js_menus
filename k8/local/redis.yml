@@ -1,0 +1,33 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: hackathon-redis
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hackathon-redis
+    spec:
+      containers:
+        - name: hackathon-redis
+          image: redis
+          ports:
+            - containerPort: 6379
+          command: ["sh", "-c", "exec redis-server --requirepass password"]
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: hackathon-redis-service
+  labels:
+    name: hackathon-redis-service
+spec:
+  ports:
+    - port: 6379
+      targetPort: 6379
+      protocol: TCP
+  selector:
+    app: hackathon-redis
+  type: NodePort

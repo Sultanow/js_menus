@@ -1,0 +1,33 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: hackathon-helidon
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hackathon-helidon
+    spec:
+      containers:
+        - name: hackathon-angular
+          image: hackathon-helidon-mp:v1
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: hackathon-helidon-service
+  labels:
+    name: hackathon-helidon-service
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: hackathon-helidon
+  type: NodePort
