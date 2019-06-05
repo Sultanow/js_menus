@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
         - name: hackathon-helidon
-          image: hackathon-helidon-mp:v1
+          image: hackathon-helidon:v1
           imagePullPolicy: Never
           ports:
             - containerPort: 8080
