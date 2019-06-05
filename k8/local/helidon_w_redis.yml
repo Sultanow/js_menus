@@ -1,37 +1,45 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: hackathon-helidon
+  labels:
+    name: hackathon-helidon
+spec:
+  selector:
+    app: hackathon
+    tier: hackathon-helidon
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+---  
 kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
   name: hackathon-helidon
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: hackathon
+      tier: hackathon-helidon
+      track: stable
   template:
     metadata:
       labels:
-        app: hackathon-helidon
+        app: hackathon
+        tier: hackathon-helidon
+        track: stable
     spec:
       containers:
-        - name: hackathon-angular
+        - name: hackathon-helidon
           image: hackathon-helidon-mp:v1
           imagePullPolicy: Never
           ports:
             - containerPort: 8080
-        - name: hackathon-redis-service
+        - name: hackathon-redis
           image: redis
           ports:
             - containerPort: 6379
           command: ["sh", "-c", "exec redis-server --requirepass password"]   
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: hackathon-service
-  labels:
-    name: hackathon-service
-spec:
-  ports:
-    - port: 8080
-      targetPort: 8080
-      protocol: TCP
-  selector:
-    app: hackathon-helidon
-  type: NodePort
+

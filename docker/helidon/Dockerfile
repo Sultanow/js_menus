@@ -1,6 +1,6 @@
 # Needs to be build from root in order to copy the parent pom.xml
-# (1) docker build -f docker/helidon/Dockerfile -t hackathon-helidon-mp:v1 .
-# (2) docker run --rm --name hackathon-helidon-mp -p 8080:8080 hackathon-helidon-mp:v1
+# (1) docker build -f docker/helidon/Dockerfile -t hackathon-helidon:v1 .
+# (2) docker run --rm --name hackathon-helidon -p 8080:8080 hackathon-helidon:v1
 
 FROM maven:3.6.1-jdk-12 as build
 WORKDIR /
