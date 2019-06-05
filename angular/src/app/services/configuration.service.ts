@@ -15,9 +15,21 @@ export class ConfigurationService {
             .then( response => response.json() as Configuration )
     }    
 
-    getRedisConfiguration(key): Promise<Configuration> {
-        return this.http.get( ServerConfiguration.SERVICE_URL + "/redis/configuration/key?key=" + key )
+    getRedisConfiguration(...theArgs): Promise<Configuration[]> {
+        let keys:string = "";
+        // concat keys e.g. get?key=1&key=2...
+        for (let i = 0; i < theArgs.length; i++) {
+            let keyToAdd:string = theArgs[i] as string;
+            if(i==0){
+                keys += keyToAdd;
+            }
+            else{
+                keys += "&key="+ keyToAdd;
+            }
+        }
+
+        return this.http.get( ServerConfiguration.SERVICE_URL + "/redis/configuration/get?key=" + keys)
             .toPromise()
-            .then( response => response.json() as Configuration )
+            .then( response => response.json() as Configuration[] )
     }  
 }

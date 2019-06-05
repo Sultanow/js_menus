@@ -17,3 +17,12 @@ div > header {
     color: #000;
 }
   
+table#config-table{
+    margin: auto;
+    width: 100%;
+}
+
+table#config-table td, table#config-table th{
+    padding: 10px;
+    border: 1px solid rgba(255,255,255,0.6);
+}

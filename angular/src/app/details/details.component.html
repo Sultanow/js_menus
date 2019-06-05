@@ -3,6 +3,17 @@
     <button (click)="close()">close</button>    
   </header>
   <div>
-    <p>Todo: Hier Service ansprechen</p>
+    <table id="config-table">
+      <thead>
+        <th>Key</th>
+        <th>Value</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let config of configData">
+          <td>{{config.key}}</td>
+          <td>{{config.value}}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
