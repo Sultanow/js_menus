@@ -56,7 +56,7 @@ public class ConfigurationService {
 	 * @return configurations
 	 */
 	@GET
-	@Path("/redis/configuration/key")
+	@Path("/redis/configuration/get")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String readConfigurationsByKey(@QueryParam("key") List<String> keys) {
 		List<Configuration> configurations = configRepo.getAll(keys);
