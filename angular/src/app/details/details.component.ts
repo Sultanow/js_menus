@@ -27,7 +27,7 @@ export class DetailsComponent implements OnInit {
   }
   
   getConfigData(){
-    let p:Promise<Configuration[]> = this.configService.getRedisConfiguration("testkey", "testkey2", "testkey3");
+    let p:Promise<Configuration[]> = this.configService.getRedisConfiguration("a220", "a610", "a620", "a999");
 
     p.then(response => {
       this.configData = response; // udpate values in ui table

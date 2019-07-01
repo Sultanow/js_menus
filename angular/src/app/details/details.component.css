@@ -3,9 +3,9 @@ div#details-box {
     width: 260px;
     height: 600px;
     color: #fff;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.5);
     border: 2px solid #fff;
-    left: 100px;
+    left: 200px;
     top: 100px;
 }
 
@@ -13,10 +13,17 @@ div > header {
     top: 0px;
     position: relative;
     height: 40px;
-    background-color: #fff;
+    background: rgba(0, 0, 0, 0.5);
     color: #000;
+    margin-bottom: 10px;
 }
-  
+
+div > header .close {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
 table#config-table{
     margin: auto;
     width: 100%;
@@ -24,5 +31,5 @@ table#config-table{
 
 table#config-table td, table#config-table th{
     padding: 10px;
-    border: 1px solid rgba(255,255,255,0.6);
+    border-bottom: 1px solid rgba(255,255,255,0.6);
 }
