@@ -5,7 +5,7 @@ Dieses Projekt zeigt eine prototypische und damit unvollständige Umsetzung eine
 Die Anwendung besteht aus einer, mithilfe von Docker, containerisierten Angular-Anwendung, einem Helidon Microservice und einer Redis-Instanz. Die Angular-Anwendung stellt ein SVG-Menu (Siehe Dmeo unter Anwendung). Dieses dient als zentrale Anlaufstelle für den Zugriff auf verschiedene, im Unternehmen verwendete, Plattformen sowie den schnellen Zugriff auf Reportdaten wie beispielsweise die Laufzeit von nächtlich laufenden Batches in einer Produktiv- oder Testumgebung.
 
 # Anwendung
-![Cloudbasierte Microservicereferenzarchitektur](docs/img/demo.gif)
+![Demo](docs/img/demo.gif)
 
 # Grundlegende Referenzarchitektur
 
@@ -27,7 +27,7 @@ Die Anwendung besteht aus einer, mithilfe von Docker, containerisierten Angular-
 # Abdeckung
 
 Nachfolgendes Bild zeigt die abgedeckten Bereiche der obenstehenden Referenzarchitektur.
-![Cloudbasierte Microservicereferenzarchitektur](docs/img/MRA_CaaS_01_Abdeckung.jpg)
+![Abdeckung](docs/img/MRA_CaaS_01_Abdeckung.jpg)
 
 Der Stack läuft aktuell lokal mit Docker-For-Desktop oder minikube.
 
@@ -39,6 +39,10 @@ Für den produktiveinsatz empfiehlt es sich zudem Technologien wie etwa Vault (a
 Das Aufsetzen einer FaaS-Plattform mithilfe von z.B. OpenFaaS wurde in einem anderen Projekt bereits erfolgreich durchgeführt. Aktuell wird für diese Anwendung keine FaaS-Plattform benötigt, daher ist dieses auch nicht im aktuellen Stack vertreten.
 
 # Zusammenspiel
+Nachfolgende Grafik zeigt die Komponenten von jsMenu im Zusammenspiel. 
+<p align="center">
+    <img src="docs/img/jsMenu_Stack.png" alt="jsMenu Stack" style="margin:auto">
+</p>
 
-Das endgültige Zusammenspiel der einzelnen Komponenten zeigt folgende Grafik:
-- TODO - Grafik erstellen und einfügen
+Die Angular-Anwendung wird in einem eigenen POD bereitgestellt, während der Microservices eng an seine Daten (der Redis-Instanz) gebunden ist. Über den Microservice greift dei Angular-Anwendung auf die Redis-Instanz zu. 
+Dabei werden die Daten aus Redis im passenden JSON-Format zurückgeliefert und schlussendlich auf der Oberfläche angezeigt.
