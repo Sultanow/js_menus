@@ -15,7 +15,8 @@ public class ConfigurationApplication extends Application {
     @Override
     public Set<Class<?>> getClasses() {
         return CollectionsHelper.setOf(
-                ConfigurationService.class
+                ConfigurationService.class,
+                BatchService.class
         );
     }
 }
