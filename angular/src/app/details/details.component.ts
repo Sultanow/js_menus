@@ -25,7 +25,7 @@ export class DetailsComponent implements OnInit {
        this.getConfigData();
      }
   }
-  
+
   getConfigData(){
     let p:Promise<Configuration[]> = this.configService.getRedisConfiguration("a220", "a610", "a620", "a999");
 

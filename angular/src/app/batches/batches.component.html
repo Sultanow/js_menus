@@ -1,0 +1,60 @@
+<div id="batches-box" *ngIf="showDetails">
+  <header>
+    <button class="close" (click)="close()">
+      <svg  width="32px" height="32px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M405 136.798L375.202 107 256 226.202 136.798 107 107 136.798 226.202 256 107 375.202 136.798 405 256 285.798 375.202 405 405 375.202 285.798 256z" fill="#ffffff"/></svg>
+    </button>
+  </header>
+  <div>
+    Batchzeiten des letzen Laufs am 01.07.2019 - 06:00
+  </div>
+  <div>
+    <label>Batch ID:
+      <input #batchId />
+    </label>
+    <button (click)="add(batchId.value); batchId.value=''">
+      add
+    </button>
+  </div>
+  <table id="batch-table">
+    <thead>
+      <th>Batchnummer</th>
+      <th>Laufzeit</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let batch of batches">
+        <td>
+          <div *ngIf="editOn==true && selectedBatch.id==batch.id">
+            {{batch.id}}
+          </div>
+          <div *ngIf="editOn==false">
+            {{batch.id}}
+          </div>
+        </td>
+        <td>
+          <div *ngIf="editOn==true && selectedBatch.id==batch.id">
+            <input [(ngModel)]="selectedBatch.duration"/>
+          </div>
+          <div *ngIf="editOn==false">
+            {{batch.duration}}
+          </div>
+        </td>
+        <td>
+          <div *ngIf="editOn==true && selectedBatch.id==batch.id">
+            <button class="fancy" title="delete batch" (click)="delete(batch)">delete</button>
+          </div>
+          <div *ngIf="editOn==false">
+            <button class="fancy" title="delete batch" (click)="delete(batch)">delete</button>
+          </div>
+        </td>
+        <td>
+          <div *ngIf="editOn==true && selectedBatch.id==batch.id">
+            <button class="fancy" title="edit batch" (click)="save(selectedBatch)">save</button>
+          </div>
+          <div *ngIf="editOn==false">
+            <button class="fancy" title="edit batch" (click)="toggleEditOn(batch)">edit</button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

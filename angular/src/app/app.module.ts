@@ -19,6 +19,12 @@ import { WestMenuComponent as O_WestMenuComponent} from './menus/outside/west-me
 // Configuration Service
 import { ConfigurationService } from './services/configuration.service';
 import { DetailsComponent } from './details/details.component';
+import { BatchesComponent } from './batches/batches.component';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+
+import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { InMemoryDataService } from './services/in-memory-data/in-memory-data.service';
 
 
 @NgModule({
@@ -28,21 +34,32 @@ import { DetailsComponent } from './details/details.component';
     M_EastMenuComponent,
     M_SouthMenuComponent,
     M_WestMenuComponent,
-    
+
     O_NorthMenuComponent,
     O_EastMenuComponent,
     O_SouthMenuComponent,
     O_WestMenuComponent,
-    DetailsComponent
+    DetailsComponent,
+    BatchesComponent
   ],
   imports: [
     BrowserModule,
-    HttpModule
+    HttpModule,
+    FormsModule,
+    HttpClientModule,
+
+    // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
+    // and returns simulated server responses.
+    // Remove it when a real server is ready to receive requests.
+    HttpClientInMemoryWebApiModule.forRoot(
+      InMemoryDataService, { dataEncapsulation: false }
+    )
   ],
   providers: [
-    ConfigurationService
+    ConfigurationService,
+    DetailsComponent
   ],
   bootstrap: [AppComponent]
-  
+
 })
 export class AppModule { }
