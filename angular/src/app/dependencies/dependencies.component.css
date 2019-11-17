@@ -1,0 +1,25 @@
+div#dependencies-box {
+    color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #fff;
+    position: absolute;
+    min-width:98%;
+    min-height: 96%;
+    left: 1%;
+    top: 2%;
+}  
+
+div > header {
+    top: 0px;
+    position: relative;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #000;
+    margin-bottom: 10px;
+  }
+  
+  div > header .close {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }

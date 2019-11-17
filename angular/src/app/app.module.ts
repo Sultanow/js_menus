@@ -25,6 +25,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './services/in-memory-data/in-memory-data.service';
+import { DependenciesComponent } from './dependencies/dependencies.component';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { InMemoryDataService } from './services/in-memory-data/in-memory-data.se
     O_SouthMenuComponent,
     O_WestMenuComponent,
     DetailsComponent,
-    BatchesComponent
+    BatchesComponent,
+    DependenciesComponent
   ],
   imports: [
     BrowserModule,

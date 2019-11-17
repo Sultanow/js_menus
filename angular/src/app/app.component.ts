@@ -36,6 +36,8 @@ export class AppComponent {
 	// Show Details?
 	showDetails = false;
 
+	showDependencies = false;
+
   ngOnInit() { 
     this.initAnimations();
     this.initAnimationButton(this.animate_north, "north-menu");
@@ -50,6 +52,14 @@ export class AppComponent {
 
 	onNotifyDetailsClose(){
 		this.showDetails = false;
+	}
+
+	onNotifyDependenciesOpen() {
+		this.showDependencies = true;
+	}
+
+	onNotifyDependenciesClose() {
+		this.showDependencies = false;
 	}
 
   initAnimations(){
