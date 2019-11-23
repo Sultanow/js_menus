@@ -7,10 +7,10 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 export class SouthMenuComponent implements OnInit {
 
   @Input() isOpen: boolean;
-  @Output() notifyDependenciesOpen = new EventEmitter<boolean>();
+  @Output() notifyDependencyChartsOpen = new EventEmitter<boolean>();
   
   openDetails() {
-    this.notifyDependenciesOpen.emit(true);
+    this.notifyDependencyChartsOpen.emit(true);
   }
 
   constructor() { }

@@ -36,7 +36,7 @@ export class AppComponent {
 	// Show Details?
 	showDetails = false;
 
-	showDependencies = false;
+	showDependencyCharts = false;
 
   ngOnInit() { 
     this.initAnimations();
@@ -54,12 +54,12 @@ export class AppComponent {
 		this.showDetails = false;
 	}
 
-	onNotifyDependenciesOpen() {
-		this.showDependencies = true;
+	onNotifyDependencyChartsOpen() {
+		this.showDependencyCharts = true;
 	}
 
-	onNotifyDependenciesClose() {
-		this.showDependencies = false;
+	onNotifyDependencyChartsClose() {
+		this.showDependencyCharts = false;
 	}
 
   initAnimations(){

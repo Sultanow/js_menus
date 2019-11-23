@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
+import { MatCardModule } from '@angular/material/card';
+
 
 import { AppComponent } from './app.component';
 
@@ -25,7 +27,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './services/in-memory-data/in-memory-data.service';
-import { DependenciesComponent } from './dependencies/dependencies.component';
+import { DependencyChartsComponent } from './dependencycharts/dependencycharts.component';
 
 
 @NgModule({
@@ -42,13 +44,14 @@ import { DependenciesComponent } from './dependencies/dependencies.component';
     O_WestMenuComponent,
     DetailsComponent,
     BatchesComponent,
-    DependenciesComponent
+    DependencyChartsComponent
   ],
   imports: [
     BrowserModule,
     HttpModule,
     FormsModule,
     HttpClientModule,
+    MatCardModule,
 
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.

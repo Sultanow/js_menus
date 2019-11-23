@@ -1,4 +1,4 @@
-div#dependencies-box {
+div#dependencycharts-box {
     color: #fff;
     background: rgba(0, 0, 0, 0.5);
     border: 2px solid #fff;
@@ -22,4 +22,22 @@ div > header {
     background: none;
     border: none;
     cursor: pointer;
+  }
+
+  button.fancy {
+    position: relative;
+    left: 10px;
+    top: 0px;
+    background-color: gray !important;
+    color: white;
+  }
+
+  .example-card {
+    max-width: 400px;
+    cursor: pointer;
+  }
+  
+  .example-header-image {
+    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-size: cover;
   }
