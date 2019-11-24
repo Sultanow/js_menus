@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
-import { MatCardModule } from '@angular/material/card';
+import { MatCardModule, MatIconModule } from '@angular/material';
 
 
 import { AppComponent } from './app.component';
@@ -52,6 +52,7 @@ import { DependencyChartsComponent } from './dependencycharts/dependencycharts.c
     FormsModule,
     HttpClientModule,
     MatCardModule,
+    MatIconModule,
 
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.
