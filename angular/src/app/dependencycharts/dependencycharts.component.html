@@ -7,19 +7,23 @@
 
     <div class="grid-container">
       <div class="basic-container">
-          <h2>Dependeny Charts</h2>
-          <mat-card class="chart-card" *ngFor="let depencyChart of dependencyCharts">
+          <h2>Fremdgesteuert</h2>
+          <mat-card class="chart-card" *ngFor="let dependencyChart of dependencyCharts" (click)=select(dependencyChart)>
             <mat-card-header>
-              <mat-card-title>{{depencyChart.title}}</mat-card-title>
-              <mat-card-subtitle>{{depencyChart.description}}</mat-card-subtitle>
+              <mat-card-title>{{dependencyChart.title}}</mat-card-title>
+              <mat-card-subtitle>{{dependencyChart.description}}</mat-card-subtitle>
             </mat-card-header>
           </mat-card>
-          <button class="add" mat-raised-button>
+          <button class="add" mat-raised-button (click)="openDialog()">
             <img src="../../assets/icons/add_circle-24px.svg" alt="image">
           </button>
         </div>
         <div>
-          blupp
+          <button mat-raised-button (click)="openDialog()">Edit chart</button>
+          <button mat-raised-button>delete</button>
+          <p *ngIf="selectedDependencyChart">
+            {{selectedDependencyChart.chartContent}}
+          </p>
         </div>
     </div>
 

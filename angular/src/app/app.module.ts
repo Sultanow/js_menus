@@ -1,8 +1,14 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
-import { MatCardModule, MatIconModule } from '@angular/material';
-
+import { MatCardModule,
+  MatIconModule,
+  MatDialogModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatRadioModule,
+  MatSelectModule } from '@angular/material';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 
@@ -27,7 +33,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './services/in-memory-data/in-memory-data.service';
-import { DependencyChartsComponent } from './dependencycharts/dependencycharts.component';
+import { DependencyChartsComponent, DialogOverviewDialog } from './dependencycharts/dependencycharts.component';
 
 
 @NgModule({
@@ -44,7 +50,8 @@ import { DependencyChartsComponent } from './dependencycharts/dependencycharts.c
     O_WestMenuComponent,
     DetailsComponent,
     BatchesComponent,
-    DependencyChartsComponent
+    DependencyChartsComponent,
+    DialogOverviewDialog
   ],
   imports: [
     BrowserModule,
@@ -53,6 +60,12 @@ import { DependencyChartsComponent } from './dependencycharts/dependencycharts.c
     HttpClientModule,
     MatCardModule,
     MatIconModule,
+    MatDialogModule,
+    BrowserAnimationsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatRadioModule,
+    MatSelectModule,
 
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.
@@ -65,7 +78,8 @@ import { DependencyChartsComponent } from './dependencycharts/dependencycharts.c
     ConfigurationService,
     DetailsComponent
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [DialogOverviewDialog, DependencyChartsComponent]
 
 })
 export class AppModule { }
