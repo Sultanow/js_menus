@@ -28,12 +28,12 @@ import { WestMenuComponent as O_WestMenuComponent} from './menus/outside/west-me
 import { ConfigurationService } from './services/configuration.service';
 import { DetailsComponent } from './details/details.component';
 import { BatchesComponent } from './batches/batches.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './services/in-memory-data/in-memory-data.service';
-import { DependencyChartsComponent, DialogOverviewDialog } from './dependencycharts/dependencycharts.component';
+import { DependencyChartsComponent, EditDialog } from './dependencycharts/dependencycharts.component';
 
 
 @NgModule({
@@ -51,7 +51,7 @@ import { DependencyChartsComponent, DialogOverviewDialog } from './dependencycha
     DetailsComponent,
     BatchesComponent,
     DependencyChartsComponent,
-    DialogOverviewDialog
+    EditDialog
   ],
   imports: [
     BrowserModule,
@@ -66,6 +66,7 @@ import { DependencyChartsComponent, DialogOverviewDialog } from './dependencycha
     MatInputModule,
     MatRadioModule,
     MatSelectModule,
+    ReactiveFormsModule,
 
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.
@@ -79,7 +80,7 @@ import { DependencyChartsComponent, DialogOverviewDialog } from './dependencycha
     DetailsComponent
   ],
   bootstrap: [AppComponent],
-  entryComponents: [DialogOverviewDialog, DependencyChartsComponent]
+  entryComponents: [EditDialog, DependencyChartsComponent]
 
 })
 export class AppModule { }

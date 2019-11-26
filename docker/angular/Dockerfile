@@ -8,7 +8,8 @@
 FROM node:12.3.1-alpine AS builder
 COPY angular/ ./angular
 WORKDIR /angular
-RUN npm i
+RUN npm i \
+    && npm install --save @angular/material @angular/cdk
 RUN $(npm bin)/ng build --prod
 
 FROM nginx:1.15.8-alpine

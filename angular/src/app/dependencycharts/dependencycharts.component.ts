@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, Inject } from '@angular/core';
 import { DependencyChart } from '../model/dependencychart';
 import { DependencyService } from '../services/dependencies/dependencies.service';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig} from '@angular/material/dialog';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-dependencycharts',
@@ -18,9 +19,9 @@ export class DependencyChartsComponent implements OnInit {
 
   @Input() showDependencyCharts: boolean;
   @Output() notifyDependencyChartsClose = new EventEmitter<boolean>();
-  isEditing: boolean;
   dependencyCharts: DependencyChart[];
   selectedDependencyChart: DependencyChart;
+  editedDependencyChart: DependencyChart;
 
   ngOnInit() {
     this.getDependencyCharts();
@@ -41,34 +42,25 @@ export class DependencyChartsComponent implements OnInit {
   }
 
   select(dependencyChart: DependencyChart) {
-    this.isEditing = false;
     this.selectedDependencyChart = dependencyChart;
   }
 
-  deselect() {
-    this.isEditing = false;
-  }
-
-  edit(dependencyChart: DependencyChart) {
-    this.isEditing = true;
-  }
-
   addNew(dependencyChart: DependencyChart) {
-  }
-
-  cancelEditing() {
-    this.isEditing = false;
+    this.dependenciesService.addDependency(dependencyChart)
+    .subscribe( chart => {
+      this.dependencyCharts.push(chart);
+    });
   }
 
   delete(dependencyChart: DependencyChart) {
-    this.isEditing = false;
+    this.dependencyCharts = this.dependencyCharts.filter(dc => dc !== dependencyChart);
+    this.dependenciesService.deleteDependency(dependencyChart);
+    this.selectedDependencyChart = null;
   }
 
-  save() {
-  }
-
-  openDialog(): void {
-    const dialogRef = this.dialog.open(DialogOverviewDialog, {
+  openEditDialog(): void {
+    this.editedDependencyChart = this.selectedDependencyChart;
+    const dialogRef = this.dialog.open(EditDialog, {
       width: '500px',
       data: {id: this.id,
         title: this.title,
@@ -78,21 +70,53 @@ export class DependencyChartsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      console.log('The dialog was closed:', result);
+    });
+  }
+
+  openCreateDialog(): void {
+    const dialogRef = this.dialog.open(EditDialog, {
+      width: '500px',
+      data: {id: this.id,
+        title: this.title,
+        chartType: this.chartType,
+        description: this.description,
+        chartContent: this.chartContent}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed:', result);
+      if (result) {
+        this.addNew(result);
+      }
     });
   }
 }
 
 
 @Component({
-  selector: 'dialog-overview-dialog',
-  templateUrl: 'dialog-overview-dialog.html',
+  selector: 'edit-dialog',
+  templateUrl: 'edit-dialog.html',
 })
-export class DialogOverviewDialog {
+export class EditDialog {
 
+  form: FormGroup;
+  
   constructor(
-    public dialogRef: MatDialogRef<DialogOverviewDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: DependencyChart) {}
+    private formBuilder: FormBuilder,
+    public dialogRef: MatDialogRef<EditDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: DependencyChart) {
+  }
+
+  ngOnInit() {
+    this.form = this.formBuilder.group({
+      id: ['', Validators.required],
+      title: ['', Validators.required],
+      chartType: ['', Validators.required],
+      description: ['', Validators.required],
+      chartContent: ['', Validators.required]
+    });
+  }
 
   onNoClick(): void {
     this.dialogRef.close();
