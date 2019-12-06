@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'g[o-south-menu]',
@@ -7,7 +7,12 @@ import { Component, OnInit, Input } from '@angular/core';
 export class SouthMenuComponent implements OnInit {
 
   @Input() isOpen: boolean;
+  @Output() notifyDependencyChartsOpen = new EventEmitter<boolean>();
   
+  openDetails() {
+    this.notifyDependencyChartsOpen.emit(true);
+  }
+
   constructor() { }
 
   ngOnInit() {

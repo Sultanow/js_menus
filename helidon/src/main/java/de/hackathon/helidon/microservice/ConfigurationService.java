@@ -1,23 +1,17 @@
 package de.hackathon.helidon.microservice;
 
+import com.google.gson.Gson;
+import de.hackathon.redis.data.Configuration;
+import de.hackathon.redis.repository.ConfigurationRepository;
+
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-
-import com.google.gson.Gson;
-
-import de.hackathon.redis.data.Configuration;
-import de.hackathon.redis.repository.ConfigurationRepository;
 
 @Path("/")
 @RequestScoped
@@ -46,12 +40,12 @@ public class ConfigurationService {
 	}
 
 	/**
-	 * 
+	 *
 	 * Get Configurations by key
-	 *  
-	 * e.g. Query for configuration with key "test1" and "test2" 
+	 *
+	 * e.g. Query for configuration with key "test1" and "test2"
 	 * => http://localhost:8080/redis/configuration/key?key=test1&key=test2
-	 * 
+	 *
 	 * @param keys
 	 * @return configurations
 	 */
@@ -60,11 +54,11 @@ public class ConfigurationService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String readConfigurationsByKey(@QueryParam("key") List<String> keys) {
 		List<Configuration> configurations = configRepo.getAll(keys);
-		
+
 		Gson gson = new Gson();
 		return gson.toJson(configurations);
 	}
-	
+
 	/**
 	 * Add new Configuration to redis
 	 * e.g. http://localhost:8080/redis/configuration/add/testkey/testvalue

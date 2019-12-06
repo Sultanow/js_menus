@@ -1,0 +1,29 @@
+<div id="dependencycharts-box" *ngIf="showDependencyCharts">
+    <header>
+      <button class="close" (click)="close()">
+        <svg  width="32px" height="32px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M405 136.798L375.202 107 256 226.202 136.798 107 107 136.798 226.202 256 107 375.202 136.798 405 256 285.798 375.202 405 405 375.202 285.798 256z" fill="#ffffff"/></svg>
+      </button>
+    </header>    
+
+    <div class="grid-container">
+      <div class="basic-container">
+          <h2>Fremdgesteuert</h2>
+          <mat-card class="chart-card" *ngFor="let dependencyChart of dependencyCharts" (click)=select(dependencyChart)>
+            <mat-card-header>
+              <mat-card-title>{{dependencyChart.title}}</mat-card-title>
+              <mat-card-subtitle>{{dependencyChart.description}}</mat-card-subtitle>
+            </mat-card-header>
+          </mat-card>
+          <button class="add" mat-raised-button (click)="openCreateDialog()">
+            <img src="../../assets/icons/add_circle-24px.svg" alt="image">
+          </button>
+        </div>
+        <div class="basic-container" *ngIf="selectedDependencyChart">
+          <h2>{{selectedDependencyChart.title}}</h2>
+          <p>{{selectedDependencyChart.chartContent}}</p>    
+          <button mat-raised-button (click)="openEditDialog()" class="fancy">edit</button>
+          <button mat-raised-button (click)="delete(selectedDependencyChart)" class="fancy">delete</button>
+        </div>
+    </div>
+
+  </div>
