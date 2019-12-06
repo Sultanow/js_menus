@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpModule } from '@angular/http';
 import { MatCardModule,
   MatIconModule,
   MatDialogModule,
@@ -55,7 +54,6 @@ import { DependencyChartsComponent, EditDialog } from './dependencycharts/depend
   ],
   imports: [
     BrowserModule,
-    HttpModule,
     FormsModule,
     HttpClientModule,
     MatCardModule,

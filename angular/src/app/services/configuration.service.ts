@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 import { Configuration } from '../model/configuration';
 import { ServerConfiguration } from 'src/config/ServerConfiguration';
@@ -7,12 +7,12 @@ import { ServerConfiguration } from 'src/config/ServerConfiguration';
 @Injectable()
 export class ConfigurationService {
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) { }
 
     getStaticConfiguration(): Promise<Configuration> {
         return this.http.get( ServerConfiguration.SERVICE_URL + "/static/configuration" )
             .toPromise()
-            .then( response => response.json() as Configuration )
+            .then( response => response as Configuration )
     }    
 
     getRedisConfiguration(...theArgs): Promise<Configuration[]> {
@@ -30,6 +30,6 @@ export class ConfigurationService {
 
         return this.http.get( ServerConfiguration.SERVICE_URL + "/redis/configuration/get?key=" + keys)
             .toPromise()
-            .then( response => response.json() as Configuration[] )
+            .then( response => response as Configuration[] )
     }  
 }
