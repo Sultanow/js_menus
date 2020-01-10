@@ -37,6 +37,7 @@ export class AppComponent {
 	showDetails = false;
 
 	showDependencyCharts = false;
+	showCompare = false;
 
   ngOnInit() { 
     this.initAnimations();
@@ -60,6 +61,14 @@ export class AppComponent {
 
 	onNotifyDependencyChartsClose() {
 		this.showDependencyCharts = false;
+	}
+
+	onNotifyComparesClose() {
+		this.showCompare = false;
+	}
+
+	onNotifyComparesOpen() {
+		this.showCompare = true;
 	}
 
   initAnimations(){
