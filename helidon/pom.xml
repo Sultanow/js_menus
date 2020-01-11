@@ -107,7 +107,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.parent.build.directory}/helidon</outputDirectory>
+							<outputDirectory>${project.parent.basedir}/target</outputDirectory>
 							<resources>
 								<resource>
 									<directory>target</directory>

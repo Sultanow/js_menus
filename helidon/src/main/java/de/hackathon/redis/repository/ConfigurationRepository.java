@@ -19,11 +19,9 @@ import redis.clients.jedis.JedisPool;
 @ApplicationScoped
 public class ConfigurationRepository {
 
-	
 	@Inject
 	@Named("configuration")
 	private JedisPool configurationPool;
-	
 	
 	/**
 	 * Save a config in redis
