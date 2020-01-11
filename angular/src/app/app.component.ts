@@ -63,11 +63,11 @@ export class AppComponent {
 		this.showDependencyCharts = false;
 	}
 
-	onNotifyComparesClose() {
+	onNotifyCompareClose() {
 		this.showCompare = false;
 	}
-
-	onNotifyComparesOpen() {
+	
+	onNotifyCompareOpen() {
 		this.showCompare = true;
 	}
 

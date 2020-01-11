@@ -1,1 +1,31 @@
-<p>compare works!</p>
+<div id="compare-box" *ngIf="showCompare">
+    <header>
+      <button class="close" (click)="close()">
+        <svg  width="32px" height="32px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M405 136.798L375.202 107 256 226.202 136.798 107 107 136.798 226.202 256 107 375.202 136.798 405 256 285.798 375.202 405 405 375.202 285.798 256z" fill="#ffffff"/></svg>
+      </button>
+    </header>
+    <div>
+      <p>Vergleich zwischen mehreren Servern</p>
+      <table id="compare-table">
+        <thead>
+          <th>Item</th>
+          <th>dev1</th>
+          <th>dev2</th>
+          <th>dev3</th>
+          <th>dev4</th>
+          <th>dev5</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let config of dummyCompare">
+            <td>{{config.key}}</td>
+            <td>{{config.value1}}</td>
+            <td>{{config.value2}}</td>
+            <td>{{config.value3}}</td>
+            <td>{{config.value4}}</td>
+            <td>{{config.value5}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
