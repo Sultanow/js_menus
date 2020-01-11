@@ -8,7 +8,7 @@
         <g class="outside-layer">
           <circle class="outer-cirlce-background" cx="396" cy="396" r="396" fill="#000" fill-opacity=".4"/>
           <g o-north-menu (notifyDetailsOpen)="onNotifyDetailsOpen()" [isOpen]="northOpen"></g>
-          <g o-east-menu (notifyCompareOpen)="onNotifyCompareOpen()" [isOpen]="eastOpen"></g>
+          <g o-east-menu (notifyViewBoxOpen)="onNotifyCompareOpen()" [isOpen]="eastOpen"></g>
           <g o-south-menu (notifyDependencyChartsOpen)="onNotifyDependencyChartsOpen()" [isOpen]="southOpen"></g>
           <g o-west-menu [isOpen]="westOpen"></g>
         </g> <!-- ./outside layer -->
@@ -33,6 +33,7 @@
   </svg>
 <!--  <app-details (notifyDetailsClose)="onNotifyDetailsClose()" [showDetails]="showDetails"></app-details> -->
   <app-batches (notifyDetailsClose)="onNotifyDetailsClose()" [showDetails]="showDetails"></app-batches>
-  <app-compare (notifyCompareClose)="onNotifyCompareClose()" [showCompare]="showCompare"></app-compare>
+  <!--<app-compare (notifyCompareClose)="onNotifyCompareClose()" [showCompare]="showCompare"></app-compare> -->
+  <app-viewbox (notifyViewBoxClose)="onNotifyViewBoxClose()" [showView]="showView" [showViewBox]="showViewBox" ></app-viewbox>
   <app-dependencycharts (notifyDependencyChartsClose)="onNotifyDependencyChartsClose()" [showDependencyCharts]="showDependencyCharts"></app-dependencycharts>
 </div>

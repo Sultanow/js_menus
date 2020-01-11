@@ -12,7 +12,13 @@ export class CompareItemsService {
 
   getDummyData(): CompareItem[] {
     let data: CompareItem[] = [];
-    data.push(new CompareItem("Silbentrennung", "an", "an", "aus", "aus", "an"));
+    let c  = new CompareItem("Silbentrennung", "an");
+    c.addItem("dev1", "an");
+    c.addItem("dev2", "an");
+    c.addItem("dev3", "aus");
+    c.addItem("dev4", "aus");
+    c.addItem("dev5", "aus");
+    data.push(c);
     return data;
   } 
 }

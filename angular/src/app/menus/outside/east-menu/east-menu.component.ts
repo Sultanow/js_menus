@@ -8,13 +8,13 @@ export class EastMenuComponent implements OnInit {
 
   @Input() isOpen: boolean;
 
-  @Output() notifyCompareOpen = new EventEmitter<boolean>();
+  @Output() notifyViewBoxOpen = new EventEmitter<boolean>();
   
   constructor() { }
 
   openCompare() {
     console.log("Click compare");
-    this.notifyCompareOpen.emit(true);
+    this.notifyViewBoxOpen.emit(true);
 }
   ngOnInit() {
   }

@@ -1,5 +1,5 @@
 /* CompareComponent's private CSS styles */
-.compare {
+/*.compare {
     margin: 0 0 2em 0;
     list-style-type: none;
     padding: 0;
@@ -97,20 +97,18 @@
     border: none;
     cursor: pointer;
   }
-  
+  */
   table#compare-table{
-    margin: fixed;
-    width: 100%;
+    
   }
   
   table#compare-table td, table#compare-table th{
     padding: 10px;
     border-bottom: 1px solid rgba(255,255,255,0.6);
     table-layout: fixed;
-    width: 100%;
   }
-  
+  /*
   input {
     width: 100px;
   }
-  
+  */

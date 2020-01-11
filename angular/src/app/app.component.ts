@@ -39,6 +39,10 @@ export class AppComponent {
 	showDependencyCharts = false;
 	showCompare = false;
 
+	showViewBox = false;
+
+	showView = "";
+
   ngOnInit() { 
     this.initAnimations();
     this.initAnimationButton(this.animate_north, "north-menu");
@@ -68,7 +72,18 @@ export class AppComponent {
 	}
 	
 	onNotifyCompareOpen() {
-		this.showCompare = true;
+		//this.showCompare = true;
+		this.showViewBox = true;
+		this.showView = "compare";
+	}
+
+	onNotifyViewBoxClose() {
+		this.showViewBox = false;
+		this.showView = "";
+	}
+
+	onNotifyViewBoxOpen() {
+		this.showViewBox = true;
 	}
 
   initAnimations(){
