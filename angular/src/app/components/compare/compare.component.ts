@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { CompareItem } from '../model/compareItem';
-import { CompareItemsService } from '../services/compare/compare-items.service';
+import { CompareItem } from '../../model/compareItem';
+import { CompareItemsService } from '../../services/compare/compare-items.service';
 
 @Component({
   selector: 'app-compare',

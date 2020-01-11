@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, Inject } from '@angular/core';
-import { DependencyChart } from '../model/dependencychart';
-import { DependencyService } from '../services/dependencies/dependencies.service';
+import { DependencyChart } from '../../model/dependencychart';
+import { DependencyService } from '../../services/dependencies/dependencies.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig} from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 

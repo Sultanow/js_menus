@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 
-import { Batch } from '../model/batch';
-import { BatchService } from '../services/batches/batches.service';
+import { Batch } from '../../model/batch';
+import { BatchService } from '../../services/batches/batches.service';
 
 @Component({
   selector: 'app-batches',

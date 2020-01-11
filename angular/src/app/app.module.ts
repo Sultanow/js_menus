@@ -25,15 +25,16 @@ import { WestMenuComponent as O_WestMenuComponent} from './menus/outside/west-me
 
 // Configuration Service
 import { ConfigurationService } from './services/configuration.service';
-import { DetailsComponent } from './details/details.component';
-import { BatchesComponent } from './batches/batches.component';
+import { DetailsComponent } from './components/details/details.component';
+import { BatchesComponent } from './components/batches/batches.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './services/in-memory-data/in-memory-data.service';
-import { DependencyChartsComponent, EditDialog } from './dependencycharts/dependencycharts.component';
-import { CompareComponent } from './compare/compare.component';
+import { DependencyChartsComponent, EditDialog } from './components/dependencycharts/dependencycharts.component';
+import { CompareComponent } from './components/compare/compare.component';
+import { ViewboxComponent } from './components/viewbox/viewbox.component';
 
 
 @NgModule({
@@ -52,7 +53,8 @@ import { CompareComponent } from './compare/compare.component';
     BatchesComponent,
     DependencyChartsComponent,
     EditDialog,
-    CompareComponent
+    CompareComponent,
+    ViewboxComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ConfigurationService } from '../services/configuration.service';
-import { Configuration } from '../model/configuration';
+import { ConfigurationService } from '../../services/configuration.service';
+import { Configuration } from '../../model/configuration';
 
 @Component({
   selector: 'app-details',
