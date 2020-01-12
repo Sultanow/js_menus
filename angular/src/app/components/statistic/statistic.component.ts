@@ -77,7 +77,8 @@ ngAfterViewInit() {
           return _this.chartProps.x(d.date.getTime());
         }
       })
-      .y(function (d) { console.log('Durachtion Batch 1'); return _this.chartProps.y(d.durationBatch1); });
+      .y(function (d) { console.log('Durachtion Batch 1'); return _this.chartProps.y(d.durationBatch1); })
+      ;
   
     // Define the line
     var valueline2 = d3.line<Batches>()
@@ -108,7 +109,7 @@ ngAfterViewInit() {
     // Add the valueline2 path.
     svg.append('path')
       .attr('class', 'line line2')
-      .style('stroke', 'green')
+      .style('stroke', 'lightgreen')
       .style('fill', 'none')
       .attr('d', valueline2(_this.batchtimes));
   
@@ -119,7 +120,24 @@ ngAfterViewInit() {
       .style('fill', 'none')
       .attr('d', valueline(_this.batchtimes));
   
-  
+      svg.append("circle").attr("cx",200).attr("cy",130).attr("r", 6).style("fill", "lightgreen")
+      svg.append("circle").attr("cx",200).attr("cy",160).attr("r", 6).style("fill", "blue")
+      svg.append("text")
+        .attr("x", 220)
+        .attr("y", 130)
+        .text("Batch 1")
+        .style("font-size", "15px")
+        .style("fill", "lightgreen")
+        .attr("alignment-baseline","middle")
+
+      svg.append("text")
+        .attr("x", 220)
+        .attr("y", 160)
+        .text("Batch 2")
+        .style("font-size", "15px")
+        .style("fill", "blue")
+        .attr("alignment-baseline","middle")
+      
     // Add the X Axis
     svg.append('g')
       .attr('class', 'x axis')
