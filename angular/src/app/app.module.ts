@@ -35,6 +35,7 @@ import { InMemoryDataService } from './services/in-memory-data/in-memory-data.se
 import { DependencyChartsComponent, EditDialog } from './components/dependencycharts/dependencycharts.component';
 import { CompareComponent } from './components/compare/compare.component';
 import { ViewboxComponent } from './components/viewbox/viewbox.component';
+import { StatisticComponent } from './components/statistic/statistic.component';
 
 
 @NgModule({
@@ -54,7 +55,8 @@ import { ViewboxComponent } from './components/viewbox/viewbox.component';
     DependencyChartsComponent,
     EditDialog,
     CompareComponent,
-    ViewboxComponent
+    ViewboxComponent,
+    StatisticComponent
   ],
   imports: [
     BrowserModule,

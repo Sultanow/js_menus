@@ -77,6 +77,11 @@ export class AppComponent {
 		this.showView = "compare";
 	}
 
+	onNotifyStatisticOpen() {
+		this.showViewBox = true;
+		this.showView = "statistic";
+	}
+
 	onNotifyViewBoxClose() {
 		this.showViewBox = false;
 		this.showView = "";
