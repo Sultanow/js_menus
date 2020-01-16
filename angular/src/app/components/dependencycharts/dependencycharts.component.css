@@ -1,4 +1,4 @@
-div#dependencycharts-box {
+/*div#dependencycharts-box {
   color: #fff;
   background: rgba(0, 0, 0, 0.5);
   border: 2px solid #fff;
@@ -31,13 +31,13 @@ button.fancy {
   background-color: gray !important;
   color: white;
 }
-
+*/
 .chart-card {
   max-width: 400px;
   cursor: pointer;
   margin-bottom: 10px;
 }
-
+/*
 .basic-container {
   padding: 10px;
 }
@@ -52,7 +52,7 @@ button.fancy {
 h2 {
   margin-bottom: 10px;
 }
-
+*/
 .add {
   border: none;
   color: white;

@@ -9,7 +9,7 @@ export class SouthMenuComponent implements OnInit {
   @Input() isOpen: boolean;
   @Output() notifyDependencyChartsOpen = new EventEmitter<boolean>();
   
-  openDetails() {
+  openDependency() {
     this.notifyDependencyChartsOpen.emit(true);
   }
 

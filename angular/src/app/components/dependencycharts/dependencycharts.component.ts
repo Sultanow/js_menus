@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, Inject } from '@angular/core';
+import { Component, OnInit, Input, Inject } from '@angular/core';
 import { DependencyChart } from '../../model/dependencychart';
 import { DependencyService } from '../../services/dependencies/dependencies.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig} from '@angular/material/dialog';
@@ -17,8 +17,7 @@ export class DependencyChartsComponent implements OnInit {
   description: string;  // e.g. ""
   chartContent: string; // Dependency Chart in JSON
 
-  @Input() showDependencyCharts: boolean;
-  @Output() notifyDependencyChartsClose = new EventEmitter<boolean>();
+  @Input() showDependency: boolean;
   dependencyCharts: DependencyChart[];
   selectedDependencyChart: DependencyChart;
   editedDependencyChart: DependencyChart;
@@ -34,11 +33,6 @@ export class DependencyChartsComponent implements OnInit {
   getDependencyCharts(): void {
     this.dependenciesService.getDependencies()
     .subscribe(dependencies => this.dependencyCharts = dependencies);
-  }
-
-  close() {
-    this.showDependencyCharts = false;
-    this.notifyDependencyChartsClose.emit(true);
   }
 
   select(dependencyChart: DependencyChart) {

@@ -56,11 +56,8 @@ export class AppComponent {
 
 
 	onNotifyDependencyChartsOpen() {
-		this.showDependencyCharts = true;
-	}
-
-	onNotifyDependencyChartsClose() {
-		this.showDependencyCharts = false;
+		this.showViewBox = true;
+		this.showView = "dependency";
 	}
 
 	onNotifyCompareOpen() {

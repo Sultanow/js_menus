@@ -21,6 +21,7 @@ export class ViewboxComponent implements OnInit {
   showCompare: boolean = false;
   showStatistic: boolean = false;
   showBatches: boolean = false;
+  showDependency: boolean = false;
   
   batchtimes: Batches[] = [
     {"date": "10-05-2012", "durationBatch1": 68.55, "durationBatch2": 74.55},
@@ -70,6 +71,8 @@ export class ViewboxComponent implements OnInit {
       this.loadBatches = this.batchtimes;
     } else if (view === "batches") {
       this.showBatches = true;
+    } else if (view === "dependency") {
+      this.showDependency = true;
     }
   }
 
@@ -77,5 +80,6 @@ export class ViewboxComponent implements OnInit {
     this.showCompare = false;
     this.showStatistic = false;
     this.showBatches = false;
+    this.showDependency = false;
   }
 }
