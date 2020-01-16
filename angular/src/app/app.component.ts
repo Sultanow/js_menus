@@ -33,8 +33,6 @@ export class AppComponent {
 	southOpen = false;
 	westOpen = false;
 
-	// Show Details?
-	showDetails = false;
 
 	showDependencyCharts = false;
 	showCompare = false;
@@ -51,13 +49,11 @@ export class AppComponent {
     this.initAnimationButton(this.animate_west, "west-menu");    
 	}
 	
-	onNotifyDetailsOpen(){
-		this.showDetails = true;
+	onNotifyBatchesOpen(){
+		this.showViewBox = true;
+		this.showView = "batches";
 	}
 
-	onNotifyDetailsClose(){
-		this.showDetails = false;
-	}
 
 	onNotifyDependencyChartsOpen() {
 		this.showDependencyCharts = true;
@@ -67,12 +63,7 @@ export class AppComponent {
 		this.showDependencyCharts = false;
 	}
 
-	onNotifyCompareClose() {
-		this.showCompare = false;
-	}
-	
 	onNotifyCompareOpen() {
-		//this.showCompare = true;
 		this.showViewBox = true;
 		this.showView = "compare";
 	}
@@ -85,10 +76,6 @@ export class AppComponent {
 	onNotifyViewBoxClose() {
 		this.showViewBox = false;
 		this.showView = "";
-	}
-
-	onNotifyViewBoxOpen() {
-		this.showViewBox = true;
 	}
 
   initAnimations(){

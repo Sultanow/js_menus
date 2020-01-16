@@ -20,6 +20,8 @@ export class ViewboxComponent implements OnInit {
 
   showCompare: boolean = false;
   showStatistic: boolean = false;
+  showBatches: boolean = false;
+  
   batchtimes: Batches[] = [
     {"date": "10-05-2012", "durationBatch1": 68.55, "durationBatch2": 74.55},
     {"date": "09-05-2012", "durationBatch1": 74.55, "durationBatch2": 69.55},
@@ -66,11 +68,14 @@ export class ViewboxComponent implements OnInit {
     } else if (view === "statistic") {
       this.showStatistic = true;
       this.loadBatches = this.batchtimes;
+    } else if (view === "batches") {
+      this.showBatches = true;
     }
   }
 
   closeAllViews() {
     this.showCompare = false;
     this.showStatistic = false;
+    this.showBatches = false;
   }
 }

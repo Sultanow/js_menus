@@ -10,8 +10,7 @@ import { BatchService } from '../../services/batches/batches.service';
 })
 export class BatchesComponent implements OnInit {
   batches: Batch[];
-  @Input() showDetails: boolean;
-  @Output() notifyDetailsClose = new EventEmitter<boolean>();
+  @Input() showBatches: boolean;
   @Input() editOn: boolean;
   selectedBatch: Batch;
 
@@ -49,11 +48,6 @@ export class BatchesComponent implements OnInit {
   delete(batch: Batch): void {
     this.batches = this.batches.filter(b => b !== batch);
     this.batchService.deleteBatch(batch).subscribe();
-  }
-
-  close() {
-    this.showDetails = false;
-    this.notifyDetailsClose.emit(true);
   }
 
   save(): void {
