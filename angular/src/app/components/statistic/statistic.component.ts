@@ -33,16 +33,11 @@ export class StatisticComponent implements OnInit {
   }
 
 ngAfterViewInit() {
-//  console.log("Statistic AVI");
-//  if (this.batchtimes) {
-//    this.buildChart();
-//  }
+  console.log(this.chartElement.nativeElement);
+  if(this.batchtimes && this.showStatistic)
+      this.buildChart();
 }
 
-  ngOnChanges() {
-    if(this.batchtimes && this.showStatistic)
-      this.buildChart();
-  }
  
   formatDate() {
     this.batchtimes.forEach(ms => {

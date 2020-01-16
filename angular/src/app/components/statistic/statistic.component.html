@@ -1,4 +1,4 @@
-<div id="chartContainer" *ngIf="showStatistic">
+<div id="chartContainer" [hidden]="!showStatistic">
     <p>Trend Batchlaufzeiten</p>
     <div #chart >
     </div>
