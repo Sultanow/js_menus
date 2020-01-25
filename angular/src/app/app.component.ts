@@ -70,6 +70,12 @@ export class AppComponent {
 		this.showView = "statistic";
 	}
 
+	onNotifyEventOpen(event) {
+		console.log(event);
+		this.showViewBox = true;
+		this.showView = event;
+	}
+
 	onNotifyViewBoxClose() {
 		this.showViewBox = false;
 		this.showView = "";

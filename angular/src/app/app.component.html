@@ -7,10 +7,10 @@
       <g class="menu" transform="translate(571 143)">
         <g class="outside-layer">
           <circle class="outer-cirlce-background" cx="396" cy="396" r="396" fill="#000" fill-opacity=".4"/>
-          <g o-north-menu (notifyBatchesOpen)="onNotifyBatchesOpen()" (notifyCompareOpen)="onNotifyCompareOpen()" [isOpen]="northOpen"></g>
-          <g o-east-menu  (notifyStatisticOpen)="onNotifyStatisticOpen()" [isOpen]="eastOpen"></g>
-          <g o-south-menu (notifyDependencyChartsOpen)="onNotifyDependencyChartsOpen()" [isOpen]="southOpen"></g>
-          <g o-west-menu [isOpen]="westOpen"></g>
+          <g o-north-menu (notifyEventOpen)="onNotifyEventOpen($event)" [isOpen]="northOpen"></g>
+          <g o-east-menu (notifyEventOpen)="onNotifyEventOpen($event)" [isOpen]="eastOpen"></g>
+          <g o-south-menu (notifyEventOpen)="onNotifyEventOpen($event)" [isOpen]="southOpen"></g>
+          <g o-west-menu (notifyEventOpen)="onNotifyEventOpen($event)" [isOpen]="westOpen"></g>
         </g> <!-- ./outside layer -->
         <g class="middle-layer" transform="translate(132 132)">
           <circle class="middle-circle-backgroud" cx="264" cy="264" r="264" fill="#000" fill-opacity=".4"/>

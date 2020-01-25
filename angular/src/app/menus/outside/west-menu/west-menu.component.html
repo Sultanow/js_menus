@@ -1,5 +1,5 @@
 <svg:g class="west-menu" *ngIf="isOpen" transform="translate(18 229)">
-  <g class="confluence-button" transform="translate(0 120)">
+  <g class="confluence-button" transform="translate(0 120)" (click)="openConfluence()">
     <title>Confluence</title>
     <circle class="Oval-2-Copy-7" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"/>
     <!-- Confluence Icon -->
@@ -11,7 +11,7 @@
     </g>
     <!-- / Confluence Icon -->
   </g>
-  <g class="jira-button" transform="translate(24)">
+  <g class="jira-button" transform="translate(24)" (click)="openJira()">
     <title>Jira</title>
     <circle class="Oval-2-Copy-7" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"/>
     <!-- Jira Icon -->
@@ -24,7 +24,7 @@
     </g>
     <!-- / Jira Icon -->
   </g>
-  <g class="bitbucket-button" transform="translate(24 240)">
+  <g class="bitbucket-button" transform="translate(24 240)" (click)="openBitbucket()">
     <title>Bitbucket</title>
     <circle class="Oval-2-Copy-7" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"/>
     <!-- Bitbucket Icon -->

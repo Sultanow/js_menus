@@ -1,5 +1,5 @@
 <svg:g class="south-menu" *ngIf="isOpen" transform="translate(228 654)">
-  <g class="conf-button" transform="translate(120 24)" (click)="openDependency()">
+  <g class="conf-button" transform="translate(120 24)" (click)="openConfig()">
     <title>Konfiguration</title>
     <circle class="Oval-2-Copy-8" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"/>
     <!-- Konfiguration Icon -->
@@ -16,7 +16,7 @@
     </g>
     <!-- / Konfiguration Icon -->
   </g>
-  <g class="server-button">
+  <g class="server-button" (click)="openServer()">
     <title>Server & Datenbaken</title>
     <circle class="Oval-2-Copy-9" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"/>
     <!-- Server Icon -->
@@ -28,7 +28,7 @@
       </g>
     <!-- / Server Icon -->
   </g>
-  <g class="batches-button" transform="translate(240)">
+  <g class="batches-button" transform="translate(240)" (click)="openBatches()">
     <title>Batches</title>
     <circle class="Oval-2-Copy-10" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"/>
     <!-- Batches Icon -->

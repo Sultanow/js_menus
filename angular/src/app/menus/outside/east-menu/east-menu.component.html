@@ -1,5 +1,5 @@
 <svg:g class="east-menu" *ngIf="isOpen" transform="translate(654 229)">
-  <g class="writing-button" transform="translate(24 120)">
+  <g class="writing-button" transform="translate(24 120)" (click)="openWarning()">
     <title>Warnungen</title>
     <circle class="Oval-2-Copy-11" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"/>
     <!-- Warnung Icon -->
@@ -13,7 +13,7 @@
     </g>
     <!-- / Warnung Icon -->
   </g>
-  <g class="news-button">
+  <g class="news-button" (click)="openNews()">
     <title>Neuigkeiten</title>
     <circle class="Oval-2-Copy-13" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"/>
     <!-- Neuigkeiten Icon -->

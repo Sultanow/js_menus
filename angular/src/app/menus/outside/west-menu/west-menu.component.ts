@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'g[o-west-menu]',
@@ -7,10 +7,25 @@ import { Component, OnInit, Input } from '@angular/core';
 export class WestMenuComponent implements OnInit {
 
   @Input() isOpen: boolean;
-  
+
+  @Output() notifyEventOpen = new EventEmitter<string>();
+
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  openConfluence() {
+    this.notifyEventOpen.emit("confluence");
+  }
+
+  openJira() {
+    this.notifyEventOpen.emit("jira");
+  }
+
+  openBitbucket() {
+    this.notifyEventOpen.emit("bitbucket");
   }
 
 }

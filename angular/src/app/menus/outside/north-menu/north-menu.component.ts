@@ -11,17 +11,20 @@ export class NorthMenuComponent implements OnInit {
   @Input() isOpen: boolean;
 
   // Notify parent (app) when details box should open
-  @Output() notifyBatchesOpen = new EventEmitter<boolean>();
-  @Output() notifyCompareOpen = new EventEmitter<boolean>();
+  @Output() notifyEventOpen = new EventEmitter<string>();
 
   constructor(private configService: ConfigurationService) { }
 
-  openDetails() {
-      this.notifyBatchesOpen.emit(true);
-  }
+  openTest() {
+    this.notifyEventOpen.emit("batches");
+      }
   
-  openCompare() {
-    this.notifyCompareOpen.emit(true);
+  openDev() {
+    this.notifyEventOpen.emit("compare");
+  }
+
+  openProd() {
+    this.notifyEventOpen.emit("prod");
   }
   
   ngOnInit() {
