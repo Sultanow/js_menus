@@ -1,28 +1,26 @@
 /* CompareComponent's private CSS styles */
-.viewbox {
+.status {
     margin: 0 0 2em 0;
     list-style-type: none;
     padding: 0;
     width: 15em;
-    z-index: 10;
   }
-  .viewbox li {
+  .status li {
     position: relative;
-    cursor: pointer;
-    background-color: #EEE;
+    /*cursor: pointer;*/
     margin: .5em;
     padding: .3em 0;
-    height: 1.6em;
     border-radius: 4px;
+    list-style-type: none;
   }
   
-  .viewbox li:hover {
+  /*.status li:hover {
     color: #607D8B;
     background-color: #DDD;
     left: .1em;
   }
   
-  .viewbox a {
+  .status a {
     color: #333;
     text-decoration: none;
     position: relative;
@@ -30,11 +28,11 @@
     width: 350px;
   }
   
-  .viewbox a:hover {
+  .status a:hover {
     color:#607D8B;
-  }
+  }*/
   
-  .viewbox .badge {
+  .status .badge {
     display: inline-block;
     font-size: small;
     color: white;
@@ -73,18 +71,17 @@
     color: white;
   }
   
-  div#view-box {
+  div#status-box {
     position: absolute;
-    width: 80%;
+    width: 30%;
     height: 80%;
     color: #fff;
     background: rgba(0, 0, 0, 0.85);
     border: 2px solid #fff;
-    left: 10%;
-    top: 10%;
-    z-index: 10;
+    left: 5%;
+    top: 5%;
   }
-  div#view-box-content {
+  div#status-box-content {
       padding-left: 2%;
   }
   
@@ -93,8 +90,11 @@
     position: relative;
     height: 40px;
     background: rgba(0, 0, 0, 0.5);
-    color: #000;
+    color: #fff;
+    text-align: center;
+    vertical-align: center;
     margin-bottom: 10px;
+    
   }
   
   div > header .close {

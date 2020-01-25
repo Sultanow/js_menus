@@ -36,6 +36,10 @@ import { DependencyChartsComponent, EditDialog } from './components/dependencych
 import { CompareComponent } from './components/compare/compare.component';
 import { ViewboxComponent } from './components/viewbox/viewbox.component';
 import { StatisticComponent } from './components/statistic/statistic.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { WarningsComponent } from './components/warnings/warnings.component';
+import { NewsComponent } from './components/news/news.component';
+import { StatusWarningsComponent } from './components/status-warnings/status-warnings.component';
 
 
 @NgModule({
@@ -56,7 +60,10 @@ import { StatisticComponent } from './components/statistic/statistic.component';
     EditDialog,
     CompareComponent,
     ViewboxComponent,
-    StatisticComponent
+    StatisticComponent,
+    WarningsComponent,
+    NewsComponent,
+    StatusWarningsComponent
   ],
   imports: [
     BrowserModule,
@@ -71,6 +78,7 @@ import { StatisticComponent } from './components/statistic/statistic.component';
     MatRadioModule,
     MatSelectModule,
     ReactiveFormsModule,
+    DragDropModule,
 
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.

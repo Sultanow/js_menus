@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, Input, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
 import { Batches } from 'src/app/model/batches';
+import {CdkDrag } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-viewbox',
@@ -22,6 +23,8 @@ export class ViewboxComponent implements OnInit {
   showStatistic: boolean = false;
   showBatches: boolean = false;
   showDependency: boolean = false;
+  showNews: boolean = false;
+  showWarnings: boolean = false;
   
   batchtimes: Batches[] = [
     {"date": "10-05-2012", "durationBatch1": 68.55, "durationBatch2": 74.55},
@@ -65,7 +68,7 @@ export class ViewboxComponent implements OnInit {
 
   openShowView(view: string) {
     if(view === "compare") {
-    this.showCompare = true;
+      this.showCompare = true;
     } else if (view === "statistic") {
       this.showStatistic = true;
       this.loadBatches = this.batchtimes;
@@ -73,6 +76,10 @@ export class ViewboxComponent implements OnInit {
       this.showBatches = true;
     } else if (view === "dependency") {
       this.showDependency = true;
+    } else if (view === "news") {
+      this.showNews = true;
+    } else if (view === "warning") {
+      this.showWarnings = true;
     }
   }
 
@@ -81,5 +88,7 @@ export class ViewboxComponent implements OnInit {
     this.showStatistic = false;
     this.showBatches = false;
     this.showDependency = false;
+    this.showNews = false;
+    this.showWarnings = false;
   }
 }

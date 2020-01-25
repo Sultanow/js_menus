@@ -5,6 +5,7 @@
   stroke-linejoin: round;
   max-width: 792px;
   max-height: 100%;
+  z-index: 10;
 }
 
 @media screen and (min-width: 512px) {

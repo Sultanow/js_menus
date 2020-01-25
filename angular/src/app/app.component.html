@@ -12,7 +12,7 @@
           <g o-south-menu (notifyEventOpen)="onNotifyEventOpen($event)" [isOpen]="southOpen"></g>
           <g o-west-menu (notifyEventOpen)="onNotifyEventOpen($event)" [isOpen]="westOpen"></g>
         </g> <!-- ./outside layer -->
-        <g class="middle-layer" transform="translate(132 132)">
+        <g class="middle-layer"  transform="translate(132 132)">
           <circle class="middle-circle-backgroud" cx="264" cy="264" r="264" fill="#000" fill-opacity=".4"/>
           <g class="button-group">
             <g (click)="openNorthMenu()" m-north-menu></g>
@@ -32,4 +32,5 @@
     </g>
   </svg>
   <app-viewbox (notifyViewBoxClose)="onNotifyViewBoxClose()" [showView]="showView" [showViewBox]="showViewBox" ></app-viewbox>
+  <app-status-warnings [showStatusWarnings]="showStatusWarnings"></app-status-warnings>
 </div>
