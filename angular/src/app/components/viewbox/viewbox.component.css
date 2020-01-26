@@ -103,16 +103,10 @@
     cursor: pointer;
   }
   
-  table#dashboard-table{
-    margin: fixed;
-    width: 100%;
-  }
-  
-  table#dashboard-table td, table#dashboard-table th{
+  .dashboard-table td, .dashboard-table th{
     padding: 10px;
     border-bottom: 1px solid rgba(255,255,255,0.6);
     table-layout: fixed;
-    width: 100%;
   }
   
   input {
