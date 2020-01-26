@@ -1,0 +1,17 @@
+<div *ngIf="showConfigView">
+    <table class="dashboard-table">
+        <thead>
+            <th>Umgebung</th>
+            <th>Artefakt</th>
+            <th>Wert</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let c of config">
+                <td>{{c.env}}</td>
+                <td>{{c.key}}</td>
+                <td>{{c.value}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

@@ -40,6 +40,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { WarningsComponent } from './components/warnings/warnings.component';
 import { NewsComponent } from './components/news/news.component';
 import { StatusWarningsComponent } from './components/status-warnings/status-warnings.component';
+import { ConfigurationViewComponent } from './components/configuration-view/configuration-view.component';
 
 
 @NgModule({
@@ -63,7 +64,8 @@ import { StatusWarningsComponent } from './components/status-warnings/status-war
     StatisticComponent,
     WarningsComponent,
     NewsComponent,
-    StatusWarningsComponent
+    StatusWarningsComponent,
+    ConfigurationViewComponent
   ],
   imports: [
     BrowserModule,

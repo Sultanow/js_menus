@@ -1,11 +1,55 @@
 <div *ngIf="showStatusWarnings" class="status" id="status-box">
-    <header>
-        Status
-    </header>
     <div id="status-box-content">
-        <p class="marquee">
+        <p *ngIf="scrollingMenu" class="marquee">
             <span>
-                Konfiguration dev1 nicht in Ordnung &nbsp;-&nbsp; Konfiguration dev2 nicht in Ordnung &nbsp;-&nbsp; Konfiguration dev3 nicht in Ordnung &nbsp;-&nbsp; Konfiguration dev4 nicht in Ordnung &nbsp;-&nbsp; Konfiguration dev5 nicht in Ordnung &nbsp;</span>
-          </p>
+                Konfiguration dev1 nicht in Ordnung &nbsp;-&nbsp; Konfiguration dev2 nicht in Ordnung &nbsp;-&nbsp;
+                Konfiguration dev3 nicht in Ordnung &nbsp;-&nbsp; Konfiguration dev4 nicht in Ordnung &nbsp;-&nbsp;
+                Konfiguration dev5 nicht in Ordnung &nbsp;</span>
+        </p>
+        <p *ngIf="!scrollingMenu">
+            <span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 30 20" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                dev1 &nbsp;-&nbsp; 
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 30 20"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                dev2 &nbsp;-&nbsp;
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 30 20"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg> 
+                dev3 &nbsp;-&nbsp; 
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 30 20"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg> 
+                dev4 &nbsp;-&nbsp;
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path
+                        d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg> 
+                dev5
+                &nbsp;</span>
+        </p>
     </div>
 </div>

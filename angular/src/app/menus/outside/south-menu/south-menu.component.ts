@@ -15,11 +15,11 @@ export class SouthMenuComponent implements OnInit {
   @Output() notifyEventOpen = new EventEmitter<string>();
   
   openConfig() {
-    this.notifyEventOpen.emit("dependency");
+    this.notifyEventOpen.emit("serverconfig");
   }
 
   openServer() {
-    this.notifyEventOpen.emit("server");
+    this.notifyEventOpen.emit("compare");
   }
 
   openBatches() {

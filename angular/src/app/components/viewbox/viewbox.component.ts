@@ -25,6 +25,7 @@ export class ViewboxComponent implements OnInit {
   showDependency: boolean = false;
   showNews: boolean = false;
   showWarnings: boolean = false;
+  showConfigView: boolean = false;
   
   batchtimes: Batches[] = [
     {"date": "10-05-2012", "durationBatch1": 68.55, "durationBatch2": 74.55},
@@ -66,7 +67,9 @@ export class ViewboxComponent implements OnInit {
     } 
    }
 
+   viewType: string; 
   openShowView(view: string) {
+    this.viewType = view;
     if(view === "compare") {
       this.showCompare = true;
     } else if (view === "statistic") {
@@ -80,6 +83,10 @@ export class ViewboxComponent implements OnInit {
       this.showNews = true;
     } else if (view === "warning") {
       this.showWarnings = true;
+    } else if (view === "serverconfig") {
+      this.showConfigView = true;
+    } else if (view === "") {
+      this.showConfigView = true;
     }
   }
 
@@ -90,5 +97,6 @@ export class ViewboxComponent implements OnInit {
     this.showDependency = false;
     this.showNews = false;
     this.showWarnings = false;
+    this.showConfigView = false;
   }
 }

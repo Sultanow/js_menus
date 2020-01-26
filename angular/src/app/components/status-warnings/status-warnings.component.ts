@@ -8,7 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class StatusWarningsComponent implements OnInit {
 
   @Input() showStatusWarnings: boolean;
-
+  scrollingMenu : boolean = false;
   constructor() { }
 
   ngOnInit() {

@@ -20,7 +20,7 @@ export class NorthMenuComponent implements OnInit {
       }
   
   openDev() {
-    this.notifyEventOpen.emit("compare");
+    this.notifyEventOpen.emit("dev");
   }
 
   openProd() {
