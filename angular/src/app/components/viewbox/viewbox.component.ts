@@ -85,7 +85,7 @@ export class ViewboxComponent implements OnInit {
       this.showWarnings = true;
     } else if (view === "serverconfig") {
       this.showConfigView = true;
-    } else if (view === "") {
+    } else if (view === "batchconfig") {
       this.showConfigView = true;
     }
   }
