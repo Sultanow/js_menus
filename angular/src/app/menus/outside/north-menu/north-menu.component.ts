@@ -16,7 +16,7 @@ export class NorthMenuComponent implements OnInit {
   constructor(private configService: ConfigurationService) { }
 
   openTest() {
-    this.notifyEventOpen.emit("batches");
+    this.notifyEventOpen.emit("test");
       }
   
   openDev() {

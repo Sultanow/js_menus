@@ -26,6 +26,9 @@ export class ViewboxComponent implements OnInit {
   showNews: boolean = false;
   showWarnings: boolean = false;
   showConfigView: boolean = false;
+  showRightManagement: boolean = false;
+  showTracker: boolean = false;
+  title: string = "";
   
   batchtimes: Batches[] = [
     {"date": "10-05-2012", "durationBatch1": 68.55, "durationBatch2": 74.55},
@@ -87,6 +90,10 @@ export class ViewboxComponent implements OnInit {
       this.showConfigView = true;
     } else if (view === "batchconfig") {
       this.showConfigView = true;
+    } else if (view === "test" || view === "prod" || view === "dev") {
+      this.showRightManagement = true;
+    } else if (view === "jira" || view === "bitbucket" || view === "confluence") {
+      this.showTracker = true;
     }
   }
 
@@ -98,5 +105,12 @@ export class ViewboxComponent implements OnInit {
     this.showNews = false;
     this.showWarnings = false;
     this.showConfigView = false;
+    this.showRightManagement = false;
+    this.showTracker = false;
+    this.title = "";
+  }
+
+  onNotifyTitle(title: string) {
+    this.title = title;
   }
 }

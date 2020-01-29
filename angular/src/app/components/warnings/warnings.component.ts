@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { MessageItem } from 'src/app/model/messageItem';
 import { MessagesService } from 'src/app/services/messages/messages.service';
 
@@ -10,7 +10,8 @@ import { MessagesService } from 'src/app/services/messages/messages.service';
 export class WarningsComponent implements OnInit {
 
   @Input() showWarnings: boolean;
-
+  @Output() notifyTitle = new EventEmitter<string>();
+  
   messages: MessageItem[];
   constructor(private messagesService: MessagesService) { 
     

@@ -1,0 +1,9 @@
+<div *ngIf="showTracker">
+    <p>{{headline}}</p>
+    <table class="dashboard-table">
+        <tr *ngFor="let i of infos">
+            <td>{{i.key}}</td>
+            <td>{{i.val}}</td>
+        </tr>
+    </table>
+</div>

@@ -41,6 +41,8 @@ import { WarningsComponent } from './components/warnings/warnings.component';
 import { NewsComponent } from './components/news/news.component';
 import { StatusWarningsComponent } from './components/status-warnings/status-warnings.component';
 import { ConfigurationViewComponent } from './components/configuration-view/configuration-view.component';
+import { RightManagementComponent } from './components/right-management/right-management.component';
+import { TrackerComponent } from './components/tracker/tracker.component';
 
 
 @NgModule({
@@ -65,7 +67,9 @@ import { ConfigurationViewComponent } from './components/configuration-view/conf
     WarningsComponent,
     NewsComponent,
     StatusWarningsComponent,
-    ConfigurationViewComponent
+    ConfigurationViewComponent,
+    RightManagementComponent,
+    TrackerComponent
   ],
   imports: [
     BrowserModule,

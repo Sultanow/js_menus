@@ -8,11 +8,11 @@ export class ConfigurationItemsService {
 
   constructor() { }
 
-  getServerConfiguration() : ConfigurationItem[] {
+  getServerConfiguration(): ConfigurationItem[] {
     return this.getDummyServerConfiguration();
   }
 
-  getDummyServerConfiguration() : ConfigurationItem[] {
+  getDummyServerConfiguration(): ConfigurationItem[] {
     let items: ConfigurationItem[] = [];
     items.push(this.createItem("Dev1", "SW-Version", "20.02.00_5"))
     items.push(this.createItem("Dev1", "Silbentrennung", "an"))
@@ -22,11 +22,11 @@ export class ConfigurationItemsService {
     return items;
   }
 
-  getBatchConfiguration() : ConfigurationItem[] {
+  getBatchConfiguration(): ConfigurationItem[] {
     return this.getDummyBatchConfig();
   }
 
-  getDummyBatchConfig() : ConfigurationItem[] {
+  getDummyBatchConfig(): ConfigurationItem[] {
     let items: ConfigurationItem[] = [];
     items.push(this.createItem("A2145", "Parameter 1", "5"))
     items.push(this.createItem("A2145", "Parameter 2", "x"))
@@ -34,6 +34,24 @@ export class ConfigurationItemsService {
     return items;
   }
 
+  getRightConfigurationTest(): ConfigurationItem[] {
+    return this.getDummyRightConfiguration();
+  }
+
+  getRightConfigurationDev(): ConfigurationItem[] {
+    return this.getDummyRightConfiguration();
+  }
+
+  getRightConfigurationProd(): ConfigurationItem[] {
+    return this.getDummyRightConfiguration();
+  }
+
+  getDummyRightConfiguration(): ConfigurationItem[] {
+    let items: ConfigurationItem[] = [];
+    items.push(this.createItem("Dev1", "abc", "ja"));
+    items.push(this.createItem("Dev1", "xyz", "nein"));
+    return items;
+  }
   createItem(env: string, key: string, val: string): ConfigurationItem {
     return new ConfigurationItem(env, key, val);
   }
