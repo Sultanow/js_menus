@@ -1,16 +1,73 @@
-import { Injectable } from '@angular/core';
 import { ConfigurationItem } from 'src/app/model/configurationItem';
+import { Injectable, OnDestroy } from '@angular/core';
+import { ZabbixClient } from "zabbix-client";
+import { ServerConfiguration } from 'src/config/ServerConfiguration';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ConfigurationItemsService {
+export class ConfigurationItemsService implements OnDestroy {
+  ngOnDestroy(): void {
+    this.client = null;
+  }
+
+  client: ZabbixClient;
+  itemlist: ConfigurationItem[];
 
   constructor() { }
 
-  getServerConfiguration(): ConfigurationItem[] {
-    return this.getDummyServerConfiguration();
+  getItemlist(): ConfigurationItem[] {
+    return this.itemlist;
   }
+
+  async getServerConfiguration(): Promise<{}> {
+    return new Promise((resolve, reject) => {
+      this.zabbixLogin().then(api => {
+        api.method("host.get")
+          .call({
+            'filter': {
+              'host': ServerConfiguration.ENV_LIST
+            },
+            'output': 'extend',
+            'selectGroups': 'extend',
+            'selectHosts': 'extend',
+            'selectItems': 'extend',
+          }, false)
+          .then(result => {
+            this.itemlist = this.createServerConf(result as JSON[]);
+            resolve();
+          })
+          .catch(x => {
+            console.log("Error", x)
+            this.itemlist = this.getDummyServerConfiguration();
+            resolve();
+          });
+      });
+    });
+
+  }
+
+  zabbixLogin() {
+    this.client = new ZabbixClient("/api_jsonrpc.php");
+    return this.client.login("viewer", "viewer");
+  }
+
+  createServerConf(result: any[]): ConfigurationItem[] {
+    let ret: ConfigurationItem[] = [];
+    result.forEach(elem => {
+      let host = elem.host;
+      console.log(elem);
+      elem.items.forEach(item => {
+        if (ServerConfiguration.EVN_ITEMS.includes(item.key_)) {
+          console.log("Item found " + item.key_);
+          ret.push(this.createItem(host, item.name, item.lastvalue));
+        }
+      })
+    })
+    return ret;
+  }
+
+
 
   getDummyServerConfiguration(): ConfigurationItem[] {
     let items: ConfigurationItem[] = [];

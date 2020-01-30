@@ -1,0 +1,6 @@
+{
+    "/api_jsonrpc.php": {
+        "target": "http://myzabbix ",
+        "secure": false
+    }
+}
