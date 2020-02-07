@@ -35,7 +35,7 @@ export class CompareComponent implements OnInit {
   ngOnChanges(changes) {
      if(this.showCompare){
        this.getConfigData();
-       this.configItemService.generateTree();
+       this.configItemService.generateTree(["dev1", "dev2"]);
      }
   }
 

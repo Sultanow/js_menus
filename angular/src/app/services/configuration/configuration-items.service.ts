@@ -120,66 +120,34 @@ export class ConfigurationItemsService implements OnDestroy {
     return new ConfigurationItem(env, key, val);
   }
 
-  generateTree(): void {
-    let arrayOfNodesTree: Node<ENVCONFIG>[] = [
-      {
-        value: {
-          configname: "Test",
-          name: 'Tasks for Sprint 1',
-          owner: 'Marco'
-        },
-        children: [
-          {
-            value: {
-              configname: "Test"
-            },
-            children: []
-          },
-          {
-            value: {
-              configname: "test",
-              name: 'Update documentation',
-              owner: 'Jane'
-            },
-            children: [
-              {
-                value: {
-                  configname: "test2",
-                  name: 'Proofread documentation',
-                  owner: 'Bob'
-                },
-                children: []
-              }
-            ]
-          }
-        ]
-      },
-      {
-        value: {
-          configname: "test2",
-          name: 'Tasks for Sprint 2',
-          owner: 'Erika',
-        },
-        children: [
-          {
-            value: {
-              configname: "test2",
-              name: 'Fix bug #567',
-              owner: 'Marco'
-            },
-            children: []
-          },
-          {
-            value: {
-              configname: "test2",
-              name: 'Speak with clients',
-              owner: 'James'
-            },
-            children: []
-          }
-        ]
-      }
-    ]
-    this.treeNodes.next(arrayOfNodesTree);
+  generateTree(env?: string[]): void {
+    let tree = this.buildEmptyTree();
+    if(env != null) {
+      env.forEach(e => {
+        tree = this.addEnvToTree(tree, e);
+      })
+    }
+    this.treeNodes.next(tree);
+  }
+
+  buildEmptyTree() {
+    let tree: Node<ENVCONFIG>[] = ServerConfiguration.EMPTY_TREE;
+    return tree;
+  }
+
+  addEnvToTree(tree: Node<ENVCONFIG>[], env: string): Node<ENVCONFIG>[] {
+    tree.forEach(i => {
+      this.addEnv(i, env);
+    })
+    return tree;
+  }
+
+  addEnv(node: Node<ENVCONFIG>, env: string) {
+    node.value[env] = "";
+    if(node.children.length != 0) {
+      node.children.forEach(c => {
+        this.addEnv(c, env);
+      })
+    }
   }
 }
