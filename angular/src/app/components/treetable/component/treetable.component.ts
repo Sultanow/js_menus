@@ -18,7 +18,7 @@ export class TreetableComponent<T> implements OnInit {
   @Input() @Required tree: Node<T> | Node<T>[];
   @Input() options: Options<T> = {};
   @Output() nodeClicked: Subject<TreeTableNode<T>> = new Subject();
-  @Input('body') customElement :TemplateRef<any>; //custom template injection
+  @Input('body') customElement: TemplateRef<any>; //custom template injection
 
 
   private searchableTree: SearchableNode<T>[];
@@ -40,20 +40,22 @@ export class TreetableComponent<T> implements OnInit {
 
   ngOnInit() {
     this.tree = Array.isArray(this.tree) ? this.tree : [this.tree];
-    this.options = this.parseOptions(defaultOptions);
-    const customOrderValidator = this.validatorService.validateCustomOrder(this.tree[0], this.options.customColumnOrder);
-    if (this.options.customColumnOrder && !customOrderValidator.valid) {
-      throw new Error(`
+    if (this.tree.length != 0) {
+      this.options = this.parseOptions(defaultOptions);
+      const customOrderValidator = this.validatorService.validateCustomOrder(this.tree[0], this.options.customColumnOrder);
+      if (this.options.customColumnOrder && !customOrderValidator.valid) {
+        throw new Error(`
         Properties ${customOrderValidator.xor.map(x => `'${x}'`).join(', ')} incorrect or missing in customColumnOrder`
-      );
+        );
+      }
+      this.displayedColumns = this.options.customColumnOrder
+        ? this.options.customColumnOrder
+        : this.extractNodeProps(this.tree[0]);
+      this.searchableTree = this.tree.map(t => this.converterService.toSearchableTree(t));
+      const treeTableTree = this.searchableTree.map(st => this.converterService.toTreeTableTree(st));
+      this.treeTable = _.flatMap(treeTableTree, this.treeService.flatten);
+      this.dataSource = this.generateDataSource();
     }
-    this.displayedColumns = this.options.customColumnOrder
-      ? this.options.customColumnOrder
-      : this.extractNodeProps(this.tree[0]);
-    this.searchableTree = this.tree.map(t => this.converterService.toSearchableTree(t));
-    const treeTableTree = this.searchableTree.map(st => this.converterService.toTreeTableTree(st));
-    this.treeTable = _.flatMap(treeTableTree, this.treeService.flatten);
-    this.dataSource = this.generateDataSource();
   }
 
   extractNodeProps(tree: Node<T> & { value: { [k: string]: any } }): string[] {
@@ -68,9 +70,9 @@ export class TreetableComponent<T> implements OnInit {
     return '&nbsp;'.repeat(node.depth * step);
   }
 
-	formatElevation(): string {
-		return `mat-elevation-z${this.options.elevation}`;
-	}
+  formatElevation(): string {
+    return `mat-elevation-z${this.options.elevation}`;
+  }
 
   onNodeClick(clickedNode: TreeTableNode<T>): void {
     clickedNode.isExpanded = !clickedNode.isExpanded;
@@ -90,7 +92,7 @@ export class TreetableComponent<T> implements OnInit {
     return _.defaults(this.options, defaultOpts);
   }
 
-  get GetElement(){
+  get GetElement() {
     return {
       // element = this.
     }

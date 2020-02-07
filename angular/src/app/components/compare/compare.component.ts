@@ -1,6 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { CompareItem } from '../../model/compareItem';
 import { CompareItemsService } from '../../services/compare/compare-items.service';
+import { Node, Options } from '../treetable/treetable.module' 
+import { ENVCONFIG } from 'src/app/model/evntreetable';
+import { ConfigurationItemsService } from 'src/app/services/configuration/configuration-items.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-compare',
@@ -8,8 +12,14 @@ import { CompareItemsService } from '../../services/compare/compare-items.servic
   styleUrls: ['./compare.component.css']
 })
 export class CompareComponent implements OnInit {
-
-  constructor(private compareService: CompareItemsService) { }
+  nodesSubscription : Subscription;
+  constructor(private compareService: CompareItemsService, private configItemService: ConfigurationItemsService) { 
+    this.nodesSubscription = this.configItemService.treeNodes.subscribe(e => {
+      if(e) {
+        this.nodesTree = e;
+      }
+    })
+  }
 
   ngOnInit() {
   }
@@ -25,6 +35,7 @@ export class CompareComponent implements OnInit {
   ngOnChanges(changes) {
      if(this.showCompare){
        this.getConfigData();
+       this.configItemService.generateTree();
      }
   }
 
@@ -39,8 +50,15 @@ export class CompareComponent implements OnInit {
 
   }
 
-  /*close(){
-    this.showCompare = false;
-    this.notifyCompareClose.emit(true);
-  }*/
+  nodesTree: Node<ENVCONFIG>[];
+
+  treeOptions: Options<ENVCONFIG> = {
+    capitalisedHeader: true,
+  };
+
+  logNode(node: Node<ENVCONFIG>) {
+    console.log(node);
+  }
 }
+
+

@@ -2,6 +2,9 @@ import { ConfigurationItem } from 'src/app/model/configurationItem';
 import { Injectable, OnDestroy } from '@angular/core';
 import { ZabbixClient } from "zabbix-client";
 import { ServerConfiguration } from 'src/config/ServerConfiguration';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import { ENVCONFIG } from 'src/app/model/evntreetable';
+import { Node } from 'src/app/components/treetable/treetable.module' 
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +13,9 @@ export class ConfigurationItemsService implements OnDestroy {
   ngOnDestroy(): void {
     this.client = null;
   }
+  
+  zabbixResult: BehaviorSubject<JSON[]> = new BehaviorSubject<JSON[]>([]);
+  treeNodes: BehaviorSubject<Node<ENVCONFIG>[]> = new BehaviorSubject<Node<ENVCONFIG>[]>([]);
 
   client: ZabbixClient;
   itemlist: ConfigurationItem[];
@@ -34,6 +40,7 @@ export class ConfigurationItemsService implements OnDestroy {
             'selectItems': 'extend',
           }, false)
           .then(result => {
+            this.zabbixResult.next(result as JSON[]);
             this.itemlist = this.createServerConf(result as JSON[]);
             resolve();
           })
@@ -111,5 +118,68 @@ export class ConfigurationItemsService implements OnDestroy {
   }
   createItem(env: string, key: string, val: string): ConfigurationItem {
     return new ConfigurationItem(env, key, val);
+  }
+
+  generateTree(): void {
+    let arrayOfNodesTree: Node<ENVCONFIG>[] = [
+      {
+        value: {
+          configname: "Test",
+          name: 'Tasks for Sprint 1',
+          owner: 'Marco'
+        },
+        children: [
+          {
+            value: {
+              configname: "Test"
+            },
+            children: []
+          },
+          {
+            value: {
+              configname: "test",
+              name: 'Update documentation',
+              owner: 'Jane'
+            },
+            children: [
+              {
+                value: {
+                  configname: "test2",
+                  name: 'Proofread documentation',
+                  owner: 'Bob'
+                },
+                children: []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        value: {
+          configname: "test2",
+          name: 'Tasks for Sprint 2',
+          owner: 'Erika',
+        },
+        children: [
+          {
+            value: {
+              configname: "test2",
+              name: 'Fix bug #567',
+              owner: 'Marco'
+            },
+            children: []
+          },
+          {
+            value: {
+              configname: "test2",
+              name: 'Speak with clients',
+              owner: 'James'
+            },
+            children: []
+          }
+        ]
+      }
+    ]
+    this.treeNodes.next(arrayOfNodesTree);
   }
 }

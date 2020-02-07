@@ -19,7 +19,8 @@
             </div>
           </div>
           <div *ngIf="!isFirst">
-            {{element.value[column]}}
+            <ng-container *ngTemplateOutlet="customElement ? customElement : defaultBodyElement; context:{$implicit : {element:element,column : column} }">
+          </ng-container>
           </div>
         </td>
       </ng-container>
