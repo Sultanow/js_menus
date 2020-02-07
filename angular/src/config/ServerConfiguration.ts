@@ -66,12 +66,12 @@ export class ServerConfiguration {
             children: [
                 {
                     value: {
-                        configname: "Level2 - 1"
+                        configname: "Level2 - 5"
                     },
                     children: [
                         {
                             value: {
-                                configname: "Level3 - 1"
+                                configname: "Level3 - 3"
                             },
                             children: [
                             ]
@@ -87,7 +87,7 @@ export class ServerConfiguration {
             children: [
                 {
                     value: {
-                        configname: "Level2 - 1"
+                        configname: "Level2 - 6"
                     },
                     children: [
                     ]

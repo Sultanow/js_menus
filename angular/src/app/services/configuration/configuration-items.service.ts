@@ -4,7 +4,7 @@ import { ZabbixClient } from "zabbix-client";
 import { ServerConfiguration } from 'src/config/ServerConfiguration';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { ENVCONFIG } from 'src/app/model/evntreetable';
-import { Node } from 'src/app/components/treetable/treetable.module' 
+import { Node } from 'src/app/components/treetable/treetable.module'
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class ConfigurationItemsService implements OnDestroy {
   ngOnDestroy(): void {
     this.client = null;
   }
-  
+
   zabbixResult: BehaviorSubject<JSON[]> = new BehaviorSubject<JSON[]>([]);
   treeNodes: BehaviorSubject<Node<ENVCONFIG>[]> = new BehaviorSubject<Node<ENVCONFIG>[]>([]);
 
@@ -122,10 +122,13 @@ export class ConfigurationItemsService implements OnDestroy {
 
   generateTree(env?: string[]): void {
     let tree = this.buildEmptyTree();
-    if(env != null) {
+    if (env != null) {
       env.forEach(e => {
         tree = this.addEnvToTree(tree, e);
       })
+    }
+    if (tree != null) {
+      this.fillValuesToArray(tree);
     }
     this.treeNodes.next(tree);
   }
@@ -142,12 +145,62 @@ export class ConfigurationItemsService implements OnDestroy {
     return tree;
   }
 
-  addEnv(node: Node<ENVCONFIG>, env: string) {
+  addEnv(node: Node<ENVCONFIG>, env: string): void {
     node.value[env] = "";
-    if(node.children.length != 0) {
+    if (node.children.length != 0) {
       node.children.forEach(c => {
         this.addEnv(c, env);
       })
     }
+  }
+
+  fillValuesToArray(tree: Node<ENVCONFIG>[]): void {
+    tree.forEach(i => {
+      this.fillValues(i);
+    })
+  }
+
+  fillValues(node: Node<ENVCONFIG>): void {
+    if (this.itemlist && this.itemlist.length != 0) {
+      this.itemlist.forEach(i => {
+        if (i.key == node.value.configname && node.value[i.env] === "") {
+          node.value[i.env] = i.value;
+          return;
+        }
+        if (node.children.length != 0) {
+          node.children.forEach(c => {
+            this.fillValues(c);
+          })
+        }
+      });
+    }
+  }
+
+  createDummyDataTable(): void {
+    let items: ConfigurationItem[] = [];
+    items.push(this.createItem("Dev1", "SW-Version", "20.02.00_5"))
+    items.push(this.createItem("Dev1", "Silbentrennung", "an"))
+    items.push(this.createItem("Dev1", "Text-Version", "V20.02.00_2"))
+    items.push(this.createItem("Dev1", "Hilfsapplication-Version", "2.03.1"))
+    items.push(this.createItem("Dev4", "SW-Version", "19.02.00_52"))
+    items.push(this.createItem("dev1", "Top1", "dev1 - Top1"));
+    items.push(this.createItem("dev2", "Top1", "dev2 - Top1"));
+    items.push(this.createItem("dev1", "Level2 - 1", "dev1 - Level2 - 1"));
+    items.push(this.createItem("dev2", "Level2 - 1", "dev2 - Level2 - 1"));
+    items.push(this.createItem("dev1", "Level2 - 2", "dev1 - Level2 - 2"));
+    items.push(this.createItem("dev2", "Level2 - 2", "dev2 - Level2 - 2"));
+    items.push(this.createItem("dev1", "Level2 - 3", "dev1 - Level2 - 3"));
+    items.push(this.createItem("dev2", "Level2 - 3", "dev2 - Level2 - 3"));
+    items.push(this.createItem("dev1", "Level2 - 4", "dev1 - Level2 - 4"));
+    items.push(this.createItem("dev2", "Level2 - 4", "dev2 - Level2 - 4"));
+    items.push(this.createItem("dev1", "Level2 - 5", "dev1 - Level2 - 5"));
+    items.push(this.createItem("dev2", "Level2 - 5", "dev2 - Level2 - 5"));
+    items.push(this.createItem("dev1", "Level2 - 6", "dev1 - Level2 - 6"));
+    items.push(this.createItem("dev2", "Level2 - 6", "dev2 - Level2 - 6"));
+    items.push(this.createItem("dev2", "Top2", "dev2 - Top2"));
+    items.push(this.createItem("dev1", "Top2", "dev1 - Top2"));
+    items.push(this.createItem("dev2", "Top3", "dev2 - Top3"));
+    items.push(this.createItem("dev1", "Top3", "dev1 - Top3"));
+    this.itemlist = items;
   }
 }
