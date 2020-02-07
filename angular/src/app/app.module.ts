@@ -6,7 +6,8 @@ import { MatCardModule,
   MatFormFieldModule,
   MatInputModule,
   MatRadioModule,
-  MatSelectModule } from '@angular/material';
+  MatSelectModule, 
+  MatTableModule} from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
@@ -85,6 +86,7 @@ import { TreetableComponent } from './components/treetable/component/treetable.c
     MatInputModule,
     MatRadioModule,
     MatSelectModule,
+    MatTableModule,
     ReactiveFormsModule,
     DragDropModule,
 
