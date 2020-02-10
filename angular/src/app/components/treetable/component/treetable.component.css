@@ -22,7 +22,7 @@ table {
   }
   
   .mat-cell, .mat-header-cell {
-    padding: 10px;
+    /*padding: 10px;*/
   }
   
   .vertical-separator {
@@ -31,4 +31,8 @@ table {
   
   td div {
     word-break: break-all;
+  }
+
+  .tableDataStyle {
+    position: relative;
   }

@@ -86,6 +86,10 @@
   }
   div#view-box-content {
       padding-left: 2%;
+      padding-right: 2%;
+      height: 90%;
+      overflow: scroll;
+      overflow-x: hidden;
   }
   
   div > header {

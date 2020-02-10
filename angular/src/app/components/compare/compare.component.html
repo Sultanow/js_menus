@@ -46,9 +46,20 @@
     <div *ngIf="el.element.value[el.column]">
       <textarea rows=1 disabled="true">{{el.element.value[el.column].ist}}</textarea>
       <textarea rows=1>{{el.element.value[el.column].soll}}</textarea>
-      <div *ngIf="!el.element.value[el.column].identic" ><p>Not Identic</p></div>
-      <div *ngIf="el.element.value[el.column].identic" ><p>Identic</p></div>
+      <div *ngIf="!el.element.value[el.column].identic">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="red"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </div>
+      <div *ngIf="el.element.value[el.column].identic" class="checkItem">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="green"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
     </div>
-    
+
   </div>
 </ng-template>

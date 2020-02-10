@@ -1,21 +1,30 @@
 <div id="view-box" *ngIf="showViewBox" cdkDragBoundary=".container" cdkDrag>
-    <header>
-      <button class="close" (click)="close()">
-        <svg  width="32px" height="32px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M405 136.798L375.202 107 256 226.202 136.798 107 107 136.798 226.202 256 107 375.202 136.798 405 256 285.798 375.202 405 405 375.202 285.798 256z" fill="#ffffff"/></svg>
-      </button>
-      {{title}}
-    </header>
-    <!-- TODO: Load dynamically the components -->
-    <div id="view-box-content">
-        <app-compare [showCompare]="showCompare" (notifyTitle)="onNotifyTitle($event)"></app-compare>
-        <app-statistic [showStatistic]="showStatistic" [batchtimes]="loadBatches" (notifyTitle)="onNotifyTitle($event)"></app-statistic>
-        <app-batches [showBatches]="showBatches" (notifyTitle)="onNotifyTitle($event)"></app-batches>
-        <app-dependencycharts [showDependency]="showDependency" (notifyTitle)="onNotifyTitle($event)"></app-dependencycharts>
-        <app-warnings [showWarnings]="showWarnings" (notifyTitle)="onNotifyTitle($event)"></app-warnings>
-        <app-news [showNews]="showNews" (notifyTitle)="onNotifyTitle($event)"></app-news>
-        <app-configuration-view [showConfigView]="showConfigView" [viewType]="viewType" (notifyTitle)="onNotifyTitle($event)"></app-configuration-view>
-        <app-right-management [showRightManagement]="showRightManagement" [viewType]="viewType" (notifyTitle)="onNotifyTitle($event)"></app-right-management>
-        <app-tracker [showTracker]="showTracker" [viewType]="viewType" (notifyTitle)="onNotifyTitle($event)"></app-tracker>
+  <header>
+    <button class="close" (click)="close()">
+      <svg width="32px" height="32px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <path
+          d="M405 136.798L375.202 107 256 226.202 136.798 107 107 136.798 226.202 256 107 375.202 136.798 405 256 285.798 375.202 405 405 375.202 285.798 256z"
+          fill="#ffffff" /></svg>
+    </button>
+    {{title}}
+  </header>
+  <!-- TODO: Load dynamically the components -->
+  <div id="view-box-content">
+    <div id="box">
+      <app-compare [showCompare]="showCompare" (notifyTitle)="onNotifyTitle($event)"></app-compare>
+      <app-statistic [showStatistic]="showStatistic" [batchtimes]="loadBatches" (notifyTitle)="onNotifyTitle($event)">
+      </app-statistic>
+      <app-batches [showBatches]="showBatches" (notifyTitle)="onNotifyTitle($event)"></app-batches>
+      <app-dependencycharts [showDependency]="showDependency" (notifyTitle)="onNotifyTitle($event)">
+      </app-dependencycharts>
+      <app-warnings [showWarnings]="showWarnings" (notifyTitle)="onNotifyTitle($event)"></app-warnings>
+      <app-news [showNews]="showNews" (notifyTitle)="onNotifyTitle($event)"></app-news>
+      <app-configuration-view [showConfigView]="showConfigView" [viewType]="viewType"
+        (notifyTitle)="onNotifyTitle($event)"></app-configuration-view>
+      <app-right-management [showRightManagement]="showRightManagement" [viewType]="viewType"
+        (notifyTitle)="onNotifyTitle($event)"></app-right-management>
+      <app-tracker [showTracker]="showTracker" [viewType]="viewType" (notifyTitle)="onNotifyTitle($event)">
+      </app-tracker>
     </div>
+  </div>
 </div>
-  
