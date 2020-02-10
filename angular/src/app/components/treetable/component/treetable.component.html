@@ -13,7 +13,7 @@
                 (click)="onNodeClick(element)">
                 {{element.isExpanded ? 'keyboard_arrow_down' : 'keyboard_arrow_right'}}
               </mat-icon>
-              <ng-container *ngTemplateOutlet="customElement ? customElement : defaultBodyElement; context:{$implicit : {element:element,column : column} }">
+              <ng-container *ngTemplateOutlet="customElementKey ? customElementKey : defaultBodyElement; context:{$implicit : {element:element,column : column} }">
               </ng-container>
   
             </div>

@@ -19,6 +19,7 @@ export class TreetableComponent<T> implements OnInit {
   @Input() options: Options<T> = {};
   @Output() nodeClicked: Subject<TreeTableNode<T>> = new Subject();
   @Input('body') customElement: TemplateRef<any>; //custom template injection
+  @Input('body_key') customElementKey: TemplateRef<any>;
 
 
   private searchableTree: SearchableNode<T>[];
@@ -59,7 +60,7 @@ export class TreetableComponent<T> implements OnInit {
   }
 
   extractNodeProps(tree: Node<T> & { value: { [k: string]: any } }): string[] {
-    return Object.keys(tree.value).filter(x => typeof tree.value[x] !== 'object');
+    return Object.keys(tree.value);//.filter(x => typeof tree.value[x] !== 'object');
   }
 
   generateDataSource(): MatTableDataSource<TreeTableNode<T>> {

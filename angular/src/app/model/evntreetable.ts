@@ -6,4 +6,5 @@ export type ENVCONFIG = {
 export type ENVVAL = {
     ist: string;
     soll: string;
+    identic: boolean;
 }

@@ -3,7 +3,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { ZabbixClient } from "zabbix-client";
 import { ServerConfiguration } from 'src/config/ServerConfiguration';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
-import { ENVCONFIG } from 'src/app/model/evntreetable';
+import { ENVCONFIG, ENVVAL } from 'src/app/model/evntreetable';
 import { Node } from 'src/app/components/treetable/treetable.module'
 
 @Injectable({
@@ -164,7 +164,12 @@ export class ConfigurationItemsService implements OnDestroy {
     if (this.itemlist && this.itemlist.length != 0) {
       this.itemlist.forEach(i => {
         if (i.key == node.value.configname && node.value[i.env] === "") {
-          node.value[i.env] = i.value;
+          let item: ENVVAL = {
+            ist: i.value,
+            soll: i.soll,
+            identic: i.identic
+          }
+          node.value[i.env] = item;
           return;
         }
         if (node.children.length != 0) {
