@@ -22,7 +22,7 @@ export class ConfigurationViewComponent implements OnInit {
   async ngOnChanges(changes) {
     if(this.showConfigView){
       await this.configService.getServerConfiguration().then(x =>{
-        this.config = this.configService.getItemlist();
+        this.config = this.configService.itemlist;
         console.log(this.config);
       });
       console.log("After");

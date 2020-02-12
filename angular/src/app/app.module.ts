@@ -7,7 +7,8 @@ import { MatCardModule,
   MatInputModule,
   MatRadioModule,
   MatSelectModule, 
-  MatTableModule} from '@angular/material';
+  MatTableModule,
+  MatMenuModule} from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
@@ -44,7 +45,7 @@ import { StatusWarningsComponent } from './components/status-warnings/status-war
 import { ConfigurationViewComponent } from './components/configuration-view/configuration-view.component';
 import { RightManagementComponent } from './components/right-management/right-management.component';
 import { TrackerComponent } from './components/tracker/tracker.component';
-import { TreetableComponent } from './components/treetable/component/treetable.component';
+import { TreetableModule } from './components/treetable/treetable.module';
 
 
 @NgModule({
@@ -71,8 +72,7 @@ import { TreetableComponent } from './components/treetable/component/treetable.c
     StatusWarningsComponent,
     ConfigurationViewComponent,
     RightManagementComponent,
-    TrackerComponent,
-    TreetableComponent
+    TrackerComponent
   ],
   imports: [
     BrowserModule,
@@ -87,8 +87,10 @@ import { TreetableComponent } from './components/treetable/component/treetable.c
     MatRadioModule,
     MatSelectModule,
     MatTableModule,
+    MatMenuModule,
     ReactiveFormsModule,
     DragDropModule,
+    TreetableModule,
 
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.

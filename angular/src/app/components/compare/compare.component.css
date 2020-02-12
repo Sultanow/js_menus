@@ -1,14 +1,22 @@
 /* CompareComponent's private CSS styles */
 
-  table#compare-table td, table#compare-table th{
-    padding: 10px;
-    border-bottom: 1px solid rgba(255,255,255,0.6);
-    table-layout: fixed;
-  }
+table#compare-table td, table#compare-table th {
+  padding: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+  table-layout: fixed;
+}
 
-  .checkItem {
-    position: absolute;
-    top:0;
-    right: 0;
-  }
-  
+.checkItem {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.textarea_1 {
+  padding: 7px 0 0 25px;
+}
+
+.textarea_items {
+  resize: none;
+  margin: -3px 0 0 0;
+}

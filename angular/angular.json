@@ -61,6 +61,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
+            "aot": true,
             "browserTarget": "angular-radial-menu:build",
             "proxyConfig": "src/proxy.conf.json"
           },

@@ -18,13 +18,15 @@ export class ConfigurationItemsService implements OnDestroy {
   treeNodes: BehaviorSubject<Node<ENVCONFIG>[]> = new BehaviorSubject<Node<ENVCONFIG>[]>([]);
 
   client: ZabbixClient;
-  itemlist: ConfigurationItem[];
+  private _itemlist: ConfigurationItem[] = [];
+  public get itemlist(): ConfigurationItem[] {
+    return this._itemlist;
+  }
+  public set itemlist(value: ConfigurationItem[]) {
+    this._itemlist = value;
+  }
 
   constructor() { }
-
-  getItemlist(): ConfigurationItem[] {
-    return this.itemlist;
-  }
 
   async getServerConfiguration(): Promise<{}> {
     return new Promise((resolve, reject) => {
@@ -127,6 +129,7 @@ export class ConfigurationItemsService implements OnDestroy {
         tree = this.addEnvToTree(tree, e);
       })
     }
+    this.setSollValues();
     if (tree != null) {
       this.fillValuesToArray(tree);
     }
@@ -163,7 +166,7 @@ export class ConfigurationItemsService implements OnDestroy {
   fillValues(node: Node<ENVCONFIG>): void {
     if (this.itemlist && this.itemlist.length != 0) {
       this.itemlist.forEach(i => {
-        if (i.key == node.value.configname && node.value[i.env] === "") {
+        if (i.key == node.value.Konfigurationsparameter && node.value[i.env] === "") {
           let item: ENVVAL = {
             ist: i.value,
             soll: i.soll,
@@ -183,11 +186,11 @@ export class ConfigurationItemsService implements OnDestroy {
 
   createDummyDataTable(): void {
     let items: ConfigurationItem[] = [];
-    items.push(this.createItem("Dev1", "SW-Version", "20.02.00_5"))
-    items.push(this.createItem("Dev1", "Silbentrennung", "an"))
-    items.push(this.createItem("Dev1", "Text-Version", "V20.02.00_2"))
-    items.push(this.createItem("Dev1", "Hilfsapplication-Version", "2.03.1"))
-    items.push(this.createItem("Dev4", "SW-Version", "19.02.00_52"))
+    items.push(this.createItem("dev1", "SW-Version", "20.02.00_5"))
+    items.push(this.createItem("dev1", "Silbentrennung", "an"))
+    items.push(this.createItem("dev1", "Text-Version", "V20.02.00_2"))
+    items.push(this.createItem("dev1", "Hilfsapplication-Version", "2.03.1"))
+    items.push(this.createItem("dev4", "SW-Version", "19.02.00_52"))
     items.push(this.createItem("dev1", "Top1", "dev1 - Top1"));
     items.push(this.createItem("dev2", "Top1", "dev2 - Top1"));
     items.push(this.createItem("dev1", "Level2 - 1", "dev1 - Level2 - 1"));
@@ -206,6 +209,13 @@ export class ConfigurationItemsService implements OnDestroy {
     items.push(this.createItem("dev1", "Top2", "dev1 - Top2"));
     items.push(this.createItem("dev2", "Top3", "dev2 - Top3"));
     items.push(this.createItem("dev1", "Top3", "dev1 - Top3"));
-    this.itemlist = items;
+
+    items.forEach(x => {
+      this.itemlist.push(x);
+    })
+  }
+  setSollValues(): void {
+    this.itemlist.forEach(element => {
+    });
   }
 }
