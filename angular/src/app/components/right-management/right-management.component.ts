@@ -6,7 +6,7 @@ import { ConfigurationItemsService } from 'src/app/services/configuration/config
 @Component({
   selector: 'app-right-management',
   templateUrl: './right-management.component.html',
-  styleUrls: ['./right-management.component.css','../viewbox/viewbox.component.css']
+  styleUrls: [ './right-management.component.css', '../viewbox/viewbox.component.css' ]
 })
 export class RightManagementComponent implements OnInit {
 
@@ -16,17 +16,17 @@ export class RightManagementComponent implements OnInit {
   headline: string;
   infos: ConfigurationItem[];
 
-  constructor(private configurationService: ConfigurationItemsService) { }
+  constructor (private configurationService: ConfigurationItemsService) { }
 
   ngOnInit() {
   }
 
   ngOnChanges(changes) {
     if (this.showRightManagement) {
-      if(this.viewType === "test") {
+      if (this.viewType === "test") {
         this.headline = "Rechte für Testumgebungen";
         this.infos = this.configurationService.getRightConfigurationTest();
-        this.notifyTitle.emit("Test")
+        this.notifyTitle.emit("Test");
       } else if (this.viewType === "dev") {
         this.headline = "Rechte für Dev-Umgebungen";
         this.infos = this.configurationService.getRightConfigurationDev();

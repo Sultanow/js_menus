@@ -9,7 +9,7 @@ div#details-box {
     top: 100px;
 }
 
-div > header {
+div>header {
     top: 0px;
     position: relative;
     height: 40px;
@@ -18,18 +18,18 @@ div > header {
     margin-bottom: 10px;
 }
 
-div > header .close {
+div>header .close {
     background: none;
     border: none;
     cursor: pointer;
 }
 
-table#config-table{
+table#config-table {
     margin: auto;
     width: 100%;
 }
 
-table#config-table td, table#config-table th{
+table#config-table td, table#config-table th {
     padding: 10px;
-    border-bottom: 1px solid rgba(255,255,255,0.6);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.6);
 }

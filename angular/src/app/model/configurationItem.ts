@@ -6,7 +6,7 @@ export class ConfigurationItem {
     soll: string;
     identic: boolean;
 
-    constructor(env: string, key:string, value:string){
+    constructor (env: string, key: string, value: string) {
         this.env = env;
         this.key = key;
         this.value = value;

@@ -6,14 +6,14 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class SouthMenuComponent implements OnInit {
 
-  constructor() { }
+  constructor () { }
 
   ngOnInit() {
   }
 
   @Input() isOpen: boolean;
   @Output() notifyEventOpen = new EventEmitter<string>();
-  
+
   openConfig() {
     this.notifyEventOpen.emit("serverconfig");
   }
@@ -26,5 +26,5 @@ export class SouthMenuComponent implements OnInit {
     this.notifyEventOpen.emit("batches");
   }
 
-  
+
 }

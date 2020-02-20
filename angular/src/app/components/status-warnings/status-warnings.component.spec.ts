@@ -10,7 +10,7 @@ describe('StatusWarningsComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ StatusWarningsComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

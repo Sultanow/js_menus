@@ -1,28 +1,30 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { MatCardModule,
+import {
+  MatCardModule,
   MatIconModule,
   MatDialogModule,
   MatFormFieldModule,
   MatInputModule,
   MatRadioModule,
-  MatSelectModule, 
-  MatTableModule} from '@angular/material';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+  MatSelectModule,
+  MatTableModule
+} from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 
 // Middle Layer
 import { NorthMenuComponent as M_NorthMenuComponent } from './menus/middle/north-menu/north-menu.component';
-import { EastMenuComponent as M_EastMenuComponent} from './menus/middle/east-menu/east-menu.component';
+import { EastMenuComponent as M_EastMenuComponent } from './menus/middle/east-menu/east-menu.component';
 import { SouthMenuComponent as M_SouthMenuComponent } from './menus/middle/south-menu/south-menu.component';
-import { WestMenuComponent as M_WestMenuComponent} from './menus/middle/west-menu/west-menu.component';
+import { WestMenuComponent as M_WestMenuComponent } from './menus/middle/west-menu/west-menu.component';
 
 // Outside Layer
 import { NorthMenuComponent as O_NorthMenuComponent } from './menus/outside/north-menu/north-menu.component';
-import { EastMenuComponent as O_EastMenuComponent} from './menus/outside/east-menu/east-menu.component';
+import { EastMenuComponent as O_EastMenuComponent } from './menus/outside/east-menu/east-menu.component';
 import { SouthMenuComponent as O_SouthMenuComponent } from './menus/outside/south-menu/south-menu.component';
-import { WestMenuComponent as O_WestMenuComponent} from './menus/outside/west-menu/west-menu.component';
+import { WestMenuComponent as O_WestMenuComponent } from './menus/outside/west-menu/west-menu.component';
 
 // Configuration Service
 import { ConfigurationService } from './services/configuration.service';
@@ -101,8 +103,8 @@ import { TreetableComponent } from './components/treetable/component/treetable.c
     ConfigurationService,
     DetailsComponent
   ],
-  bootstrap: [AppComponent],
-  entryComponents: [EditDialog, DependencyChartsComponent]
+  bootstrap: [ AppComponent ],
+  entryComponents: [ EditDialog, DependencyChartsComponent ]
 
 })
 export class AppModule { }

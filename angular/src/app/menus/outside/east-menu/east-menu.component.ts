@@ -12,19 +12,17 @@ export class EastMenuComponent implements OnInit {
   @Output() notifyWarningOpen = new EventEmitter<boolean>();
   @Output() notifyEventOpen = new EventEmitter<string>();
 
-  constructor() { }
+  constructor () { }
 
   ngOnInit() {
   }
 
   openStatistic() {
-    //this.notifyStatisticOpen.emit(true);
     this.notifyEventOpen.emit("statistic");
   }
 
   openNews() {
     this.notifyEventOpen.emit("news");
-    //this.notifyNewsOpen.emit(true);
   }
 
   openWarning() {

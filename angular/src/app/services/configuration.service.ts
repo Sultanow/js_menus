@@ -7,29 +7,29 @@ import { ServerConfiguration } from 'src/config/ServerConfiguration';
 @Injectable()
 export class ConfigurationService {
 
-    constructor(private http: HttpClient) { }
+    constructor (private http: HttpClient) { }
 
     getStaticConfiguration(): Promise<Configuration> {
-        return this.http.get( ServerConfiguration.SERVICE_URL + "/static/configuration" )
+        return this.http.get(ServerConfiguration.SERVICE_URL + "/static/configuration")
             .toPromise()
-            .then( response => response as Configuration )
-    }    
+            .then(response => response as Configuration);
+    }
 
     getRedisConfiguration(...theArgs): Promise<Configuration[]> {
-        let keys:string = "";
+        let keys: string = "";
         // concat keys e.g. get?key=1&key=2...
         for (let i = 0; i < theArgs.length; i++) {
-            let keyToAdd:string = theArgs[i] as string;
-            if(i==0){
+            let keyToAdd: string = theArgs[ i ] as string;
+            if (i == 0) {
                 keys += keyToAdd;
             }
-            else{
-                keys += "&key="+ keyToAdd;
+            else {
+                keys += "&key=" + keyToAdd;
             }
         }
 
-        return this.http.get( ServerConfiguration.SERVICE_URL + "/redis/configuration/get?key=" + keys)
+        return this.http.get(ServerConfiguration.SERVICE_URL + "/redis/configuration/get?key=" + keys)
             .toPromise()
-            .then( response => response as Configuration[] )
-    }  
+            .then(response => response as Configuration[]);
+    }
 }

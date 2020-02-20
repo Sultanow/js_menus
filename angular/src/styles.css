@@ -1,7 +1,7 @@
-@import url( 'https://fonts.googleapis.com/css?family=Roboto:400,700|Material+Icons');
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700|Material+Icons');
 @import "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
-
 /* You can add global styles to this file, and also import other style files */
+
 * {
     padding: 0;
     margin: 0;
@@ -20,18 +20,18 @@
 body {
     font-family: 'Open Sans', sans-serif;
 }
- 
+
 .container {
     position: relative;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
     -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
     -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
     width: 100vw;
     height: 100vh;
     min-width: 100vw;
@@ -44,18 +44,17 @@ body {
 [class$="-button"] {
     cursor: pointer;
 }
-  
-[class$="-button"] > circle {
+
+[class$="-button"]>circle {
     opacity: 0;
     -webkit-transition: opacity 250ms;
     transition: opacity 250ms;
 }
 
-[class$="-button"]:hover > circle {
+[class$="-button"]:hover>circle {
     opacity: 0.6;
 }
 
 [class$="-button"] path {
     pointer-events: none;
 }
-

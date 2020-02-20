@@ -7,18 +7,18 @@ import { Configuration } from 'src/app/model/configuration';
   templateUrl: './north-menu.component.html'
 })
 export class NorthMenuComponent implements OnInit {
-  
+
   @Input() isOpen: boolean;
 
   // Notify parent (app) when details box should open
   @Output() notifyEventOpen = new EventEmitter<string>();
 
-  constructor(private configService: ConfigurationService) { }
+  constructor (private configService: ConfigurationService) { }
 
   openTest() {
     this.notifyEventOpen.emit("test");
-      }
-  
+  }
+
   openDev() {
     this.notifyEventOpen.emit("dev");
   }
@@ -26,7 +26,7 @@ export class NorthMenuComponent implements OnInit {
   openProd() {
     this.notifyEventOpen.emit("prod");
   }
-  
+
   ngOnInit() {
   }
 

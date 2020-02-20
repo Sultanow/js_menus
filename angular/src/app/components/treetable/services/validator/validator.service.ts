@@ -7,7 +7,7 @@ import * as _ from 'lodash';
 })
 export class ValidatorService {
 
-  validateCustomOrder<T, K extends Node<T>>(node: K | any, customColumnOrder: Array<keyof T> & string[]): { valid: boolean, xor: string[] } {
+  validateCustomOrder<T, K extends Node<T>>(node: K | any, customColumnOrder: Array<keyof T> & string[]): { valid: boolean, xor: string[]; } {
     const xor = _.xor(Object.keys(node.value), customColumnOrder);
     return {
       valid: _.isEmpty(xor),

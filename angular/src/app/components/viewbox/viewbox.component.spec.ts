@@ -10,7 +10,7 @@ describe('ViewboxComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ ViewboxComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

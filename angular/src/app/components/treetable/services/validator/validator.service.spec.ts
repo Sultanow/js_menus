@@ -14,7 +14,7 @@ describe('ValidatorService', () => {
 
   it('should correctly process valid customColumnOrders', () => {
     const service: ValidatorService = TestBed.get(ValidatorService);
-    const validCustomOrder: Array<keyof Folder>  =  ['backup', 'owner', 'protected', 'name'];
+    const validCustomOrder: Array<keyof Folder> = [ 'backup', 'owner', 'protected', 'name' ];
     expect(service.validateCustomOrder(mockSearchableTree, validCustomOrder)).toEqual({
       valid: true,
       xor: []
@@ -23,28 +23,28 @@ describe('ValidatorService', () => {
 
   it('should correctly process invalid customColumnOrders with missing properties', () => {
     const service: ValidatorService = TestBed.get(ValidatorService);
-    const invalidCustomOrder: Array<keyof Folder>  =  ['backup', 'owner', 'protected'];
+    const invalidCustomOrder: Array<keyof Folder> = [ 'backup', 'owner', 'protected' ];
     expect(service.validateCustomOrder(mockSearchableTree, invalidCustomOrder)).toEqual({
       valid: false,
-      xor: ['name']
+      xor: [ 'name' ]
     });
   });
 
   it('should correctly process invalid customColumnOrders with incorrect properties', () => {
     const service: ValidatorService = TestBed.get(ValidatorService);
-    const invalidCustomOrder: any  =  ['backup', 'owner', 'protected', 'name', 'notAValidProperty'];
+    const invalidCustomOrder: any = [ 'backup', 'owner', 'protected', 'name', 'notAValidProperty' ];
     expect(service.validateCustomOrder(mockSearchableTree, invalidCustomOrder)).toEqual({
       valid: false,
-      xor: ['notAValidProperty']
+      xor: [ 'notAValidProperty' ]
     });
   });
 
   it('should correctly process invalid customColumnOrders with incorrect and missing properties', () => {
     const service: ValidatorService = TestBed.get(ValidatorService);
-    const invalidCustomOrder: any  =  ['backup', 'protected', 'name', 'notAValidProperty'];
+    const invalidCustomOrder: any = [ 'backup', 'protected', 'name', 'notAValidProperty' ];
     expect(service.validateCustomOrder(mockSearchableTree, invalidCustomOrder)).toEqual({
       valid: false,
-      xor: ['owner', 'notAValidProperty']
+      xor: [ 'owner', 'notAValidProperty' ]
     });
   });
 

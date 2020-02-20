@@ -6,14 +6,14 @@ import { MessageItem } from 'src/app/model/messageItem';
 })
 export class MessagesService {
 
-  constructor() { }
+  constructor () { }
 
 
-  getSuccessMessages() : MessageItem[] {
+  getSuccessMessages(): MessageItem[] {
     return this.getDummySuccessMessages();
   }
 
-  getDummySuccessMessages() : MessageItem[] {
+  getDummySuccessMessages(): MessageItem[] {
     let messages: MessageItem[] = [];
     messages.push(this.fillMessageItem("Dev2", "Info", "Neugestartet am 26.01.2020"));
     messages.push(this.fillMessageItem("Batch TL1", "Info", "grün"));
@@ -23,11 +23,11 @@ export class MessagesService {
     return messages;
   }
 
-  getFailedMessages() : MessageItem[] {
+  getFailedMessages(): MessageItem[] {
     return this.getDummyFailedMessages();
   }
 
-  getDummyFailedMessages() : MessageItem[] {
+  getDummyFailedMessages(): MessageItem[] {
     let messages: MessageItem[] = [];
     messages.push(this.fillMessageItem("Dev2", "Error", "Neugestartet fehlgeschlagen"));
     messages.push(this.fillMessageItem("Batch TL4", "Warnung", "Laufzeit > 10 Minuten"));

@@ -17,8 +17,8 @@ describe('TreeService', () => {
   it('should search for a node in a tree and return it warapped in Option<> if present', () => {
     const service: TreeService = TestBed.get(TreeService);
     const tree = _.cloneDeep(mockSearchableTree);
-    const expectedNode = tree.children[0];
-    const expectedPathToRoot = [tree];
+    const expectedNode = tree.children[ 0 ];
+    const expectedPathToRoot = [ tree ];
     const id = expectedNode.id;
     expect(service.searchById(tree, id)).toEqual(some({
       ...expectedNode,
@@ -50,13 +50,13 @@ describe('TreeService', () => {
     const tree = _.cloneDeep(mockSearchableTree);
     const expectedFlattenedTree = [
       tree,
-      tree.children[0],
-      tree.children[1],
-      tree.children[2],
-      tree.children[2].children[0],
-      tree.children[2].children[1],
-      tree.children[2].children[1].children[0],
-      tree.children[2].children[1].children[1]
+      tree.children[ 0 ],
+      tree.children[ 1 ],
+      tree.children[ 2 ],
+      tree.children[ 2 ].children[ 0 ],
+      tree.children[ 2 ].children[ 1 ],
+      tree.children[ 2 ].children[ 1 ].children[ 0 ],
+      tree.children[ 2 ].children[ 1 ].children[ 1 ]
     ];
     expect(service.flatten(tree)).toEqual(expectedFlattenedTree);
   });
@@ -64,9 +64,9 @@ describe('TreeService', () => {
   it('should return the depth of a node that\'s in the tree', () => {
     const service: TreeService = TestBed.get(TreeService);
     const tree = _.cloneDeep(mockSearchableTree);
-    const firstLevelNode = tree.children[0];
-    const secondLevelNode = tree.children[2].children[0];
-    const thirdLevelNode = tree.children[2].children[1].children[0];
+    const firstLevelNode = tree.children[ 0 ];
+    const secondLevelNode = tree.children[ 2 ].children[ 0 ];
+    const thirdLevelNode = tree.children[ 2 ].children[ 1 ].children[ 0 ];
     expect(service.getNodeDepth(tree, tree)).toEqual(0);
     expect(service.getNodeDepth(tree, firstLevelNode)).toEqual(1);
     expect(service.getNodeDepth(tree, secondLevelNode)).toEqual(2);

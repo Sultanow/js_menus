@@ -15,7 +15,7 @@ export class DependencyService {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
-  constructor(private http: HttpClient) { }
+  constructor (private http: HttpClient) { }
 
   //////// CRUD methods //////////
 

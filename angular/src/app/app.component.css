@@ -28,8 +28,6 @@
   opacity: 1;
 }
 
-.main-menu .is-active > circle {
+.main-menu .is-active>circle {
   opacity: 1;
 }
-
-

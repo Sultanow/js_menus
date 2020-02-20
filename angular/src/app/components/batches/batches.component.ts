@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { Batch } from '../../model/batch';
 import { BatchService } from '../../services/batches/batches.service';
@@ -6,7 +6,7 @@ import { BatchService } from '../../services/batches/batches.service';
 @Component({
   selector: 'app-batches',
   templateUrl: './batches.component.html',
-  styleUrls: ['./batches.component.css']
+  styleUrls: [ './batches.component.css' ]
 })
 export class BatchesComponent implements OnInit {
   batches: Batch[];
@@ -14,7 +14,7 @@ export class BatchesComponent implements OnInit {
   @Input() editOn: boolean;
   selectedBatch: Batch;
 
-  constructor(private batchService: BatchService) { }
+  constructor (private batchService: BatchService) { }
 
   ngOnInit() {
     this.getBatches();
@@ -33,7 +33,7 @@ export class BatchesComponent implements OnInit {
 
   getBatches(): void {
     this.batchService.getBatches()
-    .subscribe(batches => this.batches = batches);
+      .subscribe(batches => this.batches = batches);
   }
 
   add(id: string): void {

@@ -1,11 +1,11 @@
 export class MessageItem {
-    env: string;
-    type: string;
-    info: string;
+  env: string;
+  type: string;
+  info: string;
 
-    constructor(e: string, t: string, i: string) {
-      this.env = e;
-      this.type = t;
-      this.info = i;
-    }
+  constructor (e: string, t: string, i: string) {
+    this.env = e;
+    this.type = t;
+    this.info = i;
   }
+}

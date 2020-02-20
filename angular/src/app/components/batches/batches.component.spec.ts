@@ -10,7 +10,7 @@ describe('BatchesComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ BatchesComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

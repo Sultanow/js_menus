@@ -10,7 +10,7 @@ describe('CompareComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ CompareComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

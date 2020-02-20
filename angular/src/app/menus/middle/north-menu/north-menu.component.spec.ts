@@ -10,7 +10,7 @@ describe('NorthMenuComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ NorthMenuComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

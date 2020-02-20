@@ -9,7 +9,7 @@ import uuidv4 from 'uuid/v4';
 })
 export class ConverterService {
 
-  constructor(private treeService: TreeService) { }
+  constructor (private treeService: TreeService) { }
 
   /**
    * Clone a Node<T> object and convert it to a SearchableNode<T>

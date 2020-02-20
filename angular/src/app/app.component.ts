@@ -4,7 +4,7 @@ import { TimelineLite } from "gsap";
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
-	styleUrls: ['./app.component.css']
+	styleUrls: [ './app.component.css' ]
 })
 
 export class AppComponent {
@@ -66,24 +66,20 @@ export class AppComponent {
 				transformOrigin: "50% 50%",
 				scale: "0"
 			}, 0)
-
 			.from(".middle-layer .button-group", 0.75, {
 				transformOrigin: "50% 50%",
 				rotation: "-=135"
 			}, 0)
-
 			.from("middle-layer .button-group", 0.5, {
 				opacity: "0"
-			}, 0)
-			;
+			}, 0);
 
 		// Outside
 		this.animate_outside
 			.from(".outside-layer", 0.5, {
 				transformOrigin: "50% 50%",
 				scale: "0"
-			}, 0)
-			;
+			}, 0);
 	}
 
 	initAnimationButton(animate: TimelineLite, classSelector: String) {
@@ -91,7 +87,7 @@ export class AppComponent {
 			transformOrigin: "50% 50%",
 			opacity: "0",
 			scale: "0"
-		}, 0.125, 0.25)
+		}, 0.125, 0.25);
 	}
 
 	openMainMenu() {

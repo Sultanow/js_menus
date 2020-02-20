@@ -1,6 +1,7 @@
 /* BatchesComponent's private CSS styles */
-table#batch-table td, table#batch-table th{
+
+table#batch-table td, table#batch-table th {
   padding: 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.6);
   table-layout: fixed;
 }

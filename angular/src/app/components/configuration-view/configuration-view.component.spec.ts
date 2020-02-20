@@ -10,7 +10,7 @@ describe('ConfigurationViewComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ ConfigurationViewComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

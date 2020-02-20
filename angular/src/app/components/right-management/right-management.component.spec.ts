@@ -10,7 +10,7 @@ describe('RightManagementComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ RightManagementComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

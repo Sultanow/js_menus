@@ -6,10 +6,10 @@ import { TrackerInfos } from 'src/app/model/trackerInfos';
 })
 export class TrackerService {
 
-  constructor() { }
+  constructor () { }
 
   getJiraInfos(): TrackerInfos[] {
-    return this.dummyJiraInfos()
+    return this.dummyJiraInfos();
   }
 
   getBitbucketInfos(): TrackerInfos[] {
@@ -20,10 +20,10 @@ export class TrackerService {
     return this.dummyConflucenceInfos();
   }
 
-  generateInfos(k: string, v: string) : TrackerInfos {
+  generateInfos(k: string, v: string): TrackerInfos {
     return new TrackerInfos(k, v);
   }
-  
+
   dummyJiraInfos(): TrackerInfos[] {
     let infos: TrackerInfos[] = [];
     infos.push(this.generateInfos("Open", "20"));
@@ -39,7 +39,7 @@ export class TrackerService {
     infos.push(this.generateInfos("Abschlossen", "10"));
     return infos;
   }
-  
+
   dummyConflucenceInfos(): TrackerInfos[] {
     let infos: TrackerInfos[] = [];
     infos.push(this.generateInfos("Benötigt Überarbeitung", "120"));

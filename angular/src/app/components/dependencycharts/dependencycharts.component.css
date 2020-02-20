@@ -1,58 +1,9 @@
-/*div#dependencycharts-box {
-  color: #fff;
-  background: rgba(0, 0, 0, 0.5);
-  border: 2px solid #fff;
-  position: absolute;
-  min-width:98%;
-  min-height: 96%;
-  left: 1%;
-  top: 2%;
-}  
-
-div > header {
-  top: 0px;
-  position: relative;
-  height: 40px;
-  background: rgba(0, 0, 0, 0.5);
-  color: #000;
-  margin-bottom: 10px;
-}
-
-.close {
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-button.fancy {
-  text-align: center;
-  left: 10px;
-  top: 0px;
-  background-color: gray !important;
-  color: white;
-}
-*/
 .chart-card {
   max-width: 400px;
   cursor: pointer;
   margin-bottom: 10px;
 }
-/*
-.basic-container {
-  padding: 10px;
-}
 
-.grid-container {
-  display: grid;
-  grid-template-columns: 30% auto;
-  grid-gap: 10px;
-  padding: 10px;
-}
-
-h2 {
-  margin-bottom: 10px;
-}
-*/
 .add {
   border: none;
   color: white;
@@ -62,7 +13,7 @@ h2 {
   cursor: pointer;
   transition-duration: 0.4s;
   border-radius: 2px;
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .form {
@@ -71,6 +22,6 @@ h2 {
   width: 100%;
 }
 
-.full-width > * {
+.full-width>* {
   width: 100%;
 }

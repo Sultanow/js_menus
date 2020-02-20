@@ -10,7 +10,7 @@ describe('TrackerComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ TrackerComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -12,7 +12,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'treetable',
   templateUrl: './treetable.component.html',
-  styleUrls: ['./treetable.component.css']
+  styleUrls: [ './treetable.component.css' ]
 })
 export class TreetableComponent<T> implements OnInit {
   @Input() @Required tree: Node<T> | Node<T>[];
@@ -27,7 +27,7 @@ export class TreetableComponent<T> implements OnInit {
   displayedColumns: string[];
   dataSource: MatTableDataSource<TreeTableNode<T>>;
 
-  constructor(
+  constructor (
     private treeService: TreeService,
     private validatorService: ValidatorService,
     private converterService: ConverterService,
@@ -40,10 +40,10 @@ export class TreetableComponent<T> implements OnInit {
   }
 
   ngOnInit() {
-    this.tree = Array.isArray(this.tree) ? this.tree : [this.tree];
+    this.tree = Array.isArray(this.tree) ? this.tree : [ this.tree ];
     if (this.tree.length != 0) {
       this.options = this.parseOptions(defaultOptions);
-      const customOrderValidator = this.validatorService.validateCustomOrder(this.tree[0], this.options.customColumnOrder);
+      const customOrderValidator = this.validatorService.validateCustomOrder(this.tree[ 0 ], this.options.customColumnOrder);
       if (this.options.customColumnOrder && !customOrderValidator.valid) {
         throw new Error(`
         Properties ${customOrderValidator.xor.map(x => `'${x}'`).join(', ')} incorrect or missing in customColumnOrder`
@@ -51,7 +51,7 @@ export class TreetableComponent<T> implements OnInit {
       }
       this.displayedColumns = this.options.customColumnOrder
         ? this.options.customColumnOrder
-        : this.extractNodeProps(this.tree[0]);
+        : this.extractNodeProps(this.tree[ 0 ]);
       this.searchableTree = this.tree.map(t => this.converterService.toSearchableTree(t));
       const treeTableTree = this.searchableTree.map(st => this.converterService.toTreeTableTree(st));
       this.treeTable = _.flatMap(treeTableTree, this.treeService.flatten);
@@ -59,7 +59,7 @@ export class TreetableComponent<T> implements OnInit {
     }
   }
 
-  extractNodeProps(tree: Node<T> & { value: { [k: string]: any } }): string[] {
+  extractNodeProps(tree: Node<T> & { value: { [ k: string ]: any; }; }): string[] {
     return Object.keys(tree.value);//.filter(x => typeof tree.value[x] !== 'object');
   }
 
@@ -96,7 +96,7 @@ export class TreetableComponent<T> implements OnInit {
   get GetElement() {
     return {
       // element = this.
-    }
+    };
   }
 
 }

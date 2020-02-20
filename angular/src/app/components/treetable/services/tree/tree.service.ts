@@ -29,10 +29,10 @@ export class TreeService {
    */
   searchById<T, K extends SearchableNode<T>>(root: K, id: string): Option<NodeInTree<T>> {
     let matchingNode: K;
-    const pathToRoot: {[k: string]: K} = {};
+    const pathToRoot: { [ k: string ]: K; } = {};
     this._traverse(root, (node: K) => {
       node.children.forEach(child => {
-        pathToRoot[child.id] = node;
+        pathToRoot[ child.id ] = node;
       });
       if (node.id === id) {
         matchingNode = node;
@@ -74,9 +74,9 @@ export class TreeService {
    * @param root the tree to be flattened
    */
   flatten<T, K extends Node<T>>(root: K): K[] {
-    const result = [_.cloneDeep(root)];
+    const result = [ _.cloneDeep(root) ];
     for (let i = 0; i < result.length; i++) {
-      const node = result[i];
+      const node = result[ i ];
       if (node.children) {
         result.splice(result.indexOf(node) + 1, 0, ...node.children as K[]);
       }
@@ -89,13 +89,13 @@ export class TreeService {
    * @param id the id of the node
    * @param pathMap the pathMap returned by searchById
    */
-  private buildPath<T, K extends SearchableNode<T>>(id: string, pathMap: {[k: string]: K}): K[] {
+  private buildPath<T, K extends SearchableNode<T>>(id: string, pathMap: { [ k: string ]: K; }): K[] {
     const pathToRoot = [];
     let key = id;
     while (key) {
-      if (pathMap[key]) {
-        pathToRoot.push(pathMap[key]);
-        key = pathMap[key].id;
+      if (pathMap[ key ]) {
+        pathToRoot.push(pathMap[ key ]);
+        key = pathMap[ key ].id;
       } else {
         key = null;
       }

@@ -27,7 +27,7 @@
         </td>
         <td>
           <div *ngIf="editOn==true && selectedBatch.id==batch.id">
-            <input [(ngModel)]="selectedBatch.duration"/>
+            <input [(ngModel)]="selectedBatch.duration" />
           </div>
           <div *ngIf="editOn==false">
             {{batch.duration}}

@@ -6,9 +6,7 @@ import { CompareItem } from 'src/app/model/compareItem';
 })
 export class CompareItemsService {
 
-  constructor() {
-
-       }
+  constructor () { }
 
   getDummyData(): CompareItem[] {
     let data: CompareItem[] = [];
@@ -16,10 +14,10 @@ export class CompareItemsService {
     data.push(this.createItem("Dritanbierterstrecken erreichbar", "ja", "nein", "ja", "nein", "ja", "ja"));
     data.push(this.createItem("Produktversion", "20.01.00.00.01", "20.01.00.00.01", "20.01.00.00.01", "19.01.00.00.01", "20.01.00.00.01_b", "20.01.00.02.01"));
     return data;
-  } 
+  }
 
   createItem(value: string, ref: string, val1: string, val2: string, val3: string, val4: string, val5: string) {
-    let item  = new CompareItem(value, ref);
+    let item = new CompareItem(value, ref);
     item.addItem("dev1", val1);
     item.addItem("dev2", val2);
     item.addItem("dev3", val3);

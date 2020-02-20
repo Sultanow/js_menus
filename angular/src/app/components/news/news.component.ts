@@ -5,25 +5,25 @@ import { MessageItem } from 'src/app/model/messageItem';
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
-  styleUrls: ['./news.component.css','../viewbox/viewbox.component.css']
+  styleUrls: [ './news.component.css', '../viewbox/viewbox.component.css' ]
 })
 export class NewsComponent implements OnInit {
 
   @Input() showNews: boolean;
 
   messages: MessageItem[];
-  constructor(private messagesService: MessagesService) { 
-    
+  constructor (private messagesService: MessagesService) {
+
   }
 
   ngOnInit() {
-    
+
   }
 
   ngOnChanges(changes) {
-    if(this.showNews){
+    if (this.showNews) {
       this.messages = this.messagesService.getSuccessMessages();
     }
- }
+  }
 
 }

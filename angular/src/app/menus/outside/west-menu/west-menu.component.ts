@@ -11,7 +11,7 @@ export class WestMenuComponent implements OnInit {
   @Output() notifyEventOpen = new EventEmitter<string>();
 
 
-  constructor() { }
+  constructor () { }
 
   ngOnInit() {
   }

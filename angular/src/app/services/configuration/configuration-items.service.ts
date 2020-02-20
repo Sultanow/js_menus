@@ -4,7 +4,7 @@ import { ZabbixClient } from "zabbix-client";
 import { ServerConfiguration } from 'src/config/ServerConfiguration';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { ENVCONFIG, ENVVAL } from 'src/app/model/evntreetable';
-import { Node } from 'src/app/components/treetable/treetable.module'
+import { Node } from 'src/app/components/treetable/treetable.module';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,7 @@ export class ConfigurationItemsService implements OnDestroy {
   client: ZabbixClient;
   itemlist: ConfigurationItem[];
 
-  constructor() { }
+  constructor () { }
 
   getItemlist(): ConfigurationItem[] {
     return this.itemlist;
@@ -45,7 +45,7 @@ export class ConfigurationItemsService implements OnDestroy {
             resolve();
           })
           .catch(x => {
-            console.log("Error", x)
+            console.log("Error", x);
             this.itemlist = this.getDummyServerConfiguration();
             resolve();
           });
@@ -69,8 +69,8 @@ export class ConfigurationItemsService implements OnDestroy {
           console.log("Item found " + item.key_);
           ret.push(this.createItem(host, item.name, item.lastvalue));
         }
-      })
-    })
+      });
+    });
     return ret;
   }
 
@@ -78,11 +78,11 @@ export class ConfigurationItemsService implements OnDestroy {
 
   getDummyServerConfiguration(): ConfigurationItem[] {
     let items: ConfigurationItem[] = [];
-    items.push(this.createItem("Dev1", "SW-Version", "20.02.00_5"))
-    items.push(this.createItem("Dev1", "Silbentrennung", "an"))
-    items.push(this.createItem("Dev1", "Text-Version", "V20.02.00_2"))
-    items.push(this.createItem("Dev1", "Hilfsapplication-Version", "2.03.1"))
-    items.push(this.createItem("Dev4", "SW-Version", "19.02.00_52"))
+    items.push(this.createItem("Dev1", "SW-Version", "20.02.00_5"));
+    items.push(this.createItem("Dev1", "Silbentrennung", "an"));
+    items.push(this.createItem("Dev1", "Text-Version", "V20.02.00_2"));
+    items.push(this.createItem("Dev1", "Hilfsapplication-Version", "2.03.1"));
+    items.push(this.createItem("Dev4", "SW-Version", "19.02.00_52"));
     return items;
   }
 
@@ -92,9 +92,9 @@ export class ConfigurationItemsService implements OnDestroy {
 
   getDummyBatchConfig(): ConfigurationItem[] {
     let items: ConfigurationItem[] = [];
-    items.push(this.createItem("A2145", "Parameter 1", "5"))
-    items.push(this.createItem("A2145", "Parameter 2", "x"))
-    items.push(this.createItem("TL244", "Parameter 1", "test"))
+    items.push(this.createItem("A2145", "Parameter 1", "5"));
+    items.push(this.createItem("A2145", "Parameter 2", "x"));
+    items.push(this.createItem("TL244", "Parameter 1", "test"));
     return items;
   }
 
@@ -125,7 +125,7 @@ export class ConfigurationItemsService implements OnDestroy {
     if (env != null) {
       env.forEach(e => {
         tree = this.addEnvToTree(tree, e);
-      })
+      });
     }
     if (tree != null) {
       this.fillValuesToArray(tree);
@@ -141,41 +141,41 @@ export class ConfigurationItemsService implements OnDestroy {
   addEnvToTree(tree: Node<ENVCONFIG>[], env: string): Node<ENVCONFIG>[] {
     tree.forEach(i => {
       this.addEnv(i, env);
-    })
+    });
     return tree;
   }
 
   addEnv(node: Node<ENVCONFIG>, env: string): void {
-    node.value[env] = "";
+    node.value[ env ] = "";
     if (node.children.length != 0) {
       node.children.forEach(c => {
         this.addEnv(c, env);
-      })
+      });
     }
   }
 
   fillValuesToArray(tree: Node<ENVCONFIG>[]): void {
     tree.forEach(i => {
       this.fillValues(i);
-    })
+    });
   }
 
   fillValues(node: Node<ENVCONFIG>): void {
     if (this.itemlist && this.itemlist.length != 0) {
       this.itemlist.forEach(i => {
-        if (i.key == node.value.configname && node.value[i.env] === "") {
+        if (i.key == node.value.configname && node.value[ i.env ] === "") {
           let item: ENVVAL = {
             ist: i.value,
             soll: i.soll,
             identic: i.identic
-          }
-          node.value[i.env] = item;
+          };
+          node.value[ i.env ] = item;
           return;
         }
         if (node.children.length != 0) {
           node.children.forEach(c => {
             this.fillValues(c);
-          })
+          });
         }
       });
     }
@@ -183,11 +183,11 @@ export class ConfigurationItemsService implements OnDestroy {
 
   createDummyDataTable(): void {
     let items: ConfigurationItem[] = [];
-    items.push(this.createItem("Dev1", "SW-Version", "20.02.00_5"))
-    items.push(this.createItem("Dev1", "Silbentrennung", "an"))
-    items.push(this.createItem("Dev1", "Text-Version", "V20.02.00_2"))
-    items.push(this.createItem("Dev1", "Hilfsapplication-Version", "2.03.1"))
-    items.push(this.createItem("Dev4", "SW-Version", "19.02.00_52"))
+    items.push(this.createItem("dev1", "SW-Version", "20.02.00_5"));
+    items.push(this.createItem("dev1", "Silbentrennung", "an"));
+    items.push(this.createItem("dev1", "Text-Version", "V20.02.00_2"));
+    items.push(this.createItem("dev1", "Hilfsapplication-Version", "2.03.1"));
+    items.push(this.createItem("dev4", "SW-Version", "19.02.00_52"));
     items.push(this.createItem("dev1", "Top1", "dev1 - Top1"));
     items.push(this.createItem("dev2", "Top1", "dev2 - Top1"));
     items.push(this.createItem("dev1", "Level2 - 1", "dev1 - Level2 - 1"));

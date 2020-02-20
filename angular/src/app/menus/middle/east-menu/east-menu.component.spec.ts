@@ -10,7 +10,7 @@ describe('EastMenuComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ EastMenuComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
