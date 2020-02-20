@@ -12,24 +12,24 @@ export class ServerConfiguration {
     static readonly EMPTY_TREE: Node<ENVCONFIG>[] = [
         {
             value: {
-                configname: "Top1"
+                Konfigurationsparameter: "Top1"
             },
             children: [
                 {
                     value: {
-                        configname: "Level2 - 1"
+                        Konfigurationsparameter: "Level2 - 1"
                     },
                     children: [
                         {
                             value: {
-                                configname: "Level3 - 1"
+                                Konfigurationsparameter: "Level3 - 1"
                             },
                             children: [
                             ]
                         },
                         {
                             value: {
-                                configname: "Level 3 - 2"
+                                Konfigurationsparameter: "Level 3 - 2"
                             },
                             children: [
                             ]
@@ -38,21 +38,21 @@ export class ServerConfiguration {
                 },
                 {
                     value: {
-                        configname: "Level2 - 2"
+                        Konfigurationsparameter: "Level2 - 2"
                     },
                     children: [
                     ]
                 },
                 {
                     value: {
-                        configname: "Level2 - 3"
+                        Konfigurationsparameter: "Level2 - 3"
                     },
                     children: [
                     ]
                 },
                 {
                     value: {
-                        configname: "Level2 - 4"
+                        Konfigurationsparameter: "Level2 - 4"
                     },
                     children: [
                     ]
@@ -61,17 +61,17 @@ export class ServerConfiguration {
         },
         {
             value: {
-                configname: "Top2"
+                Konfigurationsparameter: "Top2"
             },
             children: [
                 {
                     value: {
-                        configname: "Level2 - 5"
+                        Konfigurationsparameter: "Level2 - 5"
                     },
                     children: [
                         {
                             value: {
-                                configname: "Level3 - 3"
+                                Konfigurationsparameter: "Level3 - 3"
                             },
                             children: [
                             ]
@@ -82,12 +82,12 @@ export class ServerConfiguration {
         },
         {
             value: {
-                configname: "Top3"
+                Konfigurationsparameter: "Top3"
             },
             children: [
                 {
                     value: {
-                        configname: "Level2 - 6"
+                        Konfigurationsparameter: "Level2 - 6"
                     },
                     children: [
                     ]

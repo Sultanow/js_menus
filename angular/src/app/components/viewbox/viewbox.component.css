@@ -120,3 +120,9 @@ div>header .close {
 input {
   width: 100px;
 }
+
+.header_title {
+  position: absolute;
+  left: 60px;
+  top: 10px;
+}

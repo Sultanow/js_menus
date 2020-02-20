@@ -8,6 +8,15 @@ table#compare-table td, table#compare-table th {
 
 .checkItem {
   position: absolute;
-  top: 0;
-  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.textarea_1 {
+  padding: 7px 0 0 25px;
+}
+
+.textarea_items {
+  resize: none;
+  margin: -3px 0 0 0;
 }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TimelineLite } from "gsap";
+import { ConfigurationItemsService } from './services/configuration/configuration-items.service';
 
 @Component({
 	selector: 'app-root',
@@ -45,6 +46,12 @@ export class AppComponent {
 		this.initAnimationButton(this.animate_east, "east-menu");
 		this.initAnimationButton(this.animate_south, "south-menu");
 		this.initAnimationButton(this.animate_west, "west-menu");
+		this.configService.getServerConfiguration().then(x => {
+			console.log(x);
+		});
+	}
+
+	constructor(private configService: ConfigurationItemsService) {
 	}
 
 

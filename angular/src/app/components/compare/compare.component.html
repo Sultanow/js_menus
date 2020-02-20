@@ -31,6 +31,8 @@
     </table>
   </div> -->
 
+  <p>Last Update: 12.02.2020 08:45 Uhr</p>
+  <p>Select Env TODO (List)</p>
   <treetable [tree]="nodesTree" (nodeClicked)="logNode($event)" [body]="treetableDesign">
   </treetable>
 </div>
@@ -44,9 +46,11 @@
   -->
   <div class="treeTableElement">
     <div *ngIf="el.element.value[el.column]">
-      <textarea rows=1 disabled="true">{{el.element.value[el.column].ist}}</textarea>
-      <textarea rows=1>{{el.element.value[el.column].soll}}</textarea>
-      <div *ngIf="!el.element.value[el.column].identic">
+      <div class="textarea_1">
+        <textarea rows=1 cols="26" class="textarea_items">{{el.element.value[el.column].soll}}</textarea>
+        <textarea rows=1 disabled="true" cols="26" class="textarea_items">{{el.element.value[el.column].ist}}</textarea>
+      </div>
+      <div *ngIf="!el.element.value[el.column].identic" class="checkItem">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="red"
           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
           <line x1="18" y1="6" x2="6" y2="18"></line>

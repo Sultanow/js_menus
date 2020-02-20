@@ -1,3 +1,6 @@
+<mat-form-field>
+  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter" class="placeholder">
+</mat-form-field>
 <table mat-table [dataSource]="dataSource" [ngClass]="formatElevation()">
 
   <div *ngFor="let column of displayedColumns; first as isFirst;">

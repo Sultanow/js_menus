@@ -1,7 +1,7 @@
 export type ENVCONFIG = {
-    configname: string;
-    [ name: string ]: ENVVAL | string;
-};
+    Konfigurationsparameter: string;
+    [name: string]: ENVVAL | string;
+}
 
 export type ENVVAL = {
     ist: string;

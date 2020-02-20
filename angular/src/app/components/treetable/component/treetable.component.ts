@@ -56,10 +56,32 @@ export class TreetableComponent<T> implements OnInit {
       const treeTableTree = this.searchableTree.map(st => this.converterService.toTreeTableTree(st));
       this.treeTable = _.flatMap(treeTableTree, this.treeService.flatten);
       this.dataSource = this.generateDataSource();
+      this.dataSource.filterPredicate = (data, filter: string) => {
+        const accumulator = (currentTerm, key) => {
+          return this.nestedFilterCheck(currentTerm, data, key);
+        };
+        const dataStr = Object.keys(data).reduce(accumulator, '').toLowerCase();
+        // Transform the filter by converting it to lowercase and removing whitespace.
+        const transformedFilter = filter.trim().toLowerCase();
+        return dataStr.indexOf(transformedFilter) !== -1;
+      };
     }
   }
 
-  extractNodeProps(tree: Node<T> & { value: { [ k: string ]: any; }; }): string[] {
+  nestedFilterCheck(search, data, key) {
+    if (typeof data[key] === 'object') {
+      for (const k in data[key]) {
+        if (data[key][k] !== null) {
+          search = this.nestedFilterCheck(search, data[key], k);
+        }
+      }
+    } else {
+      search += data[key];
+    }
+    return search;
+  }
+
+  extractNodeProps(tree: Node<T> & { value: { [k: string]: any } }): string[] {
     return Object.keys(tree.value);//.filter(x => typeof tree.value[x] !== 'object');
   }
 
@@ -97,6 +119,10 @@ export class TreetableComponent<T> implements OnInit {
     return {
       // element = this.
     };
+  }
+
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
 }
