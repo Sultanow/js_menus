@@ -166,7 +166,7 @@ export class ConfigurationItemsService implements OnDestroy {
   fillValues(node: Node<ENVCONFIG>): void {
     if (this.itemlist && this.itemlist.length != 0) {
       this.itemlist.forEach(i => {
-        if (i.key == node.value.Konfigurationsparameter && node.value[i.env] === "") {
+        if (i.key == node.value.Konfigurationsparameter && node.value[ i.env ] === "") {
           let item: ENVVAL = {
             ist: i.value,
             soll: i.soll,
@@ -212,7 +212,7 @@ export class ConfigurationItemsService implements OnDestroy {
 
     items.forEach(x => {
       this.itemlist.push(x);
-    })
+    });
   }
   setSollValues(): void {
     this.itemlist.forEach(element => {

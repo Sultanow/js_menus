@@ -51,7 +51,7 @@ export class AppComponent {
 		});
 	}
 
-	constructor(private configService: ConfigurationItemsService) {
+	constructor (private configService: ConfigurationItemsService) {
 	}
 
 

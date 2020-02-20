@@ -111,25 +111,25 @@ export class StatisticComponent implements OnInit {
       .style('stroke', 'lightblue')
       .style('fill', 'none')
       .attr('d', valueline(_this.batchtimes));
-  
-      svg.append("circle").attr("cx",200).attr("cy",130).attr("r", 6).style("fill", "lightgreen")
-      svg.append("circle").attr("cx",200).attr("cy",160).attr("r", 6).style("fill", "lightblue")
-      svg.append("text")
-        .attr("x", 220)
-        .attr("y", 130)
-        .text("Batch 1")
-        .style("font-size", "15px")
-        .style("fill", "lightgreen")
-        .attr("alignment-baseline","middle")
 
-      svg.append("text")
-        .attr("x", 220)
-        .attr("y", 160)
-        .text("Batch 2")
-        .style("font-size", "15px")
-        .style("fill", "lightblue")
-        .attr("alignment-baseline","middle")
-      
+    svg.append("circle").attr("cx", 200).attr("cy", 130).attr("r", 6).style("fill", "lightgreen");
+    svg.append("circle").attr("cx", 200).attr("cy", 160).attr("r", 6).style("fill", "lightblue");
+    svg.append("text")
+      .attr("x", 220)
+      .attr("y", 130)
+      .text("Batch 1")
+      .style("font-size", "15px")
+      .style("fill", "lightgreen")
+      .attr("alignment-baseline", "middle");
+
+    svg.append("text")
+      .attr("x", 220)
+      .attr("y", 160)
+      .text("Batch 2")
+      .style("font-size", "15px")
+      .style("fill", "lightblue")
+      .attr("alignment-baseline", "middle");
+
     // Add the X Axis
     svg.append('g')
       .attr('class', 'x axis')

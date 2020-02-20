@@ -7,7 +7,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatRadioModule, MatSelectModule } from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-export { Node, Options} from './models';
+export { Node, Options } from './models';
 
 @NgModule({
   declarations: [

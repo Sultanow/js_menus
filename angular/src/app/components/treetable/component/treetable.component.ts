@@ -69,19 +69,19 @@ export class TreetableComponent<T> implements OnInit {
   }
 
   nestedFilterCheck(search, data, key) {
-    if (typeof data[key] === 'object') {
-      for (const k in data[key]) {
-        if (data[key][k] !== null) {
-          search = this.nestedFilterCheck(search, data[key], k);
+    if (typeof data[ key ] === 'object') {
+      for (const k in data[ key ]) {
+        if (data[ key ][ k ] !== null) {
+          search = this.nestedFilterCheck(search, data[ key ], k);
         }
       }
     } else {
-      search += data[key];
+      search += data[ key ];
     }
     return search;
   }
 
-  extractNodeProps(tree: Node<T> & { value: { [k: string]: any } }): string[] {
+  extractNodeProps(tree: Node<T> & { value: { [ k: string ]: any; }; }): string[] {
     return Object.keys(tree.value);//.filter(x => typeof tree.value[x] !== 'object');
   }
 

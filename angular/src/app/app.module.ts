@@ -7,10 +7,11 @@ import {
   MatFormFieldModule,
   MatInputModule,
   MatRadioModule,
-  MatSelectModule, 
+  MatSelectModule,
   MatTableModule,
-  MatMenuModule} from '@angular/material';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+  MatMenuModule
+} from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 
