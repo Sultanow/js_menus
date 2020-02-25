@@ -93,6 +93,7 @@ import { TreetableModule } from './components/treetable/treetable.module';
     ReactiveFormsModule,
     DragDropModule,
     TreetableModule,
+    MatMenuModule,
 
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.

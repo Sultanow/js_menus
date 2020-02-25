@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { StatusWarningsComponent } from './status-warnings.component';
+import { MatMenuModule } from '@angular/material';
 
 describe('StatusWarningsComponent', () => {
   let component: StatusWarningsComponent;
@@ -8,7 +8,10 @@ describe('StatusWarningsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StatusWarningsComponent ]
+      declarations: [ StatusWarningsComponent ],
+      imports: [
+        MatMenuModule
+      ]
     })
       .compileComponents();
   }));

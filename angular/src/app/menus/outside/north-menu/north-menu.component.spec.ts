@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { NorthMenuComponent } from './north-menu.component';
+import { ConfigurationService } from 'src/app/services/configuration.service';
+import { HttpHandler, HttpClient } from '@angular/common/http';
 
 describe('NorthMenuComponent', () => {
   let component: NorthMenuComponent;
@@ -8,7 +9,12 @@ describe('NorthMenuComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NorthMenuComponent ]
+      declarations: [ NorthMenuComponent ],
+      providers: [
+        ConfigurationService,
+        HttpHandler,
+        HttpClient
+      ]
     })
       .compileComponents();
   }));

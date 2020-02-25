@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { DetailsComponent } from './details.component';
+import { ConfigurationService } from 'src/app/services/configuration.service';
+import { HttpClient, HttpHandler } from '@angular/common/http';
 
 describe('DetailsComponent', () => {
   let component: DetailsComponent;
@@ -8,7 +9,12 @@ describe('DetailsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DetailsComponent ]
+      declarations: [ DetailsComponent ],
+      providers: [ 
+        ConfigurationService,
+        HttpClient,
+        HttpHandler
+      ]
     })
       .compileComponents();
   }));

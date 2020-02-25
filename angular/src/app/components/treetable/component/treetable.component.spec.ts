@@ -1,9 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TreetableComponent } from './treetable.component';
-import { MatTableModule } from '@angular/material/table';
-import { MatIconModule } from '@angular/material/icon';
 import { mockSearchableTree } from '../mocks/mockSearchableTree';
 import * as _ from 'lodash';
+import { TreetableModule } from '../treetable.module';
 
 describe('TreetableComponent', () => {
   let component: TreetableComponent<any>;
@@ -12,11 +11,9 @@ describe('TreetableComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        TreetableComponent
       ],
       imports: [
-        MatTableModule,
-        MatIconModule
+        TreetableModule
       ]
     })
       .compileComponents();

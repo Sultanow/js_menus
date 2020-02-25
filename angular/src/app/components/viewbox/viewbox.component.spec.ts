@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ViewboxComponent } from './viewbox.component';
+import { AppModule } from 'src/app/app.module';
 
 describe('ViewboxComponent', () => {
   let component: ViewboxComponent;
@@ -8,7 +8,10 @@ describe('ViewboxComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ViewboxComponent ]
+      declarations: [  ],
+      imports: [ 
+        AppModule 
+      ]
     })
       .compileComponents();
   }));

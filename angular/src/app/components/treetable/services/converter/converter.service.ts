@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { TreeService } from '../tree/tree.service';
 import { Node, SearchableNode, TreeTableNode } from '../../models';
 import * as _ from 'lodash';
-import uuidv4 from 'uuid/v4';
+import {v4 as uuid} from 'uuid';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class ConverterService {
   toSearchableTree<T>(tree: Node<T>): SearchableNode<T> {
     const treeClone = _.cloneDeep(tree) as SearchableNode<T>;
     this.treeService.traverse(treeClone, (node: SearchableNode<T>) => {
-      node.id = node.id ? node.id : uuidv4();
+      node.id = node.id ? node.id : uuid();
     });
     return treeClone;
   }

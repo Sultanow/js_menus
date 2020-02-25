@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CompareComponent } from './compare.component';
+import { TreetableModule } from '../treetable/treetable.module';
 
 describe('CompareComponent', () => {
   let component: CompareComponent;
@@ -8,7 +9,8 @@ describe('CompareComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CompareComponent ]
+      declarations: [ CompareComponent ],
+      imports: [ TreetableModule ]
     })
       .compileComponents();
   }));
