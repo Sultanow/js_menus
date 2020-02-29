@@ -121,4 +121,9 @@ buildNumber.properties
 # Ignore all local history of files
 .history
 
+### Maven build files
+backend/*.iml
+backend/target/*
+backend/.idea
+
 # End of https://www.gitignore.io/api/maven,angular,eclipse,visualstudiocode
