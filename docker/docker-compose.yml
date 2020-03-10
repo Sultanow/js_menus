@@ -1,35 +1,32 @@
 version: '3'
 services:
-  angular:
-    build:
-         context: ../
-         dockerfile: docker/angular/Dockerfile
-    container_name: hackathon-angular-service
-    ports:
-    - "8090:80"
-    links:
-    - helidon
-    networks:
-      - helidon-net
-  helidon:
-    build:
-         context: ../
-         dockerfile: docker/helidon/Dockerfile
-    container_name: hackathon-helidon-mp-service
-    ports:
-    - "8080:8080"
-    links:
-    - redis
-    networks:
-      - helidon-net
+
   redis:
     image: redis
-    command: redis-server --requirepass password #set custom password
-    container_name: hackathon-redis-service
+    command: /home/redis.conf 
+    volumes:
+      - ./redis/conf:/home
+      - ./redis/data:/data
+    container_name: redis-service
     ports:
     - "6379:6379"
     networks:
-      - helidon-net 
+      - cockpit-net 
+
+  payara:
+    image: payara/server-full
+    volumes:
+      - ./../target/autodeploy:/opt/payara/deployments
+    container_name: payara-service
+    ports:
+    - "4848:4848"
+    - "8080:8080"
+    links: 
+    - redis
+    networks: 
+      - cockpit-net
+
+
+  
 networks:
-  helidon-net:
-    driver: "bridge"
+  cockpit-net:

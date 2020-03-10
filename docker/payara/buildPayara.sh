@@ -1,1 +1,1 @@
-docker pull payara/server-full
+docker build -t "mypayara-image" .

@@ -17,6 +17,7 @@
   </properties>
 
   <build>
+    <finalName>frontend</finalName>
     <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -64,6 +65,7 @@
               <directory>../target/angular/angular-radial-menu</directory>
             </resource>
           </webResources>
+          <outputDirectory>../target/autodeploy</outputDirectory>
         </configuration>
       </plugin>
     </plugins>
