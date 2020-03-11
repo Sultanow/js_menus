@@ -11,69 +11,83 @@ import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * Configuration Access to Redis
- *
  */
 public class ConfigurationRepository {
-             private static ConfigurationRepository instance;
-             private JedisPool configurationPool;
+    private static ConfigurationRepository instance;
+    private JedisPool configurationPool;
 
-             private ConfigurationRepository() {
-                             configurationPool = new JedisPool(new JedisPoolConfig(), "redis-service", 6379, 60, "password");
-             }
+    private ConfigurationRepository() {
+        configurationPool = new JedisPool(new JedisPoolConfig(), "redis-service", 6379, 60, "password");
+        checkMinimalConfiguration();
+    }
 
-             public static ConfigurationRepository getRepo() {
-                             if (instance == null) {
-                                             instance = new ConfigurationRepository();
-                             }
-                             return instance;
-             }
+    private void checkMinimalConfiguration() {
+        saveConfigItemIfNotExist("zabbixURL");
+        saveConfigItemIfNotExist("zabbixUser");
+        saveConfigItemIfNotExist("zabbixPass");
+    }
 
-             /**
-             * Save a config in redis
-             * @param config - The config
-             */
-             public void save(Configuration config) {
-                             try (Jedis jedis = configurationPool.getResource()) {
-                                             if (jedis.get(config.getKey()) != null) {
-                                                            // config key already exists
-                                                            return;
-                                             }
+    private void saveConfigItemIfNotExist(String item) {
+        try(Jedis jedis = configurationPool.getResource()) {
+            if (jedis.get(item) == null)
+                save(new Configuration(item, ""));
+        }
+    }
 
-                                             jedis.append(config.getKey(), config.getValue());
-                             }
-             }
+    public static ConfigurationRepository getRepo() {
+        if (instance == null) {
+            instance = new ConfigurationRepository();
+        }
+        return instance;
+    }
 
-             /**
-             * Get configuration entry by key
-             * @param key
-             * @return null, if the given key has no value
-             * @return Configuration, if a value was found
-             */
-             public Configuration get(String key) {
-                             try (Jedis jedis = configurationPool.getResource()) {
-                                             String value = jedis.get(key);
-                                             if (value == null) {
-                                                            return null;
-                                             }
-                                             return new Configuration(key, value);
-                             }
-             }
+    /**
+     * Save a config in redis
+     *
+     * @param config - The config
+     */
+    public void save(Configuration config) {
+        try (Jedis jedis = configurationPool.getResource()) {
+            if (jedis.get(config.getKey()) != null) {
+                jedis.set(config.getKey(), config.getValue());
+                return;
+            }
 
-             public List<Configuration> getAll(List<String> keys) {
-                             try (Jedis jedis = configurationPool.getResource()) {
-                                             List<String> values = jedis.mget(keys.toArray(new String[0]));
+            jedis.append(config.getKey(), config.getValue());
+        }
+    }
 
-                                             if (values == null) {
-                                                            return Collections.emptyList();
-                                             }
+    /**
+     * Get configuration entry by key
+     *
+     * @param key
+     * @return Configuration, if a value was found
+     */
+    public Configuration get(String key) {
+        try (Jedis jedis = configurationPool.getResource()) {
+            String value = jedis.get(key);
+            if (value == null) {
+                return new Configuration(key, "");
+            }
+            return new Configuration(key, value);
+        }
+    }
 
-                                             List<Configuration> configurations = new ArrayList<>();
-                                             for (int i = 0; i < keys.size(); i++) {
-                                                            configurations.add(new Configuration(keys.get(i), values.get(i)));
-                                             }
+    public List<Configuration> getAll(List<String> keys) {
+        try (Jedis jedis = configurationPool.getResource()) {
+            List<String> values = jedis.mget(keys.toArray(new String[0]));
 
-                                             return configurations;
-                             }
-             }
+            if (values == null) {
+                return Collections.emptyList();
+            }
+
+            List<Configuration> configurations = new ArrayList<>();
+            for (int i = 0; i < keys.size(); i++) {
+                configurations.add(new Configuration(keys.get(i), values.get(i)));
+            }
+
+            return configurations;
+        }
+    }
 
 }

@@ -28,6 +28,7 @@ export class ViewboxComponent implements OnInit {
   showConfigView: boolean = false;
   showRightManagement: boolean = false;
   showTracker: boolean = false;
+  showSettings: boolean = false;
   title: string = "";
 
   batchtimes: Batches[] = [
@@ -93,6 +94,8 @@ export class ViewboxComponent implements OnInit {
       this.showRightManagement = true;
     } else if (view === "jira" || view === "bitbucket" || view === "confluence") {
       this.showTracker = true;
+    } else if (view === "settings") {
+      this.showSettings = true;
     }
   }
 
@@ -106,6 +109,7 @@ export class ViewboxComponent implements OnInit {
     this.showConfigView = false;
     this.showRightManagement = false;
     this.showTracker = false;
+    this.showSettings = false;
     this.title = "";
   }
 

@@ -14,6 +14,12 @@ public class ZabbixUser {
         zabbixUrl = ConfigurationRepository.getRepo().get("zabbixURL").getValue();
     }
 
+    public ZabbixUser(String user, String pass, String url) {
+        this.username = user;
+        this.password = pass;
+        this.zabbixUrl = url;
+    }
+
 
     public String getUsername() {
         return username;
@@ -26,4 +32,21 @@ public class ZabbixUser {
     public String getZabbixUrl() {
         return zabbixUrl;
     }
+
+    @Override
+    public String toString() {
+        return "User: " + username + "; Password: " + password + "; URL: " + zabbixUrl;
+    }
+
+    public void saveUser() {
+        ConfigurationRepository repo = ConfigurationRepository.getRepo();
+        Configuration userConfiguration = new Configuration("zabbixUser", this.username);
+        repo.save(userConfiguration);
+        Configuration passConfiguration = new Configuration("zabbixPass", this.password);
+        repo.save(passConfiguration);
+        Configuration urlConfig = new Configuration("zabbixURL", this.zabbixUrl);
+        repo.save(urlConfig);
+    }
+
+
 }

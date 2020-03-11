@@ -1,0 +1,13 @@
+<div *ngIf="showSettings">
+    <table>
+        <caption>Einstellungen</caption>
+        <tr>
+            <th scope="col">Einstellung</th>
+            <th scope="col">Wert</th>
+        </tr>
+        <tr *ngFor="let setting of allSettings">
+            <td>{{setting.key}}</td>
+            <td>{{setting.value}}</td>
+        </tr>
+    </table>
+</div>

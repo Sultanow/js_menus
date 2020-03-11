@@ -48,6 +48,7 @@ import { ConfigurationViewComponent } from './components/configuration-view/conf
 import { RightManagementComponent } from './components/right-management/right-management.component';
 import { TrackerComponent } from './components/tracker/tracker.component';
 import { TreetableModule } from './components/treetable/treetable.module';
+import { SettingsComponent } from './components/settings/settings.component';
 
 
 @NgModule({
@@ -74,7 +75,8 @@ import { TreetableModule } from './components/treetable/treetable.module';
     StatusWarningsComponent,
     ConfigurationViewComponent,
     RightManagementComponent,
-    TrackerComponent
+    TrackerComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
