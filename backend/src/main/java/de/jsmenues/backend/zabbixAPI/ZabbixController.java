@@ -53,14 +53,31 @@ public class ZabbixController {
         a.add("host");
         Request hostRequest = RequestBuilder.newBuilder().method("host.get").paramEntry("output", a.toArray()).build();
         JsonNode getResponse = api.call(hostRequest, true);
-        return Response.ok(responseText + getResponse.toString()).build();
+        JsonNode result = getResponse.path("result");
+        return Response.ok(responseText + result.toString()).build();
     }
 
     @GET
     @Path("/getInformationForHosts")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getHostInfos(/**/) {
-        return Response.ok("").build();
+    public Response getHostInfos(@QueryParam("host") List<String> hosts) {
+        ZabbixApi api = zabbixLogin();
+        if (api == null) {
+            return Response.status(505, "ZabbixLogin not successful").build();
+        }
+        Map<String, String[]> filter = new HashMap<>();
+        filter.put("host", hosts.toArray(new String[0]));
+        Request informationRequest = RequestBuilder.newBuilder()
+            .method("host.get")
+            .paramEntry("filter", filter)
+            .paramEntry("output", "extend")
+            .paramEntry("selectItems", "extend")
+            .paramEntry("selectHosts", "extend")
+            .paramEntry("selectGroups", "extend")
+            .build();
+        JsonNode getResponse = api.call(informationRequest);
+        JsonNode result = getResponse.path("result");
+        return Response.ok(result.toString()).build();
     }
 
     private ZabbixApi zabbixLogin() {

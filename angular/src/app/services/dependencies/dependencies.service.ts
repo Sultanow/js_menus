@@ -9,7 +9,7 @@ import { DependencyChart } from '../../model/dependencychart';
 @Injectable({ providedIn: 'root' })
 export class DependencyService {
 
-  private dependenciesUrl = 'api/dependencies';  // TODO: das richtige Backend anbinden
+  private dependenciesUrl = '/backend/dependencies';  // TODO: das richtige Backend anbinden
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })

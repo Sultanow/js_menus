@@ -5,14 +5,19 @@ import { ServerConfiguration } from 'src/config/ServerConfiguration';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { ENVCONFIG, ENVVAL } from 'src/app/model/evntreetable';
 import { Node } from 'src/app/components/treetable/treetable.module';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConfigurationItemsService implements OnDestroy {
+	
   ngOnDestroy(): void {
     this.client = null;
   }
+
+  private backendZabbixURL: string = '/backend/zabbixapi'
 
   zabbixResult: BehaviorSubject<JSON[]> = new BehaviorSubject<JSON[]>([]);
   treeNodes: BehaviorSubject<Node<ENVCONFIG>[]> = new BehaviorSubject<Node<ENVCONFIG>[]>([]);
@@ -26,35 +31,19 @@ export class ConfigurationItemsService implements OnDestroy {
     this._itemlist = value;
   }
 
-  constructor () { }
+  constructor (private http: HttpClient) { }
 
-  async getServerConfiguration(): Promise<{}> {
-    return new Promise((resolve, reject) => {
-      this.zabbixLogin().then(api => {
-        api.method("host.get")
-          .call({
-            'filter': {
-              'host': ServerConfiguration.ENV_LIST
-            },
-            'output': 'extend',
-            'selectGroups': 'extend',
-            'selectHosts': 'extend',
-            'selectItems': 'extend',
-          }, false)
-          .then(result => {
-            this.zabbixResult.next(result as JSON[]);
-            this.itemlist = this.createServerConf(result as JSON[]);
-            resolve();
-          })
-          .catch(x => {
-            console.log("Error", x);
-            this.itemlist = this.getDummyServerConfiguration();
-            resolve();
-          });
-      });
-    });
-
+  getServerConfiguration(environments: string[]): Observable<any> {
+    let params = new HttpParams();
+    environments.forEach(environment => {
+      params = params.append('host', environment);
+    })
+    return this.http.get(`${this.backendZabbixURL}/getInformationForHosts`, {params: params});
   }
+
+  addConfiguration(list: ConfigurationItem[]) {
+		this.itemlist = list;
+	}
 
   zabbixLogin() {
     this.client = new ZabbixClient("/api_jsonrpc.php");

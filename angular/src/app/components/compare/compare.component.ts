@@ -38,6 +38,7 @@ export class CompareComponent implements OnInit {
       this.configItemService.createDummyDataTable();
       this.configItemService.createDummyDataTable();
       this.configItemService.generateTree([ "dev1", "dev2" ]);
+      // The request of the data should happen here TODO
     }
   }
 
