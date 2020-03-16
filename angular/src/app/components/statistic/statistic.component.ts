@@ -10,7 +10,7 @@ import { Batches } from 'src/app/model/batches';
 })
 export class StatisticComponent implements OnInit {
 
-  @ViewChild('chart', { static: false })
+  @ViewChild('chart')
   chartElement: ElementRef;
 
   parseDate = d3.timeParse('%d-%m-%Y');
