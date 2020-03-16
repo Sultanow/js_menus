@@ -6,14 +6,22 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class SettingsService {
-  private backendUrl: string = 'backend/webapi/';
+  private backendUrl: string = 'backend/webapi/settings';
   constructor(private http: HttpClient) { }
 
   getAllSettings(): Observable<any> {
-    return this.http.get(`${this.backendUrl}/settings`);
+    return this.http.get(`${this.backendUrl}`);
   }
 
   updateSettings(values: JSON): Observable<any> {
-    return this.http.put(`${this.backendUrl}/settings`, values)
+    return this.http.post(`${this.backendUrl}`, values)
+  }
+
+  getTitel(): Observable<any> {
+    return this.http.get(`${this.backendUrl}/title`);
+  }
+
+  setTitle(newTitel: string):Observable<any> {
+    return this.http.post(`${this.backendUrl}/titel`, newTitel)
   }
 }

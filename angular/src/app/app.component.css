@@ -31,3 +31,13 @@
 .main-menu .is-active>circle {
   opacity: 1;
 }
+
+.settingsIconSvg {
+  filter: invert(1);
+}
+
+.settingsIcon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}

@@ -34,6 +34,9 @@
       </g>
     </g>
   </svg>
+  <div class="settingsIcon">
+    <img src="/assets/icons/settings.svg" (click)="openSettings()" alt="Settings" class="settingsIconSvg" />
+  </div>
   <app-viewbox (notifyViewBoxClose)="onNotifyViewBoxClose()" [showView]="showView" [showViewBox]="showViewBox">
   </app-viewbox>
   <app-status-warnings [showStatusWarnings]="showStatusWarnings"></app-status-warnings>

@@ -226,4 +226,9 @@ export class AppComponent {
 		this.southOpen = false;
 	}
 
+	openSettings() {
+		this.showViewBox = true;
+		this.showView = "settings"
+	}
+
 }
