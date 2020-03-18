@@ -90,7 +90,7 @@ export class AppComponent {
 			}, 0);
 	}
 
-	initAnimationButton(animate: TimelineLite, classSelector: String) {
+	initAnimationButton(animate: TimelineLite, classSelector: string) {
 		animate.staggerFrom("." + classSelector + " g", 0.5, {
 			transformOrigin: "50% 50%",
 			opacity: "0",
@@ -123,8 +123,8 @@ export class AppComponent {
 	}
 
 	openNorthMenu() {
-		if (this.northOpen == false) {
-			if (this.outsideCircleOpen == false) {
+		if (!this.northOpen) {
+			if (!this.outsideCircleOpen) {
 				this.animate_outside.play();
 			}
 
@@ -149,8 +149,8 @@ export class AppComponent {
 	}
 
 	openEastMenu() {
-		if (this.eastOpen == false) {
-			if (this.outsideCircleOpen == false) {
+		if (!this.eastOpen) {
+			if (!this.outsideCircleOpen) {
 				this.animate_outside.play();
 			}
 
@@ -175,8 +175,8 @@ export class AppComponent {
 	}
 
 	openSouthMenu() {
-		if (this.southOpen == false) {
-			if (this.outsideCircleOpen == false) {
+		if (!this.southOpen) {
+			if (!this.outsideCircleOpen) {
 				this.animate_outside.play();
 			}
 
@@ -201,8 +201,8 @@ export class AppComponent {
 	}
 
 	openWestMenu() {
-		if (this.westOpen == false) {
-			if (this.outsideCircleOpen == false) {
+		if (!this.westOpen) {
+			if (!this.outsideCircleOpen) {
 				this.animate_outside.play();
 			}
 

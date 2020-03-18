@@ -1,8 +1,7 @@
 import { ConfigurationItem } from 'src/app/model/configurationItem';
 import { Injectable, OnDestroy } from '@angular/core';
-import { ZabbixClient } from "zabbix-client";
 import { ServerConfiguration } from 'src/config/ServerConfiguration';
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import { Observable,  BehaviorSubject } from 'rxjs';
 import { ENVCONFIG, ENVVAL } from 'src/app/model/evntreetable';
 import { Node } from 'src/app/components/treetable/treetable.module';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -13,7 +12,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 export class ConfigurationItemsService implements OnDestroy {
 	
   ngOnDestroy(): void {
-    this.client = null;
   }
 
   private backendZabbixURL: string = '/backend/zabbixapi';
@@ -21,7 +19,6 @@ export class ConfigurationItemsService implements OnDestroy {
   zabbixResult: BehaviorSubject<JSON[]> = new BehaviorSubject<JSON[]>([]);
   treeNodes: BehaviorSubject<Node<ENVCONFIG>[]> = new BehaviorSubject<Node<ENVCONFIG>[]>([]);
 
-  client: ZabbixClient;
   private _itemlist: ConfigurationItem[] = [];
   public get itemlist(): ConfigurationItem[] {
     return this._itemlist;
