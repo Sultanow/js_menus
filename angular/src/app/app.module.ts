@@ -1,16 +1,17 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {
-  MatCardModule,
-  MatIconModule,
-  MatDialogModule,
-  MatFormFieldModule,
-  MatInputModule,
-  MatRadioModule,
-  MatSelectModule,
-  MatTableModule,
-  MatMenuModule
-} from '@angular/material';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
+
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
@@ -99,8 +100,8 @@ import { SettingsComponent } from './components/settings/settings.component';
     ConfigurationService,
     DetailsComponent
   ],
-  bootstrap: [ AppComponent ],
-  entryComponents: [ EditDialog, DependencyChartsComponent ]
+  bootstrap: [AppComponent],
+  entryComponents: [EditDialog, DependencyChartsComponent]
 
 })
 export class AppModule { }

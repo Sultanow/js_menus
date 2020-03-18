@@ -128,3 +128,7 @@ input {
     transform: translate(-100%, 0);
   }
 }
+
+.menuButton {
+  cursor: initial;
+}

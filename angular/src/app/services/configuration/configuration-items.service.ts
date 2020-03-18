@@ -6,7 +6,6 @@ import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { ENVCONFIG, ENVVAL } from 'src/app/model/evntreetable';
 import { Node } from 'src/app/components/treetable/treetable.module';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +16,7 @@ export class ConfigurationItemsService implements OnDestroy {
     this.client = null;
   }
 
-  private backendZabbixURL: string = '/backend/zabbixapi'
+  private backendZabbixURL: string = '/backend/zabbixapi';
 
   zabbixResult: BehaviorSubject<JSON[]> = new BehaviorSubject<JSON[]>([]);
   treeNodes: BehaviorSubject<Node<ENVCONFIG>[]> = new BehaviorSubject<Node<ENVCONFIG>[]>([]);
@@ -44,11 +43,6 @@ export class ConfigurationItemsService implements OnDestroy {
   addConfiguration(list: ConfigurationItem[]) {
 		this.itemlist = list;
 	}
-
-  zabbixLogin() {
-    this.client = new ZabbixClient("/api_jsonrpc.php");
-    return this.client.login("viewer", "viewer");
-  }
 
   createServerConf(result: any[]): ConfigurationItem[] {
     let ret: ConfigurationItem[] = [];

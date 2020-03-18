@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class SettingsService {
-  private backendUrl: string = 'backend/webapi/settings';
+  private backendUrl: string = 'backend/settings';
   constructor(private http: HttpClient) { }
 
   getAllSettings(): Observable<any> {
