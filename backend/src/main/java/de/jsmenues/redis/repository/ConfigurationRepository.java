@@ -74,6 +74,7 @@ public class ConfigurationRepository {
     }
 
     public List<Configuration> getAll(List<String> keys) {
+        List<Configuration> configurations = new ArrayList<>();
         try (Jedis jedis = configurationPool.getResource()) {
             List<String> values = jedis.mget(keys.toArray(new String[0]));
 
@@ -81,13 +82,11 @@ public class ConfigurationRepository {
                 return Collections.emptyList();
             }
 
-            List<Configuration> configurations = new ArrayList<>();
             for (int i = 0; i < keys.size(); i++) {
                 configurations.add(new Configuration(keys.get(i), values.get(i)));
             }
-
-            return configurations;
         }
+        return configurations;
     }
 
 }

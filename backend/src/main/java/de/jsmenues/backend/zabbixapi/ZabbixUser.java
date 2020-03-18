@@ -9,9 +9,9 @@ public class ZabbixUser {
     private String zabbixUrl;
 
     public ZabbixUser() {
-        username = ConfigurationRepository.getRepo().get("zabbixUser").getValue();
-        password = ConfigurationRepository.getRepo().get("zabbixPass").getValue();
-        zabbixUrl = ConfigurationRepository.getRepo().get("zabbixURL").getValue();
+        username = ConfigurationRepository.getRepo().get("configuration.zabbix.User").getValue();
+        password = ConfigurationRepository.getRepo().get("configuration.zabbix.Password").getValue();
+        zabbixUrl = ConfigurationRepository.getRepo().get("configuration.zabbix.URL").getValue();
     }
 
     public ZabbixUser(String user, String pass, String url) {
@@ -35,16 +35,16 @@ public class ZabbixUser {
 
     @Override
     public String toString() {
-        return "User: " + username + "; Password: " + password + "; URL: " + zabbixUrl;
+        return "configuration.zabbix.User: " + username + "; configuration.zabbix.Password: " + password + "; configuration.zabbix.URL: " + zabbixUrl;
     }
 
     public void saveUser() {
         ConfigurationRepository repo = ConfigurationRepository.getRepo();
-        Configuration userConfiguration = new Configuration("zabbixUser", this.username);
+        Configuration userConfiguration = new Configuration("configuration.zabbix.User", this.username);
         repo.save(userConfiguration);
-        Configuration passConfiguration = new Configuration("zabbixPass", this.password);
+        Configuration passConfiguration = new Configuration("configuration.zabbix.Password", this.password);
         repo.save(passConfiguration);
-        Configuration urlConfig = new Configuration("zabbixURL", this.zabbixUrl);
+        Configuration urlConfig = new Configuration("configuration.zabbix.URL", this.zabbixUrl);
         repo.save(urlConfig);
     }
 

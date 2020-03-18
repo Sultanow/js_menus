@@ -10,7 +10,7 @@ export class SettingsService {
   constructor(private http: HttpClient) { }
 
   getAllSettings(): Observable<any> {
-    return this.http.get(`${this.backendUrl}`);
+    return this.http.get(`${this.backendUrl}/getAllConfig`);
   }
 
   updateSettings(values: JSON): Observable<any> {
