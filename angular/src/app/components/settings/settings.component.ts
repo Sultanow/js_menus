@@ -1,20 +1,19 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Configuration } from 'src/app/model/configuration';
-import { Observable } from 'rxjs';
 import { SettingsService } from 'src/app/services/settings/settings.service';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styleUrls: [ './settings.component.css' ]
+  styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
   @Input() showSettings: boolean;
   @Output() notifyTitle = new EventEmitter<string>();
 
-  settings: Observable<Configuration[]>;
+  settings: Configuration[];
 
-  constructor (private settingsService: SettingsService) {
+  constructor(private settingsService: SettingsService) {
   }
 
   ngOnInit() {
@@ -28,18 +27,39 @@ export class SettingsComponent implements OnInit {
   }
 
   reloadData() {
-    this.settings = this.settingsService.getAllSettings();
+    this.settingsService.getAllSettings().subscribe(data => {
+      console.log(data);
+      this.settings = data;
+      console.log(this.settings);
+    });
   }
 
-  updateSettings() {
-    let changedSettings: JSON = this.checkChangedSettings();
+  onChangeItem(event) {
+    this.settings.forEach(setting => {
+      if (setting.key === event.srcElement.name) {
+        if (setting.oldValue === undefined) {
+          setting.value !== undefined ? setting.oldValue = setting.value : setting.oldValue = "";
+          setting.value = event.srcElement.value;
+        }
+        return;
+      }
+    })
+  }
+
+  onSaveSettings() {
+    let changedSettings: Configuration[] = [];
+    this.settings.forEach(setting => {
+      if (setting.oldValue !== undefined)
+        changedSettings.push(setting);
+    });
+    if (changedSettings.length === 0) {
+      console.log("No changed settings");
+      return;
+    }
     this.settingsService.updateSettings(changedSettings).subscribe(data => {
       console.log(data);
       this.reloadData();
     }, error => console.log(error));
   }
 
-  checkChangedSettings(): JSON {
-    throw new Error("Method not implemented.");
-  }
 }

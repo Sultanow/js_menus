@@ -5,9 +5,10 @@
             <th scope="col">Einstellung</th>
             <th scope="col">Wert</th>
         </tr>
-        <tr *ngFor="let setting of allSettings">
+        <tr *ngFor="let setting of settings">
             <td>{{setting.key}}</td>
-            <td>{{setting.value}}</td>
+            <td><textarea rows=1 cols="26" class="textarea_items" (change)="onChangeItem($event)" name="{{setting.key}}">{{setting.value}}</textarea></td>
         </tr>
     </table>
+    <button (click)="onSaveSettings($event)">Einstellungen Speichern</button>
 </div>
