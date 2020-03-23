@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { StatusWarningsComponent } from './status-warnings.component';
-import { MatMenuModule } from '@angular/material';
+import { MatMenuModule } from '@angular/material/menu';
 
 describe('StatusWarningsComponent', () => {
   let component: StatusWarningsComponent;

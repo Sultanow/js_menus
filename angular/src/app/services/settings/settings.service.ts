@@ -23,11 +23,11 @@ export class SettingsService {
   }
 
   getTitel(): Observable<any> {
-    return this.http.get(`${this.backendUrl}/title`);
+    return this.http.get(`${this.backendUrl}/title`, { responseType: "text"});
   }
 
-  setTitle(newTitel: string):Observable<any> {
-    return this.http.post(`${this.backendUrl}/titel`, newTitel)
+  getSVGLogo(): Observable<any> {
+    return this.http.get(`${this.backendUrl}/logo`, {responseType: "text"});
   }
 
   private handleError(error: HttpErrorResponse) {

@@ -20,7 +20,6 @@ export class StatisticComponent implements OnInit {
   @Input()
   batchtimes: Batches[];
 
-  private svgElement: HTMLElement;
   private chartProps: any;
 
   constructor () { }
@@ -92,7 +91,7 @@ export class StatisticComponent implements OnInit {
     this.chartProps.x.domain(
       d3.extent(_this.batchtimes, function (d) {
         if (d.date instanceof Date)
-          return (d.date as Date).getTime();
+          return (d.date).getTime();
       }));
     this.chartProps.y.domain([ 0, d3.max(this.batchtimes, function (d) {
       return Math.max(d.durationBatch1, d.durationBatch2);

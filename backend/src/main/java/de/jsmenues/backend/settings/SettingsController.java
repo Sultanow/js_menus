@@ -29,6 +29,8 @@ public class SettingsController {
                      "configuration.zabbix.User",
                      "configuration.zabbix.Password",
                      "configuration.zabbix.URL",
+                     "configuration.zabbix.filterGroup",
+                     "configuration.zabbix.items",
                      "configuration.frontend.title",
                      "configuration.frontend.logo"));
 
@@ -54,6 +56,7 @@ public class SettingsController {
 
              @GET
              @Path("/title")
+             @Produces(MediaType.TEXT_PLAIN)
              public Response getTitle() {
                              String siteTitle = ConfigurationRepository.getRepo().get("configuration.frontend.title").getValue();
 

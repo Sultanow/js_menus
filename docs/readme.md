@@ -1,7 +1,7 @@
 Starten der Containerplattform.
 
 1. Es ist kein Zabbix im Netzwerk verfügbar:
-  - Disclamer: Diese Zabbix Konfiguration ist nur für Testzwecke und als Minimalkonfiguration gedacht, um das Dashboad nutzen zu können!
+  - Disclaimer: Diese Zabbix Konfiguration ist nur für Testzwecke und als Minimalkonfiguration gedacht, um das Dashboad nutzen zu können!
   - Zuerst starten des Zabbix Service: Dafür eine Powershell öffnen und in das Verzeichnis /docker/zabbix wechseln.
   - Mit `docker-compose up -d` den Service starten.
   - Einloggen ins Zabbix erfolgt über localhost:8081 mit dem User "Admin" und Password "zabbix" (Groß-/Kleinschreibung beachten für den User).  
@@ -18,3 +18,10 @@ Starten der Containerplattform.
   - Mit der Powershell in das Verzeichnis /docker wechseln
   - Mit `docker-compose up -d` den Payara und Redis Service starten
 
+4. Setzen der Einstellungen für Zabbix in der Weboberfläche
+  - Öffnen des Dashboards im Browser mit http://localhost:8080
+  - Klick auf das Zahnrad oben rechts
+  - Setzen der Zabbix Konfiguration:
+    - User: Admin
+    - Passwort: zabbix
+    - URL: http://zabbix-frontend:80/api_jsonrpc.php

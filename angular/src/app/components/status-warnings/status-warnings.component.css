@@ -132,3 +132,15 @@ input {
 .menuButton {
   cursor: initial;
 }
+
+#globalLogo {
+  height: 20px;
+  max-height: 20px;
+  width: 30px;
+  fill: white;
+}
+
+.logoTitle {
+  width: 100px;
+  display: contents;
+}

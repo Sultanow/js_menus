@@ -561,3 +561,97 @@
 1:M 10 Mar 2020 13:17:24.384 * DB saved on disk
 1:M 10 Mar 2020 13:17:24.386 * Removing the pid file.
 1:M 10 Mar 2020 13:17:24.389 # Redis is now ready to exit, bye bye...
+1:C 18 Mar 2020 13:49:17.948 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+1:C 18 Mar 2020 13:49:17.950 # Redis version=5.0.7, bits=64, commit=00000000, modified=0, pid=1, just started
+1:C 18 Mar 2020 13:49:17.952 # Configuration loaded
+                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 5.0.7 (00000000/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                   
+ (    '      ,       .-`  | `,    )     Running in standalone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+ |    `-._   `._    /     _.-'    |     PID: 1
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           http://redis.io        
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+1:M 18 Mar 2020 13:49:17.958 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+1:M 18 Mar 2020 13:49:17.960 # Server initialized
+1:M 18 Mar 2020 13:49:17.962 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
+1:M 18 Mar 2020 13:49:17.965 * DB loaded from append only file: 0.002 seconds
+1:M 18 Mar 2020 13:49:17.966 * Ready to accept connections
+1:M 18 Mar 2020 13:54:18.012 * 10 changes in 300 seconds. Saving...
+1:M 18 Mar 2020 13:54:18.015 * Background saving started by pid 17
+17:C 18 Mar 2020 13:54:18.029 * DB saved on disk
+17:C 18 Mar 2020 13:54:18.031 * RDB: 0 MB of memory used by copy-on-write
+1:M 18 Mar 2020 13:54:18.118 * Background saving terminated with success
+1:M 18 Mar 2020 14:45:48.774 * 1 changes in 900 seconds. Saving...
+1:M 18 Mar 2020 14:45:48.785 * Background saving started by pid 18
+18:C 18 Mar 2020 14:45:48.797 * DB saved on disk
+18:C 18 Mar 2020 14:45:48.801 * RDB: 0 MB of memory used by copy-on-write
+1:M 18 Mar 2020 14:45:48.888 * Background saving terminated with success
+1:signal-handler (1584548380) Received SIGTERM scheduling shutdown...
+1:M 18 Mar 2020 16:19:40.818 # User requested shutdown...
+1:M 18 Mar 2020 16:19:40.820 * Calling fsync() on the AOF file.
+1:M 18 Mar 2020 16:19:40.823 * Saving the final RDB snapshot before exiting.
+1:M 18 Mar 2020 16:19:40.833 * DB saved on disk
+1:M 18 Mar 2020 16:19:40.835 * Removing the pid file.
+1:M 18 Mar 2020 16:19:40.842 # Redis is now ready to exit, bye bye...
+1:C 18 Mar 2020 23:24:42.061 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+1:C 18 Mar 2020 23:24:42.065 # Redis version=5.0.7, bits=64, commit=00000000, modified=0, pid=1, just started
+1:C 18 Mar 2020 23:24:42.068 # Configuration loaded
+                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 5.0.7 (00000000/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                   
+ (    '      ,       .-`  | `,    )     Running in standalone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+ |    `-._   `._    /     _.-'    |     PID: 1
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           http://redis.io        
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+1:M 18 Mar 2020 23:24:42.077 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+1:M 18 Mar 2020 23:24:42.080 # Server initialized
+1:M 18 Mar 2020 23:24:42.083 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
+1:M 18 Mar 2020 23:24:42.088 * DB loaded from append only file: 0.003 seconds
+1:M 18 Mar 2020 23:24:42.090 * Ready to accept connections
+1:M 18 Mar 2020 23:29:43.035 * 10 changes in 300 seconds. Saving...
+1:M 18 Mar 2020 23:29:43.048 * Background saving started by pid 17
+17:C 18 Mar 2020 23:29:43.071 * DB saved on disk
+17:C 18 Mar 2020 23:29:43.076 * RDB: 0 MB of memory used by copy-on-write
+1:M 18 Mar 2020 23:29:43.155 * Background saving terminated with success
+1:M 19 Mar 2020 00:02:02.739 * 1 changes in 900 seconds. Saving...
+1:M 19 Mar 2020 00:02:02.744 * Background saving started by pid 18
+18:C 19 Mar 2020 00:02:02.769 * DB saved on disk
+18:C 19 Mar 2020 00:02:02.775 * RDB: 0 MB of memory used by copy-on-write
+1:M 19 Mar 2020 00:02:02.848 * Background saving terminated with success
+1:M 19 Mar 2020 00:21:55.327 * 1 changes in 900 seconds. Saving...
+1:M 19 Mar 2020 00:21:55.333 * Background saving started by pid 19
+19:C 19 Mar 2020 00:21:55.356 * DB saved on disk
+19:C 19 Mar 2020 00:21:55.364 * RDB: 0 MB of memory used by copy-on-write
+1:M 19 Mar 2020 00:21:55.438 * Background saving terminated with success
+1:M 19 Mar 2020 04:42:22.755 * 1 changes in 900 seconds. Saving...
+1:M 19 Mar 2020 04:42:22.767 * Background saving started by pid 20
+20:C 19 Mar 2020 04:42:22.777 * DB saved on disk
+20:C 19 Mar 2020 04:42:22.779 * RDB: 0 MB of memory used by copy-on-write
+1:M 19 Mar 2020 04:42:22.870 * Background saving terminated with success
+1:M 19 Mar 2020 04:57:23.022 * 1 changes in 900 seconds. Saving...
+1:M 19 Mar 2020 04:57:23.025 * Background saving started by pid 21
+21:C 19 Mar 2020 04:57:23.032 * DB saved on disk
+21:C 19 Mar 2020 04:57:23.036 * RDB: 0 MB of memory used by copy-on-write
+1:M 19 Mar 2020 04:57:23.128 * Background saving terminated with success

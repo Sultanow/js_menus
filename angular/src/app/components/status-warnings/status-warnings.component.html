@@ -1,12 +1,16 @@
 <div *ngIf="showStatusWarnings" class="status" id="status-box">
     <div id="status-box-content">
+        <div class="logoTitle">
+            <div #globalLogo ></div>
+            {{globalTitle}}
+        </div>
         <p *ngIf="scrollingMenu" class="marquee">
             <span>
                 Konfiguration dev1 nicht in Ordnung &nbsp;-&nbsp; Konfiguration dev2 nicht in Ordnung &nbsp;-&nbsp;
                 Konfiguration dev3 nicht in Ordnung &nbsp;-&nbsp; Konfiguration dev4 nicht in Ordnung &nbsp;-&nbsp;
                 Konfiguration dev5 nicht in Ordnung &nbsp;</span>
         </p>
-        <p *ngIf="!scrollingMenu">
+        <div *ngIf="!scrollingMenu">
 
             <mat-menu #menuDev1="matMenu">
                 <button mat-menu-item class="menuButton">Item 1</button>
@@ -52,6 +56,6 @@
                 </svg>
                 dev3
             </span>
-        </p>
+        </div>
     </div>
 </div>

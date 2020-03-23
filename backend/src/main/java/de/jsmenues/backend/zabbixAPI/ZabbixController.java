@@ -11,10 +11,7 @@ import org.codehaus.jackson.JsonNode;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Path("zabbixapi")
 public class ZabbixController {
@@ -48,10 +45,18 @@ public class ZabbixController {
             return Response.status(505, "ZabbixLogin not successful").build();
         }
 
-        List<String> a = new LinkedList<>();
-        a.add("hostid");
-        a.add("host");
-        Request hostRequest = RequestBuilder.newBuilder().method("host.get").paramEntry("output", a.toArray()).build();
+        List<String> outputParams = new LinkedList<>();
+        outputParams.add("hostid");
+        outputParams.add("host");
+
+        String filterGroup = ConfigurationRepository.getRepo().get("configuration.zabbix.filterGroup").getValue();
+        Map<String, String[]> filter = new HashMap<>();
+        filter.put("hostgroup", new String[] {filterGroup});
+        Request hostRequest = RequestBuilder.newBuilder()
+                .method("host.get")
+                .paramEntry("output", outputParams.toArray())
+                .paramEntry("filter", filter)
+                .build();
         JsonNode getResponse = api.call(hostRequest, true);
         JsonNode result = getResponse.path("result");
         return Response.ok(responseText + result.toString()).build();
