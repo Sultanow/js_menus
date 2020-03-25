@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { TimelineLite } from "gsap";
 import { ConfigurationItemsService } from './services/configuration/configuration-items.service';
 import { ServerConfiguration } from 'src/config/ServerConfiguration';
+import { SettingsService } from './services/settings/settings.service';
 
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
-	styleUrls: [ './app.component.css' ]
+	styleUrls: ['./app.component.css']
 })
 
 export class AppComponent {
@@ -50,9 +51,12 @@ export class AppComponent {
 		this.configService.getServerConfiguration(ServerConfiguration.ENV_LIST).subscribe(data => {
 			this.configService.addConfiguration(this.configService.createServerConf(data));
 		});
+		this.settingsService.getTitel().subscribe(title => {
+			this.title = title;
+		})
 	}
 
-	constructor (private configService: ConfigurationItemsService) {
+	constructor(private configService: ConfigurationItemsService, private settingsService: SettingsService) {
 	}
 
 
@@ -227,8 +231,13 @@ export class AppComponent {
 	}
 
 	openSettings() {
-		this.showViewBox = true;
-		this.showView = "settings"
+		if (this.showViewBox && this.showView === "settings") {
+			this.showViewBox = false;
+			this.showView = "";
+		} else {
+			this.showViewBox = true;
+			this.showView = "settings";
+		}
 	}
 
 }
