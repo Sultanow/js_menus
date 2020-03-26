@@ -7,6 +7,8 @@ import io.github.cgi.zabbix.api.Request;
 import io.github.cgi.zabbix.api.RequestBuilder;
 import io.github.cgi.zabbix.api.ZabbixApi;
 import org.codehaus.jackson.JsonNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -15,6 +17,7 @@ import java.util.*;
 
 @Path("zabbixapi")
 public class ZabbixController {
+    private static Logger LOGGER = LoggerFactory.getLogger(ZabbixController.class);
 
     /**
      * Method handling HTTP GET requests. The returned object will be sent
@@ -33,8 +36,6 @@ public class ZabbixController {
         return zabbixApi.apiVersion();
     }
 
-
-
     @GET
     @Path("/getAllHosts")
     @Produces(MediaType.TEXT_PLAIN)
@@ -51,7 +52,7 @@ public class ZabbixController {
 
         String filterGroup = ConfigurationRepository.getRepo().get("configuration.zabbix.filterGroup").getValue();
         Map<String, String[]> filter = new HashMap<>();
-        filter.put("hostgroup", new String[] {filterGroup});
+        filter.put("hostgroup", new String[] { filterGroup });
         Request hostRequest = RequestBuilder.newBuilder()
                 .method("host.get")
                 .paramEntry("output", outputParams.toArray())
@@ -72,17 +73,25 @@ public class ZabbixController {
         }
         Map<String, String[]> filter = new HashMap<>();
         filter.put("host", hosts.toArray(new String[0]));
+        String[] output = {"name", "hostid", "host"};
+        String[] selectItems = {"itemid", "key_", "name", "prevvalue", "lastvalue", "lastclock", "description"};
         Request informationRequest = RequestBuilder.newBuilder()
             .method("host.get")
             .paramEntry("filter", filter)
-            .paramEntry("output", "extend")
-            .paramEntry("selectItems", "extend")
+            .paramEntry("output", output)
+            .paramEntry("selectItems", selectItems)
             .paramEntry("selectHosts", "extend")
             .paramEntry("selectGroups", "extend")
             .build();
         JsonNode getResponse = api.call(informationRequest);
         JsonNode result = getResponse.path("result");
+        removeNotNeededInformationFromResult(result);
         return Response.ok(result.toString()).build();
+    }
+
+    private void removeNotNeededInformationFromResult(JsonNode information) {
+        String item = ConfigurationRepository.getRepo().get("configuration.zabbix.items").getValue();
+        String[] items = item.split(",");
     }
 
     private ZabbixApi zabbixLogin() {

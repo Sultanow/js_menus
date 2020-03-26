@@ -73,6 +73,7 @@ export class ViewboxComponent implements OnInit {
   viewType: string;
   openShowView(view: string) {
     this.viewType = view;
+    this.closeAllViews();
     if (view === "compare") {
       this.showCompare = true;
     } else if (view === "statistic") {
