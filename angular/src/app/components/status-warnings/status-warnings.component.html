@@ -1,22 +1,13 @@
 <div *ngIf="showStatusWarnings" class="status" id="status-box">
     <div id="status-box-content">
-        <div class="logoTitle">
-            <div #globalLogo ></div>
-            {{globalTitle}}
-        </div>
-        <p *ngIf="scrollingMenu" class="marquee">
-            <span>
-                Konfiguration dev1 nicht in Ordnung &nbsp;-&nbsp; Konfiguration dev2 nicht in Ordnung &nbsp;-&nbsp;
-                Konfiguration dev3 nicht in Ordnung &nbsp;-&nbsp; Konfiguration dev4 nicht in Ordnung &nbsp;-&nbsp;
-                Konfiguration dev5 nicht in Ordnung &nbsp;</span>
-        </p>
-        <div *ngIf="!scrollingMenu">
+        <span #globalLogo></span>
+        <span style="padding-right: 20px;">{{globalTitle}}</span>
 
-            <mat-menu #menuDev1="matMenu">
-                <button mat-menu-item class="menuButton">Item 1</button>
-                <button mat-menu-item class="menuButton">Item 2</button>
+        <ng-container *ngFor="let menuItem of menuItems">
+            <mat-menu #menu1="matMenu">
+                <button mat-menu-item class="menuButton" *ngFor="let item of menuItem.items">{{item.name}}</button>
             </mat-menu>
-            <span mat-button [matMenuTriggerFor]="menuDev1">
+            <span mat-button [matMenuTriggerFor]="menu1">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 30 20" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path
@@ -24,38 +15,8 @@
                     <line x1="12" y1="9" x2="12" y2="13" />
                     <line x1="12" y1="17" x2="12.01" y2="17" />
                 </svg>
-                dev1
+                {{menuItem.name}}
             </span>
-
-            <mat-menu #menuDev2="matMenu">
-                <button mat-menu-item class="menuButton">Item 2</button>
-                <button mat-menu-item class="menuButton">Item 3</button>
-            </mat-menu>
-            <span mat-button [matMenuTriggerFor]="menuDev2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 30 20" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path
-                        d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-                    <line x1="12" y1="9" x2="12" y2="13" />
-                    <line x1="12" y1="17" x2="12.01" y2="17" />
-                </svg>
-                dev2
-            </span>
-
-            <mat-menu #menuDev3="matMenu">
-                <button mat-menu-item class="menuButton">Item 3</button>
-                <button mat-menu-item class="menuButton">Item 4</button>
-            </mat-menu>
-            <span mat-button [matMenuTriggerFor]="menuDev3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 30 20" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path
-                        d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-                    <line x1="12" y1="9" x2="12" y2="13" />
-                    <line x1="12" y1="17" x2="12.01" y2="17" />
-                </svg>
-                dev3
-            </span>
-        </div>
+        </ng-container>
     </div>
 </div>

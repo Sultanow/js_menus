@@ -30,6 +30,14 @@ export class SettingsService {
     return this.http.get(`${this.backendUrl}/logo`, {responseType: "text"});
   }
 
+  getDummyStatusWarnings(): Observable<any> {
+    return this.http.get(`${this.backendUrl}/dummyStatusWarnings`);
+  }
+  
+  getCompareServerConfig(): Observable<any> {
+    return this.http.get(`${this.backendUrl}/servercompareconfig`);
+  }
+  
   private handleError(error: HttpErrorResponse) {
     if( error.error instanceof ErrorEvent) {
       console.error('An error occurred:', error.error.message)

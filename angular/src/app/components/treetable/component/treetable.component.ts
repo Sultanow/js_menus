@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, ElementRef, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, Output, ElementRef, TemplateRef, OnChanges, SimpleChanges } from '@angular/core';
 import { Node, TreeTableNode, Options, SearchableNode } from '../models';
 import { TreeService } from '../services/tree/tree.service';
 import { MatTableDataSource } from '@angular/material/table';
@@ -14,7 +14,7 @@ import { Subject } from 'rxjs';
   templateUrl: './treetable.component.html',
   styleUrls: [ './treetable.component.css' ]
 })
-export class TreetableComponent<T> implements OnInit {
+export class TreetableComponent<T> implements OnInit, OnChanges {
   @Input() @Required tree: Node<T> | Node<T>[];
   @Input() options: Options<T> = {};
   @Output() nodeClicked: Subject<TreeTableNode<T>> = new Subject();
@@ -38,8 +38,19 @@ export class TreetableComponent<T> implements OnInit {
       console.warn(`DEPRECATION WARNING: \n The 'ng-treetable' selector is being deprecated. Please use the new 'treetable' selector`);
     }
   }
-
+  
   ngOnInit() {
+    this.createTree();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes.tree.isFirstChange()) {
+      return;
+    }
+    this.createTree();
+  }
+
+  createTree() {
     this.tree = Array.isArray(this.tree) ? this.tree : [ this.tree ];
     if (this.tree.length != 0) {
       this.options = this.parseOptions(defaultOptions);

@@ -15,6 +15,8 @@ export class StatusWarningsComponent implements OnInit {
   @ViewChild('globalLogo') logo: ElementRef;
   globalLogo: string = "<svg viewBox='0 0 80 2' xmlns='http://www.w3.org/2000/svg'><style>.logo { font: italic 2px sans-serif; fill: white; } </style>  <text x='0' y='2' class='logo'>KC</text></svg>";
 
+  menuItems: JSON;
+
   constructor (private settingsService: SettingsService) { }
 
   ngOnInit() {
@@ -22,12 +24,19 @@ export class StatusWarningsComponent implements OnInit {
       console.log(title);
       if(title !== "")
         this.globalTitle = title;
-    })
-    console.log(this.logo)
+    });
     this.settingsService.getSVGLogo().subscribe(logo => {
       console.log(logo);
       if(logo !== "")
         this.globalLogo = logo;
+
+      if(this.logo.nativeElement)
+        this.logo.nativeElement.innerHTML = this.globalLogo;
+    });
+
+    this.settingsService.getDummyStatusWarnings().subscribe(data => {
+      console.log(data);
+      this.menuItems = data;
     })
   }
 
@@ -35,4 +44,25 @@ export class StatusWarningsComponent implements OnInit {
     this.logo.nativeElement.innerHTML = this.globalLogo;
   }
 
+  /*
+    Statuswarning JSON sieht so aus:
+    [
+      {
+        "name" : "dev1",
+        "items" : [{
+          "name" : "Item1"},
+          {"name" : "Item2"}
+        ]
+      },
+      {
+        "name" : "dev2",
+        "items": [
+          {"name": "Item3"},
+          {"name": "Item4"}
+        ]
+      }
+    ]
+
+
+  */
 }

@@ -5,6 +5,7 @@ import { Observable,  BehaviorSubject } from 'rxjs';
 import { ENVCONFIG, ENVVAL } from 'src/app/model/evntreetable';
 import { Node } from 'src/app/components/treetable/treetable.module';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { SettingsService } from '../settings/settings.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,8 @@ export class ConfigurationItemsService implements OnDestroy {
     this._itemlist = value;
   }
 
-  constructor (private http: HttpClient) { }
+  constructor (private http: HttpClient,
+    private settingsService: SettingsService) { }
 
   getServerConfiguration(environments: string[]): Observable<any> {
     let params = new HttpParams();
@@ -45,10 +47,8 @@ export class ConfigurationItemsService implements OnDestroy {
     let ret: ConfigurationItem[] = [];
     result.forEach(elem => {
       let host = elem.host;
-      console.log(elem);
       elem.items.forEach(item => {
         if (ServerConfiguration.EVN_ITEMS.includes(item.key_)) {
-          console.log("Item found " + item.key_);
           ret.push(this.createItem(host, item.name, item.lastvalue));
         }
       });
@@ -103,7 +103,9 @@ export class ConfigurationItemsService implements OnDestroy {
   }
 
   generateTree(env?: string[]): void {
-    let tree = this.buildEmptyTree();
+    this.settingsService.getCompareServerConfig().subscribe(data => {
+      console.log(data);
+      let tree = data;
     if (env != null) {
       env.forEach(e => {
         tree = this.addEnvToTree(tree, e);
@@ -114,11 +116,8 @@ export class ConfigurationItemsService implements OnDestroy {
       this.fillValuesToArray(tree);
     }
     this.treeNodes.next(tree);
-  }
-
-  buildEmptyTree() {
-    let tree: Node<ENVCONFIG>[] = ServerConfiguration.EMPTY_TREE;
-    return tree;
+    })
+    
   }
 
   addEnvToTree(tree: Node<ENVCONFIG>[], env: string): Node<ENVCONFIG>[] {

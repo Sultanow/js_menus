@@ -32,7 +32,9 @@ public class SettingsController {
                      "configuration.zabbix.filterGroup",
                      "configuration.zabbix.items",
                      "configuration.frontend.title",
-                     "configuration.frontend.logo"));
+                     "configuration.frontend.logo",
+                     "configuration.dummy.statuswarning",
+                     "configuration.servercompare.config"));
 
              @GET
              @Path("/getZabbixConfig")
@@ -106,4 +108,17 @@ public class SettingsController {
                              return Response.ok().build();
              }
 
+             @GET
+             @Path("/dummyStatusWarnings")
+             public Response getDummyStatusWarnings() {
+                     String value = ConfigurationRepository.getRepo().get("configuration.dummy.statuswarning").getValue();
+                     return Response.ok(value).build();
+             }
+
+             @GET
+             @Path("/servercompareconfig")
+             public Response getServerCompareConfig() {
+                     String value = ConfigurationRepository.getRepo().get("configuration.servercompare.config").getValue();
+                     return Response.ok(value).build();
+             }
 }
