@@ -3,6 +3,7 @@ package de.jsmenues.backend.settings;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -12,11 +13,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import com.google.gson.Gson;
 
-import de.jsmenues.backend.zabbixapi.ZabbixUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.jsmenues.backend.zabbixAPI.ZabbixUser;
 import de.jsmenues.redis.data.Configuration;
 import de.jsmenues.redis.repository.ConfigurationRepository;
 
