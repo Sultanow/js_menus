@@ -1,3 +1,8 @@
 .textarea_items {
     resize: none;
 }
+.versionPosition{
+    position: absolute;
+    font-style: italic;
+    bottom: 10px;
+}
