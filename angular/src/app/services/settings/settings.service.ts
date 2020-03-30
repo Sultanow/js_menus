@@ -52,4 +52,7 @@ export class SettingsService {
       'Something bad happened; please try again later.'
     );
   }
+  getVersion(): Observable<any> {
+    return this.http.get(`${this.backendUrl}/version`, { responseType: "text"});
+  }
 }

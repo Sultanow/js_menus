@@ -12,12 +12,14 @@ export class SettingsComponent implements OnInit {
   @Output() notifyTitle = new EventEmitter<string>();
 
   settings: Configuration[];
+  version: string;
 
   constructor(private settingsService: SettingsService) {
   }
 
   ngOnInit() {
     this.reloadData();
+    this.showVersion();
   }
 
   ngOnChanges(changes) {
@@ -61,5 +63,13 @@ export class SettingsComponent implements OnInit {
       this.reloadData();
     }, error => console.log(error));
   }
+  showVersion() {
+  
+    this.settingsService.getVersion().subscribe (data => {
+      console.log(data);
+      this.version = data;
+      console.log(this.version);
+    });
 
+  }
 }

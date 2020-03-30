@@ -1,8 +1,10 @@
 package de.jsmenues.backend.settings;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -123,5 +125,21 @@ public class SettingsController {
              public Response getServerCompareConfig() {
                      String value = ConfigurationRepository.getRepo().get("configuration.servercompare.config").getValue();
                      return Response.ok(value).build();
+             }
+             @GET
+             @Path("/version")
+             public Response getVersion() {
+                      
+                final Properties properties = new Properties();
+                try {
+                        properties.load(this.getClass().getClassLoader().getResourceAsStream("project.properties"));
+                        } catch (IOException e) {
+                String version = "no version";
+                return Response.ok(version).build();
+
+                 }
+                String version = properties.getProperty("version");
+
+                return Response.ok(version).build();
              }
 }
