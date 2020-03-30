@@ -21,7 +21,7 @@ import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.jsmenues.backend.zabbixAPI.ZabbixUser;
+import de.jsmenues.backend.zabbixapi.ZabbixUser;
 import de.jsmenues.redis.data.Configuration;
 import de.jsmenues.redis.repository.ConfigurationRepository;
 

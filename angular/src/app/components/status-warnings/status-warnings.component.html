@@ -1,7 +1,7 @@
 <div *ngIf="showStatusWarnings" class="status" id="status-box">
     <div id="status-box-content">
         <span #globalLogo></span>
-        <span style="padding-right: 20px;">{{globalTitle}}</span>
+        <span class="logoTitle">{{globalTitle}}</span>
 
         <ng-container *ngFor="let menuItem of menuItems">
             <mat-menu #menu1="matMenu">
