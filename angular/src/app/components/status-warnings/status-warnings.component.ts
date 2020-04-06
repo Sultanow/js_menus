@@ -11,6 +11,8 @@ export class StatusWarningsComponent implements OnInit {
   @Input() showStatusWarnings: boolean;
   scrollingMenu: boolean = false;
   globalTitle: string = "Dashboard";
+
+
   
   @ViewChild('globalLogo') logo: ElementRef;
   globalLogo: string = "<svg viewBox='5 -10 12 12' xmlns='http://www.w3.org/2000/svg' width='40px' height='20px'><style>.logo { font: italic 13px sans-serif; fill: white; } </style>  <text x='0' y='2' class='logo'>KC</text></svg>";
@@ -37,6 +39,12 @@ export class StatusWarningsComponent implements OnInit {
     this.settingsService.getDummyStatusWarnings().subscribe(data => {
       console.log(data);
       this.menuItems = data;
+    })
+    this.settingsService.currentTitle.subscribe( title => {
+      console.log(title);
+      if(title !== ""){
+        this.globalTitle = title;
+      }
     })
   }
 

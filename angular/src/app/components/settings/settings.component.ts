@@ -13,6 +13,9 @@ export class SettingsComponent implements OnInit {
 
   settings: Configuration[];
   version: string;
+  globalTitle : string;
+
+ 
 
   constructor(private settingsService: SettingsService) {
   }
@@ -20,6 +23,7 @@ export class SettingsComponent implements OnInit {
   ngOnInit() {
     this.reloadData();
     this.showVersion();
+   
   }
 
   ngOnChanges(changes) {
@@ -28,12 +32,22 @@ export class SettingsComponent implements OnInit {
     }
   }
 
+  getNewTitle(){  
+    this.settingsService.getTitel().subscribe(title => {
+     if(title !== "")
+    this.globalTitle= title;
+       this.settingsService.changeTitle(this.globalTitle);
+   });
+
+  }
+
   reloadData() {
     this.settingsService.getAllSettings().subscribe(data => {
-      console.log(data);
+     // console.log(data);
       this.settings = data;
       console.log(this.settings);
     });
+  
   }
 
   onChangeItem(event) {
@@ -61,12 +75,12 @@ export class SettingsComponent implements OnInit {
     this.settingsService.updateSettings(changedSettings).subscribe(data => {
       console.log(data);
       this.reloadData();
+      this.getNewTitle()
     }, error => console.log(error));
   }
   showVersion() {
-  
     this.settingsService.getVersion().subscribe (data => {
-      console.log(data);
+     // console.log(data);
       this.version = data;
       console.log(this.version);
     });

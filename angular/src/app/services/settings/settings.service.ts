@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { Configuration } from 'src/app/model/configuration';
 import { catchError } from 'rxjs/operators';
 
@@ -8,8 +8,16 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class SettingsService {
+
+  private title = new BehaviorSubject<string>("");
+  currentTitle = this.title.asObservable();
+  
   private backendUrl: string = 'backend/settings';
   constructor(private http: HttpClient) { }
+
+  changeTitle( title : string){
+    this.title.next(title);
+  }
 
   getAllSettings(): Observable<any> {
     return this.http.get(`${this.backendUrl}/getAllConfig`);

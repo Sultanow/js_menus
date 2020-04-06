@@ -131,15 +131,12 @@ public class SettingsController {
              public Response getVersion() {
                       
                 final Properties properties = new Properties();
+                String version = "no version";
                 try {
                         properties.load(this.getClass().getClassLoader().getResourceAsStream("project.properties"));
-                        } catch (IOException e) {
-                String version = "no version";
-                return Response.ok(version).build();
-
+                        version = properties.getProperty("version");
+                 } catch (IOException e) {             
                  }
-                String version = properties.getProperty("version");
-
                 return Response.ok(version).build();
              }
 }
