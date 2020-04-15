@@ -1,7 +1,7 @@
 import { ConfigurationItem } from 'src/app/model/configurationItem';
 import { Injectable, OnDestroy } from '@angular/core';
 import { ServerConfiguration } from 'src/config/ServerConfiguration';
-import { Observable,  BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, onErrorResumeNext } from 'rxjs';
 import { ENVCONFIG, ENVVAL } from 'src/app/model/evntreetable';
 import { Node } from 'src/app/components/treetable/treetable.module';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -11,7 +11,8 @@ import { SettingsService } from '../settings/settings.service';
   providedIn: 'root'
 })
 export class ConfigurationItemsService implements OnDestroy {
-	
+
+
   ngOnDestroy(): void {
   }
 
@@ -25,7 +26,21 @@ export class ConfigurationItemsService implements OnDestroy {
     return this._itemlist;
   }
   public set itemlist(value: ConfigurationItem[]) {
-    this._itemlist = value;
+    value.forEach(elem => {
+      if (elem.value === "")
+        return;
+      let update: boolean = false;
+      this._itemlist.forEach(item => {
+        if (item.key === elem.key && item.env === elem.env) {
+          item.value = elem.value;
+          item.soll = elem.soll;
+          update = true;
+          return;
+        }
+      });
+      if (update === false)
+        this._itemlist.push(elem);
+    });
   }
 
   constructor (private http: HttpClient,
@@ -35,27 +50,39 @@ export class ConfigurationItemsService implements OnDestroy {
     let params = new HttpParams();
     environments.forEach(environment => {
       params = params.append('host', environment);
-    })
-    return this.http.get(`${this.backendZabbixURL}/getInformationForHosts`, {params: params});
+    });
+    return this.http.get(`${this.backendZabbixURL}/getInformationForHosts`, { params: params });
+  }
+
+  getHostlist(): Observable<any> {
+    return this.http.get(`${this.backendZabbixURL}/getAllHosts`);
   }
 
   addConfiguration(list: ConfigurationItem[]) {
-		this.itemlist = list;
-	}
+    this.itemlist = list;
+  }
 
   createServerConf(result: any[]): ConfigurationItem[] {
     let ret: ConfigurationItem[] = [];
     result.forEach(elem => {
       let host = elem.host;
       elem.items.forEach(item => {
-        if (ServerConfiguration.EVN_ITEMS.includes(item.key_)) {
-          ret.push(this.createItem(host, item.name, item.lastvalue));
-        }
+        ret.push(this.createItem(host, item.name, item.lastvalue));
       });
     });
     return ret;
   }
 
+  getUpdateTime(data: any): number {
+    let time: number = 0;
+    data.forEach(elem => {
+      elem.items.forEach(item => {
+        if (item.lastclock !== '' && item.lastclock > time)
+          time = item.lastclock;
+      });
+    });
+    return time;
+  }
 
 
   getDummyServerConfiguration(): ConfigurationItem[] {
@@ -106,18 +133,18 @@ export class ConfigurationItemsService implements OnDestroy {
     this.settingsService.getCompareServerConfig().subscribe(data => {
       console.log(data);
       let tree = data;
-    if (env != null) {
-      env.forEach(e => {
-        tree = this.addEnvToTree(tree, e);
-      });
-    }
-    this.setSollValues();
-    if (tree != null) {
-      this.fillValuesToArray(tree);
-    }
-    this.treeNodes.next(tree);
-    })
-    
+      if (env != null) {
+        env.forEach(e => {
+          tree = this.addEnvToTree(tree, e);
+        });
+      }
+      this.setSollValues();
+      if (tree != null) {
+        this.fillValuesToArray(tree);
+      }
+      this.treeNodes.next(tree);
+    });
+
   }
 
   addEnvToTree(tree: Node<ENVCONFIG>[], env: string): Node<ENVCONFIG>[] {

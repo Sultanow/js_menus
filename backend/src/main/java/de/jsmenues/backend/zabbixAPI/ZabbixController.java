@@ -10,6 +10,7 @@ import org.codehaus.jackson.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.json.Json;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -45,22 +46,46 @@ public class ZabbixController {
         if (api == null) {
             return Response.status(505, "ZabbixLogin not successful").build();
         }
-
-        List<String> outputParams = new LinkedList<>();
-        outputParams.add("hostid");
-        outputParams.add("host");
-
+        List<String> hostOutputParams = new LinkedList<>();
+        hostOutputParams.add("hostid");
+        hostOutputParams.add("host");
         String filterGroup = ConfigurationRepository.getRepo().get("configuration.zabbix.filterGroup").getValue();
-        Map<String, String[]> filter = new HashMap<>();
-        filter.put("hostgroup", new String[] { filterGroup });
-        Request hostRequest = RequestBuilder.newBuilder()
-                .method("host.get")
-                .paramEntry("output", outputParams.toArray())
-                .paramEntry("filter", filter)
-                .build();
-        JsonNode getResponse = api.call(hostRequest, true);
-        JsonNode result = getResponse.path("result");
-        return Response.ok(responseText + result.toString()).build();
+        if(filterGroup.isEmpty()) {
+
+
+            Request hostRequest = RequestBuilder.newBuilder()
+                    .method("host.get")
+                    .paramEntry("output", hostOutputParams.toArray())
+                    .build();
+            JsonNode getResponse = api.call(hostRequest, true);
+            JsonNode result = getResponse.path("result");
+            return Response.ok(responseText + result.toString()).build();
+        }
+        else {
+            Map<String, String[]> filter = new HashMap<>();
+            filter.put("name", new String[]{filterGroup});
+            List<String> outputParams = new LinkedList<>();
+            outputParams.add("name");
+            outputParams.add("hosts");
+            Map<String, String[]> query = new HashMap<>();
+            //query.put("output", hostOutputParams.toArray());
+            Request hostgroupRequest = RequestBuilder.newBuilder()
+                    .method("hostgroup.get")
+                    .paramEntry("selectHosts", hostOutputParams.toArray())
+                    .paramEntry("filter", filter)
+                    .paramEntry("output", outputParams)
+                    .build();
+            JsonNode getResponse = api.call(hostgroupRequest, true);
+            JsonNode result = getResponse.path("result");
+            if(result.isArray()) {
+                for (final JsonNode objNode : result) {
+                    JsonNode node = objNode.get("hosts");
+                    result = node;
+                }
+            }
+
+            return Response.ok(responseText + result.toString()).build();
+        }
     }
 
     @GET

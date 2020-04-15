@@ -20,3 +20,20 @@ table#compare-table td, table#compare-table th {
   resize: none;
   margin: -3px 0 0 0;
 }
+
+.selectedEnvs {
+  display: inline;
+  border: solid 1px white;
+  margin-right: 0.3rem;
+}
+
+.selectedEnvs .feather {
+  position: relative;
+  top: 0.4rem;
+}
+
+::ng-deep.mat-select-value {
+  color: #fff;
+}
+
+
