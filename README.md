@@ -7,6 +7,9 @@ Die Anwendung besteht aus einer, mithilfe von Docker, containerisierten Angular-
 # Anwendung
 ![Demo](docs/img/demo.gif)
 
+# Quickstart Anleitung
+[Quickstart](docs/readme.md)
+
 # Grundlegende Referenzarchitektur
 
 ![Cloudbasierte Microservicereferenzarchitektur](docs/img/MRA_CaaS_01.jpg)
