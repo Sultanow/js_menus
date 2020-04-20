@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Configuration } from 'src/app/model/configuration';
 import { SettingsService } from 'src/app/services/settings/settings.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-settings',
@@ -17,12 +18,13 @@ export class SettingsComponent implements OnInit {
 
  
 
-  constructor(private settingsService: SettingsService) {
+  constructor(private settingsService: SettingsService ,private titleService : Title) {
   }
-
+  
   ngOnInit() {
     this.reloadData();
     this.showVersion();
+    this.titleService.setTitle(this.globalTitle);
    
   }
 
@@ -37,6 +39,8 @@ export class SettingsComponent implements OnInit {
      if(title !== "")
     this.globalTitle= title;
        this.settingsService.changeTitle(this.globalTitle);
+      this.titleService.setTitle(this.globalTitle);  
+
    });
 
   }
@@ -77,6 +81,7 @@ export class SettingsComponent implements OnInit {
       this.reloadData();
       this.getNewTitle()
     }, error => console.log(error));
+    
   }
   showVersion() {
     this.settingsService.getVersion().subscribe (data => {

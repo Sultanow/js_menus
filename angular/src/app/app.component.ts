@@ -3,6 +3,7 @@ import { TimelineLite } from "gsap";
 import { ConfigurationItemsService } from './services/configuration/configuration-items.service';
 import { ServerConfiguration } from 'src/config/ServerConfiguration';
 import { SettingsService } from './services/settings/settings.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
 	selector: 'app-root',
@@ -12,6 +13,7 @@ import { SettingsService } from './services/settings/settings.service';
 
 export class AppComponent {
 	title = 'angular-radial-menu';
+	
 
 	// Animations
 	animate_middle: TimelineLite = new TimelineLite({ paused: true });
@@ -51,12 +53,20 @@ export class AppComponent {
 		this.configService.getServerConfiguration(ServerConfiguration.ENV_LIST).subscribe(data => {
 			this.configService.addConfiguration(this.configService.createServerConf(data));
 		});
-		this.settingsService.getTitel().subscribe(title => {
-			this.title = title;
-		})
+		this.updateTitle() 
+	
 	}
 
-	constructor(private configService: ConfigurationItemsService, private settingsService: SettingsService) {
+	constructor(private configService: ConfigurationItemsService,
+		 private settingsService: SettingsService,
+		 private titleService : Title) {
+	}
+	updateTitle() {
+		this.settingsService.getTitel().subscribe(title => {
+			this.title = title;
+			this.titleService.setTitle(this.title);
+		})
+
 	}
 
 
@@ -64,11 +74,13 @@ export class AppComponent {
 		console.log(event);
 		this.showViewBox = true;
 		this.showView = event;
+		this.updateTitle();
 	}
 
 	onNotifyViewBoxClose() {
 		this.showViewBox = false;
 		this.showView = "";
+		this.updateTitle();
 	}
 
 	initAnimations() {
@@ -234,9 +246,12 @@ export class AppComponent {
 		if (this.showViewBox && this.showView === "settings") {
 			this.showViewBox = false;
 			this.showView = "";
+			this.updateTitle() 
 		} else {
 			this.showViewBox = true;
 			this.showView = "settings";
+			this.updateTitle() 
+			 
 		}
 	}
 
