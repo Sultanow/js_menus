@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation, ElementRef, Input } from '@angular/core';
 import * as d3 from 'd3';
 import { Batches } from 'src/app/model/batches';
+import { StatisticService } from 'src/app/services/statistic/statistic.service';
 
 @Component({
   selector: 'app-statistic',
@@ -9,16 +10,59 @@ import { Batches } from 'src/app/model/batches';
   styleUrls: [ './statistic.component.css' ]
 })
 export class StatisticComponent implements OnInit {
+// Inputs
+@Input()
+showStatistic: boolean;
+// Variables
+pendingResult = false;
+resultAvailable = null;
+configData=null;
+availableFiles = [];
+selectedOption= "";
+selectingGraph=true;
 
+settingsOpen=false;
+addingEntry=false;
+pendingAddEntry=false;
+newExcel="beispiel.xlsx";
+newPython="script.py";
+
+isDeleteMode=false;
+pendingDelete=false
+displayedColumns: string[] = ['excel', 'py','id'];
+// Inits
+
+  ngOnInit(): void {
+    this.statisticService.getChartData().subscribe(result => {
+      this.selectingGraph = false;
+      console.log("should minimize!");
+      this.resultAvailable = JSON.stringify(result);
+      console.log(JSON.stringify(result));
+      this.pendingResult = false;
+    })
+  }
+  
+  constructor(private statisticService: StatisticService) {}
+
+// Methods
+  ngOnChange(): void {
+    
+  }
+
+
+
+
+// Old
+
+  @Input()
+  batchtimes: Batches[];
+  /*
   @ViewChild('chart')
   chartElement: ElementRef;
 
   parseDate = d3.timeParse('%d-%m-%Y');
 
-  @Input()
-  showStatistic: boolean;
-  @Input()
-  batchtimes: Batches[];
+  
 
   private chartProps: any;
 
@@ -146,5 +190,5 @@ export class StatisticComponent implements OnInit {
     this.chartProps.valueline2 = valueline2;
     this.chartProps.xAxis = xAxis;
     this.chartProps.yAxis = yAxis;
-  }
+  }*/
 }

@@ -1,5 +1,10 @@
 <div id="chartContainer" [hidden]="!showStatistic">
-    <p>Trend Batchlaufzeiten</p>
+<!--    <p>Trend Batchlaufzeiten</p>
     <div #chart>
     </div>
+
+    -->
+    <div *ngIf="resultAvailable">
+    <app-graphs [graphData]= resultAvailable></app-graphs>
+</div>
 </div>

@@ -46,6 +46,7 @@ import { RightManagementComponent } from './components/right-management/right-ma
 import { TrackerComponent } from './components/tracker/tracker.component';
 import { TreetableModule } from './components/treetable/treetable.module';
 import { SettingsComponent } from './components/settings/settings.component';
+import { GraphsComponent } from './components/graphs/graphs.component';
 
 
 @NgModule({
@@ -73,7 +74,8 @@ import { SettingsComponent } from './components/settings/settings.component';
     ConfigurationViewComponent,
     RightManagementComponent,
     TrackerComponent,
-    SettingsComponent
+    SettingsComponent,
+    GraphsComponent
   ],
   imports: [
     BrowserModule,
