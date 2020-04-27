@@ -129,8 +129,8 @@ public class StatisticController {
         }
         ConfigurationRepository.getRepo().save(new Configuration("statistic.allChartNames", chartnames));
         String itemBase = "statistic.chart." + chartName;
-        ConfigurationRepository.getRepo().save(new Configuration(itemBase + "data", ""));
-        ConfigurationRepository.getRepo().save(new Configuration(itemBase + "script", ""));
+        ConfigurationRepository.getRepo().save(new Configuration(itemBase + ".data", ""));
+        ConfigurationRepository.getRepo().save(new Configuration(itemBase + ".script", ""));
 
         return Response.ok().build();
     }
