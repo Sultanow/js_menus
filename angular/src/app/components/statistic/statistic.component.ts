@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation, ElementRef, Input } from '@angular/core';
 import * as d3 from 'd3';
 import { Batches } from 'src/app/model/batches';
+import { StatisticService } from 'src/app/services/statistic/statistic.service';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-statistic',
@@ -9,16 +11,71 @@ import { Batches } from 'src/app/model/batches';
   styleUrls: [ './statistic.component.css' ]
 })
 export class StatisticComponent implements OnInit {
+// Inputs
+@Input()
+showStatistic: boolean;
+// Variables
+charts = [];
+showCreateChartContainer = false;
+showGraphChart = false;
+chartName = "";
+// Inits
 
+  ngOnInit(): void {
+    this.reloadData();
+  }
+  
+  constructor(private statisticService: StatisticService) {}
+
+// Methods
+  ngOnChange(): void {
+    this.reloadData();
+  }
+
+  reloadData() {
+    this.statisticService.getChartNames().subscribe(result => {
+      console.log(result)
+      if(result.length > 0)
+        this.charts = result.substring(1, result.length-1).split(", ");
+      
+    })
+  }
+
+  createChartView() {
+    console.log("createChartView()");
+    this.showCreateChartContainer = true;
+    this.showGraphChart = false;
+    this.chartName = "";
+  }
+
+  showChartView(event, chart) {
+    console.log(event);
+    console.log(chart);
+    this.showGraphChart = true;
+    this.chartName = chart;
+    this.showCreateChartContainer = false;
+  }
+
+  onNewChartSubmitted() {
+    this.reloadData();
+  }
+
+  onDeleteChart() {
+    this.chartName = "";
+    this.showGraphChart = false;
+    this.reloadData();
+  }
+// Old
+
+  @Input()
+  batchtimes: Batches[];
+  /*
   @ViewChild('chart')
   chartElement: ElementRef;
 
   parseDate = d3.timeParse('%d-%m-%Y');
 
-  @Input()
-  showStatistic: boolean;
-  @Input()
-  batchtimes: Batches[];
+  
 
   private chartProps: any;
 
@@ -146,5 +203,5 @@ export class StatisticComponent implements OnInit {
     this.chartProps.valueline2 = valueline2;
     this.chartProps.xAxis = xAxis;
     this.chartProps.yAxis = yAxis;
-  }
+  }*/
 }

@@ -26,6 +26,29 @@ services:
     networks: 
       - cockpit-net
 
+  flask:
+    image: webapp-flask
+    container_name: python-service
+    build:
+      context: ./python/data
+      dockerfile: Dockerfile-flask
+    volumes:
+      - "./python/data/:/app"
+    networks: 
+      - cockpit-net
+
+  nginx:
+    image: webapp-nginx
+    container_name: python-nginx-service
+    build:
+      context: ./python/data
+      dockerfile: Dockerfile-nginx
+    ports:
+      - 5000:80
+    depends_on:
+      - flask
+    networks: 
+      - cockpit-net
 
   
 networks:

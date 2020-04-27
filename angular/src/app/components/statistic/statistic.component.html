@@ -1,5 +1,23 @@
-<div id="chartContainer" [hidden]="!showStatistic">
-    <p>Trend Batchlaufzeiten</p>
-    <div #chart>
+<div  [hidden]="!showStatistic">
+    <div id="chartContainer">
+    <div class="chartSideNav">
+        <div *ngFor="let chart of charts">
+            <button mat-button (click)="showChartView($event, chart)">{{chart}}</button>
+        </div>
+        <div>
+            <button mat-button (click)="createChartView()">Neuen Chart anlegen</button>
+        </div>
     </div>
+    <div class="chartContent">
+        <!-- Browse Files, -->
+        <app-graphs 
+            [chartName]="chartName" 
+            [showGraphChart]="showGraphChart"
+            (notifyDeleteChart)="onDeleteChart()"></app-graphs>
+        <app-create-chart 
+            [showCreateChartContainer]="showCreateChartContainer"
+            (notifyNewChartSubmitted)="onNewChartSubmitted()"
+            ></app-create-chart>
+    </div>
+</div>
 </div>
