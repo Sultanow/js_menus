@@ -27,7 +27,6 @@ def update_data():
         file.save(os.path.join(UPLOAD_FOLDER, filename))
     else:
         abort(Response("There is an error with the file"))
-
     scriptname = request.form.get('script')
     processname = "/app/" + scriptname + " " + UPLOAD_FOLDER + filename
 

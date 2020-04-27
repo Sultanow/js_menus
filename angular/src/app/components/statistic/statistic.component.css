@@ -1,12 +1,13 @@
 .chartSideNav {
     /*position: relative;*/
-    background-color: blue;
+    /*background-color: blue;*/
     width: 10rem;
     /*float: left;*/
+    border-right: 1px solid white;
 }
 
 .chartContent {
-    /*position: relative;*/
+    width: 100%;
 }
 
 #chartContainer {

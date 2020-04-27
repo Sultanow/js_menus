@@ -77,12 +77,12 @@ button.fancy {
 
 div#view-box {
   position: absolute;
-  width: 80%;
+  width: 90%;
   height: 80%;
   color: #fff;
   background: rgba(0, 0, 0, 0.85);
   border: 2px solid #fff;
-  left: 10%;
+  left: 5%;
   top: 10%;
   z-index: 10;
 }

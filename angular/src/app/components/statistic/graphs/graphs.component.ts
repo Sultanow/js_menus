@@ -12,7 +12,7 @@ export class GraphsComponent implements OnInit, OnChanges {
   @Input() showGraphChart: boolean;
   @Input() chartName: string;
 
-  @ViewChild("Graph", { static: true })
+  @ViewChild("Graph")
   private Graph: ElementRef;
 
   graphData: string;
@@ -56,13 +56,11 @@ export class GraphsComponent implements OnInit, OnChanges {
       });
 
     }
-
-
   }
 
   basicChart(): void {
     const element = this.Graph.nativeElement;
-    const data = JSON.parse(this.graphData);
+    const data = JSON.parse(this.resultAvailable);
     const graphData = data[ "traces" ];
     const layout = {
       xaxis: {
@@ -102,8 +100,7 @@ export class GraphsComponent implements OnInit, OnChanges {
 
   csvInputChange(fileInputEvent: any) {
     console.log(fileInputEvent.target.files[ 0 ]);
-    let chartname = "anwenderzahlen";
-    this.statisticService.updateData(chartname, fileInputEvent.target.files[ 0 ]).subscribe(result => {
+    this.statisticService.updateData(this.chartName, fileInputEvent.target.files[ 0 ]).subscribe(result => {
       console.log(result);
       this.loadGraphData();
     });

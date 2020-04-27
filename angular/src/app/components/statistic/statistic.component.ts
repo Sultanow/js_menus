@@ -36,7 +36,7 @@ chartName = "";
     this.statisticService.getChartNames().subscribe(result => {
       console.log(result)
       if(result.length > 0)
-        this.charts = result.substring(1, result.length-1).split(",");
+        this.charts = result.substring(1, result.length-1).split(", ");
       
     })
   }
