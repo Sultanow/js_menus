@@ -12,7 +12,7 @@ if(len(sys.argv) <= 1):
     sys.exit(1)
 excel_data = sys.argv[1]
 
-df = pd.read_excel(os.path.join(os.path.dirname(__file__), "./data/"+excel_data), header=1, usecols="A:I", skiprows=0, nrows=19)
+df = pd.read_excel(excel_data, header=1, usecols="A:I", skiprows=0, nrows=19)
 
 labels = df.columns.astype(str).to_list()
 labels = labels[1:]

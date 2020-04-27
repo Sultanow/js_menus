@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ViewEncapsulation, ElementRef, Input } fr
 import * as d3 from 'd3';
 import { Batches } from 'src/app/model/batches';
 import { StatisticService } from 'src/app/services/statistic/statistic.service';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-statistic',
@@ -14,44 +15,46 @@ export class StatisticComponent implements OnInit {
 @Input()
 showStatistic: boolean;
 // Variables
-pendingResult = false;
-resultAvailable = null;
-configData=null;
-availableFiles = [];
-selectedOption= "";
-selectingGraph=true;
-
-settingsOpen=false;
-addingEntry=false;
-pendingAddEntry=false;
-newExcel="beispiel.xlsx";
-newPython="script.py";
-
-isDeleteMode=false;
-pendingDelete=false
-displayedColumns: string[] = ['excel', 'py','id'];
+charts = [];
+showCreateChartContainer = false;
+showGraphChart = false;
+chartName = "";
 // Inits
 
   ngOnInit(): void {
-    this.statisticService.getChartData().subscribe(result => {
-      this.selectingGraph = false;
-      console.log("should minimize!");
-      this.resultAvailable = JSON.stringify(result);
-      console.log(JSON.stringify(result));
-      this.pendingResult = false;
-    })
+    this.reloadData();
   }
   
   constructor(private statisticService: StatisticService) {}
 
 // Methods
   ngOnChange(): void {
-    
+    this.reloadData();
   }
 
+  reloadData() {
+    this.statisticService.getChartNames().subscribe(result => {
+      console.log(result)
+      if(result.length > 0)
+        this.charts = result.substring(1, result.length-1).split(",");
+      
+    })
+  }
 
+  createChartView() {
+    console.log("createChartView()");
+    this.showCreateChartContainer = true;
+    this.showGraphChart = false;
+    this.chartName = "";
+  }
 
-
+  showChartView(event, chart) {
+    console.log(event);
+    console.log(chart);
+    this.showGraphChart = true;
+    this.chartName = chart;
+    this.showCreateChartContainer = false;
+  }
 // Old
 
   @Input()

@@ -2,45 +2,152 @@ package de.jsmenues.backend.statistic;
 
 
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import de.jsmenues.redis.data.Configuration;
+import de.jsmenues.redis.repository.ConfigurationRepository;
+import org.glassfish.hk2.utilities.reflection.Logger;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
+
+import javax.ws.rs.*;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Arrays;
 
 @Path("/statistic")
 public class StatisticController {
+    @GET
+    @Path("/allChartNames")
+    public Response getAllChartNames() {
+        String chartnames = ConfigurationRepository.getRepo().get("statistic.allChartNames").getValue();
+        Logger.getLogger().warning(chartnames);
+        String[] charts = chartnames.split(", ");
+        return Response.ok(Arrays.toString(charts)).build();
+    }
 
     @GET
-    @Path("/data")
-    public Response data() {
-        StringBuilder ret = new StringBuilder();
-        try {
-            URL statisticServiceURL = new URL("http","python-nginx-service",80,"/data1");
-            URLConnection yc = statisticServiceURL.openConnection();
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    yc.getInputStream()));
-            String inputLine;
-            while ((inputLine = in.readLine()) != null)
-                ret.append(inputLine);
-            in.close();
-
-
-        } catch (MalformedURLException e) {
-            return Response.ok("Malformed " + e.getMessage()).build();
-        } catch (IOException e) {
-            return Response.ok("IOException " + e.getMessage()).build();
-        } finally {
-            String ret2 = "{\"title\":\"Anwenderzahlen\",\"traces\":[{\"x\":[\"05:00:00\",\"06:00:00\",\"07:00:00\",\"08:00:00\",\"09:00:00\",\"10:00:00\",\"11:00:00\",\"12:00:00\",\"13:00:00\",\"14:00:00\",\"15:00:00\",\"16:00:00\",\"17:00:00\",\"18:00:00\",\"19:00:00\",\"20:00:00\",\"21:00:00\",\"22:00:00\",\"23:00:00\"],\"y\":[399,9091,19577,26312,28280,28625,28431,22104,22330,22698,17475,7953,2905,1012,350,210,128,48,22],\"mode\":\"lines\",\"type\":\"scatter\",\"name\":\"2020-03-16 00:00:00\",\"line\":{\"width\":2},\"connectgaps\":true},{\"x\":[\"05:00:00\",\"06:00:00\",\"07:00:00\",\"08:00:00\",\"09:00:00\",\"10:00:00\",\"11:00:00\",\"12:00:00\",\"13:00:00\",\"14:00:00\",\"15:00:00\",\"16:00:00\",\"17:00:00\",\"18:00:00\",\"19:00:00\",\"20:00:00\",\"21:00:00\",\"22:00:00\",\"23:00:00\"],\"y\":[705,10743,21465,27436,28992,29510,29087,22578,23476,23821,19131,9594,3999,1435,546,340,213,108,48],\"mode\":\"lines\",\"type\":\"scatter\",\"name\":\"2020-03-17 00:00:00\",\"line\":{\"width\":2},\"connectgaps\":true},{\"x\":[\"05:00:00\",\"06:00:00\",\"07:00:00\",\"08:00:00\",\"09:00:00\",\"10:00:00\",\"11:00:00\",\"12:00:00\",\"13:00:00\",\"14:00:00\",\"15:00:00\",\"16:00:00\",\"17:00:00\",\"18:00:00\",\"19:00:00\",\"20:00:00\",\"21:00:00\",\"22:00:00\",\"23:00:00\"],\"y\":[862,11395,21237,26426,27779,28370,28123,22205,23082,22564,17122,8067,3269,1437,667,416,231,109,55],\"mode\":\"lines\",\"type\":\"scatter\",\"name\":\"2020-03-18 00:00:00\",\"line\":{\"width\":2},\"connectgaps\":true},{\"x\":[\"05:00:00\",\"06:00:00\",\"07:00:00\",\"08:00:00\",\"09:00:00\",\"10:00:00\",\"11:00:00\",\"12:00:00\",\"13:00:00\",\"14:00:00\",\"15:00:00\",\"16:00:00\",\"17:00:00\",\"18:00:00\",\"19:00:00\",\"20:00:00\",\"21:00:00\",\"22:00:00\",\"23:00:00\"],\"y\":[1127,11291,21447,26956,28786,29160,28815,22853,24005,24522,20146,11929,6205,1999,654,409,238,124,49],\"mode\":\"lines\",\"type\":\"scatter\",\"name\":\"2020-03-19 00:00:00\",\"line\":{\"width\":2},\"connectgaps\":true},{\"x\":[\"05:00:00\",\"06:00:00\",\"07:00:00\",\"08:00:00\",\"09:00:00\",\"10:00:00\",\"11:00:00\",\"12:00:00\",\"13:00:00\",\"14:00:00\",\"15:00:00\",\"16:00:00\",\"17:00:00\",\"18:00:00\",\"19:00:00\",\"20:00:00\",\"21:00:00\",\"22:00:00\",\"23:00:00\"],\"y\":[1179,11302,20351,25017,25735,26103,25520,20245,11658,7338,4332,2503,1505,849,430,249,203,121,57],\"mode\":\"lines\",\"type\":\"scatter\",\"name\":\"2020-03-20 00:00:00\",\"line\":{\"width\":2},\"connectgaps\":true},{\"x\":[\"05:00:00\",\"06:00:00\",\"07:00:00\",\"08:00:00\",\"09:00:00\",\"10:00:00\",\"11:00:00\",\"12:00:00\",\"13:00:00\",\"14:00:00\",\"15:00:00\",\"16:00:00\",\"17:00:00\",\"18:00:00\",\"19:00:00\",\"20:00:00\",\"21:00:00\",\"22:00:00\",\"23:00:00\"],\"y\":[29,78,138,236,288,334,352,311,241,176,84,81,71,66,55,45,34,29,21],\"mode\":\"lines\",\"type\":\"scatter\",\"name\":\"2020-03-21 00:00:00\",\"line\":{\"width\":2},\"connectgaps\":true},{\"x\":[\"05:00:00\",\"06:00:00\",\"07:00:00\",\"08:00:00\",\"09:00:00\",\"10:00:00\",\"11:00:00\",\"12:00:00\",\"13:00:00\",\"14:00:00\",\"15:00:00\",\"16:00:00\",\"17:00:00\",\"18:00:00\",\"19:00:00\",\"20:00:00\",\"21:00:00\",\"22:00:00\",\"23:00:00\"],\"y\":[1354,12286,22472,28190,29893,30267,30048,24690,25215,24817,19652,9720,4022,1812,940,606,341,129,48],\"mode\":\"lines\",\"type\":\"scatter\",\"name\":\"2020-03-23 00:00:00\",\"line\":{\"width\":2},\"connectgaps\":true},{\"x\":[\"05:00:00\",\"06:00:00\",\"07:00:00\",\"08:00:00\",\"09:00:00\",\"10:00:00\",\"11:00:00\",\"12:00:00\",\"13:00:00\",\"14:00:00\",\"15:00:00\",\"16:00:00\",\"17:00:00\",\"18:00:00\",\"19:00:00\",\"20:00:00\",\"21:00:00\",\"22:00:00\",\"23:00:00\"],\"y\":[1546,12690,23076,28794,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"mode\":\"lines\",\"type\":\"scatter\",\"name\":\"2020-03-24 00:00:00\",\"line\":{\"width\":2},\"connectgaps\":true}]}";
-
+    @Path("/chartData")
+    public Response getChartDataForName(
+            @DefaultValue("") @QueryParam("chart") String chartName
+    ) {
+        if(chartName.isEmpty()) {
+            return Response.ok("No data").build();
         }
+        StringBuilder sb = new StringBuilder();
+        sb.append("statistic.chart.").append(chartName).append(".data");
+        String chartData = ConfigurationRepository.getRepo().get(sb.toString()).getValue();
+        Logger.getLogger().warning(chartData);
+        Logger.getLogger().warning(sb.toString());
+        return Response.ok(chartData).build();
+    }
 
-        return Response.ok(ret.toString()).build();
+    @POST
+    @Path("/updateData")
+    public Response uploadNewData(
+            @FormDataParam("chart") String chartName,
+            @FormDataParam("file") InputStream fileInputStream,
+            @FormDataParam("file") FormDataContentDisposition fileMetaData
+    ) throws IOException {
+        // First save the File to the tmp
+        saveFileToTmpFolder(fileInputStream, fileMetaData);
 
+        // Get script name for chartName
+        StringBuilder sb_Script = new StringBuilder();
+        sb_Script.append("statistic.chart.").append(chartName).append(".script");
+        String scriptName = ConfigurationRepository.getRepo().get(sb_Script.toString()).getValue();
+        String url = "http://python-nginx-service:80/updateData";
+        Response response = sendFileDataToPythonService(url,fileMetaData.getFileName(), "script", scriptName);
 
+        StringBuilder sbData = new StringBuilder();
+        sbData.append("statistic.chart.").append(chartName).append(".data");
+        if(response.getStatus() == 200) {
+            String responseText = response.readEntity(String.class);
+            ConfigurationRepository.getRepo().save(new Configuration(sbData.toString(), responseText));
+            Logger.getLogger().warning(responseText);
+            Logger.getLogger().warning(sb_Script.toString());
+            Logger.getLogger().warning(ConfigurationRepository.getRepo().get(sbData.toString()).getValue());
+            return Response.ok(responseText).build();
+        }
+        else
+            return Response.status(401, "Could not get Response from service").build();
+    }
+
+    @POST
+    @Path("/createChart")
+    public Response createChart(
+            @FormDataParam("chartName") String chartName,
+            @FormDataParam("file") InputStream fileInputStream,
+            @FormDataParam("file") FormDataContentDisposition fileMetaData
+    ) {
+        saveFileToTmpFolder(fileInputStream, fileMetaData);
+        // Save chartname and scriptname to redis database
+        String chartNames = ConfigurationRepository.getRepo().get("statistic.allChartNames").getValue();
+        String url = "http://python-nginx-service:80/createChart";
+        Response response = sendFileDataToPythonService(url,fileMetaData.getFileName(),"","");
+
+        if(response.getStatus() == 200) {
+            String responseText = response.readEntity(String.class);
+            Logger.getLogger().warning(responseText);
+            if(!chartNames.isEmpty())
+                chartNames += ", ";
+            chartNames += chartName;
+            ConfigurationRepository.getRepo().save(new Configuration("statistic.allChartNames", chartNames));
+            StringBuilder sb = new StringBuilder();
+            sb.append("statistic.chart.").append(chartName).append(".script");
+            ConfigurationRepository.getRepo().save(new Configuration(sb.toString(),fileMetaData.getFileName()));
+            Logger.getLogger().warning(sb.toString());
+            Logger.getLogger().warning(ConfigurationRepository.getRepo().get(sb.toString()).getValue());
+            return Response.ok(responseText).build();
+        }
+        else
+            return Response.status(401, "Could not get Response from service").build();
+    }
+
+    private void saveFileToTmpFolder(InputStream fileInputStream, FormDataContentDisposition fileMetaData) {
+        final String UPLOAD_PATH = "/tmp/";
+        try
+        {
+            int read = 0;
+            byte[] bytes = new byte[1024];
+
+            OutputStream out = new FileOutputStream(new File(UPLOAD_PATH + fileMetaData.getFileName()));
+            while ((read = fileInputStream.read(bytes)) != -1)
+            {
+                out.write(bytes, 0, read);
+            }
+            out.flush();
+            out.close();
+        } catch (IOException e)
+        {
+            throw new WebApplicationException("Error while uploading file. Please try again !!");
+        }
+    }
+
+    private Response sendFileDataToPythonService(String url, String fileName, String fieldName, String fieldValue) {
+        try {
+            final Client client = ClientBuilder.newBuilder().register(MultiPartFeature.class).build();
+            final FileDataBodyPart filePart = new FileDataBodyPart("file", new File("/tmp/" + fileName));
+            FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
+            final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart.field(fieldName, fieldValue).bodyPart(filePart);
+
+            final WebTarget target = client.target(url);
+            final Response response = target.request().post(Entity.entity(multipart, multipart.getMediaType()));
+            formDataMultiPart.close();
+            multipart.close();
+
+            return response;
+        } catch (Exception e) {
+            Logger.getLogger().warning("Exception: " + e.getMessage());
+            return Response.status(401).build();
+        }
     }
 }

@@ -1,0 +1,15 @@
+.chartSideNav {
+    /*position: relative;*/
+    background-color: blue;
+    width: 10rem;
+    /*float: left;*/
+}
+
+.chartContent {
+    /*position: relative;*/
+}
+
+#chartContainer {
+    display: flex;
+    align-items: stretch;
+}

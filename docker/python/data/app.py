@@ -5,35 +5,53 @@ from io import StringIO
 from werkzeug.utils import secure_filename
 
 
-UPLOAD_FOLDER= '/app/data'
+UPLOAD_FOLDER= '/app/data/'
+UPLOAD_SCRIPT_FOLDER= '/app/'
 
 app = Flask(__name__)
 @app.route('/')
 def hello_world():
     return 'Hello world!'
 
-@app.route('/data1', methods=["POST", "GET"])
-def run_excel_analysis():
-    
-    p = Popen("/app/extract_data.py awps.xlsx", shell=True, stdout=PIPE)
+@app.route('/updateData', methods=["POST"])
+def update_data():
+    if 'file' not in request.files:
+        abort(Response('No file part'))
+        return redirect(request.url)
+    file = request.files['file']
+    if file.filename == '':
+        flash('No selected file')
+        return "No file!"
+    if file:
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(UPLOAD_FOLDER, filename))
+    else:
+        abort(Response("There is an error with the file"))
+
+    scriptname = request.form.get('script')
+    processname = "/app/" + scriptname + " " + UPLOAD_FOLDER + filename
+
+    p = Popen(processname, shell=True, stdout=PIPE)
     output, err = p.communicate(timeout=15)
     print(err)
     print(output)
     return output, err
 
-def test():
+@app.route('/createChart', methods=["POST"])
+def create_chart():
     if 'file' not in request.files:
-        abort('No file part')
+        abort(Response('No file part'))
         return redirect(request.url)
     file = request.files['file']
     if file.filename == '':
         flash('No selected file')
-        return redirect(request.url)
+        return "No file!"
     if file:
         filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        file.save(os.path.join(UPLOAD_SCRIPT_FOLDER, filename))
     else:
         abort(Response("There is an error with the file"))
+    return Response("All fine", status=200)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

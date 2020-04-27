@@ -46,7 +46,9 @@ import { RightManagementComponent } from './components/right-management/right-ma
 import { TrackerComponent } from './components/tracker/tracker.component';
 import { TreetableModule } from './components/treetable/treetable.module';
 import { SettingsComponent } from './components/settings/settings.component';
-import { GraphsComponent } from './components/graphs/graphs.component';
+import { GraphsComponent } from './components/statistic/graphs/graphs.component';
+import { MatButtonModule } from '@angular/material/button';
+import { CreateChartComponent } from './components/statistic/create-chart/create-chart.component';
 
 
 @NgModule({
@@ -75,7 +77,8 @@ import { GraphsComponent } from './components/graphs/graphs.component';
     RightManagementComponent,
     TrackerComponent,
     SettingsComponent,
-    GraphsComponent
+    GraphsComponent,
+    CreateChartComponent
   ],
   imports: [
     BrowserModule,
@@ -95,6 +98,7 @@ import { GraphsComponent } from './components/graphs/graphs.component';
     DragDropModule,
     TreetableModule,
     MatMenuModule,
+    MatButtonModule
   ],
   providers: [
     ConfigurationService,
