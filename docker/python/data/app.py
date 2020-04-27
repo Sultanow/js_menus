@@ -28,7 +28,7 @@ def update_data():
     else:
         abort(Response("There is an error with the file"))
     scriptname = request.form.get('script')
-    processname = "/app/" + scriptname + " " + UPLOAD_FOLDER + filename
+    processname = "python /app/" + scriptname + " " + UPLOAD_FOLDER + filename
 
     p = Popen(processname, shell=True, stdout=PIPE)
     output, err = p.communicate(timeout=15)
