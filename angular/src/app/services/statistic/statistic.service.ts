@@ -6,6 +6,10 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class StatisticService {
+  deleteChart(chartName: string) {
+    let params = new HttpParams().set("chart",chartName);
+    return this.http.delete(`${this.backendURLStatistic}/deleteChart`, {params});
+  }
   
   updateData(chartname: string, file: File) : Observable<any> {
     let formData = new FormData();

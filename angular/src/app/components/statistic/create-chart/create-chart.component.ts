@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { StatisticService } from 'src/app/services/statistic/statistic.service';
 
@@ -11,6 +11,7 @@ export class CreateChartComponent implements OnInit {
   @Input()
   showCreateChartContainer: boolean;
 
+  @Output() notifyNewChartSubmitted = new EventEmitter<boolean>();
 
   scriptName: string = "";
 
@@ -43,6 +44,7 @@ export class CreateChartComponent implements OnInit {
     if(this.myForm.valid)
     this.statisticService.createChart(this.myForm.get('name').value, this.myForm.get('fileSource').value, "").subscribe(result => {
       console.log(result);
+      this.notifyNewChartSubmitted.emit(true);
     });
   }
 

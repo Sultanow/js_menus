@@ -112,6 +112,29 @@ public class StatisticController {
             return Response.status(401, "Could not get Response from service").build();
     }
 
+    @DELETE
+    @Path("/deleteChart")
+    public Response deleteChart(
+            @DefaultValue("") @QueryParam("chart") String chartName
+    ) {
+        String chartnames = ConfigurationRepository.getRepo().get("statistic.allChartNames").getValue();
+        String[] charts = chartnames.split(", ");
+        chartnames = "";
+        for(String chart: charts) {
+            if(!chart.equals(chartName)) {
+                if (!chartnames.isEmpty())
+                    chartnames += ", ";
+                chartnames += chart;
+            }
+        }
+        ConfigurationRepository.getRepo().save(new Configuration("statistic.allChartNames", chartnames));
+        String itemBase = "statistic.chart." + chartName;
+        ConfigurationRepository.getRepo().save(new Configuration(itemBase + "data", ""));
+        ConfigurationRepository.getRepo().save(new Configuration(itemBase + "script", ""));
+
+        return Response.ok().build();
+    }
+
     private void saveFileToTmpFolder(InputStream fileInputStream, FormDataContentDisposition fileMetaData) {
         final String UPLOAD_PATH = "/tmp/";
         try

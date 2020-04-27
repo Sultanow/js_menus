@@ -55,6 +55,16 @@ chartName = "";
     this.chartName = chart;
     this.showCreateChartContainer = false;
   }
+
+  onNewChartSubmitted() {
+    this.reloadData();
+  }
+
+  onDeleteChart() {
+    this.chartName = "";
+    this.showGraphChart = false;
+    this.reloadData();
+  }
 // Old
 
   @Input()

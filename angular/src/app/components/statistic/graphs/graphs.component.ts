@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { StatisticService } from 'src/app/services/statistic/statistic.service';
 
 declare var Plotly: any;
@@ -11,6 +11,8 @@ declare var Plotly: any;
 export class GraphsComponent implements OnInit, OnChanges {
   @Input() showGraphChart: boolean;
   @Input() chartName: string;
+
+  @Output() notifyDeleteChart = new EventEmitter<boolean>();
 
   @ViewChild("Graph")
   private Graph: ElementRef;
@@ -107,4 +109,9 @@ export class GraphsComponent implements OnInit, OnChanges {
     // Aktuell Ausgewähltes Chart in Kombination mit File zum Server schicken
   }
 
+  deleteChart() {
+    this.statisticService.deleteChart(this.chartName).subscribe(result => {
+      this.notifyDeleteChart.emit(true);
+    })
+  }
 }

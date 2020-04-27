@@ -2,5 +2,7 @@
     Daten aktualisieren:     
         <input #csvInput hidden="true" type="file" onclick="this.value=null" (change)="csvInputChange($event)" accept=".xlsx,.xls,.csv"/>
         <button mat-flat-button color="primary" (click)="csvInput.click()">Daten aktualisieren</button>
+
+        <a (click)="deleteChart()"><mat-icon [ngStyle]="{'color':'white'}">delete</mat-icon></a>
     <div id="Graph" #Graph></div>
 </div>
