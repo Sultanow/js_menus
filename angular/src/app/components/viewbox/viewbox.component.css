@@ -109,6 +109,7 @@ div>header .close {
   background: none;
   border: none;
   cursor: pointer;
+  float: right;
 }
 
 .dashboard-table td, .dashboard-table th {
