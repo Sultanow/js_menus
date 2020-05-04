@@ -52,7 +52,7 @@ export class AppComponent {
 		this.initAnimationButton(this.animate_south, "south-menu");
 		this.initAnimationButton(this.animate_west, "west-menu");
 		this.settingsService.getActiveItems().subscribe(result => {
-			if (Array.isArray(result.activeItems))
+			if (result && result.activeItems && Array.isArray(result.activeItems))
 				this.activeItems = result.activeItems;
 		});
 		this.configService.getServerConfiguration(ServerConfiguration.ENV_LIST).subscribe(data => {
