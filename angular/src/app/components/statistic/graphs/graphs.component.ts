@@ -46,7 +46,7 @@ export class GraphsComponent implements OnInit, OnChanges {
   loadGraphData() {
     if (this.chartName !== "") {
       this.statisticService.getChartData(this.chartName.replace(/\s/g, "")).subscribe(result => {
-        console.log(result)
+        console.log(result);
         if (!(result === null || result === "")) {
           this.selectingGraph = false;
           console.log("should minimize!");
@@ -112,6 +112,6 @@ export class GraphsComponent implements OnInit, OnChanges {
   deleteChart() {
     this.statisticService.deleteChart(this.chartName).subscribe(result => {
       this.notifyDeleteChart.emit(true);
-    })
+    });
   }
 }

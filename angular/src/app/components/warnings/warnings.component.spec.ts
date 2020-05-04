@@ -8,7 +8,7 @@ describe('WarningsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ],
+      declarations: [],
       imports: [
         AppModule
       ]

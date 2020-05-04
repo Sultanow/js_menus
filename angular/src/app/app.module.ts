@@ -104,8 +104,8 @@ import { CreateChartComponent } from './components/statistic/create-chart/create
     ConfigurationService,
     DetailsComponent
   ],
-  bootstrap: [AppComponent],
-  entryComponents: [EditDialog, DependencyChartsComponent]
+  bootstrap: [ AppComponent ],
+  entryComponents: [ EditDialog, DependencyChartsComponent ]
 
 })
 export class AppModule { }

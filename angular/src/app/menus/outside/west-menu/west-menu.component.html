@@ -1,7 +1,9 @@
 <svg:g class="west-menu" *ngIf="isOpen" transform="translate(18 229)">
-  <g class="confluence-button" transform="translate(0 120)" (click)="openConfluence()">
+  <g class="confluence-button" transform="translate(0 120)" (click)="openConfluence()"
+    [ngClass]="{'disabled': !confluenceActive }">
     <title>Confluence</title>
-    <circle class="Oval-2-Copy-7" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6" />
+    <circle class="Oval-2-Copy-7" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"
+      [ngClass]="{'disabledCircle': !confluenceActive }" />
     <!-- Confluence Icon -->
     <g transform="translate(24 24)">
       <g>
@@ -15,9 +17,10 @@
     </g>
     <!-- / Confluence Icon -->
   </g>
-  <g class="jira-button" transform="translate(24)" (click)="openJira()">
+  <g class="jira-button" transform="translate(24)" (click)="openJira()" [ngClass]="{'disabled': !jiraActive }">
     <title>Jira</title>
-    <circle class="Oval-2-Copy-7" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6" />
+    <circle class="Oval-2-Copy-7" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"
+      [ngClass]="{'disabledCircle': !jiraActive }" />
     <!-- Jira Icon -->
     <g transform="translate(24 24)">
       <g>
@@ -34,9 +37,11 @@
     </g>
     <!-- / Jira Icon -->
   </g>
-  <g class="bitbucket-button" transform="translate(24 240)" (click)="openBitbucket()">
+  <g class="bitbucket-button" transform="translate(24 240)" (click)="openBitbucket()"
+    [ngClass]="{'disabled': !bitbucketActive }">
     <title>Bitbucket</title>
-    <circle class="Oval-2-Copy-7" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6" />
+    <circle class="Oval-2-Copy-7" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"
+      [ngClass]="{'disabledCircle': !bitbucketActive }" />
     <!-- Bitbucket Icon -->
     <g transform="translate(24 24)">
       <g>

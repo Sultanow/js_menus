@@ -98,11 +98,11 @@ export class CompareComponent implements OnInit {
   }
   getServerConfiguration() {
     let envs = ServerConfiguration.ENV_LIST;
-    if(this.selectedEnvs)
+    if (this.selectedEnvs)
       envs = this.selectedEnvs;
     this.configItemService.getServerConfiguration(envs).subscribe(data => {
       let updateTime = this.configItemService.getUpdateTime(data);
-      this.updateTime.setTime(updateTime*1000);
+      this.updateTime.setTime(updateTime * 1000);
       this.configItemService.itemlist = this.configItemService.createServerConf(data);
       this.configItemService.generateTree(this.selectedEnvs);
     });

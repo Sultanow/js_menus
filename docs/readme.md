@@ -25,3 +25,5 @@ Starten der Containerplattform.
     - User: Admin
     - Passwort: zabbix
     - URL: http://zabbix-frontend:80/api_jsonrpc.php
+
+5. Die Konfigurationsparameter werden [hier](parameterbeschreibung.md) extra beschrieben mit Beispielen

@@ -8,12 +8,11 @@ import { Title } from '@angular/platform-browser';
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
-	styleUrls: ['./app.component.css']
+	styleUrls: [ './app.component.css' ]
 })
 
 export class AppComponent {
 	title = 'angular-radial-menu';
-	
 
 	// Animations
 	animate_middle: TimelineLite = new TimelineLite({ paused: true });
@@ -44,28 +43,34 @@ export class AppComponent {
 	showViewBox = false;
 	showView = "";
 
+	activeItems: string[] = [];
+
 	ngOnInit() {
 		this.initAnimations();
 		this.initAnimationButton(this.animate_north, "north-menu");
 		this.initAnimationButton(this.animate_east, "east-menu");
 		this.initAnimationButton(this.animate_south, "south-menu");
 		this.initAnimationButton(this.animate_west, "west-menu");
+		this.settingsService.getActiveItems().subscribe(result => {
+			if (Array.isArray(result.activeItems))
+				this.activeItems = result.activeItems;
+		});
 		this.configService.getServerConfiguration(ServerConfiguration.ENV_LIST).subscribe(data => {
 			this.configService.addConfiguration(this.configService.createServerConf(data));
 		});
-		this.updateTitle() 
-	
+		this.updateTitle();
+
 	}
 
-	constructor(private configService: ConfigurationItemsService,
-		 private settingsService: SettingsService,
-		 private titleService : Title) {
+	constructor (private configService: ConfigurationItemsService,
+		private settingsService: SettingsService,
+		private titleService: Title) {
 	}
 	updateTitle() {
 		this.settingsService.getTitel().subscribe(title => {
 			this.title = title;
 			this.titleService.setTitle(this.title);
-		})
+		});
 
 	}
 
@@ -246,12 +251,12 @@ export class AppComponent {
 		if (this.showViewBox && this.showView === "settings") {
 			this.showViewBox = false;
 			this.showView = "";
-			this.updateTitle() 
+			this.updateTitle();
 		} else {
 			this.showViewBox = true;
 			this.showView = "settings";
-			this.updateTitle() 
-			 
+			this.updateTitle();
+
 		}
 	}
 

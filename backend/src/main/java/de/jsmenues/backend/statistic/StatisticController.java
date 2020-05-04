@@ -1,7 +1,5 @@
 package de.jsmenues.backend.statistic;
 
-
-
 import de.jsmenues.redis.data.Configuration;
 import de.jsmenues.redis.repository.ConfigurationRepository;
 import org.glassfish.hk2.utilities.reflection.Logger;
@@ -18,9 +16,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Arrays;
 
 @Path("/statistic")
@@ -39,7 +34,7 @@ public class StatisticController {
     public Response getChartDataForName(
             @DefaultValue("") @QueryParam("chart") String chartName
     ) {
-        if(chartName.isEmpty()) {
+        if (chartName.isEmpty()) {
             return Response.ok("No data").build();
         }
         StringBuilder sb = new StringBuilder();
@@ -65,19 +60,18 @@ public class StatisticController {
         sb_Script.append("statistic.chart.").append(chartName).append(".script");
         String scriptName = ConfigurationRepository.getRepo().get(sb_Script.toString()).getValue();
         String url = "http://python-nginx-service:80/updateData";
-        Response response = sendFileDataToPythonService(url,fileMetaData.getFileName(), "script", scriptName);
+        Response response = sendFileDataToPythonService(url, fileMetaData.getFileName(), "script", scriptName);
 
         StringBuilder sbData = new StringBuilder();
         sbData.append("statistic.chart.").append(chartName).append(".data");
-        if(response.getStatus() == 200) {
+        if (response.getStatus() == 200) {
             String responseText = response.readEntity(String.class);
             ConfigurationRepository.getRepo().save(new Configuration(sbData.toString(), responseText));
             Logger.getLogger().warning(responseText);
             Logger.getLogger().warning(sb_Script.toString());
             Logger.getLogger().warning(ConfigurationRepository.getRepo().get(sbData.toString()).getValue());
             return Response.ok(responseText).build();
-        }
-        else
+        } else
             return Response.status(401, "Could not get Response from service").build();
     }
 
@@ -92,23 +86,22 @@ public class StatisticController {
         // Save chartname and scriptname to redis database
         String chartNames = ConfigurationRepository.getRepo().get("statistic.allChartNames").getValue();
         String url = "http://python-nginx-service:80/createChart";
-        Response response = sendFileDataToPythonService(url,fileMetaData.getFileName(),"","");
+        Response response = sendFileDataToPythonService(url, fileMetaData.getFileName(), "", "");
 
-        if(response.getStatus() == 200) {
+        if (response.getStatus() == 200) {
             String responseText = response.readEntity(String.class);
             Logger.getLogger().warning(responseText);
-            if(!chartNames.isEmpty())
+            if (!chartNames.isEmpty())
                 chartNames += ", ";
             chartNames += chartName;
             ConfigurationRepository.getRepo().save(new Configuration("statistic.allChartNames", chartNames));
             StringBuilder sb = new StringBuilder();
             sb.append("statistic.chart.").append(chartName).append(".script");
-            ConfigurationRepository.getRepo().save(new Configuration(sb.toString(),fileMetaData.getFileName()));
+            ConfigurationRepository.getRepo().save(new Configuration(sb.toString(), fileMetaData.getFileName()));
             Logger.getLogger().warning(sb.toString());
             Logger.getLogger().warning(ConfigurationRepository.getRepo().get(sb.toString()).getValue());
             return Response.ok(responseText).build();
-        }
-        else
+        } else
             return Response.status(401, "Could not get Response from service").build();
     }
 
@@ -120,8 +113,8 @@ public class StatisticController {
         String chartnames = ConfigurationRepository.getRepo().get("statistic.allChartNames").getValue();
         String[] charts = chartnames.split(", ");
         chartnames = "";
-        for(String chart: charts) {
-            if(!chart.equals(chartName)) {
+        for (String chart : charts) {
+            if (!chart.equals(chartName)) {
                 if (!chartnames.isEmpty())
                     chartnames += ", ";
                 chartnames += chart;
@@ -137,20 +130,17 @@ public class StatisticController {
 
     private void saveFileToTmpFolder(InputStream fileInputStream, FormDataContentDisposition fileMetaData) {
         final String UPLOAD_PATH = "/tmp/";
-        try
-        {
+        try {
             int read = 0;
             byte[] bytes = new byte[1024];
 
             OutputStream out = new FileOutputStream(new File(UPLOAD_PATH + fileMetaData.getFileName()));
-            while ((read = fileInputStream.read(bytes)) != -1)
-            {
+            while ((read = fileInputStream.read(bytes)) != -1) {
                 out.write(bytes, 0, read);
             }
             out.flush();
             out.close();
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new WebApplicationException("Error while uploading file. Please try again !!");
         }
     }

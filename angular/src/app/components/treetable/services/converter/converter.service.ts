@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { TreeService } from '../tree/tree.service';
 import { Node, SearchableNode, TreeTableNode } from '../../models';
 import * as _ from 'lodash';
-import {v4 as uuid} from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 @Injectable({
   providedIn: 'root'

@@ -8,9 +8,9 @@ describe('ViewboxComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [  ],
-      imports: [ 
-        AppModule 
+      declarations: [],
+      imports: [
+        AppModule
       ]
     })
       .compileComponents();

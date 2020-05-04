@@ -6,7 +6,7 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.css']
+  styleUrls: [ './settings.component.css' ]
 })
 export class SettingsComponent implements OnInit {
   @Input() showSettings: boolean;
@@ -14,18 +14,18 @@ export class SettingsComponent implements OnInit {
 
   settings: Configuration[];
   version: string;
-  globalTitle : string;
+  globalTitle: string;
 
- 
 
-  constructor(private settingsService: SettingsService ,private titleService : Title) {
+
+  constructor (private settingsService: SettingsService, private titleService: Title) {
   }
-  
+
   ngOnInit() {
     this.reloadData();
     this.showVersion();
     this.titleService.setTitle(this.globalTitle);
-   
+
   }
 
   ngOnChanges(changes) {
@@ -34,24 +34,23 @@ export class SettingsComponent implements OnInit {
     }
   }
 
-  getNewTitle(){  
+  getNewTitle() {
     this.settingsService.getTitel().subscribe(title => {
-     if(title !== "")
-    this.globalTitle= title;
-       this.settingsService.changeTitle(this.globalTitle);
-      this.titleService.setTitle(this.globalTitle);  
+      if (title !== "")
+        this.globalTitle = title;
+      this.settingsService.changeTitle(this.globalTitle);
+      this.titleService.setTitle(this.globalTitle);
 
-   });
+    });
 
   }
 
   reloadData() {
     this.settingsService.getAllSettings().subscribe(data => {
-     // console.log(data);
       this.settings = data;
       console.log(this.settings);
     });
-  
+
   }
 
   onChangeItem(event) {
@@ -63,7 +62,7 @@ export class SettingsComponent implements OnInit {
         }
         return;
       }
-    })
+    });
   }
 
   onSaveSettings() {
@@ -79,13 +78,11 @@ export class SettingsComponent implements OnInit {
     this.settingsService.updateSettings(changedSettings).subscribe(data => {
       console.log(data);
       this.reloadData();
-      this.getNewTitle()
+      this.getNewTitle();
     }, error => console.log(error));
-    
   }
   showVersion() {
-    this.settingsService.getVersion().subscribe (data => {
-     // console.log(data);
+    this.settingsService.getVersion().subscribe(data => {
       this.version = data;
       console.log(this.version);
     });

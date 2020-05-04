@@ -1,13 +1,13 @@
 package de.jsmenues.redis.repository;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import de.jsmenues.redis.data.Configuration;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Configuration Access to Redis
@@ -28,7 +28,7 @@ public class ConfigurationRepository {
     }
 
     private void saveConfigItemIfNotExist(String item) {
-        try(Jedis jedis = configurationPool.getResource()) {
+        try (Jedis jedis = configurationPool.getResource()) {
             if (jedis.get(item) == null)
                 save(new Configuration(item, ""));
         }

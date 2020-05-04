@@ -1,6 +1,5 @@
 package de.jsmenues.backend.zabbixapi;
 
-import de.jsmenues.redis.data.Configuration;
 import de.jsmenues.redis.repository.ConfigurationRepository;
 import io.github.cgi.zabbix.api.DefaultZabbixApi;
 import io.github.cgi.zabbix.api.Request;
@@ -10,11 +9,16 @@ import org.codehaus.jackson.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.json.Json;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 @Path("zabbixapi")
 public class ZabbixController {
@@ -50,7 +54,7 @@ public class ZabbixController {
         hostOutputParams.add("hostid");
         hostOutputParams.add("host");
         String filterGroup = ConfigurationRepository.getRepo().get("configuration.zabbix.filterGroup").getValue();
-        if(filterGroup.isEmpty()) {
+        if (filterGroup.isEmpty()) {
 
 
             Request hostRequest = RequestBuilder.newBuilder()
@@ -60,8 +64,7 @@ public class ZabbixController {
             JsonNode getResponse = api.call(hostRequest, true);
             JsonNode result = getResponse.path("result");
             return Response.ok(responseText + result.toString()).build();
-        }
-        else {
+        } else {
             Map<String, String[]> filter = new HashMap<>();
             filter.put("name", new String[]{filterGroup});
             List<String> outputParams = new LinkedList<>();
@@ -77,7 +80,7 @@ public class ZabbixController {
                     .build();
             JsonNode getResponse = api.call(hostgroupRequest, true);
             JsonNode result = getResponse.path("result");
-            if(result.isArray()) {
+            if (result.isArray()) {
                 for (final JsonNode objNode : result) {
                     JsonNode node = objNode.get("hosts");
                     result = node;
@@ -101,13 +104,13 @@ public class ZabbixController {
         String[] output = {"name", "hostid", "host"};
         String[] selectItems = {"itemid", "key_", "name", "prevvalue", "lastvalue", "lastclock", "description"};
         Request informationRequest = RequestBuilder.newBuilder()
-            .method("host.get")
-            .paramEntry("filter", filter)
-            .paramEntry("output", output)
-            .paramEntry("selectItems", selectItems)
-            .paramEntry("selectHosts", "extend")
-            .paramEntry("selectGroups", "extend")
-            .build();
+                .method("host.get")
+                .paramEntry("filter", filter)
+                .paramEntry("output", output)
+                .paramEntry("selectItems", selectItems)
+                .paramEntry("selectHosts", "extend")
+                .paramEntry("selectGroups", "extend")
+                .build();
         JsonNode getResponse = api.call(informationRequest);
         JsonNode result = getResponse.path("result");
         removeNotNeededInformationFromResult(result);

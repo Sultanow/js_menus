@@ -4,15 +4,15 @@ import { HttpHandler, HttpClient } from '@angular/common/http';
 
 describe('BatchService', () => {
   beforeEach(() => TestBed.configureTestingModule({
-    declarations: [ ],
-      imports: [
-      ],
-      providers: [
-        HttpClient,
-        HttpHandler
-      ]
-    }).compileComponents()
-);
+    declarations: [],
+    imports: [
+    ],
+    providers: [
+      HttpClient,
+      HttpHandler
+    ]
+  }).compileComponents()
+  );
 
   it('should be created', () => {
     const service: BatchService = TestBed.get(BatchService);

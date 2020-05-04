@@ -4,13 +4,29 @@
     width: 10rem;
     /*float: left;*/
     border-right: 1px solid white;
+    padding-right: 0.2rem;
+}
+
+.chartSideNavActive {
+    font-weight: bold;
+    font-style: italic;
 }
 
 .chartContent {
+    padding-left: 0.2rem;
     width: 100%;
 }
 
 #chartContainer {
     display: flex;
     align-items: stretch;
+}
+
+.chartSideNavButton.mat-card {
+    padding: 0.4rem;
+    cursor: pointer;
+}
+
+.chartSideNavButton.mat-card-content {
+    margin-bottom: 0.4rem;
 }

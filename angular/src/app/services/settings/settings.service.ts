@@ -11,11 +11,11 @@ export class SettingsService {
 
   private title = new BehaviorSubject<string>("");
   currentTitle = this.title.asObservable();
-  
-  private backendUrl: string = 'backend/settings';
-  constructor(private http: HttpClient) { }
 
-  changeTitle( title : string){
+  private backendUrl: string = 'backend/settings';
+  constructor (private http: HttpClient) { }
+
+  changeTitle(title: string) {
     this.title.next(title);
   }
 
@@ -31,24 +31,28 @@ export class SettingsService {
   }
 
   getTitel(): Observable<any> {
-    return this.http.get(`${this.backendUrl}/title`, { responseType: "text"});
+    return this.http.get(`${this.backendUrl}/title`, { responseType: "text" });
   }
 
   getSVGLogo(): Observable<any> {
-    return this.http.get(`${this.backendUrl}/logo`, {responseType: "text"});
+    return this.http.get(`${this.backendUrl}/logo`, { responseType: "text" });
   }
 
   getDummyStatusWarnings(): Observable<any> {
     return this.http.get(`${this.backendUrl}/dummyStatusWarnings`);
   }
-  
+
   getCompareServerConfig(): Observable<any> {
     return this.http.get(`${this.backendUrl}/servercompareconfig`);
   }
-  
+
+  getActiveItems(): Observable<any> {
+    return this.http.get(`${this.backendUrl}/activeItems`);
+  }
+
   private handleError(error: HttpErrorResponse) {
-    if( error.error instanceof ErrorEvent) {
-      console.error('An error occurred:', error.error.message)
+    if (error.error instanceof ErrorEvent) {
+      console.error('An error occurred:', error.error.message);
     } else {
       console.error(
         `Backend returned code ${error.status}, ` +
@@ -61,6 +65,6 @@ export class SettingsService {
     );
   }
   getVersion(): Observable<any> {
-    return this.http.get(`${this.backendUrl}/version`, { responseType: "text"});
+    return this.http.get(`${this.backendUrl}/version`, { responseType: "text" });
   }
 }

@@ -1,7 +1,8 @@
 <svg:g class="south-menu" *ngIf="isOpen" transform="translate(228 654)">
-  <g class="conf-button" transform="translate(120 24)" (click)="openConfig()">
+  <g class="conf-button" transform="translate(120 24)" (click)="openConfig()" [ngClass]="{'disabled': !compareActive }">
     <title>Konfiguration</title>
-    <circle class="Oval-2-Copy-8" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6" />
+    <circle class="Oval-2-Copy-8" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"
+      [ngClass]="{'disabledCircle': !compareActive }" />
     <!-- Konfiguration Icon -->
     <g transform="translate(24 24)">
       <path d="M13.109,36.388l0,-9.079" style="fill:none;stroke:#fff;stroke-width:2.59px;" />
@@ -16,9 +17,10 @@
     </g>
     <!-- / Konfiguration Icon -->
   </g>
-  <g class="server-button" (click)="openServer()">
+  <g class="server-button" (click)="openServer()" [ngClass]="{'disabled': !serverconfigActive }">
     <title>Konfigurationsübersicht</title>
-    <circle class="Oval-2-Copy-9" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6" />
+    <circle class="Oval-2-Copy-9" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"
+      [ngClass]="{'disabledCircle': !serverconfigActive }" />
     <!-- Server Icon -->
     <g transform="translate(24 24)">
       <path
@@ -33,9 +35,11 @@
     </g>
     <!-- / Server Icon -->
   </g>
-  <g class="batches-button" transform="translate(240)" (click)="openBatches()">
+  <g class="batches-button" transform="translate(240)" (click)="openBatches()"
+    [ngClass]="{'disabled': !batchesActive }">
     <title>Batches</title>
-    <circle class="Oval-2-Copy-10" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6" />
+    <circle class="Oval-2-Copy-10" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"
+      [ngClass]="{'disabledCircle': !batchesActive }" />
     <!-- Batches Icon -->
     <g transform="translate(24 24)">
       <path d="M24,10.004l-13.996,6.998l13.996,6.998l13.996,-6.998l-13.996,-6.998Z"

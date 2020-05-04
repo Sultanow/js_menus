@@ -1,32 +1,24 @@
 <div id="createChartContainer" *ngIf="showCreateChartContainer">
     <form [formGroup]="myForm" (ngSubmit)="submit()">
-  
+
         <div class="form-group">
             <label for="name">Name </label>
-            <input 
-                formControlName="name"
-                id="name" 
-                type="text" 
-                class="form-control">
+            <input formControlName="name" id="name" type="text" class="form-control">
             <div *ngIf="f.name.touched && f.name.invalid" class="alert alert-danger">
                 <div *ngIf="f.name.errors.required">Name is required.</div>
                 <div *ngIf="f.name.errors.minlength">Name should be 3 character.</div>
             </div>
         </div>
-          
+
         <div class="form-group">
             <label for="file">Python Script </label>
-            <input mat-flat-button color="primary"
-                formControlName="file"
-                id="file" 
-                type="file" 
-                class="form-control"
+            <input mat-flat-button color="primary" formControlName="file" id="file" type="file" class="form-control"
                 (change)="onFileChange($event)">
             <div *ngIf="f.file.touched && f.file.invalid" class="alert alert-danger">
                 <div *ngIf="f.file.errors.required">File is required.</div>
             </div>
         </div>
-              
+
         <button mat-flat-button color="primary" type="submit">Submit</button>
     </form>
 </div>

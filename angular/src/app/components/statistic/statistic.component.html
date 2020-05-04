@@ -1,23 +1,23 @@
-<div  [hidden]="!showStatistic">
+<div [hidden]="!showStatistic">
     <div id="chartContainer">
-    <div class="chartSideNav">
-        <div *ngFor="let chart of charts">
-            <button mat-button (click)="showChartView($event, chart)">{{chart}}</button>
+        <div class="chartSideNav">
+            <div *ngFor="let chart of charts">
+                <mat-card mat-card-content class="chartSideNavButton" (click)="showChartView($event, chart)">
+                    {{chart}}
+                </mat-card>
+            </div>
+            <div>
+                <mat-card mat-card-content class="chartSideNavButton" (click)="createChartView($event)">Neuen Chart
+                    anlegen
+                </mat-card>
+            </div>
         </div>
-        <div>
-            <button mat-button (click)="createChartView()">Neuen Chart anlegen</button>
+        <div class="chartContent">
+            <!-- Browse Files, -->
+            <app-graphs [chartName]="chartName" [showGraphChart]="showGraphChart" (notifyDeleteChart)="onDeleteChart()">
+            </app-graphs>
+            <app-create-chart [showCreateChartContainer]="showCreateChartContainer"
+                (notifyNewChartSubmitted)="onNewChartSubmitted()"></app-create-chart>
         </div>
     </div>
-    <div class="chartContent">
-        <!-- Browse Files, -->
-        <app-graphs 
-            [chartName]="chartName" 
-            [showGraphChart]="showGraphChart"
-            (notifyDeleteChart)="onDeleteChart()"></app-graphs>
-        <app-create-chart 
-            [showCreateChartContainer]="showCreateChartContainer"
-            (notifyNewChartSubmitted)="onNewChartSubmitted()"
-            ></app-create-chart>
-    </div>
-</div>
 </div>

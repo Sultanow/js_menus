@@ -128,8 +128,9 @@ backend/.idea
 
 # End of https://www.gitignore.io/api/maven,angular,eclipse,visualstudiocode
 
-docker/redis/data
-docker/zabbix/zbx_env/var/lib/mysql
+docker/redis/data/*
+docker/zabbix/zbx_env/var/lib/mysql/*
 docker/redis/conf/redis.log
 
 
+*/__pychache__/*

@@ -38,13 +38,13 @@ export class TreetableComponent<T> implements OnInit, OnChanges {
       console.warn(`DEPRECATION WARNING: \n The 'ng-treetable' selector is being deprecated. Please use the new 'treetable' selector`);
     }
   }
-  
+
   ngOnInit() {
     this.createTree();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.tree.isFirstChange()) {
+    if (changes.tree.isFirstChange()) {
       return;
     }
     this.createTree();

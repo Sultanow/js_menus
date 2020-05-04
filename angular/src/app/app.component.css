@@ -42,3 +42,11 @@
   right: 7px;
   z-index: 100;
 }
+
+.disabled {
+  pointer-events: none;
+}
+
+.disabledCircle {
+  fill: transparent;
+}

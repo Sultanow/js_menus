@@ -1,38 +1,66 @@
-import { Component, OnInit, Input, Inject, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, Inject, EventEmitter, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { ConfigurationService } from 'src/app/services/configuration.service';
 import { Configuration } from 'src/app/model/configuration';
 
 @Component({
   selector: 'g[o-north-menu]',
-  templateUrl: './north-menu.component.html'
+  templateUrl: './north-menu.component.html',
+  styleUrls: [ './../../../app.component.css' ]
 })
-export class NorthMenuComponent implements OnInit {
+export class NorthMenuComponent implements OnInit, OnChanges {
 
   @Input() isOpen: boolean;
+  @Input() activeItems: string[] = [];
 
   // Notify parent (app) when details box should open
   @Output() notifyEventOpen = new EventEmitter<string>();
 
-  constructor (private configService: ConfigurationService) { }
+  testActive: boolean = true;
+  devActive: boolean = true;
+  prodActive: boolean = true;
+
+  constructor () { }
+  ngOnChanges(changes: SimpleChanges): void {
+    this.reloadActiveItems();
+  }
 
   openTest() {
-    this.notifyEventOpen.emit("test");
+    if (this.testActive)
+      this.notifyEventOpen.emit("test");
   }
 
   openDev() {
-    this.notifyEventOpen.emit("dev");
+    if (this.devActive)
+      this.notifyEventOpen.emit("dev");
   }
 
   openProd() {
-    this.notifyEventOpen.emit("prod");
+    if (this.prodActive)
+      this.notifyEventOpen.emit("prod");
   }
 
   ngOnInit() {
+    this.reloadActiveItems();
   }
 
-  /* openDetails(){
-    var config = this.configService.getRedisConfiguration("testkey");
-    config.then(resolved => console.log(resolved), error => console.error(error));
-  } */
-
+  reloadActiveItems() {
+    if (this.activeItems.length !== 0) {
+      this.testActive = false;
+      this.devActive = false;
+      this.prodActive = false;
+      if (this.activeItems.includes("test")) {
+        this.testActive = true;
+      }
+      if (this.activeItems.includes("dev")) {
+        this.devActive = true;
+      }
+      if (this.activeItems.includes("prod")) {
+        this.prodActive = true;
+      }
+    } else {
+      this.testActive = true;
+      this.devActive = true;
+      this.prodActive = true;
+    }
+  }
 }

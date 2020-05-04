@@ -10,7 +10,7 @@ describe('DetailsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ DetailsComponent ],
-      providers: [ 
+      providers: [
         ConfigurationService,
         HttpClient,
         HttpHandler
