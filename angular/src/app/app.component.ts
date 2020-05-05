@@ -1,9 +1,12 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 import { TimelineLite } from "gsap";
 import { ConfigurationItemsService } from './services/configuration/configuration-items.service';
 import { ServerConfiguration } from 'src/config/ServerConfiguration';
 import { SettingsService } from './services/settings/settings.service';
 import { Title } from '@angular/platform-browser';
+import { MatDialog,MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { SettingsPasswordComponent } from './components/settings-password/settings-password.component';
+
 
 @Component({
 	selector: 'app-root',
@@ -13,6 +16,7 @@ import { Title } from '@angular/platform-browser';
 
 export class AppComponent {
 	title = 'angular-radial-menu';
+	 
 
 	// Animations
 	animate_middle: TimelineLite = new TimelineLite({ paused: true });
@@ -64,7 +68,8 @@ export class AppComponent {
 
 	constructor (private configService: ConfigurationItemsService,
 		private settingsService: SettingsService,
-		private titleService: Title) {
+		private titleService: Title,
+		public dialog: MatDialog) {
 	}
 	updateTitle() {
 		this.settingsService.getTitel().subscribe(title => {
@@ -247,17 +252,32 @@ export class AppComponent {
 		this.southOpen = false;
 	}
 
-	openSettings() {
-		if (this.showViewBox && this.showView === "settings") {
-			this.showViewBox = false;
-			this.showView = "";
-			this.updateTitle();
-		} else {
-			this.showViewBox = true;
-			this.showView = "settings";
-			this.updateTitle();
 
+	 openSettings() {
+		this.updateTitle();
+		if (this.showViewBox && this.showView === "settings") {
+			this.showView = "";
+			this.showViewBox = false;	
+		} else {
+			this.showView = "settings";
+			this.showViewBox =true;
 		}
 	}
 
+	checkPasswordDialog(){
+		let dialogRef = this.dialog.open(SettingsPasswordComponent,{
+		width : "300 px",
+		disableClose: true,
+		});
+		dialogRef.afterClosed().subscribe(result =>{
+			if(result==null){
+				return;
+			}
+			if(result){
+				this.openSettings();
+			}else  {
+				alert("Passwort ist Falsch");
+			}
+		}); 
+	}
 }

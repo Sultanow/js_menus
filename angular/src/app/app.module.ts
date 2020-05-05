@@ -49,7 +49,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { GraphsComponent } from './components/statistic/graphs/graphs.component';
 import { MatButtonModule } from '@angular/material/button';
 import { CreateChartComponent } from './components/statistic/create-chart/create-chart.component';
-
+import { SettingsPasswordComponent } from './components/settings-password/settings-password.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +78,8 @@ import { CreateChartComponent } from './components/statistic/create-chart/create
     TrackerComponent,
     SettingsComponent,
     GraphsComponent,
-    CreateChartComponent
+    CreateChartComponent,
+	SettingsPasswordComponent
   ],
   imports: [
     BrowserModule,
@@ -105,7 +106,7 @@ import { CreateChartComponent } from './components/statistic/create-chart/create
     DetailsComponent
   ],
   bootstrap: [ AppComponent ],
-  entryComponents: [ EditDialog, DependencyChartsComponent ]
+  entryComponents: [ EditDialog, DependencyChartsComponent, SettingsPasswordComponent ]
 
 })
 export class AppModule { }
