@@ -52,6 +52,7 @@ public class StatisticController {
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileMetaData
     ) throws IOException {
+        Logger.getLogger().warning("/updateData");
         // First save the File to the tmp
         saveFileToTmpFolder(fileInputStream, fileMetaData);
 
@@ -71,8 +72,10 @@ public class StatisticController {
             Logger.getLogger().warning(sb_Script.toString());
             Logger.getLogger().warning(ConfigurationRepository.getRepo().get(sbData.toString()).getValue());
             return Response.ok(responseText).build();
-        } else
+        } else {
+            Logger.getLogger().warning(response.toString());
             return Response.status(401, "Could not get Response from service").build();
+        }
     }
 
     @POST

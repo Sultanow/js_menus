@@ -31,7 +31,7 @@ def update_data():
     processname = "python /app/" + scriptname + " " + UPLOAD_FOLDER + filename
 
     p = Popen(processname, shell=True, stdout=PIPE)
-    output, err = p.communicate(timeout=15)
+    output, err = p.communicate(timeout=600)
     print(err)
     print(output)
     return output, err
