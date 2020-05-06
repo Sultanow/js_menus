@@ -90,10 +90,12 @@ export class CompareComponent implements OnInit {
   }
 
   onAddEnv(event) {
-    if (!this.selectedEnvs.includes(this.selectedValue))
+    if (!this.selectedEnvs.includes(this.selectedValue) && (this.selectedValue != "")){
       this.selectedEnvs.push(this.selectedValue);
-    this.generateShowlists();
-    this.getServerConfiguration();
+    }
+  this.generateShowlists();
+  this.getServerConfiguration();
+ 
 
   }
   getServerConfiguration() {
