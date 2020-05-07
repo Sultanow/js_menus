@@ -16,8 +16,11 @@ services:
   payara:
     image: payara/server-full
     volumes:
-      - ./../target/autodeploy:/opt/payara/deployments
+      - ./../target/autodeploy:/opt/payara/appserver/glassfish/domains/production/autodeploy
+      - ./payara/config/:/opt/payara/deployments/
     container_name: payara-service
+    environment: 
+      - POSTBOOT_COMMANDS=/opt/payara/deployments/commands.asadmin
     ports:
     - "4848:4848"
     - "8080:8080"
