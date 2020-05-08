@@ -1,9 +1,10 @@
-<div class="container">
+<app-old-browser-banner class="container" *ngIf="isIE"></app-old-browser-banner>
+<div class="container" *ngIf="!isIE">
   <svg class="menu" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 792 792">
     <defs>
       <path class="path-1"
         d="M45 67.9c0 2.3 1.9 4.1 4.2 4.1a4.1 4.1 0 1 0 0-8.3 4.1 4.1 0 0 0-4.1 4.2zm6 0c0 1-.8 1.7-1.8 1.7s-1.8-.7-1.8-1.7.8-1.8 1.8-1.8 1.8.7 1.8 1.8z" />
-    </defs>
+    </defs> 
     <g class="All-on" fill="none" fill-rule="evenodd" transform="translate(-571 -143)">
       <g class="menu" transform="translate(571 143)">
         <g class="outside-layer">

@@ -50,6 +50,7 @@ import { GraphsComponent } from './components/statistic/graphs/graphs.component'
 import { MatButtonModule } from '@angular/material/button';
 import { CreateChartComponent } from './components/statistic/create-chart/create-chart.component';
 import { SettingsPasswordComponent } from './components/settings-password/settings-password.component';
+import { OldBrowserBannerComponent } from './components/old-browser-banner/old-browser-banner.component';
 
 @NgModule({
   declarations: [
@@ -79,7 +80,8 @@ import { SettingsPasswordComponent } from './components/settings-password/settin
     SettingsComponent,
     GraphsComponent,
     CreateChartComponent,
-	SettingsPasswordComponent
+	SettingsPasswordComponent,
+	OldBrowserBannerComponent
   ],
   imports: [
     BrowserModule,

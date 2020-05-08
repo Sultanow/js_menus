@@ -1,10 +1,10 @@
-import { Component} from '@angular/core';
+import { Component } from '@angular/core';
 import { TimelineLite } from "gsap";
 import { ConfigurationItemsService } from './services/configuration/configuration-items.service';
 import { ServerConfiguration } from 'src/config/ServerConfiguration';
 import { SettingsService } from './services/settings/settings.service';
 import { Title } from '@angular/platform-browser';
-import { MatDialog,MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SettingsPasswordComponent } from './components/settings-password/settings-password.component';
 
 
@@ -16,7 +16,7 @@ import { SettingsPasswordComponent } from './components/settings-password/settin
 
 export class AppComponent {
 	title = 'angular-radial-menu';
-	 
+	isIE = /msie\s|trident\//i.test(window.navigator.userAgent);
 
 	// Animations
 	animate_middle: TimelineLite = new TimelineLite({ paused: true });
@@ -50,20 +50,21 @@ export class AppComponent {
 	activeItems: string[] = [];
 
 	ngOnInit() {
-		this.initAnimations();
-		this.initAnimationButton(this.animate_north, "north-menu");
-		this.initAnimationButton(this.animate_east, "east-menu");
-		this.initAnimationButton(this.animate_south, "south-menu");
-		this.initAnimationButton(this.animate_west, "west-menu");
-		this.settingsService.getActiveItems().subscribe(result => {
-			if (result && result.activeItems && Array.isArray(result.activeItems))
-				this.activeItems = result.activeItems;
-		});
-		this.configService.getServerConfiguration(ServerConfiguration.ENV_LIST).subscribe(data => {
-			this.configService.addConfiguration(this.configService.createServerConf(data));
-		});
-		this.updateTitle();
-
+		if (!this.isIE) {
+			this.initAnimations();
+			this.initAnimationButton(this.animate_north, "north-menu");
+			this.initAnimationButton(this.animate_east, "east-menu");
+			this.initAnimationButton(this.animate_south, "south-menu");
+			this.initAnimationButton(this.animate_west, "west-menu");
+			this.settingsService.getActiveItems().subscribe(result => {
+				if (result && result.activeItems && Array.isArray(result.activeItems))
+					this.activeItems = result.activeItems;
+			});
+			this.configService.getServerConfiguration(ServerConfiguration.ENV_LIST).subscribe(data => {
+				this.configService.addConfiguration(this.configService.createServerConf(data));
+			});
+			this.updateTitle();
+		}
 	}
 
 	constructor (private configService: ConfigurationItemsService,
@@ -253,31 +254,31 @@ export class AppComponent {
 	}
 
 
-	 openSettings() {
+	openSettings() {
 		this.updateTitle();
 		if (this.showViewBox && this.showView === "settings") {
 			this.showView = "";
-			this.showViewBox = false;	
+			this.showViewBox = false;
 		} else {
 			this.showView = "settings";
-			this.showViewBox =true;
+			this.showViewBox = true;
 		}
 	}
 
-	checkPasswordDialog(){
-		let dialogRef = this.dialog.open(SettingsPasswordComponent,{
-		width : "300 px",
-		disableClose: true,
+	checkPasswordDialog() {
+		let dialogRef = this.dialog.open(SettingsPasswordComponent, {
+			width: "300 px",
+			disableClose: true,
 		});
-		dialogRef.afterClosed().subscribe(result =>{
-			if(result==null){
+		dialogRef.afterClosed().subscribe(result => {
+			if (result == null) {
 				return;
 			}
-			if(result){
+			if (result) {
 				this.openSettings();
-			}else  {
+			} else {
 				alert("Passwort ist Falsch");
 			}
-		}); 
+		});
 	}
 }
