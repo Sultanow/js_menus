@@ -14,7 +14,7 @@
   <div id="dropdownListEnv">Liste mit auswählbaren Environments
     <mat-form-field>
       <mat-label>Environment auswählen</mat-label>
-      <mat-select (selectionChange)="setSelectedValue($event)">
+      <mat-select (selectionChange)="setSelectedValue($event)" style="width: 150px;">
         <mat-option *ngFor="let env of otherEnvs" [value]="env">
           {{env}}
         </mat-option>

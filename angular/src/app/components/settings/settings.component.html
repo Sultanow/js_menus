@@ -1,4 +1,4 @@
-<div *ngIf="showSettings">
+<div *ngIf="showSettings" style="width: 80%; height: 80%;">
     <table>
         <caption>Einstellungen</caption>
         <tr>
@@ -8,6 +8,7 @@
         <tr *ngFor="let setting of settings">
             <td>{{setting.key}}</td>
             <td><textarea rows=1 cols="50" class="textarea_items" (change)="onChangeItem($event)"
+                style="width: 350px; height: 25px Arial, sans-serif;"
                     name="{{setting.key}}">{{setting.value}}</textarea></td>
         </tr>
     </table>
