@@ -19,6 +19,9 @@ table#compare-table td, table#compare-table th {
 .textarea_items {
   resize: none;
   margin: -3px 0 0 0;
+  width: 17rem;
+  height: 1.5rem;
+  font: 0.8rem Arial, sans-serif;
 }
 
 .selectedEnvs {
@@ -34,4 +37,7 @@ table#compare-table td, table#compare-table th {
 
 ::ng-deep.mat-select-value {
   color: #fff;
+}
+.selectionChange{
+  width: 12.rem;
 }

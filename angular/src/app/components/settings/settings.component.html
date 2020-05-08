@@ -6,8 +6,8 @@
             <th scope="col">Wert</th>
         </tr>
         <tr *ngFor="let setting of settings">
-            <td>{{setting.key}}</td>
-            <td><textarea rows=1 cols="50" class="textarea_items" (change)="onChangeItem($event)"
+            <td class= "settingKey">{{setting.key}}</td>
+            <td><textarea class="textarea_items" (change)="onChangeItem($event)"
                     name="{{setting.key}}">{{setting.value}}</textarea></td>
         </tr>
     </table>

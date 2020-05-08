@@ -39,6 +39,7 @@ body {
     background-image: url("/assets/img/585929349-datacenter-wallpaper.jpg");
     background-size: cover;
     background-position: center center;
+    font : Arial, sans-serif
 }
 
 [class$="-button"] {

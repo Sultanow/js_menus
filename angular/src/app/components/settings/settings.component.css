@@ -3,3 +3,12 @@
     font-style: italic;
     bottom: 10px;
 }
+.textarea_items{
+    width: 20rem;
+    height: 1.5rem;
+    font: 0.8rem Arial, sans-serif;
+    padding: 0.2rem;
+}
+.settingKey{
+    padding: 0.2rem;
+}
