@@ -14,7 +14,7 @@
   <div id="dropdownListEnv">Liste mit auswählbaren Environments
     <mat-form-field>
       <mat-label>Environment auswählen</mat-label>
-      <mat-select (selectionChange)="setSelectedValue($event)" style="width: 150px;">
+      <mat-select (selectionChange)="setSelectedValue($event)" class= "selectionChange">
         <mat-option *ngFor="let env of otherEnvs" [value]="env">
           {{env}}
         </mat-option>
@@ -38,8 +38,8 @@
   <div class="treeTableElement">
     <div *ngIf="el.element.value[el.column]">
       <div class="textarea_1">
-        <textarea rows=1 cols="26" class="textarea_items">{{el.element.value[el.column].soll}}</textarea>
-        <textarea rows=1 disabled="true" cols="26" class="textarea_items">{{el.element.value[el.column].ist}}</textarea>
+        <textarea class="textarea_items">{{el.element.value[el.column].soll}}</textarea>
+        <textarea disabled="true" class="textarea_items">{{el.element.value[el.column].ist}}</textarea>
       </div>
       <div *ngIf="!el.element.value[el.column].identic" class="checkItem">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="red"
