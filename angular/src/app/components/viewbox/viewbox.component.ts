@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, Input, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, SimpleChanges, OnChanges, ChangeDetectorRef } from '@angular/core';
 import { Batches } from 'src/app/model/batches';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 
@@ -9,7 +9,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
 })
 export class ViewboxComponent implements OnInit {
 
-  constructor () { }
+  constructor (private ref: ChangeDetectorRef) { }
 
   ngOnInit() {
   }
@@ -116,5 +116,6 @@ export class ViewboxComponent implements OnInit {
 
   onNotifyTitle(title: string) {
     this.title = title;
+    this.ref.detectChanges();
   }
 }

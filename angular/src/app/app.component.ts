@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TimelineLite } from "gsap";
 import { ConfigurationItemsService } from './services/configuration/configuration-items.service';
 import { ServerConfiguration } from 'src/config/ServerConfiguration';
 import { SettingsService } from './services/settings/settings.service';
 import { Title } from '@angular/platform-browser';
-import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { SettingsPasswordComponent } from './components/settings-password/settings-password.component';
 
 
@@ -14,10 +14,8 @@ import { SettingsPasswordComponent } from './components/settings-password/settin
 	styleUrls: [ './app.component.css' ]
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit {
 	title = 'angular-radial-menu';
-	isIE = /msie\s|trident\//i.test(window.navigator.userAgent);
-
 	// Animations
 	animate_middle: TimelineLite = new TimelineLite({ paused: true });
 	animate_outside: TimelineLite = new TimelineLite({ paused: true });
@@ -50,7 +48,6 @@ export class AppComponent {
 	activeItems: string[] = [];
 
 	ngOnInit() {
-		if (!this.isIE) {
 			this.initAnimations();
 			this.initAnimationButton(this.animate_north, "north-menu");
 			this.initAnimationButton(this.animate_east, "east-menu");
@@ -64,13 +61,13 @@ export class AppComponent {
 				this.configService.addConfiguration(this.configService.createServerConf(data));
 			});
 			this.updateTitle();
-		}
 	}
 
 	constructor (private configService: ConfigurationItemsService,
 		private settingsService: SettingsService,
 		private titleService: Title,
 		public dialog: MatDialog) {
+			if (/MSIE |Trident\//.test(window.navigator.userAgent)) { window.location.replace("unsupported.html"); }
 	}
 	updateTitle() {
 		this.settingsService.getTitel().subscribe(title => {
