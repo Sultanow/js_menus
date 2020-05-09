@@ -1,7 +1,9 @@
 .versionPosition {
-    position: absolute;
+    position: relative;
     font-style: italic;
-    bottom: 10px;
+    padding-top: 3rem;
+    float: right;
+   
 }
 .textarea_items{
     width: 20rem;
