@@ -28,6 +28,7 @@ export class CompareComponent implements OnInit {
 
   selectedValue: string = "";
   updateTime: Date = new Date();
+  DateLocale = this.updateTime.toLocaleString();
 
 
   @Input() showCompare: boolean;
