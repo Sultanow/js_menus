@@ -1,14 +1,18 @@
 <div [hidden]="!showStatistic">
     <div id="chartContainer">
         <div class="chartSideNav">
-            <div *ngFor="let chart of charts">
-                <mat-card mat-card-content class="chartSideNavButton" (click)="showChartView($event, chart)">
-                    {{chart}}
-                </mat-card>
+            <div *ngFor="let group of charts">
+                <div *ngFor="let chart of group.charts">
+                    <mat-card mat-card-content class="chartSideNavButton" (click)="showChartView($event, chart)"
+                        [ngClass]="{'chartSideNavActive': chart === chartName }">
+                        {{chart}}
+                    </mat-card>
+                </div>
             </div>
             <div>
-                <mat-card mat-card-content class="chartSideNavButton" (click)="createChartView($event)">Neuen Chart
-                    anlegen
+                <mat-card mat-card-content class="chartSideNavButton" (click)="createChartView($event)"
+                    [ngClass]="{'chartSideNavActive': showCreateChartContainer }">
+                    Neuen Chart anlegen
                 </mat-card>
             </div>
         </div>

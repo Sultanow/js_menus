@@ -1,6 +1,9 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { Batches } from 'src/app/model/batches';
 import { StatisticService } from 'src/app/services/statistic/statistic.service';
+import { StatisticGroup } from 'src/app/model/statisticGroups';
+
+
 
 @Component({
   selector: 'app-statistic',
@@ -8,12 +11,12 @@ import { StatisticService } from 'src/app/services/statistic/statistic.service';
   templateUrl: './statistic.component.html',
   styleUrls: [ './statistic.component.css' ]
 })
-export class StatisticComponent implements OnInit {
-  // Inputs
-  @Input()
-  showStatistic: boolean;
+export class StatisticComponent implements OnInit, OnChanges {
+  // In-/Outputs
+  @Input() showStatistic: boolean;
+  @Output() notifyTitle = new EventEmitter<string>();
   // Variables
-  charts = [];
+  charts: StatisticGroup[] = [];
   showCreateChartContainer = false;
   showGraphChart = false;
   chartName = "";
@@ -28,44 +31,37 @@ export class StatisticComponent implements OnInit {
   constructor (private statisticService: StatisticService) { }
 
   // Methods
-  ngOnChange(): void {
+  ngOnChanges(changes: SimpleChanges): void {
     this.reloadData();
+    if (this.showStatistic) {
+      this.notifyTitle.emit("Statistiken");
+    }
   }
 
   reloadData() {
     this.statisticService.getChartNames().subscribe(result => {
       console.log(result);
-      if (result.length > 0)
-        this.charts = result.substring(1, result.length - 1).split(", ");
-
+      this.charts = result;
+      if (this.showGraphChart === false && this.showCreateChartContainer === false) {
+        if (this.charts.length > 0 && this.charts[ 0 ].charts.length > 0)
+          this.showChartView(null, this.charts[ 0 ].charts[ 0 ]);
+        else {
+          this.createChartView(null);
+        }
+      }
     });
   }
 
   createChartView(event) {
-    console.log(event);
-    console.log("createChartView()");
     this.showCreateChartContainer = true;
     this.showGraphChart = false;
     this.chartName = "";
-    this.markActiveButton(event.target);
   }
 
   showChartView(event, chart) {
-    console.log(event);
-    console.log(chart);
     this.showGraphChart = true;
     this.chartName = chart;
     this.showCreateChartContainer = false;
-    this.markActiveButton(event.target);
-
-
-  }
-
-  markActiveButton(newButton: Element) {
-    if (this.activeElement)
-      this.activeElement.classList.remove("chartSideNavActive");
-    this.activeElement = newButton;
-    this.activeElement.classList.add("chartSideNavActive");
   }
 
   onNewChartSubmitted() {

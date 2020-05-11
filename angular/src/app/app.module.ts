@@ -10,6 +10,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
@@ -46,7 +49,7 @@ import { RightManagementComponent } from './components/right-management/right-ma
 import { TrackerComponent } from './components/tracker/tracker.component';
 import { TreetableModule } from './components/treetable/treetable.module';
 import { SettingsComponent } from './components/settings/settings.component';
-import { GraphsComponent } from './components/statistic/graphs/graphs.component';
+import { GraphsComponent, DialogDeleteChart } from './components/statistic/graphs/graphs.component';
 import { MatButtonModule } from '@angular/material/button';
 import { CreateChartComponent } from './components/statistic/create-chart/create-chart.component';
 import { SettingsPasswordComponent } from './components/settings-password/settings-password.component';
@@ -79,7 +82,8 @@ import { SettingsPasswordComponent } from './components/settings-password/settin
     SettingsComponent,
     GraphsComponent,
     CreateChartComponent,
-    SettingsPasswordComponent
+    SettingsPasswordComponent,
+    DialogDeleteChart
   ],
   imports: [
     BrowserModule,
@@ -99,14 +103,17 @@ import { SettingsPasswordComponent } from './components/settings-password/settin
     DragDropModule,
     TreetableModule,
     MatMenuModule,
-    MatButtonModule
+    MatButtonModule,
+    MatAutocompleteModule,
+    MatTooltipModule,
+    MatSnackBarModule
   ],
   providers: [
     ConfigurationService,
     DetailsComponent
   ],
   bootstrap: [ AppComponent ],
-  entryComponents: [ EditDialog, DependencyChartsComponent, SettingsPasswordComponent ]
+  entryComponents: [ EditDialog, DependencyChartsComponent, SettingsPasswordComponent, DialogDeleteChart ]
 
 })
 export class AppModule { }
