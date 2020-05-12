@@ -30,6 +30,7 @@ td[class*=' mat-column'] {
 
 .vertical-separator {
   border-left: 1px solid #f0f0f5;
+  background-color: white;
 }
 
 td div {
