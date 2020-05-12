@@ -6,6 +6,7 @@ import sys
 
 import numpy as np
 import pandas as pd
+from datetime import datetime
 
 if(len(sys.argv) <= 1):
     print("No Excel File given!", flush=True)
@@ -41,12 +42,48 @@ for n in range(num_series):
         "type": "scatter", 
         "name": labels[n],
         "line":dict(width=2),
-        "connectgaps":True
+        "connectgaps":True,
+        "hoverinfo": "x+y+text"
     })
+title = 'Anwenderzahlen'
+
+layout = {
+        "xaxis": {
+          "showline": True,
+          "showgrid": True,
+          "showticklabels": True,
+          "linewidth": 2,
+          "ticks": "outside",
+          "tickfont": {
+            "family": "Arial",
+            "size": 12,
+          }
+        },
+        "yaxis": {
+          "showgrid": True,
+          "zeroline": True,
+          "showline": True,
+          "showticklabels": True,
+        },
+        "autosize": True,
+        "margin": {
+          "autoexpand": True,
+          "l": 100,
+          "r": 20,
+          "t": 110,
+        },
+        "showlegend": True,
+        "title": title
+      }
+# Converting datetime object to string
+dateTimeObj = datetime.now()
+timestampStr = dateTimeObj.strftime("%d.%m.%Y (%H:%M)")
 
 result = {
-    "title": 'Anwenderzahlen',
-    "traces": traces
+    "title": title,
+    "traces": traces,   
+    "layout": layout,
+    "updateTime" : timestampStr
 }
 
 print(json.dumps(result))

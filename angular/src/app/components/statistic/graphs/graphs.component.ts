@@ -24,11 +24,14 @@ export class GraphsComponent implements OnInit, OnChanges {
   resultAvailable = null;
   selectingGraph = true;
 
+  updateTime: string = "";
+
   constructor (private statisticService: StatisticService, public dialog: MatDialog) {
 
   }
   ngOnChanges(changes: SimpleChanges): void {
     this.destroyPlot();
+    this.updateTime = "";
     this.loadGraphData();
   }
 
@@ -59,6 +62,8 @@ export class GraphsComponent implements OnInit, OnChanges {
     const data = JSON.parse(this.resultAvailable);
     const graphData = data[ "traces" ];
     let layout;
+    if (data.updateTime)
+      this.updateTime = data.updateTime;
     if (data.layout) {
       layout = data.layout;
       layout.title = data.title;
