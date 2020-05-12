@@ -1,24 +1,46 @@
 <div id="createChartContainer" *ngIf="showCreateChartContainer">
-    <form [formGroup]="myForm" (ngSubmit)="submit()">
+    <h3>Neues Chart erstellen</h3>
+    <form [formGroup]="myForm" (ngSubmit)="submit()" class="newChartForm">
 
-        <div class="form-group">
-            <label for="name">Name </label>
-            <input formControlName="name" id="name" type="text" class="form-control">
-            <div *ngIf="f.name.touched && f.name.invalid" class="alert alert-danger">
-                <div *ngIf="f.name.errors.required">Name is required.</div>
-                <div *ngIf="f.name.errors.minlength">Name should be 3 character.</div>
-            </div>
+        <mat-form-field class="field-input-full-width" matTooltip="Gruppen verwenden immer die selbe Datenbasis">
+            <input matInput placeholder="Gruppe" aria-label="Gruppe" [matAutocomplete]="auto" formControlName="group">
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let group of filteredGroups | async" [value]="group">
+                    <span>{{group}}</span>
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+
+        <mat-form-field matTooltip="Name zur Auswahl im Menü" class="field-input-full-width">
+            <mat-label for="name">Name</mat-label>
+            <input matInput formControlName="name" id="name" type="text" [errorStateMatcher]="matcher">
+            <mat-error *ngIf="myForm.get('name').hasError('required')">
+                Name wird benötigt
+            </mat-error>
+            <mat-error *ngIf="myForm.get('name').hasError('minlength')">
+                Der Name benötigt mindestens 3 Zeichen.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field matTooltip="Beschreibung für das neue Chart" class="field-input-full-width">
+            <mat-label for="description">Beschreibung</mat-label>
+            <input matInput formControlName="description" id="description" type="text">
+        </mat-form-field>
+
+        <div>
+            <input style="display: none" type="file" (change)="onFileChange($event)" #file formControlName="file" />
+            <button mat-flat-button class="upload-button" color="primary" (click)="file.click()"
+                matTooltip="Python Skript zur Analyse"
+                [ngClass]="{'buttonWarn': myForm.get('file').touched && myForm.get('file').invalid}">
+                Datei hochladen
+            </button>
+            <mat-error *ngIf="myForm.get('file').touched && myForm.get('file').invalid">
+                Script wird benötigt.
+            </mat-error>
+            {{scriptName}}
         </div>
-
-        <div class="form-group">
-            <label for="file">Python Script </label>
-            <input mat-flat-button color="primary" formControlName="file" id="file" type="file" class="form-control"
-                (change)="onFileChange($event)">
-            <div *ngIf="f.file.touched && f.file.invalid" class="alert alert-danger">
-                <div *ngIf="f.file.errors.required">File is required.</div>
-            </div>
-        </div>
-
-        <button mat-flat-button color="primary" type="submit">Submit</button>
+        <button mat-flat-button color="primary" type="submit" class="submit-button-right">
+            Chart anlegen
+        </button>
     </form>
 </div>

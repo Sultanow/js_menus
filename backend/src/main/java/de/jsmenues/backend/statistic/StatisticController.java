@@ -1,5 +1,7 @@
 package de.jsmenues.backend.statistic;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import de.jsmenues.redis.data.Configuration;
 import de.jsmenues.redis.repository.ConfigurationRepository;
 import org.glassfish.hk2.utilities.reflection.Logger;
@@ -16,7 +18,8 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import java.io.*;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 @Path("/statistic")
 public class StatisticController {
@@ -24,9 +27,7 @@ public class StatisticController {
     @Path("/allChartNames")
     public Response getAllChartNames() {
         String chartnames = ConfigurationRepository.getRepo().get("statistic.allChartNames").getValue();
-        Logger.getLogger().warning(chartnames);
-        String[] charts = chartnames.split(", ");
-        return Response.ok(Arrays.toString(charts)).build();
+        return Response.ok(chartnames).build();
     }
 
     @GET
@@ -55,6 +56,7 @@ public class StatisticController {
         Logger.getLogger().warning("/updateData");
         // First save the File to the tmp
         saveFileToTmpFolder(fileInputStream, fileMetaData);
+        // TODO find all charts in Group to update with dataSource
 
         // Get script name for chartName
         StringBuilder sb_Script = new StringBuilder();
@@ -82,22 +84,41 @@ public class StatisticController {
     @Path("/createChart")
     public Response createChart(
             @FormDataParam("chartName") String chartName,
+            @FormDataParam("groupName") String groupName,
+            @FormDataParam("description") String description,
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileMetaData
     ) {
         saveFileToTmpFolder(fileInputStream, fileMetaData);
         // Save chartname and scriptname to redis database
-        String chartNames = ConfigurationRepository.getRepo().get("statistic.allChartNames").getValue();
         String url = "http://python-nginx-service:80/createChart";
         Response response = sendFileDataToPythonService(url, fileMetaData.getFileName(), "", "");
 
-        if (response.getStatus() == 200) {
+        if (response.getStatus() == 200) { // Successfull placed script on Server.
+            List<StatisticItem> groupsAndCharts = getGroupsAndCharts();
+            if(groupsAndCharts == null)
+                groupsAndCharts = new ArrayList<>();
+            if (groupName.isEmpty()) groupName = "noGroup";
+            boolean added = false;
+            for (StatisticItem chart : groupsAndCharts) {
+                if (chart.groupName.equals(groupName)) {
+                    if (!chart.charts.contains(chartName)) {
+                        chart.charts.add(chartName);
+                    }
+                    added = true;
+                }
+            }
+            if (!added) { // The GroupName not exists, so add it and the chart.
+                StatisticItem item = new StatisticItem();
+                item.groupName = groupName;
+                item.charts.add(chartName);
+                groupsAndCharts.add(item);
+            }
+            // TODO Group Name usage / Description
             String responseText = response.readEntity(String.class);
             Logger.getLogger().warning(responseText);
-            if (!chartNames.isEmpty())
-                chartNames += ", ";
-            chartNames += chartName;
-            ConfigurationRepository.getRepo().save(new Configuration("statistic.allChartNames", chartNames));
+            Gson gson = new Gson();
+            ConfigurationRepository.getRepo().save(new Configuration("statistic.allChartNames", gson.toJson(groupsAndCharts)));
             StringBuilder sb = new StringBuilder();
             sb.append("statistic.chart.").append(chartName).append(".script");
             ConfigurationRepository.getRepo().save(new Configuration(sb.toString(), fileMetaData.getFileName()));
@@ -113,23 +134,51 @@ public class StatisticController {
     public Response deleteChart(
             @DefaultValue("") @QueryParam("chart") String chartName
     ) {
-        String chartnames = ConfigurationRepository.getRepo().get("statistic.allChartNames").getValue();
-        String[] charts = chartnames.split(", ");
-        chartnames = "";
-        for (String chart : charts) {
-            if (!chart.equals(chartName)) {
-                if (!chartnames.isEmpty())
-                    chartnames += ", ";
-                chartnames += chart;
+        List<StatisticItem> groupsAndCharts = getGroupsAndCharts();
+        StatisticItem deleteItem = null;
+        for (StatisticItem item : groupsAndCharts) {
+            if (item.charts.contains(chartName)) {
+                item.charts.remove(chartName);
+                if (item.charts.size() == 0)
+                    deleteItem = item;
             }
         }
-        ConfigurationRepository.getRepo().save(new Configuration("statistic.allChartNames", chartnames));
+        if(deleteItem != null) {
+            groupsAndCharts.remove(deleteItem);
+        }
+        Gson gson = new Gson();
+
+        ConfigurationRepository.getRepo().save(new Configuration("statistic.allChartNames", gson.toJson(groupsAndCharts)));
         String itemBase = "statistic.chart." + chartName;
         ConfigurationRepository.getRepo().save(new Configuration(itemBase + ".data", ""));
         ConfigurationRepository.getRepo().save(new Configuration(itemBase + ".script", ""));
 
         return Response.ok().build();
     }
+
+    private ArrayList<StatisticItem> getGroupsAndCharts() {
+        String chartNames = ConfigurationRepository.getRepo().get("statistic.allChartNames").getValue();
+        Gson gson = new Gson();
+        ArrayList<StatisticItem> groupsAndCharts = gson.fromJson(chartNames, new TypeToken<ArrayList<StatisticItem>>() {
+        }.getType());
+        return groupsAndCharts;
+    }
+
+    @GET
+    @Path("/groups")
+    public Response getAllGroups() {
+        Gson gson = new Gson();
+        ArrayList<StatisticItem> statisticItems = getGroupsAndCharts();
+        ArrayList<String> groupList = new ArrayList<>();
+        if (statisticItems != null && statisticItems.size() != 0)
+            for (StatisticItem item : statisticItems) {
+                if (!item.groupName.equals("noGroup")) {
+                    groupList.add(item.groupName);
+                }
+            }
+        return Response.ok(gson.toJson(groupList)).build();
+    }
+
 
     private void saveFileToTmpFolder(InputStream fileInputStream, FormDataContentDisposition fileMetaData) {
         final String UPLOAD_PATH = "/tmp/";
