@@ -44,6 +44,22 @@
     <div class="box">
         <h1> Bitte verwenden Sie Chrome, Firefox oder Edge.</h1>
         <h3>Der Internet Explorer wird nicht unterstützt!</h3>
+        <p id="test" style="display: none;"></p>
+        <p><button onclick="myFunction()" id="TextBtn">></button></p>
+
+        <script>
+            function myFunction() {
+                document.getElementById("test").innerHTML = (window.navigator.userAgent)
+                var btnText = document.getElementById("TextBtn")
+            if (test.style.display === "none") {
+                test.style.display = "inline";
+                btnText.innerHTML = "v"; 
+            } else {
+                test.style.display = "none";
+                btnText.innerHTML = ">"; 
+            }
+            }
+        </script>
      </div>
 </body>
 </html>
