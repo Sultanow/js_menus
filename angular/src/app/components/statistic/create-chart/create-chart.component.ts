@@ -1,10 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { StatisticService } from 'src/app/services/statistic/statistic.service';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SpinnerService } from 'src/app/services/spinner/spinner.service';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -23,6 +24,8 @@ export class CreateChartComponent implements OnInit, OnChanges {
   showCreateChartContainer: boolean;
   @Output() notifyNewChartSubmitted = new EventEmitter<boolean>();
 
+  @ViewChild('form') form : FormGroupDirective;
+
   matcher = new MyErrorStateMatcher();
 
   filteredGroups: Observable<string[]>;
@@ -30,7 +33,7 @@ export class CreateChartComponent implements OnInit, OnChanges {
 
   scriptName: string = "";
 
-  myForm = new FormGroup({
+  newChartForm = new FormGroup({
     group: new FormControl(),
     name: new FormControl('', [ Validators.required, Validators.minLength(3) ]),
     file: new FormControl('', [ Validators.required ]),
@@ -38,8 +41,8 @@ export class CreateChartComponent implements OnInit, OnChanges {
     description: new FormControl(),
   });
 
-  constructor (private statisticService: StatisticService, private snackBar: MatSnackBar) {
-    this.filteredGroups = this.myForm.get("group").valueChanges
+  constructor (private statisticService: StatisticService, private snackBar: MatSnackBar, private spinnerService: SpinnerService) {
+    this.filteredGroups = this.newChartForm.get("group").valueChanges
       .pipe(
         startWith(''),
         map(state => state ? this._filterStates(state) : this.groups.slice())
@@ -61,7 +64,7 @@ export class CreateChartComponent implements OnInit, OnChanges {
 
     if (event.target.files.length > 0) {
       const file = event.target.files[ 0 ];
-      this.myForm.patchValue({
+      this.newChartForm.patchValue({
         fileSource: file
       });
       this.scriptName = file.name;
@@ -69,14 +72,20 @@ export class CreateChartComponent implements OnInit, OnChanges {
   }
 
   submit() {
-    if (this.myForm.valid) {
+    if (this.newChartForm.valid) {
+      this.spinnerService.show();
       this.statisticService.createChart(
-        this.myForm.get('name').value,
-        this.myForm.get('group').value,
-        this.myForm.get('fileSource').value,
-        this.myForm.get('description').value)
+        this.newChartForm.get('name').value,
+        this.newChartForm.get('group').value,
+        this.newChartForm.get('fileSource').value,
+        this.newChartForm.get('description').value)
         .subscribe(result => {
           this.notifyNewChartSubmitted.emit(true);
+          this.snackBar.open('Neues Chart wurde angelegt', '', { duration: 2000,});
+          this.newChartForm.reset();
+          this.scriptName = "";
+          this.form.resetForm();
+          this.spinnerService.hide();
         });
     }
     else {

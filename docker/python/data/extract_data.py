@@ -3,6 +3,7 @@ import json
 import math
 import os
 import sys
+import re
 
 import numpy as np
 import pandas as pd
@@ -17,7 +18,10 @@ df = pd.read_excel(excel_data, header=1, usecols="A:I", skiprows=0, nrows=19)
 
 labels = df.columns.astype(str).to_list()
 labels = labels[1:]
-num_series = len(labels)
+shortLables = []
+for label in labels:
+  shortLables.append(re.sub(" 00:00:00", "", label))
+num_series = len(shortLables)
 df_values_only = df.iloc[:,1:num_series+1]
 num_values = df_values_only.shape[0]
 x_scale = df.iloc[:,0].to_numpy()
@@ -40,7 +44,7 @@ for n in range(num_series):
         "y":y_data[n], 
         "mode": "lines", 
         "type": "scatter", 
-        "name": labels[n],
+        "name": shortLables[n],
         "line":dict(width=2),
         "connectgaps":True,
         "hoverinfo": "x+y+text"
@@ -73,7 +77,8 @@ layout = {
           "t": 110,
         },
         "showlegend": True,
-        "title": title
+        "title": title,
+        "separators":".,"
       }
 # Converting datetime object to string
 dateTimeObj = datetime.now()

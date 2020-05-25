@@ -13,6 +13,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
@@ -53,6 +54,7 @@ import { GraphsComponent, DialogDeleteChart } from './components/statistic/graph
 import { MatButtonModule } from '@angular/material/button';
 import { CreateChartComponent } from './components/statistic/create-chart/create-chart.component';
 import { SettingsPasswordComponent } from './components/settings-password/settings-password.component';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -83,7 +85,8 @@ import { SettingsPasswordComponent } from './components/settings-password/settin
     GraphsComponent,
     CreateChartComponent,
     SettingsPasswordComponent,
-    DialogDeleteChart
+    DialogDeleteChart,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,
@@ -106,7 +109,8 @@ import { SettingsPasswordComponent } from './components/settings-password/settin
     MatButtonModule,
     MatAutocompleteModule,
     MatTooltipModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     ConfigurationService,

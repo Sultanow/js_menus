@@ -1,6 +1,6 @@
 <div id="createChartContainer" *ngIf="showCreateChartContainer">
     <h3>Neues Chart erstellen</h3>
-    <form [formGroup]="myForm" (ngSubmit)="submit()" class="newChartForm">
+    <form [formGroup]="newChartForm" (ngSubmit)="submit()" class="newChartForm" #form="ngForm">
 
         <mat-form-field class="field-input-full-width" matTooltip="Gruppen verwenden immer die selbe Datenbasis">
             <input matInput placeholder="Gruppe" aria-label="Gruppe" [matAutocomplete]="auto" formControlName="group">
@@ -14,10 +14,10 @@
         <mat-form-field matTooltip="Name zur Auswahl im Menü" class="field-input-full-width">
             <mat-label for="name">Name</mat-label>
             <input matInput formControlName="name" id="name" type="text" [errorStateMatcher]="matcher">
-            <mat-error *ngIf="myForm.get('name').hasError('required')">
+            <mat-error *ngIf="newChartForm.get('name').hasError('required')">
                 Name wird benötigt
             </mat-error>
-            <mat-error *ngIf="myForm.get('name').hasError('minlength')">
+            <mat-error *ngIf="newChartForm.get('name').hasError('minlength')">
                 Der Name benötigt mindestens 3 Zeichen.
             </mat-error>
         </mat-form-field>
@@ -31,10 +31,10 @@
             <input style="display: none" type="file" (change)="onFileChange($event)" #file formControlName="file" />
             <button mat-flat-button class="upload-button" color="primary" (click)="file.click()"
                 matTooltip="Python Skript zur Analyse"
-                [ngClass]="{'buttonWarn': myForm.get('file').touched && myForm.get('file').invalid}">
-                Datei hochladen
+                [ngClass]="{'buttonWarn': newChartForm.get('file').touched && newChartForm.get('file').invalid}">
+                Python Datei hochladen
             </button>
-            <mat-error *ngIf="myForm.get('file').touched && myForm.get('file').invalid">
+            <mat-error *ngIf="newChartForm.get('file').touched && newChartForm.get('file').invalid">
                 Script wird benötigt.
             </mat-error>
             {{scriptName}}
