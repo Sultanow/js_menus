@@ -25,15 +25,17 @@ export class StatisticComponent implements OnInit, OnChanges {
   // Inits
 
   ngOnInit(): void {
-    this.reloadData();
+    if(this.showStatistic) {
+      this.reloadData();
+    }
   }
 
   constructor (private statisticService: StatisticService) { }
 
   // Methods
   ngOnChanges(changes: SimpleChanges): void {
-    this.reloadData();
     if (this.showStatistic) {
+      this.reloadData();
       this.notifyTitle.emit("Statistiken");
     }
   }
