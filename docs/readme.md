@@ -5,6 +5,11 @@ Starten der Containerplattform.
   - Zuerst starten des Zabbix Service: Dafür eine Powershell öffnen und in das Verzeichnis /docker/zabbix wechseln.
   - Mit `docker-compose up -d` den Service starten.
   - Einloggen ins Zabbix erfolgt über localhost:8081 mit dem User "Admin" und Password "zabbix" (Groß-/Kleinschreibung beachten für den User).  
+  - Die Defaultkonfiguration für Zabbix kann mittels eines Pythonscripts geladen werden. Dies ist nicht unbedingt notwendig.
+    1. Installieren von Python3 (Die Verwendung innerhalb von Docker ist noch nicht eingerichtet.)
+    2. Installieren der Python Bibliothek py-zabbix mit `pip install py-zabbix`
+    3. Wechsel in den Ordner /docker/zabbix/scripts
+    4. Ausführen des Scripts in der Powershell: `python .\createDefaultConfig.py` (wenn man sich über das Frontend anmelden kann)
 
 2. Bauen der *.war Files: (mvn sollte im Path liegen)
   1. Frontend:
