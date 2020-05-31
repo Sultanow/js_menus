@@ -27,8 +27,7 @@ export class CompareComponent implements OnInit {
   dummyCompare: CompareItem[] = [];
 
   selectedValue: string = "";
-  updateTime: Date = new Date();
-  DateLocale = this.updateTime.toLocaleString();
+  lastUpdate: Date = new Date();
 
 
   @Input() showCompare: boolean;
@@ -105,7 +104,11 @@ export class CompareComponent implements OnInit {
       envs = this.selectedEnvs;
     this.configItemService.getServerConfiguration(envs).subscribe(data => {
       let updateTime = this.configItemService.getUpdateTime(data);
-      this.updateTime.setTime(updateTime * 1000);
+      console.log("lastclock: "+updateTime);
+      let temp = new Date();
+      temp.setTime(updateTime *1000 );
+      this.lastUpdate= temp;
+      console.log("lastUpdate: "+this.lastUpdate);
       this.configItemService.itemlist = this.configItemService.createServerConf(data);
       this.configItemService.generateTree(this.selectedEnvs);
     });
