@@ -56,3 +56,4 @@ services:
   
 networks:
   cockpit-net:
+    name: cockpit-net

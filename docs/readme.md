@@ -1,5 +1,6 @@
-Starten der Containerplattform.
+# Starten der Containerplattform.
 
+## Manuelles Bauen mit lokal installierter Build-Umgebung
 1. Es ist kein Zabbix im Netzwerk verfügbar:
   - Disclaimer: Diese Zabbix Konfiguration ist nur für Testzwecke und als Minimalkonfiguration gedacht, um das Dashboad nutzen zu können!
   - Zuerst starten des Zabbix Service: Dafür eine Powershell öffnen und in das Verzeichnis /docker/zabbix wechseln.
@@ -32,3 +33,9 @@ Starten der Containerplattform.
     - URL: http://zabbix-frontend:80/api_jsonrpc.php
 
 5. Die Konfigurationsparameter werden [hier](parameterbeschreibung.md) extra beschrieben mit Beispielen
+
+## Automatisiertes Bauen ohne lokal installierte Build-Umgebung
+
+1. Der Anleitung für [Build mit Docker](DockerBuildUse.md) befolgen.
+2. Für den ersten Startup sollten das Startup Skript verwendet werden, da dies auch zusätzliche initialisierungen übernimmt.
+

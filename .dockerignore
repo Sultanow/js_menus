@@ -1,0 +1,9 @@
+static/*
+target/*
+k8/*
+docs/*
+.settings/*
+*/.vscode/*
+*/node_modules/*
+.git/*
+docker/zabbix/zbx_env/*
