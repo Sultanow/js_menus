@@ -58,10 +58,13 @@ $destinationFolder = -join ($PWD.Path, '\..\..\target\autodeploy\')
 if (!(Test-Path -path $destinationFolder)) { New-Item $destinationFolder -Type Directory }
 $erfolg = "erfolgreich"
 
+$mainDir = Split-Path -path $PWD.Path -Parent
+$mainDir = Split-Path -path $mainDir -Parent
+
 ## Docker Container build done, now build the war files.
 if ($build -eq "all" -or $build -eq "backend") {
     # Build the backend
-    docker run -it --rm -v $PWD\..\..\backend\target:/usr/src/app/target -v $PWD\..\..\backend\src:/usr/src/app/src backendbuilder clean install -DbuildDirectory='${project.basedir}/target/'
+    docker run -it --rm -v "$($mainDir)\backend\target:/usr/src/app/target" -v "$($mainDir)\backend\src:/usr/src/app/src" backendbuilder clean install -DbuildDirectory='${project.basedir}/target/'
     if (Test-Path -Path .\..\..\backend\target\backend.war) {
         $srcPath = -join ($PWD.Path, '\..\..\backend\target\backend.war')
         $destPath = -join ($destinationFolder, 'backend.war')
@@ -75,8 +78,8 @@ if ($build -eq "all" -or $build -eq "backend") {
 }
 
 if ($build -eq "all" -or $build -eq "frontend") {
-    docker run -it --rm -v $PWD\..\..\frontend\target\angular-radial-menu:/usr/src/target/angular/angular-radial-menu -v $PWD\..\..\angular\src:/usr/src/app/src frontendbuilder run buildProduction
-    docker run -it --rm -v $PWD\..\..\frontend\target\angular-radial-menu:/usr/src/target/angular/angular-radial-menu -v $PWD\..\..\frontend\target:/usr/src/target/autodeploy frontendwarbuilder clean install
+    docker run -it --rm -v "$($mainDir)\frontend\target\angular-radial-menu:/usr/src/target/angular/angular-radial-menu" -v "$($mainDir)\angular\src:/usr/src/app/src" frontendbuilder run buildProduction
+    docker run -it --rm -v "$($mainDir)\frontend\target\angular-radial-menu:/usr/src/target/angular/angular-radial-menu" -v "$($mainDir)\frontend\target:/usr/src/target/autodeploy" frontendwarbuilder clean install
     if (Test-Path -Path .\..\..\frontend\target\frontend.war) {
         $srcPath = -join ($PWD.Path, '\..\..\frontend\target\frontend.war')
         $destPath = -join ($destinationFolder, 'frontend.war')
