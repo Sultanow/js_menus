@@ -158,6 +158,8 @@ public class StatisticController {
 
     private ArrayList<StatisticItem> getGroupsAndCharts() {
         String chartNames = ConfigurationRepository.getRepo().get("statistic.allChartNames").getValue();
+        if(chartNames.isEmpty())
+            return null;
         Gson gson = new Gson();
         ArrayList<StatisticItem> groupsAndCharts = gson.fromJson(chartNames, new TypeToken<ArrayList<StatisticItem>>() {
         }.getType());

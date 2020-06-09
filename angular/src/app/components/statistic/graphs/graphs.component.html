@@ -1,14 +1,14 @@
 <div *ngIf="showGraphChart" class="graphsContainer">
     <div class="chartConfiguration">
         <div class="controls">
-            <input #dataSourceInput hidden="true" type="file" onclick="this.value=null"
-                (change)="dataSourceInputChange($event)" accept=".xlsx,.xls,.csv" />
-            <button mat-flat-button color="primary" (click)="dataSourceInput.click()"
-                matTooltip="Daten für das aktuell ausgewählte Chart und die Gruppe aktualisieren">
-                Daten aktualisieren
-            </button>
+            <app-drag-and-drop [fileUploadText]="fileUploadText"
+                matTooltip="Daten für das aktuell ausgewählte Chart und die Gruppe aktualisieren"
+                (fileEmitter)="onFileAdded($event)" matTooltipPosition="right" [containerHeight]="2"
+                [showUploadAreaFile]="showUploadAreaFile">
+            </app-drag-and-drop>
             <a (click)="openDeleteDialog()">
-                <mat-icon [ngStyle]="{'color':'white'}" matTooltip="Chart löschen">delete</mat-icon>
+                <mat-icon [ngStyle]="{'color':'white'}" matTooltip="Chart löschen" matTooltipPosition="right">delete
+                </mat-icon>
             </a>
         </div>
         <div class="updateTime">

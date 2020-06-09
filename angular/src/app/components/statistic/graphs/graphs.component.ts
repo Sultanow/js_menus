@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, Output, EventEmitter, Inject } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { StatisticService } from 'src/app/services/statistic/statistic.service';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { SpinnerService } from 'src/app/services/spinner/spinner.service';
@@ -26,6 +26,9 @@ export class GraphsComponent implements OnInit, OnChanges {
   selectingGraph = true;
 
   updateTime: string = "";
+  fileUploadText: string = "Daten aktualisieren";
+  showUploadAreaFile: boolean = false;
+
 
   constructor (private statisticService: StatisticService, public dialog: MatDialog, private spinnerService: SpinnerService) {
 
@@ -109,10 +112,9 @@ export class GraphsComponent implements OnInit, OnChanges {
     this.loadGraphData();
   }
 
-  dataSourceInputChange(fileInputEvent: any) {
-    console.log(fileInputEvent.target.files[ 0 ]);
+  onFileAdded(file) {
     this.spinnerService.show();
-    this.statisticService.updateData(this.chartName, fileInputEvent.target.files[ 0 ]).subscribe(result => {
+    this.statisticService.updateData(this.chartName, file).subscribe(result => {
       console.log(result);
       this.loadGraphData();
       this.spinnerService.hide();

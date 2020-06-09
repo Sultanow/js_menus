@@ -2,7 +2,8 @@
     <h3>Neues Chart erstellen</h3>
     <form [formGroup]="newChartForm" (ngSubmit)="submit()" class="newChartForm" #form="ngForm">
 
-        <mat-form-field class="field-input-full-width" matTooltip="Gruppen verwenden immer die selbe Datenbasis">
+        <mat-form-field class="field-input-full-width" matTooltip="Gruppen verwenden immer die selbe Datenbasis"
+            matTooltipPosition="right">
             <input matInput placeholder="Gruppe" aria-label="Gruppe" [matAutocomplete]="auto" formControlName="group">
             <mat-autocomplete #auto="matAutocomplete">
                 <mat-option *ngFor="let group of filteredGroups | async" [value]="group">
@@ -11,7 +12,7 @@
             </mat-autocomplete>
         </mat-form-field>
 
-        <mat-form-field matTooltip="Name zur Auswahl im Menü" class="field-input-full-width">
+        <mat-form-field matTooltip="Name zur Auswahl im Menü" class="field-input-full-width" matTooltipPosition="right">
             <mat-label for="name">Name</mat-label>
             <input matInput formControlName="name" id="name" type="text" [errorStateMatcher]="matcher">
             <mat-error *ngIf="newChartForm.get('name').hasError('required')">
@@ -22,25 +23,22 @@
             </mat-error>
         </mat-form-field>
 
-        <mat-form-field matTooltip="Beschreibung für das neue Chart" class="field-input-full-width">
+        <mat-form-field matTooltip="Beschreibung für das neue Chart" class="field-input-full-width"
+            matTooltipPosition="right">
             <mat-label for="description">Beschreibung</mat-label>
             <input matInput formControlName="description" id="description" type="text">
         </mat-form-field>
 
         <div>
-            <input style="display: none" type="file" (change)="onFileChange($event)" #file formControlName="file" />
-            <button mat-flat-button class="upload-button" color="primary" (click)="file.click()"
-                matTooltip="Python Skript zur Analyse"
-                [ngClass]="{'buttonWarn': newChartForm.get('file').touched && newChartForm.get('file').invalid}">
-                Python Datei hochladen
-            </button>
-            <mat-error *ngIf="newChartForm.get('file').touched && newChartForm.get('file').invalid">
-                Script wird benötigt.
-            </mat-error>
-            {{scriptName}}
+            <app-drag-and-drop [fileUploadText]="fileUploadText"
+                matTooltip="Python Script zur Analyse hineinziehen oder klicken" (fileEmitter)="onFileAdded($event)"
+                matTooltipPosition="right">
+            </app-drag-and-drop>
         </div>
+        <mat-divider class="divider"></mat-divider>
         <button mat-flat-button color="primary" type="submit" class="submit-button-right">
             Chart anlegen
         </button>
+
     </form>
 </div>

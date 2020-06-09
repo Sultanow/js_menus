@@ -25,7 +25,7 @@ export class StatisticComponent implements OnInit, OnChanges {
   // Inits
 
   ngOnInit(): void {
-    if(this.showStatistic) {
+    if (this.showStatistic) {
       this.reloadData();
     }
   }
@@ -45,7 +45,7 @@ export class StatisticComponent implements OnInit, OnChanges {
       console.log(result);
       this.charts = result;
       if (this.showGraphChart === false && this.showCreateChartContainer === false) {
-        if (this.charts.length > 0 && this.charts[ 0 ].charts.length > 0)
+        if (this.charts != null && (this.charts.length > 0 && this.charts[ 0 ].charts.length > 0))
           this.showChartView(null, this.charts[ 0 ].charts[ 0 ]);
         else {
           this.createChartView(null);

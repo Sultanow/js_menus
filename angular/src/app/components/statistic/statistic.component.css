@@ -10,8 +10,9 @@
 }
 
 .chartSideNavActive {
-    font-weight: bold;
     font-style: italic;
+    background-color: #f4f4f4;
+    color: black;
 }
 
 .chartContent {

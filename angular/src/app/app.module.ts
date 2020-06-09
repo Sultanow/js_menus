@@ -14,6 +14,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDividerModule } from '@angular/material/divider';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
@@ -55,6 +56,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { CreateChartComponent } from './components/statistic/create-chart/create-chart.component';
 import { SettingsPasswordComponent } from './components/settings-password/settings-password.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
+import { DragAndDropComponent } from './components/drag-and-drop/drag-and-drop.component';
+import { DragAndDropDirective } from './components/drag-and-drop/drag-and-drop.directive';
 
 @NgModule({
   declarations: [
@@ -86,7 +89,9 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     CreateChartComponent,
     SettingsPasswordComponent,
     DialogDeleteChart,
-    SpinnerComponent
+    SpinnerComponent,
+    DragAndDropComponent,
+    DragAndDropDirective
   ],
   imports: [
     BrowserModule,
@@ -110,7 +115,8 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     MatAutocompleteModule,
     MatTooltipModule,
     MatSnackBarModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatDividerModule
   ],
   providers: [
     ConfigurationService,

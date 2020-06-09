@@ -1,0 +1,12 @@
+<div class="uploadfilecontainer" [style.height.rem]="containerHeight">
+    <div *ngIf="(file === null || showUploadAreaFile === false)" (click)="fileInput.click()" appDragAndDrop (onFileDropped)="uploadFile($event)" class="uploadArea">
+        {{fileUploadText}}
+        <input hidden type="file" #fileInput (change)="uploadFile($event.target.files)">
+    </div>
+    <div *ngIf="(file !== null && showUploadAreaFile === true)" class="fileContainer" >
+        {{ file.name }}
+        <a (click)="deleteFile()">
+            <mat-icon [ngStyle]="{'color':'white'}" matTooltip="Hochgeladene Datei löschen">delete</mat-icon>
+        </a>
+    </div>
+</div>

@@ -1190,7 +1190,7 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   color: white; }
 
 .mat-divider {
-  border-top-color: rgba(255, 255, 255, 0.12); }
+  border-top-color: rgba(255, 255, 255, 0.32); }
 
 .mat-divider-vertical {
   border-right-color: rgba(255, 255, 255, 0.12); }

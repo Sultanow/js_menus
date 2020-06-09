@@ -24,7 +24,9 @@ export class CreateChartComponent implements OnInit, OnChanges {
   showCreateChartContainer: boolean;
   @Output() notifyNewChartSubmitted = new EventEmitter<boolean>();
 
-  @ViewChild('form') form : FormGroupDirective;
+  fileUploadText: string = "Datei hochladen";
+
+  @ViewChild('form') form: FormGroupDirective;
 
   matcher = new MyErrorStateMatcher();
 
@@ -36,7 +38,6 @@ export class CreateChartComponent implements OnInit, OnChanges {
   newChartForm = new FormGroup({
     group: new FormControl(),
     name: new FormControl('', [ Validators.required, Validators.minLength(3) ]),
-    file: new FormControl('', [ Validators.required ]),
     fileSource: new FormControl('', [ Validators.required ]),
     description: new FormControl(),
   });
@@ -60,6 +61,12 @@ export class CreateChartComponent implements OnInit, OnChanges {
   ngOnInit(): void {
   }
 
+  onFileAdded(file: File) {
+    this.newChartForm.patchValue({
+      fileSource: file
+    });
+  }
+
   onFileChange(event) {
 
     if (event.target.files.length > 0) {
@@ -81,7 +88,7 @@ export class CreateChartComponent implements OnInit, OnChanges {
         this.newChartForm.get('description').value)
         .subscribe(result => {
           this.notifyNewChartSubmitted.emit(true);
-          this.snackBar.open('Neues Chart wurde angelegt', '', { duration: 2000,});
+          this.snackBar.open('Neues Chart wurde angelegt', '', { duration: 2000, });
           this.newChartForm.reset();
           this.scriptName = "";
           this.form.resetForm();

@@ -15,3 +15,8 @@
 .buttonWarn {
     background-color: red;
 }
+
+.divider {
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+}
