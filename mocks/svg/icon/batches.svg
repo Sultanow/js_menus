@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22px" height="16px" viewBox="0 0 22 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->
+    <title>icon/batches</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Start" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1_5-menu_unten" transform="translate(-1035.000000, -750.000000)" fill="#000000" stroke="#FFFFFF">
+            <g id="Hierachie2" transform="translate(481.000000, 8.000000)">
+                <g id="menu/Unten" transform="translate(326.000000, 736.500000)">
+                    <g id="icon/batches" transform="translate(228.232673, 6.029703)">
+                        <path d="M10.5363394,0.553284006 L1.16459065,5.02616408 L10.5380031,9.46433283 L20.1227516,5.06244829 L10.5363394,0.553284006 Z" id="oben" fill="#FFFFFF"></path>
+                        <polyline id="Path-3" fill="none" points="0 7.00667447 10.6544934 11.9947332 21.3089868 7.00667447"></polyline>
+                        <polyline id="Path-3" fill="none" points="0 9.22481258 10.6544934 14.2128713 21.3089868 9.22481258"></polyline>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
