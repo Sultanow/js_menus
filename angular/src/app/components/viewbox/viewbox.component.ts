@@ -1,6 +1,5 @@
-import { Component, OnInit, Output, Input, EventEmitter, SimpleChanges, OnChanges, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, SimpleChanges,  ChangeDetectorRef } from '@angular/core';
 import { Batches } from 'src/app/model/batches';
-import { CdkDrag } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-viewbox',

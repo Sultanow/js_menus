@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ConfigurationService } from 'src/app/services/configuration.service';
 import { ConfigurationItem } from 'src/app/model/configurationItem';
 import { ConfigurationItemsService } from 'src/app/services/configuration/configuration-items.service';
 

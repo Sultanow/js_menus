@@ -38,4 +38,8 @@ export class DragAndDropDirective {
     evt.stopPropagation();
     this.opacity = opacity;
   }
+
+  debugActualValues() {
+    console.log(this.background, this.borderRadius, this.opacity, this.textColor);
+  }
 }

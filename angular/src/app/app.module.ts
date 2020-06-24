@@ -32,7 +32,6 @@ import { SouthMenuComponent as O_SouthMenuComponent } from './menus/outside/sout
 import { WestMenuComponent as O_WestMenuComponent } from './menus/outside/west-menu/west-menu.component';
 
 // Configuration Service
-import { ConfigurationService } from './services/configuration.service';
 import { DetailsComponent } from './components/details/details.component';
 import { BatchesComponent } from './components/batches/batches.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -119,7 +118,6 @@ import { DragAndDropDirective } from './components/drag-and-drop/drag-and-drop.d
     MatDividerModule
   ],
   providers: [
-    ConfigurationService,
     DetailsComponent
   ],
   bootstrap: [ AppComponent ],

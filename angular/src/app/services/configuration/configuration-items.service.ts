@@ -1,7 +1,6 @@
 import { ConfigurationItem } from 'src/app/model/configurationItem';
 import { Injectable, OnDestroy } from '@angular/core';
-import { ServerConfiguration } from 'src/config/ServerConfiguration';
-import { Observable, BehaviorSubject, onErrorResumeNext } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { ENVCONFIG, ENVVAL } from 'src/app/model/evntreetable';
 import { Node } from 'src/app/components/treetable/treetable.module';
 import { HttpClient, HttpParams } from '@angular/common/http';

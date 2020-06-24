@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { TimelineLite } from "gsap";
-import { ConfigurationItemsService } from './services/configuration/configuration-items.service';
-import { ServerConfiguration } from 'src/config/ServerConfiguration';
 import { SettingsService } from './services/settings/settings.service';
 import { Title } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
@@ -57,13 +55,10 @@ export class AppComponent implements OnInit {
 				if (result && result.activeItems && Array.isArray(result.activeItems))
 					this.activeItems = result.activeItems;
 			});
-			this.configService.getServerConfiguration(ServerConfiguration.ENV_LIST).subscribe(data => {
-				this.configService.addConfiguration(this.configService.createServerConf(data));
-			});
 			this.updateTitle();
 	}
 
-	constructor (private configService: ConfigurationItemsService,
+	constructor (
 		private settingsService: SettingsService,
 		private titleService: Title,
 		public dialog: MatDialog) {

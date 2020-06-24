@@ -1,6 +1,4 @@
-import { Component, OnInit, Input, Inject, EventEmitter, Output, OnChanges, SimpleChanges } from '@angular/core';
-import { ConfigurationService } from 'src/app/services/configuration.service';
-import { Configuration } from 'src/app/model/configuration';
+import { Component, OnInit, Input, EventEmitter, Output, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'g[o-north-menu]',
