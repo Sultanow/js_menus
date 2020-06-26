@@ -77,7 +77,7 @@ Werte in ``<>`` müssen durch Zahlen ersetzt werden.
     "layout" : { },
     * "updateTime" : "", *
     * "timeseries" : true|#false, *
-    * "accuracy" : "year"|"month"|"day"|#"none", *
+    * "accuracy" : "year"|"month"|"day"|"week"|#"none", *
     * "multiple" : true|#false, *
     * "options" : [], *
 }
@@ -93,7 +93,7 @@ Definition des "traces"-Arrays:
     }
 ]
 ```
-2. Um das neue Format nutzen zu können, muss ``timeseries : true`` sein und ``accuracy`` ungleich ``none``, sonst wird das erste Format angenommen und es kann zu Problemen in der Ausgabe führen, da Plotly die Daten nicht versteht! Im Traces array wird nun für jede Zeiteinheit ein Objekt erzeugt. ``"time : <year>-<month>-<day>"`` ist so definiert, dass anhand der ``accuracy`` bestimmt wird wie genau time definiert wird. Wenn ``"accuracy" : "year"`` dann ist ``"time" : "<year>"`` zu setzten. Das folgende Beispiel erläutert den Fall für ``"accuracy" : "day"``
+2. Um das neue Format nutzen zu können, muss ``timeseries : true`` sein und ``accuracy`` ungleich ``none``, sonst wird das erste Format angenommen und es kann zu Problemen in der Ausgabe führen, da Plotly die Daten nicht versteht! Im Traces array wird nun für jede Zeiteinheit ein Objekt erzeugt. ``"time : <year>-<month>-<day>"`` ist so definiert, dass anhand der ``accuracy`` bestimmt wird wie genau time definiert wird. Wenn ``"accuracy" : "year"`` dann ist ``"time" : "<year>"`` zu setzten. Zusätzlich kann die Option ``"accuracy" : "week"`` gesetzt werden. Damit können Charts mit der Genauigkeit von Wochen als Timeseries verwendet werden, indem die Woche als Zeit mit geben: ``"time" : "<year>-<weekNumber>"``. Das folgende Beispiel erläutert den Fall für ``"accuracy" : "day"``:
 ```
 "traces" : [
     {
@@ -102,7 +102,7 @@ Definition des "traces"-Arrays:
     }
 ]
 ```
-
+3. Der Parameter ``options`` wird aktuell noch nicht verwendet. Wird aber für zukünftige Anpassungen der Schnittstelle verwendet.
 ### Änderungen im Backend
 Da die Daten im Backend gecached werden, ist es nötig auch hier Änderungen durchzuführen. Hierfür muss das JSON welches vom Python Web Service geschickt wird analysiert werden und die Einträge entsprechend in der Redis Datenbank gespeichert werden.
 
@@ -132,3 +132,84 @@ Im Zuge der Änderungen sollte es auch möglich sein, ein Chart anzupassen ohne 
 
 Für die Timeseries Funktionalität wird zusätzlich ein Kalender und Buttons benötigt. Mit der Kalender Funktion soll es möglich sein, zu definieren, welche Daten angezeigt werden. Ist die Option ``multiple : false`` gesetzt, so ist es nur möglich einen bestimmten Monat anzuzeigen. Mit ``multiple : true`` ist es möglich einen Range an Daten zu wählen. 
 Wenn die Timeseries Funktionalität nicht zur Verfügung steht, so soll der Kalender und die Buttons auch nicht angezeigt werden, damit bleibt das bisher bestehende Verhalten erhalten.
+
+## Beispiele
+Im Folgenden werden einige Beispiele für die JSON Schnittstelle gegeben:
+### Einfacher Plot ohne Timeseries 
+```
+{
+    "title" : "Titel",
+    "traces" : [ 
+        {
+            "x" : [234,324,3232],
+            "y" : [34,32,32]
+        }
+    ],
+    "layout" : { 
+        <Layout infos>
+    },
+}
+```
+### Plot mit Timeseries, Accuracy year und multiple false
+```
+{
+    "title" : "Titel",
+    "traces" : [ 
+        {
+            "time" : "2020",
+            "timetraces" : [
+                {
+                    "x" : [234,324,3232],
+                    "y" : [34,32,32]
+                }
+            ],
+            "time" : "2019",
+            "timetraces" : [
+                {
+                    "x" : [322,322,3212],
+                    "y" : [37,36,34]
+                }
+            ], 
+        }
+    ],
+    "layout" : { 
+        <Layout infos>
+    },
+    "updateTime" : "<timestamp>",
+    "timeseries" : true,
+    "accuracy" : "year",
+    "multiple" : false,
+}
+```
+
+### Plot mit Timeseries, Accuracy day und multiple true
+```
+{
+    "title" : "Titel",
+    "traces" : [ 
+        {
+            "time" : "2020-06-24",
+            "timetraces" : [
+                {
+                    "x" : [234,324,3232],
+                    "y" : [34,32,32]
+                }
+            ],
+            "time" : "2020-06-25",
+            "timetraces" : [
+                {
+                    "x" : [322,322,3212],
+                    "y" : [37,36,34]
+                }
+            ], 
+        }
+    ],
+    "layout" : {
+        <Layout infos>
+     },
+    "updateTime" : "<timestamp>",
+    "timeseries" : true,
+    "accuracy" : "day",
+    "multiple" : true,
+}
+```
