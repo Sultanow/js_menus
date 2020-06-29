@@ -13,6 +13,9 @@ Die Anwendung besteht aus einem, mithilfe von Docker, containerisierten Payara S
 # Grundlegende Referenzarchitektur
 TODO neues Bild generieren
 
+# Interface Beschreibungen
+[Python Interface für Statistik Chart Erzeugung](docs/PythonInterfaceAnpassung.md")
+
 # Technologienstack
 
 ## Application Server
