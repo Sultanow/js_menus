@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { Batches } from 'src/app/model/batches';
-import { StatisticService } from 'src/app/services/statistic/statistic.service';
-import { StatisticGroup } from 'src/app/model/statisticGroups';
+import { StatisticGroup } from './model/statisticGroup';
+import { StatisticService } from './services/statistic.service';
 
 
 
@@ -16,7 +16,7 @@ export class StatisticComponent implements OnInit, OnChanges {
   @Input() showStatistic: boolean;
   @Output() notifyTitle = new EventEmitter<string>();
   // Variables
-  charts: StatisticGroup[] = [];
+  allCharts: StatisticGroup[] = [];
   showCreateChartContainer = false;
   showGraphChart = false;
   chartName = "";
@@ -43,10 +43,12 @@ export class StatisticComponent implements OnInit, OnChanges {
   reloadData() {
     this.statisticService.getChartNames().subscribe(result => {
       console.log(result);
-      this.charts = result;
+      this.allCharts = result;
+      console.log(this.allCharts);
       if (this.showGraphChart === false && this.showCreateChartContainer === false) {
-        if (this.charts != null && (this.charts.length > 0 && this.charts[ 0 ].charts.length > 0))
-          this.showChartView(null, this.charts[ 0 ].charts[ 0 ]);
+        if (this.allCharts != null && this.allCharts.length > 0) {
+          this.showChartView(null,Object.keys(this.allCharts[0].charts)[0]);
+        }
         else {
           this.createChartView(null);
         }

@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
-import { StatisticService } from 'src/app/services/statistic/statistic.service';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SpinnerService } from 'src/app/services/spinner/spinner.service';
+import { StatisticService } from '../services/statistic.service';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -34,6 +34,7 @@ export class CreateChartComponent implements OnInit, OnChanges {
   groups: string[] = [];
 
   scriptName: string = "";
+  resetDragNDrop: boolean = false;
 
   newChartForm = new FormGroup({
     group: new FormControl(),
@@ -80,10 +81,14 @@ export class CreateChartComponent implements OnInit, OnChanges {
 
   submit() {
     if (this.newChartForm.valid) {
+      let group = this.newChartForm.get('group').value;
+      if(null == group) {
+        group = "";
+      }
       this.spinnerService.show();
       this.statisticService.createChart(
         this.newChartForm.get('name').value,
-        this.newChartForm.get('group').value,
+        group,
         this.newChartForm.get('fileSource').value,
         this.newChartForm.get('description').value)
         .subscribe(result => {
@@ -93,7 +98,13 @@ export class CreateChartComponent implements OnInit, OnChanges {
           this.scriptName = "";
           this.form.resetForm();
           this.spinnerService.hide();
-        });
+          this.resetDragNDrop = true;
+          
+        }, e => {
+          console.log(e);
+          this.snackBar.open(e.statusText);
+          this.spinnerService.hide();
+        })
     }
     else {
       this.snackBar.open('Es müssen Name und ein Skript hinterlegt sein.', '',

@@ -1,17 +1,26 @@
-import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-drag-and-drop',
   templateUrl: './drag-and-drop.component.html',
   styleUrls: [ './drag-and-drop.component.css' ]
 })
-export class DragAndDropComponent implements OnInit {
+export class DragAndDropComponent implements OnInit, OnChanges {
   @Output() fileEmitter = new EventEmitter();
   @Input() fileUploadText = "Drop File oder klicke um File hochzuladen";
   @Input() containerHeight = "3rem";
   @Input() showUploadAreaFile: boolean = true;
+  @Input() reset = true;
 
   constructor () { }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
+    if (changes.reset && changes.reset.currentValue === true) {
+      this.reset = false;
+      this.deleteFile();
+    }
+  }
 
 
   ngOnInit(): void {

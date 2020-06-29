@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { StatisticService } from 'src/app/services/statistic/statistic.service';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { SpinnerService } from 'src/app/services/spinner/spinner.service';
+import { StatisticService } from '../services/statistic.service';
 
 declare var Plotly: any;
 
@@ -47,7 +47,7 @@ export class GraphsComponent implements OnInit, OnChanges {
   loadGraphData() {
     if (this.chartName !== "") {
       this.spinnerService.show();
-      this.statisticService.getChartData(this.chartName.replace(/\s/g, "")).subscribe(result => {
+      this.statisticService.getChartData(this.chartName).subscribe(result => {
         console.log(result);
         if (!(result === null || result === "")) {
           this.selectingGraph = false;
@@ -117,6 +117,8 @@ export class GraphsComponent implements OnInit, OnChanges {
     this.statisticService.updateData(this.chartName, file).subscribe(result => {
       console.log(result);
       this.loadGraphData();
+      this.spinnerService.hide();
+    }, e => {
       this.spinnerService.hide();
     });
   }

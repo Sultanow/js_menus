@@ -19,7 +19,7 @@ import java.util.Properties;
 
 @Path("/settings")
 public class SettingsController {
-    private static final Logger logger = LoggerFactory.getLogger(SettingsController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SettingsController.class);
 
     private static ArrayList<String> allConfigurationItems = new ArrayList<>(Arrays.asList(
             "configuration.zabbix.User",
@@ -96,10 +96,10 @@ public class SettingsController {
     @Path("/setConfig")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response setConfig(SettingItem[] config) {
-        logger.info("Size of config: " + config.length);
+        LOGGER.info("Size of config: " + config.length);
         ConfigurationRepository repo = ConfigurationRepository.getRepo();
         for (SettingItem settingItem : config) {
-            logger.error(settingItem.toString());
+            LOGGER.error(settingItem.toString());
             repo.save(new Configuration(settingItem.getKey(), settingItem.getValue()));
         }
         return Response.ok().build();

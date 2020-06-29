@@ -32,7 +32,7 @@
         <div>
             <app-drag-and-drop [fileUploadText]="fileUploadText"
                 matTooltip="Python Script zur Analyse hineinziehen oder klicken" (fileEmitter)="onFileAdded($event)"
-                matTooltipPosition="right">
+                matTooltipPosition="right" [reset]="resetDragNDrop">
             </app-drag-and-drop>
         </div>
         <mat-divider class="divider"></mat-divider>

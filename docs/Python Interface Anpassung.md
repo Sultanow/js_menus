@@ -125,13 +125,17 @@ Um die neuen Daten zu speichern soll folgendes Format verwendet werden:
 
 Im Objekt ``statistic.allChatNames`` soll nun zusätzlich das ``script`` sowie die neuen daten für ``timeseries``, ``accuracy`` und ``multiple`` gespeichert werden. Die Informationen über welchen Zeitraum Daten gespeichert sind, kann mithilfe von Redis gesucht werden.
 
-Zusätzlich muss die API in Richtung Frontend erweitert werden, damit Timeseries spezifische Informationen vom Backend geholt werden können.
+Um die Umstellung zu erleichtern, wird das alte Format automatisch vom Server in das neue umgewandelt. Dafür wird vorübergehend eine Klasse mit den Alten Parametern gebraucht. Diese wird in Zukunft gelöscht werden und wird dafür direkt als @Deprecated markiert. 
+
+Zusätzlich muss die API in Richtung Frontend erweitert werden, damit Timeseries spezifische Informationen vom Backend geholt werden können. Die Chart Objekte werden in Zukunft in Maps gespeichert.
 
 ### Änderungen im Frontend
 Im Zuge der Änderungen sollte es auch möglich sein, ein Chart anzupassen ohne dieses löschen und neu anlegen zu müssen. Dafür wird noch ein neuer Dialog benötigt, der sich darum kümmert.
 
 Für die Timeseries Funktionalität wird zusätzlich ein Kalender und Buttons benötigt. Mit der Kalender Funktion soll es möglich sein, zu definieren, welche Daten angezeigt werden. Ist die Option ``multiple : false`` gesetzt, so ist es nur möglich einen bestimmten Monat anzuzeigen. Mit ``multiple : true`` ist es möglich einen Range an Daten zu wählen. 
 Wenn die Timeseries Funktionalität nicht zur Verfügung steht, so soll der Kalender und die Buttons auch nicht angezeigt werden, damit bleibt das bisher bestehende Verhalten erhalten.
+
+Aufgrund der Speicherung der Chart Objekte in Maps sollten die Charts nach Namen sortiert sein. Dies macht ein auffinden für die Nutzer leichter.
 
 ## Beispiele
 Im Folgenden werden einige Beispiele für die JSON Schnittstelle gegeben:
