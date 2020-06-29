@@ -88,4 +88,9 @@ export class SettingsComponent implements OnInit {
     });
 
   }
+
+  logout() {
+    localStorage.clear();
+    window.location.reload();
+    }
 }

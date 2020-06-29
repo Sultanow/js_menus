@@ -14,3 +14,7 @@
 .settingKey{
     padding: 0.2rem;
 }
+.logoutPosition{
+    position: relative;
+    padding-top: 3rem;
+}
