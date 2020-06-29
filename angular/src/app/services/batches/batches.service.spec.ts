@@ -15,7 +15,7 @@ describe('BatchService', () => {
   );
 
   it('should be created', () => {
-    const service: BatchService = TestBed.get(BatchService);
+    const service: BatchService = TestBed.inject(BatchService);
     expect(service).toBeTruthy();
   });
 });

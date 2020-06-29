@@ -28,8 +28,7 @@
             ],
             "scripts": [
               "src/assets/js/plotly-latest.min.js"
-            ],
-            "es5BrowserSupport": true
+            ]
           },
           "configurations": {
             "production": {
@@ -91,8 +90,6 @@
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
-              "src/assets/js/TweenMax.min.js"
             ],
             "assets": [
               "src/favicon.ico",

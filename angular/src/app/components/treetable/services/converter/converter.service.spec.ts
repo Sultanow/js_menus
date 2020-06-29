@@ -10,31 +10,31 @@ describe('ConverterService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: ConverterService = TestBed.get(ConverterService);
+    const service: ConverterService = TestBed.inject(ConverterService);
     expect(service).toBeTruthy();
   });
 
   it('should convert a basic tree into a searchable tree', () => {
-    const service: ConverterService = TestBed.get(ConverterService);
+    const service: ConverterService = TestBed.inject(ConverterService);
     expect(instanceOfSearchableNode(mockTree)).toBe(false);
     expect(instanceOfSearchableNode(service.toSearchableTree(mockTree))).toBe(true);
   });
 
   it('should convert a searchable tree into a treetable tree', () => {
-    const service: ConverterService = TestBed.get(ConverterService);
+    const service: ConverterService = TestBed.inject(ConverterService);
     expect(instanceOfSearchableNode(mockSearchableTree)).toBe(true);
     expect(instanceOfTreeTableNodee(mockSearchableTree)).toBe(false);
     expect(instanceOfSearchableNode(service.toTreeTableTree(mockSearchableTree))).toBe(true);
   });
 
   it('should do nothing to trees that are already of the required type', () => {
-    const service: ConverterService = TestBed.get(ConverterService);
+    const service: ConverterService = TestBed.inject(ConverterService);
     expect(instanceOfSearchableNode(mockSearchableTree)).toBe(true);
     expect(instanceOfSearchableNode(service.toSearchableTree(mockSearchableTree))).toBe(true);
   });
 
   it('should clone the trees', () => {
-    const service: ConverterService = TestBed.get(ConverterService);
+    const service: ConverterService = TestBed.inject(ConverterService);
     expect(mockSearchableTree !== service.toSearchableTree(mockSearchableTree)).toBe(true);
     expect(_.isEqual(mockSearchableTree, service.toSearchableTree(mockSearchableTree))).toBe(true);
     expect(mockTreeTableTree !== service.toTreeTableTree(mockTreeTableTree)).toBe(true);
