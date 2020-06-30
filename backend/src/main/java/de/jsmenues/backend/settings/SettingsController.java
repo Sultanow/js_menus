@@ -51,7 +51,7 @@ public class SettingsController {
 		return Response.ok().build();
 	}
 
-	@RolesAllowed("ADMIN")
+	@PermitAll
 	@GET
 	@Path("/title")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -68,7 +68,7 @@ public class SettingsController {
 		ConfigurationRepository.getRepo().save(new Configuration("configuration.frontend.title", title));
 		return Response.ok().build();
 	}
-
+	@PermitAll
 	@GET
 	@Path("/logo")
 	public Response getLogoSVG() {
@@ -76,7 +76,7 @@ public class SettingsController {
 		return Response.ok(siteLogo).build();
 	}
 
-	@PermitAll
+	@RolesAllowed("ADMIN")
 	@POST
 	@Path("/logo")
 	public Response setLogo(String logo) {
@@ -84,7 +84,7 @@ public class SettingsController {
 		return Response.ok().build();
 	}
 
-	@RolesAllowed("ADMIN")
+	@PermitAll
 	@GET
 	@Path("/getAllConfig")
 	public Response getAllConfig() {
@@ -93,7 +93,7 @@ public class SettingsController {
 		String returnItems = jsonItems.toJson(items);
 		return Response.ok(returnItems, MediaType.APPLICATION_JSON).build();
 	}
-
+	@RolesAllowed("ADMIN")
 	@POST
 	@Path("/setConfig")
 	@Consumes(MediaType.APPLICATION_JSON)

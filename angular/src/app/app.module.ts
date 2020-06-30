@@ -57,7 +57,7 @@ import { SettingsPasswordComponent } from './components/settings-password/settin
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { DragAndDropComponent } from './components/drag-and-drop/drag-and-drop.component';
 import { DragAndDropDirective } from './components/drag-and-drop/drag-and-drop.directive';
-import { BasicAuthInterceptorService } from './services/authentiecation/basic-auth-interceptor-.service';
+import { BasicAuthInterceptorService } from './services/authentication/basic-auth-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -66,7 +66,6 @@ import { BasicAuthInterceptorService } from './services/authentiecation/basic-au
     M_EastMenuComponent,
     M_SouthMenuComponent,
     M_WestMenuComponent,
-
     O_NorthMenuComponent,
     O_EastMenuComponent,
     O_SouthMenuComponent,

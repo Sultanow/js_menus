@@ -46,7 +46,7 @@ export class AppComponent implements OnInit {
 	activeItems: string[] = [];
 
 	ngOnInit() {
-		this.ClearLocalStorgeAfterOneDay ;
+		this.ClearLocalStorgeAfter12Hour() ;
 			this.initAnimations();
 			this.initAnimationButton(this.animate_north, "north-menu");
 			this.initAnimationButton(this.animate_east, "east-menu");
@@ -278,7 +278,7 @@ export class AppComponent implements OnInit {
 		});
 	}
 }
-	ClearLocalStorgeAfterOneDay() {
+	ClearLocalStorgeAfter12Hour() {
 		var lastclear  = localStorage.getItem('lastclear');
 		var lastclearNumber : number = + lastclear;
 		var time_now  = (new Date()).getTime();

@@ -38,7 +38,7 @@ public class StatisticController {
      * @param chartName Name for the requested chart
      * @return The chart data locally cached.
      */
-	@RolesAllowed("ADMIN")
+    @PermitAll
     @GET
     @Path("/chartData")
     @Produces(MediaType.APPLICATION_JSON)
@@ -61,7 +61,7 @@ public class StatisticController {
      * @param fileMetaData    File meta data containing the filename
      * @return Success information
      */
-	@RolesAllowed("ADMIN")
+    @RolesAllowed("ADMIN")
     @POST
     @Path("/updateData")
     //@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -95,7 +95,7 @@ public class StatisticController {
      * @param fileMetaData    python file metadata
      * @return response if the create was successful.
      */
-	@RolesAllowed("ADMIN")
+    @RolesAllowed("ADMIN")
     @POST
     @Path("/createChart")
     public Response createChart(
@@ -119,7 +119,7 @@ public class StatisticController {
      * @param chartName Chartname to delete from the repository
      * @return boolean as JSON which shows the success of the delete
      */
-	@RolesAllowed("ADMIN")
+    @RolesAllowed("ADMIN")
     @DELETE
     @Path("/deleteChart")
     public Response deleteChart(

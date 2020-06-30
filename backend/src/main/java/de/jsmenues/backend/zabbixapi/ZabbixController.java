@@ -134,7 +134,6 @@ public class ZabbixController {
             zabbixApi = null;
         }
         return zabbixApi;
-
     }
 
 }

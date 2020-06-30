@@ -1,6 +1,6 @@
 package de.jsmenues.backend.dependencies;
 
-import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -16,7 +16,7 @@ public class DependencyController {
 	 *
 	 * @return String that will be returned as a text/plain response.
 	 */
-    @PermitAll
+	@RolesAllowed("ADMIN")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getIt() {

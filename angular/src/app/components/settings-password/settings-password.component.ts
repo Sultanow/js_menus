@@ -38,7 +38,6 @@ export class SettingsPasswordComponent implements OnInit {
         this.dialogRef.close(this.showSettings);
         alert("Regeisteration ist erfolgreich");
         window.location.reload();
-
       }else{
         alert("Passwort ist Falsch");
       }
