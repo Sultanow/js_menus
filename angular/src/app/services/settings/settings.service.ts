@@ -67,11 +67,4 @@ export class SettingsService {
   getVersion(): Observable<any> {
     return this.http.get(`${this.backendUrl}/version`, { responseType: "text" });
   }
-    getAuthData(password: string): Observable<any> {
-    return this.http.post(`${this.backendUrl}/authentication`, password,  { responseType: "text" });
-  }
-  
-  getToken(){
-     return localStorage.getItem('token');
-  }
 }

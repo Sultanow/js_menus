@@ -5,8 +5,6 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -24,7 +22,6 @@ public class StatisticController {
      *
      * @return Chart names and groups.
      */
-    @PermitAll
     @GET
     @Path("/allChartNames")
     public Response getAllChartNames() {
@@ -41,7 +38,6 @@ public class StatisticController {
      * @param update If "true" then only the trace information will send back to the caller.
      * @return The chart data locally cached.
      */
-	@RolesAllowed("ADMIN")
     @GET
     @Path("/chartData")
     @Produces(MediaType.APPLICATION_JSON)
@@ -66,7 +62,6 @@ public class StatisticController {
      * @param fileMetaData    File meta data containing the filename
      * @return Success information
      */
-	@RolesAllowed("ADMIN")
     @POST
     @Path("/updateData")
     public Response uploadNewData(
@@ -98,7 +93,6 @@ public class StatisticController {
      * @param fileMetaData    python file metadata
      * @return response if the create was successful.
      */
-	@RolesAllowed("ADMIN")
     @POST
     @Path("/createChart")
     public Response createChart(
@@ -122,7 +116,6 @@ public class StatisticController {
      * @param chartName Chartname to delete from the repository
      * @return boolean as JSON which shows the success of the delete
      */
-	@RolesAllowed("ADMIN")
     @DELETE
     @Path("/deleteChart")
     public Response deleteChart(
@@ -139,7 +132,6 @@ public class StatisticController {
      *
      * @return The groupList JSON encoded string.
      */
-	@PermitAll
     @GET
     @Path("/groups")
     @Produces(MediaType.APPLICATION_JSON)
