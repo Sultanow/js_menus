@@ -28,7 +28,12 @@
             ],
             "scripts": [
               "src/assets/js/plotly-latest.min.js"
-            ]
+            ],
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "uuid",
+              "fp-ts/lib/Option"
+           ]
           },
           "configurations": {
             "production": {

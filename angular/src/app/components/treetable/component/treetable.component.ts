@@ -6,16 +6,15 @@ import { ValidatorService } from '../services/validator/validator.service';
 import { ConverterService } from '../services/converter/converter.service';
 import { defaultOptions } from '../default.options';
 import * as _ from 'lodash';
-import { Required } from '../decorators/required.decorator';
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'treetable',
+  selector: 'treetable[tree]',
   templateUrl: './treetable.component.html',
   styleUrls: [ './treetable.component.css' ]
 })
 export class TreetableComponent<T> implements OnInit, OnChanges {
-  @Input() @Required tree: Node<T> | Node<T>[];
+  @Input() tree: Node<T> | Node<T>[];
   @Input() options: Options<T> = {};
   @Output() nodeClicked: Subject<TreeTableNode<T>> = new Subject();
   @Input('body') customElement: TemplateRef<any>; //custom template injection
@@ -123,7 +122,11 @@ export class TreetableComponent<T> implements OnInit, OnChanges {
 
   // Overrides default options with those specified by the user
   parseOptions(defaultOpts: Options<T>): Options<T> {
-    return _.defaults(this.options, defaultOpts);
+    // Use the js standard variant instead of the _.defaults methode.
+    return {
+      ...defaultOpts,
+      ...this.options,
+    };
   }
 
   get GetElement() {
