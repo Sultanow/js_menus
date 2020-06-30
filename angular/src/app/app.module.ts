@@ -19,7 +19,7 @@ import { WestMenuComponent as O_WestMenuComponent } from './menus/outside/west-m
 import { DetailsComponent } from './components/details/details.component';
 import { BatchesComponent } from './components/batches/batches.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 import { DependencyChartsComponent, EditDialog } from './components/dependencycharts/dependencycharts.component';
 import { CompareComponent } from './components/compare/compare.component';
@@ -36,7 +36,6 @@ import { SettingsPasswordComponent } from './components/settings-password/settin
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { MaterialModule } from './material.module';
 import { StatisticModule } from './components/statistic/statistic.module';
-import { BasicAuthInterceptorService } from './services/authentiecation/basic-auth-interceptor-.service';
 
 @NgModule({
   declarations: [
@@ -78,16 +77,7 @@ import { BasicAuthInterceptorService } from './services/authentiecation/basic-au
     StatisticModule,
   ],
   providers: [
-    DetailsComponent,
-    {
-      provide : HTTP_INTERCEPTORS,
-      useClass: BasicAuthInterceptorService,
-      multi:true
-    },
-    {
-      provide: MatDialogRef,
-      useValue: {}
-    },
+    DetailsComponent
   ],
   bootstrap: [ AppComponent ],
   entryComponents: [ EditDialog, DependencyChartsComponent, SettingsPasswordComponent ]

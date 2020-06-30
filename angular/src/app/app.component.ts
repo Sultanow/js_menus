@@ -46,7 +46,6 @@ export class AppComponent implements OnInit {
 	activeItems: string[] = [];
 
 	ngOnInit() {
-		this.ClearLocalStorgeAfterOneDay ;
 			this.initAnimations();
 			this.initAnimationButton(this.animate_north, "north-menu");
 			this.initAnimationButton(this.animate_east, "east-menu");
@@ -259,9 +258,6 @@ export class AppComponent implements OnInit {
 	}
 
 	checkPasswordDialog() {
-		if (localStorage.getItem("token")){
-			this.openSettings();
-		}else{
 		let dialogRef = this.dialog.open(SettingsPasswordComponent, {
 			width: "300 px",
 			disableClose: true,
@@ -277,14 +273,4 @@ export class AppComponent implements OnInit {
 			}
 		});
 	}
-}
-	ClearLocalStorgeAfterOneDay() {
-		var lastclear  = localStorage.getItem('lastclear');
-		var lastclearNumber : number = + lastclear;
-		var time_now  = (new Date()).getTime();
-		if ((time_now - lastclearNumber) > 1000 * 60 * 60 * 12) {
-		  localStorage.clear();
-		  localStorage.setItem('lastclear', JSON.stringify(time_now));
-		}
-	  }
 }
