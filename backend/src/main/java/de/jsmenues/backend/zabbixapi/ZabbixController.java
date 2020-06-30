@@ -9,8 +9,6 @@ import org.codehaus.jackson.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -32,7 +30,7 @@ public class ZabbixController {
      *
      * @return String that will be returned as a text/plain response.
      */
-	@PermitAll
+
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String getTestConnection() {
@@ -42,7 +40,7 @@ public class ZabbixController {
         boolean login = zabbixApi.login(user.getUsername(), user.getPassword());
         return zabbixApi.apiVersion();
     }
-	@RolesAllowed("ADMIN")
+
     @GET
     @Path("/getAllHosts")
     @Produces(MediaType.TEXT_PLAIN)
@@ -92,7 +90,7 @@ public class ZabbixController {
             return Response.ok(responseText + result.toString()).build();
         }
     }
-	@RolesAllowed("ADMIN")
+
     @GET
     @Path("/getInformationForHosts")
     @Produces(MediaType.APPLICATION_JSON)

@@ -4,7 +4,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
@@ -35,7 +35,7 @@ import { WestMenuComponent as O_WestMenuComponent } from './menus/outside/west-m
 import { DetailsComponent } from './components/details/details.component';
 import { BatchesComponent } from './components/batches/batches.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 import { DependencyChartsComponent, EditDialog } from './components/dependencycharts/dependencycharts.component';
 import { CompareComponent } from './components/compare/compare.component';
@@ -57,7 +57,6 @@ import { SettingsPasswordComponent } from './components/settings-password/settin
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { DragAndDropComponent } from './components/drag-and-drop/drag-and-drop.component';
 import { DragAndDropDirective } from './components/drag-and-drop/drag-and-drop.directive';
-import { BasicAuthInterceptorService } from './services/authentiecation/basic-auth-interceptor-.service';
 
 @NgModule({
   declarations: [
@@ -119,16 +118,7 @@ import { BasicAuthInterceptorService } from './services/authentiecation/basic-au
     MatDividerModule
   ],
   providers: [
-    DetailsComponent,
-    {
-      provide : HTTP_INTERCEPTORS,
-      useClass: BasicAuthInterceptorService,
-      multi:true
-    },
-    {
-      provide: MatDialogRef,
-      useValue: {}
-    },
+    DetailsComponent
   ],
   bootstrap: [ AppComponent ],
   entryComponents: [ EditDialog, DependencyChartsComponent, SettingsPasswordComponent, DialogDeleteChart ]

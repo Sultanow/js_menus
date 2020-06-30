@@ -88,13 +88,5 @@ public class ConfigurationRepository {
         }
         return configurations;
     }
-    public String getPassword(){
-        String key = "password";
-        String value = "1234";
-        try (Jedis jedis = configurationPool.getResource()) {
-                jedis.set(key, value);
-        }
-		return value;
-    }
 
 }
