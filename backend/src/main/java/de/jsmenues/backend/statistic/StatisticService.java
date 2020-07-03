@@ -420,7 +420,7 @@ class StatisticService {
      * Get the last day of the list. If daysBeforeLastDay is 0.
      *
      * @param localDates       List of all Dates for TimeCharts
-     * @param formatter        Formats the date in the correct format
+     * @param formatter Formats the date in the correct format
      * @param daysBevorLastDay Given number is used to select number days before last day
      * @return String with the last day (or before)
      */
