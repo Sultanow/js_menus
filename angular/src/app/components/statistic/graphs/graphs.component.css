@@ -30,3 +30,7 @@
 .updateTime {
     padding-top: 0.4rem;
 }
+
+.btnDisabled {
+    pointer-events: none;
+}

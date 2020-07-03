@@ -102,7 +102,16 @@ Definition des "traces"-Arrays:
     }
 ]
 ```
-3. Der Parameter ``options`` wird aktuell noch nicht verwendet. Wird aber für zukünftige Anpassungen der Schnittstelle verwendet.
+3. Der Parameter ``options`` wird verwendet um zusätzliche Informationen für das Backend oder auch Frontend zur Verfügung zu stellen. Die Liste an unterstützten Optionen wird in Zukunft erweitert.
+```
+"options" : [
+    {
+        "displayDefault" : <number>
+    }
+]
+```
+ - ``displayDefault`` kann in Kombination mit ``multiple : true`` verwendet werden, um einen Default Range anzugeben, an Traces, welche angezeigt werden.
+
 ### Änderungen im Backend
 Da die Daten im Backend gecached werden, ist es nötig auch hier Änderungen durchzuführen. Hierfür muss das JSON welches vom Python Web Service geschickt wird analysiert werden und die Einträge entsprechend in der Redis Datenbank gespeichert werden.
 
@@ -215,5 +224,8 @@ Im Folgenden werden einige Beispiele für die JSON Schnittstelle gegeben:
     "timeseries" : true,
     "accuracy" : "day",
     "multiple" : true,
+    "option" : [
+        "displayDefault" : 5
+    ]
 }
 ```
