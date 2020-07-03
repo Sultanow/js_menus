@@ -18,7 +18,11 @@
         </div>
         <div class="chartContent">
             <!-- Browse Files, -->
-            <app-graphs [chartName]="chartName" [showGraphChart]="showGraphChart" (notifyDeleteChart)="onDeleteChart()">
+            <app-graphs 
+                [chartName]="chartName" 
+                [showGraphChart]="showGraphChart" 
+                [chart]="activeChart"
+                (notifyDeleteChart)="onDeleteChart()">
             </app-graphs>
             <app-create-chart [showCreateChartContainer]="showCreateChartContainer"
                 (notifyNewChartSubmitted)="onNewChartSubmitted()"></app-create-chart>
