@@ -1,0 +1,8 @@
+.activeDate {
+    background: orange;
+    border-radius: 100%;
+}
+
+.inactiveDate {
+    pointer-events: none;
+}

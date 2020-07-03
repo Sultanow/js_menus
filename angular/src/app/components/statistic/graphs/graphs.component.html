@@ -14,6 +14,28 @@
         <div class="updateTime">
             Daten zuletzt aktualisiert: {{updateTime}}
         </div>
+        <div class="description">
+
+        </div>
+        <div class="Datefield" *ngIf="isTimeseries() && actuallStatisticData !== null">
+            <a (click)="prevTimeseriesChart()" *ngIf="!isMultiple()" [ngClass]="{'btnDisabled': actuallStatisticData.prevDate === '' }">
+                <mat-icon [ngStyle]="{'color':'white'}" matTooltip="Vorangegangene Daten anzeigen">
+                    keyboard_arrow_left
+                </mat-icon>
+            </a>
+            <app-date-picker
+                [title]="datePickerTitle"
+                [accuracy]="getAccuracyForString(chart.accuracy)"
+                [availableDates]="timeSeriesDates"
+                [startDate]="actuallStatisticData.startDate"
+                (datepickerChangeEvent)="datepickerChangeEvent($event)"
+            ></app-date-picker>
+            <a (click)="nextTimeseriesChart()" *ngIf="!isMultiple()" [ngClass]="{'btnDisabled': actuallStatisticData.nextDate === '' }">
+                <mat-icon [ngStyle]="{'color':'white'}" matTooltip="Vorangegangene Daten anzeigen">
+                    keyboard_arrow_right
+                </mat-icon>
+            </a>
+        </div>
     </div>
     <div id="Graph" #Graph></div>
 </div>
