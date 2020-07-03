@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation, Input, Output, EventEmitter, OnCh
 import { Batches } from 'src/app/model/batches';
 import { StatisticGroup } from './model/statisticGroup';
 import { StatisticService } from './services/statistic.service';
+import { StatisticChart } from './model/statisticChart';
 
 
 
@@ -20,8 +21,7 @@ export class StatisticComponent implements OnInit, OnChanges {
   showCreateChartContainer = false;
   showGraphChart = false;
   chartName = "";
-
-  activeElement: Element = null;
+  activeChart: StatisticChart = null;
   // Inits
 
   ngOnInit(): void {
@@ -42,12 +42,10 @@ export class StatisticComponent implements OnInit, OnChanges {
 
   reloadData() {
     this.statisticService.getChartNames().subscribe(result => {
-      console.log(result);
       this.allCharts = result;
-      console.log(this.allCharts);
       if (this.showGraphChart === false && this.showCreateChartContainer === false) {
         if (this.allCharts != null && this.allCharts.length > 0) {
-          this.showChartView(null,Object.keys(this.allCharts[0].charts)[0]);
+          this.showChartView(null, Object.keys(this.allCharts[ 0 ].charts)[ 0 ]);
         }
         else {
           this.createChartView(null);
@@ -60,12 +58,24 @@ export class StatisticComponent implements OnInit, OnChanges {
     this.showCreateChartContainer = true;
     this.showGraphChart = false;
     this.chartName = "";
+    this.activeChart = null;
   }
 
   showChartView(event, chart) {
     this.showGraphChart = true;
     this.chartName = chart;
     this.showCreateChartContainer = false;
+    this.activeChart = this.getActiveChart(chart);
+  }
+
+  private getActiveChart(chart: string): StatisticChart {
+    let chartItem;
+    this.allCharts.forEach(x => {
+      if (x.charts[ chart ])
+        return chartItem = x.charts[ chart ];
+    });
+    console.log(chartItem);
+    return chartItem;
   }
 
   onNewChartSubmitted() {
@@ -75,7 +85,6 @@ export class StatisticComponent implements OnInit, OnChanges {
   onDeleteChart() {
     this.chartName = "";
     this.showGraphChart = false;
-    this.activeElement = null;
     this.reloadData();
   }
   // Old

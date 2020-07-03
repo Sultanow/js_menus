@@ -1,21 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
-
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatSelectModule } from '@angular/material/select';
-import { MatTableModule } from '@angular/material/table';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatDividerModule } from '@angular/material/divider';
-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 
@@ -40,8 +24,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { DependencyChartsComponent, EditDialog } from './components/dependencycharts/dependencycharts.component';
 import { CompareComponent } from './components/compare/compare.component';
 import { ViewboxComponent } from './components/viewbox/viewbox.component';
-import { StatisticComponent } from './components/statistic/statistic.component';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { WarningsComponent } from './components/warnings/warnings.component';
 import { NewsComponent } from './components/news/news.component';
 import { StatusWarningsComponent } from './components/status-warnings/status-warnings.component';
@@ -50,13 +32,10 @@ import { RightManagementComponent } from './components/right-management/right-ma
 import { TrackerComponent } from './components/tracker/tracker.component';
 import { TreetableModule } from './components/treetable/treetable.module';
 import { SettingsComponent } from './components/settings/settings.component';
-import { GraphsComponent, DialogDeleteChart } from './components/statistic/graphs/graphs.component';
-import { MatButtonModule } from '@angular/material/button';
-import { CreateChartComponent } from './components/statistic/create-chart/create-chart.component';
 import { SettingsPasswordComponent } from './components/settings-password/settings-password.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
-import { DragAndDropComponent } from './components/drag-and-drop/drag-and-drop.component';
-import { DragAndDropDirective } from './components/drag-and-drop/drag-and-drop.directive';
+import { MaterialModule } from './material.module';
+import { StatisticModule } from './components/statistic/statistic.module';
 
 @NgModule({
   declarations: [
@@ -76,7 +55,6 @@ import { DragAndDropDirective } from './components/drag-and-drop/drag-and-drop.d
     EditDialog,
     CompareComponent,
     ViewboxComponent,
-    StatisticComponent,
     WarningsComponent,
     NewsComponent,
     StatusWarningsComponent,
@@ -84,44 +62,25 @@ import { DragAndDropDirective } from './components/drag-and-drop/drag-and-drop.d
     RightManagementComponent,
     TrackerComponent,
     SettingsComponent,
-    GraphsComponent,
-    CreateChartComponent,
     SettingsPasswordComponent,
-    DialogDeleteChart,
     SpinnerComponent,
-    DragAndDropComponent,
-    DragAndDropDirective
+
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    MatCardModule,
-    MatIconModule,
-    MatDialogModule,
     BrowserAnimationsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatRadioModule,
-    MatSelectModule,
-    MatTableModule,
-    MatMenuModule,
     ReactiveFormsModule,
-    DragDropModule,
     TreetableModule,
-    MatMenuModule,
-    MatButtonModule,
-    MatAutocompleteModule,
-    MatTooltipModule,
-    MatSnackBarModule,
-    MatProgressSpinnerModule,
-    MatDividerModule
+    MaterialModule,
+    StatisticModule,
   ],
   providers: [
     DetailsComponent
   ],
   bootstrap: [ AppComponent ],
-  entryComponents: [ EditDialog, DependencyChartsComponent, SettingsPasswordComponent, DialogDeleteChart ]
+  entryComponents: [ EditDialog, DependencyChartsComponent, SettingsPasswordComponent ]
 
 })
 export class AppModule { }
