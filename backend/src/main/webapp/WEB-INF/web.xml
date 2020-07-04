@@ -15,7 +15,7 @@
         </init-param>
         <init-param>
 			<param-name>javax.ws.rs.Application</param-name>
-			<param-value>de.jsmenues.backend.authentication.CustomApplication</param-value>
+			<param-value>de.jsmenues.backend.authentication.AuthenticationResource</param-value>
 		</init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
@@ -23,4 +23,9 @@
         <servlet-name>Jersey Web Application</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
+    <listener>
+     <listener-class>
+        de.jsmenues.listeners.MyContextListener
+    </listener-class>
+  </listener>
 </web-app>

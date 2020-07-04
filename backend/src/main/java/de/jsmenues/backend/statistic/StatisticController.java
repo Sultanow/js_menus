@@ -11,7 +11,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.InputStream;
 
-
 @Path("/statistic")
 public class StatisticController {
     private static final Logger LOGGER = LoggerFactory.getLogger(StatisticController.class);
@@ -42,9 +41,7 @@ public class StatisticController {
     @GET
     @Path("/chartData")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getChartDataForName(
-            @DefaultValue("") @QueryParam("chart") String chartName
-    ) {
+    public Response getChartDataForName(@DefaultValue("") @QueryParam("chart") String chartName) {
         if (chartName.isEmpty()) {
             return Response.ok("No data").build();
         }
@@ -53,8 +50,8 @@ public class StatisticController {
     }
 
     /**
-     * Update chart data. The data file is sent to the python service.
-     * TODO Check why MediaType making problems which end in 404 Errors...
+     * Update chart data. The data file is sent to the python service. TODO Check
+     * why MediaType making problems which end in 404 Errors...
      * 
      * @param chartName       Name of the chart to update
      * @param fileInputStream File data as stream
@@ -64,17 +61,15 @@ public class StatisticController {
     @RolesAllowed("ADMIN")
     @POST
     @Path("/updateData")
-    //@Consumes(MediaType.MULTIPART_FORM_DATA)
-    //@Produces(MediaType.APPLICATION_JSON)
-    public Response uploadNewData(
-            @FormDataParam("chart") String chartName,
+    // @Consumes(MediaType.MULTIPART_FORM_DATA)
+    // @Produces(MediaType.APPLICATION_JSON)
+    public Response uploadNewData(@FormDataParam("chart") String chartName,
             @FormDataParam("file") InputStream fileInputStream,
-            @FormDataParam("file") FormDataContentDisposition fileMetaData
-    ) {
+            @FormDataParam("file") FormDataContentDisposition fileMetaData) {
         LOGGER.debug("Enter [POST] '/updateData'");
         boolean result = statisticService.updateData(chartName, fileInputStream, fileMetaData);
         Response response;
-        if(!result) {
+        if (!result) {
             response = Response.status(401, "Error on update").build();
         } else {
             response = Response.ok().build();
@@ -86,7 +81,8 @@ public class StatisticController {
     /**
      * Call this to create a new chart.
      * <p>
-     * TODO: Charts should be created only if the user is authenticated! For this the password service have to be implemented.
+     * TODO: Charts should be created only if the user is authenticated! For this
+     * the password service have to be implemented.
      *
      * @param chartName       new chartname
      * @param groupName       group for the chart
@@ -98,15 +94,13 @@ public class StatisticController {
     @RolesAllowed("ADMIN")
     @POST
     @Path("/createChart")
-    public Response createChart(
-            @FormDataParam("chartName") String chartName,
-            @FormDataParam("groupName") String groupName,
-            @FormDataParam("description") String description,
+    public Response createChart(@FormDataParam("chartName") String chartName,
+            @FormDataParam("groupName") String groupName, @FormDataParam("description") String description,
             @FormDataParam("file") InputStream fileInputStream,
-            @FormDataParam("file") FormDataContentDisposition fileMetaData
-    ) {
+            @FormDataParam("file") FormDataContentDisposition fileMetaData) {
         LOGGER.debug("Enter [POST] '/createChart'");
-        Response response = statisticService.createChart(chartName, groupName, description, fileInputStream, fileMetaData);
+        Response response = statisticService.createChart(chartName, groupName, description, fileInputStream,
+                fileMetaData);
         LOGGER.debug("Leave [POST] '/createChart'");
         return response;
     }
@@ -114,7 +108,8 @@ public class StatisticController {
     /**
      * This can be called to delete a chart from the Service.
      * <p>
-     * TODO: Charts should be deleted only if the user is authenticated! For this the password service have to be implemented.
+     * TODO: Charts should be deleted only if the user is authenticated! For this
+     * the password service have to be implemented.
      *
      * @param chartName Chartname to delete from the repository
      * @return boolean as JSON which shows the success of the delete
@@ -122,9 +117,7 @@ public class StatisticController {
     @RolesAllowed("ADMIN")
     @DELETE
     @Path("/deleteChart")
-    public Response deleteChart(
-            @DefaultValue("") @QueryParam("chart") String chartName
-    ) {
+    public Response deleteChart(@DefaultValue("") @QueryParam("chart") String chartName) {
         LOGGER.debug("Enter [DELETE] '/deleteChart'");
         statisticService.deleteChart(chartName);
         LOGGER.debug("Leave [DELETE] '/deleteChart'");
@@ -136,7 +129,7 @@ public class StatisticController {
      *
      * @return The groupList JSON encoded string.
      */
-	@PermitAll
+    @PermitAll
     @GET
     @Path("/groups")
     @Produces(MediaType.APPLICATION_JSON)

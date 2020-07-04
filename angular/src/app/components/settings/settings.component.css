@@ -18,3 +18,7 @@
     position: relative;
     padding-top: 3rem;
 }
+.logoutPosition button {
+    cursor: pointer;
+    }
+    

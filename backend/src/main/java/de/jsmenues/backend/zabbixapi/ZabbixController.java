@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -27,12 +26,12 @@ public class ZabbixController {
     private static Logger LOGGER = LoggerFactory.getLogger(ZabbixController.class);
 
     /**
-     * Method handling HTTP GET requests. The returned object will be sent
-     * to the client as "text/plain" media type.
+     * Method handling HTTP GET requests. The returned object will be sent to the
+     * client as "text/plain" media type.
      *
      * @return String that will be returned as a text/plain response.
      */
-	@PermitAll
+    @PermitAll
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String getTestConnection() {
@@ -42,7 +41,8 @@ public class ZabbixController {
         boolean login = zabbixApi.login(user.getUsername(), user.getPassword());
         return zabbixApi.apiVersion();
     }
-	@RolesAllowed("ADMIN")
+
+    @PermitAll
     @GET
     @Path("/getAllHosts")
     @Produces(MediaType.TEXT_PLAIN)
@@ -57,29 +57,22 @@ public class ZabbixController {
         hostOutputParams.add("host");
         String filterGroup = ConfigurationRepository.getRepo().get("configuration.zabbix.filterGroup").getValue();
         if (filterGroup.isEmpty()) {
-
-
-            Request hostRequest = RequestBuilder.newBuilder()
-                    .method("host.get")
-                    .paramEntry("output", hostOutputParams.toArray())
-                    .build();
+            Request hostRequest = RequestBuilder.newBuilder().method("host.get")
+                    .paramEntry("output", hostOutputParams.toArray()).build();
             JsonNode getResponse = api.call(hostRequest, true);
             JsonNode result = getResponse.path("result");
             return Response.ok(responseText + result.toString()).build();
         } else {
             Map<String, String[]> filter = new HashMap<>();
-            filter.put("name", new String[]{filterGroup});
+            filter.put("name", new String[] { filterGroup });
             List<String> outputParams = new LinkedList<>();
             outputParams.add("name");
             outputParams.add("hosts");
             Map<String, String[]> query = new HashMap<>();
-            //query.put("output", hostOutputParams.toArray());
-            Request hostgroupRequest = RequestBuilder.newBuilder()
-                    .method("hostgroup.get")
-                    .paramEntry("selectHosts", hostOutputParams.toArray())
-                    .paramEntry("filter", filter)
-                    .paramEntry("output", outputParams)
-                    .build();
+            // query.put("output", hostOutputParams.toArray());
+            Request hostgroupRequest = RequestBuilder.newBuilder().method("hostgroup.get")
+                    .paramEntry("selectHosts", hostOutputParams.toArray()).paramEntry("filter", filter)
+                    .paramEntry("output", outputParams).build();
             JsonNode getResponse = api.call(hostgroupRequest, true);
             JsonNode result = getResponse.path("result");
             if (result.isArray()) {
@@ -88,11 +81,11 @@ public class ZabbixController {
                     result = node;
                 }
             }
-
             return Response.ok(responseText + result.toString()).build();
         }
     }
-	@RolesAllowed("ADMIN")
+
+    @PermitAll
     @GET
     @Path("/getInformationForHosts")
     @Produces(MediaType.APPLICATION_JSON)
@@ -103,16 +96,11 @@ public class ZabbixController {
         }
         Map<String, String[]> filter = new HashMap<>();
         filter.put("host", hosts.toArray(new String[0]));
-        String[] output = {"name", "hostid", "host"};
-        String[] selectItems = {"itemid", "key_", "name", "prevvalue", "lastvalue", "lastclock", "description"};
-        Request informationRequest = RequestBuilder.newBuilder()
-                .method("host.get")
-                .paramEntry("filter", filter)
-                .paramEntry("output", output)
-                .paramEntry("selectItems", selectItems)
-                .paramEntry("selectHosts", "extend")
-                .paramEntry("selectGroups", "extend")
-                .build();
+        String[] output = { "name", "hostid", "host" };
+        String[] selectItems = { "itemid", "key_", "name", "prevvalue", "lastvalue", "lastclock", "description" };
+        Request informationRequest = RequestBuilder.newBuilder().method("host.get").paramEntry("filter", filter)
+                .paramEntry("output", output).paramEntry("selectItems", selectItems).paramEntry("selectHosts", "extend")
+                .paramEntry("selectGroups", "extend").build();
         JsonNode getResponse = api.call(informationRequest);
         JsonNode result = getResponse.path("result");
         removeNotNeededInformationFromResult(result);

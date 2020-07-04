@@ -10,11 +10,9 @@
             </button>
         </mat-form-field>
     </div>
+
     <button type="button"  mat-raised-button color="primary"
-        (click) = "checkPasswordBackend(input.value)" [disabled]="!input.value"
-       >Login
-    </button>
+        (click) = "checkPasswordBackend(input.value)" [disabled]="!input.value">Login</button>
+
     <button type="button"  mat-raised-button color="danger" style="float : right"
-        (click) = "cancel()"
-       >Cancel
-    </button>
+        (click) = "cancel()">Cancel</button>

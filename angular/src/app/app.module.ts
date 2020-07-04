@@ -53,11 +53,11 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { GraphsComponent, DialogDeleteChart } from './components/statistic/graphs/graphs.component';
 import { MatButtonModule } from '@angular/material/button';
 import { CreateChartComponent } from './components/statistic/create-chart/create-chart.component';
-import { SettingsPasswordComponent } from './components/settings-password/settings-password.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { DragAndDropComponent } from './components/drag-and-drop/drag-and-drop.component';
 import { DragAndDropDirective } from './components/drag-and-drop/drag-and-drop.directive';
 import { BasicAuthInterceptorService } from './services/authentication/basic-auth-interceptor.service';
+import { AuthenticationComponent } from './components/authentication/authentication.component';
 
 @NgModule({
   declarations: [
@@ -86,11 +86,11 @@ import { BasicAuthInterceptorService } from './services/authentication/basic-aut
     SettingsComponent,
     GraphsComponent,
     CreateChartComponent,
-    SettingsPasswordComponent,
     DialogDeleteChart,
     SpinnerComponent,
     DragAndDropComponent,
-    DragAndDropDirective
+    DragAndDropDirective,
+    AuthenticationComponent
   ],
   imports: [
     BrowserModule,
@@ -130,7 +130,7 @@ import { BasicAuthInterceptorService } from './services/authentication/basic-aut
     },
   ],
   bootstrap: [ AppComponent ],
-  entryComponents: [ EditDialog, DependencyChartsComponent, SettingsPasswordComponent, DialogDeleteChart ]
+  entryComponents: [ EditDialog, DependencyChartsComponent, AuthenticationComponent, DialogDeleteChart ]
 
 })
 export class AppModule { }

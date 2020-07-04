@@ -10,6 +10,7 @@ import { Title } from '@angular/platform-browser';
 })
 export class SettingsComponent implements OnInit {
   @Input() showSettings: boolean;
+  @Output() notifyshowViewBoxClose = new EventEmitter<boolean>();
   @Output() notifyTitle = new EventEmitter<string>();
 
   settings: Configuration[];
@@ -90,7 +91,7 @@ export class SettingsComponent implements OnInit {
   }
 
   logout() {
-    localStorage.clear();
-    window.location.reload();
+    localStorage.removeItem("token");
+    this.notifyshowViewBoxClose.emit(true);
     }
 }

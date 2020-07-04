@@ -22,10 +22,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 
-import de.jsmenues.redis.repository.ConfigurationRepository;
-
 import javax.ws.rs.Priorities;
-
 
 /**
  * This filter verify the access permissions for a user based on username and
@@ -34,108 +31,116 @@ import javax.ws.rs.Priorities;
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationFilter implements ContainerRequestFilter {
-	javax.inject.Provider<UriInfo> uriInfo;
+    javax.inject.Provider<UriInfo> uriInfo;
 
-	@Context
-	private ResourceInfo resourceInfo;
-	private static final String AUTHORIZATION_PROPERTY = "Authorization";
-	private static final String AUTHENTICATION_SCHEME = "Basic";
+    @Context
+    private ResourceInfo resourceInfo;
+    private static final String AUTHORIZATION_PROPERTY = "Authorization";
+    private static final String AUTHENTICATION_SCHEME = "Basic";
+    private final String admin = "admin";
 
-	@Override
-	public void filter(ContainerRequestContext requestContext) {
-		Method method = resourceInfo.getResourceMethod();
+    // filter for the annotation over the Methods
+    @Override
+    public void filter(ContainerRequestContext requestContext) {
 
-		//all access
-		if (!method.isAnnotationPresent(PermitAll.class)) {
-			//all deny
-			if (method.isAnnotationPresent(DenyAll.class)) {
-				requestContext.abortWith(
-						Response.status(Response.Status.FORBIDDEN).entity("Access blocked for all users !!").build());
-				return;
-			}
+        Method method = resourceInfo.getResourceMethod();
 
-			final MultivaluedMap<String, String> headers = requestContext.getHeaders();
-			final List<String> authorization = headers.get(AUTHORIZATION_PROPERTY);
-			if (authorization == null || authorization.isEmpty()) {
-				requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
-						.entity("You cannot access this resource1").build());
-				return;
-			}
-			final String encodedUserPassword = authorization.get(0).replaceFirst(AUTHENTICATION_SCHEME + " ", "");
-			String usernameAndPassword = new String(Base64.getDecoder().decode(encodedUserPassword.getBytes()));
+        // all access
+        if (!method.isAnnotationPresent(PermitAll.class)) {
+            // all deny
+            if (method.isAnnotationPresent(DenyAll.class)) {
+                requestContext.abortWith(
+                        Response.status(Response.Status.FORBIDDEN).entity("Access blocked for all users !!").build());
+                return;
+            }
 
-			final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
-			final String username = tokenizer.nextToken();
-			final String password = tokenizer.nextToken();
-			
-			//is user valid?
-			if (method.isAnnotationPresent(RolesAllowed.class)) {
-				RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
-				Set<String> rolesSet = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
+            final MultivaluedMap<String, String> headers = requestContext.getHeaders();
+            final List<String> authorization = headers.get(AUTHORIZATION_PROPERTY);
+            if (authorization == null || authorization.isEmpty()) {
+                requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
+                        .entity("You cannot access this resource1").build());
+                return;
+            }
+            final String encodedUserPassword = authorization.get(0).replaceFirst(AUTHENTICATION_SCHEME + " ", "");
 
-				if (!isUserAllowed(username, password, rolesSet)) {
-					requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
-							.entity("You cannot access this resource2").build());
-					return;
-				}
-			}
-		}
-		
-		User user=new User("admin","ADMIN");
-		requestContext.setSecurityContext(new Authorizer(user));
-	}
+            if (!AuthenticationTokens.getInstance().isValid(encodedUserPassword)) {
+                requestContext
+                        .abortWith(Response.status(Response.Status.UNAUTHORIZED).entity("user is not valid").build());
+            }
+            String usernameAndPassword = new String(Base64.getDecoder().decode(encodedUserPassword.getBytes()));
 
-	public boolean isUserAllowed(final String username, final String password, final Set<String> rolesSet) {
-		boolean isAllowed = false;
-		String pass = ConfigurationRepository.getRepo().getPassword();
-		if (username.equals("admin") && password.equals(pass)){
-			String userRole = "ADMIN";
-			if (rolesSet.contains(userRole)) {
-				isAllowed = true;
-			}
-		}
-		return isAllowed;
-	}
-	
-	public class Authorizer implements SecurityContext {
+            final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
+            final String username = tokenizer.nextToken();
+            final String password = tokenizer.nextToken();
 
-		private User user;
-		private Principal principal;
+            // is user valid?
+            if (method.isAnnotationPresent(RolesAllowed.class)) {
+                RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
+                Set<String> rolesSet = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
 
-		public Authorizer(final User user) {
-			this.user = user;
-			this.principal = new Principal() {
+                if (!isUserAllowed(username, password, rolesSet)) {
+                    requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
+                            .entity("You cannot access this resource2").build());
+                    return;
+                }
+            }
+        }
+        User user = new User(admin, "ADMIN");
+        requestContext.setSecurityContext(new Authorizer(user));
+    }
 
-				public String getName() {
-					return user.username;
-				}
-			};
-		}
+    // user allowed ?
+    public boolean isUserAllowed(final String username, final String password, final Set<String> rolesSet) {
+        boolean isAllowed = false;
+        if (username.equals(admin) && password.equals(TokenGenerator.getPassword())) {
+            String userRole = "ADMIN";
+            if (rolesSet.contains(userRole)) {
+                isAllowed = true;
+            }
+        }
+        return isAllowed;
+    }
 
-		public Principal getUserPrincipal() {
-			return this.principal;
-		}
+    // set user as Authorizser
+    public class Authorizer implements SecurityContext {
 
-		public boolean isUserInRole(String role) {
-			return (role.equals(user.role));
-		}
+        private User user;
+        private Principal principal;
 
-		public boolean isSecure() {
-			return true;
-		}
+        public Authorizer(final User user) {
+            this.user = user;
+            this.principal = new Principal() {
 
-		public String getAuthenticationScheme() {
-			return SecurityContext.BASIC_AUTH;
-		}
-	}
+                public String getName() {
+                    return user.username;
+                }
+            };
+        }
 
-	public class User {
-		public String username;
-		public String role;
+        public Principal getUserPrincipal() {
+            return this.principal;
+        }
 
-		public User(String username, String role) {
-			this.username = username;
-			this.role = role;
-		}
-	}
+        public boolean isUserInRole(String role) {
+            return (role.equals(user.role));
+        }
+
+        public boolean isSecure() {
+            return true;
+        }
+
+        public String getAuthenticationScheme() {
+            return SecurityContext.BASIC_AUTH;
+        }
+    }
+
+    public class User {
+        public String username;
+        public String role;
+
+        public User(String username, String role) {
+            this.username = username;
+            this.role = role;
+        }
+    }
 }
