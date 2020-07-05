@@ -56,10 +56,13 @@ export class StatisticService {
     let params = new HttpParams().set("chart", chartName);
     return this.http.get<string[]>(`${this.backendURLStatistic}/timeseriesDates`, { params });
   }
-  
-  getChartDataForDate(chartName: string, date: string): Observable<StatisticData> {
-    let params = new HttpParams().set("chart", chartName).set("date", date).set("update", "true");
+
+  getChartDataForDate(chartName: string, startDate: string, endDate?: string): Observable<StatisticData> {
+    let params = new HttpParams()
+      .set("chart", chartName)
+      .set("startdate", startDate)
+      .set("update", "true")
+      .set("enddate", endDate);
     return this.http.get<StatisticData>(`${this.backendURLStatistic}/chartData`, { params });
   }
-  
 }
