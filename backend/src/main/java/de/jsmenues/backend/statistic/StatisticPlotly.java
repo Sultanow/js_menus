@@ -19,6 +19,15 @@ class StatisticPlotly {
     private String startDate;
     private String prevDate;
     private String nextDate;
+    private String endDate;
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
 
     public String getPrevDate() {
         return prevDate;
@@ -104,6 +113,7 @@ class StatisticPlotly {
                 ", startDate='" + startDate + '\'' +
                 ", prevDate='" + prevDate + '\'' +
                 ", nextDate='" + nextDate + '\'' +
+                ", endDate='" + endDate + '\'' +
                 '}';
     }
 
@@ -120,12 +130,13 @@ class StatisticPlotly {
                 Objects.equals(prevTrace, that.prevTrace) &&
                 Objects.equals(startDate, that.startDate) &&
                 Objects.equals(prevDate, that.prevDate) &&
-                Objects.equals(nextDate, that.nextDate);
+                Objects.equals(nextDate, that.nextDate) &&
+                Objects.equals(endDate, that.endDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(updateTime, title, traces, layout, nextTrace, prevTrace, startDate, prevDate, nextDate);
+        return Objects.hash(updateTime, title, traces, layout, nextTrace, prevTrace, startDate, prevDate, nextDate, endDate);
     }
 
 }

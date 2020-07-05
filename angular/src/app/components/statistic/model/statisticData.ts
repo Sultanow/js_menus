@@ -8,6 +8,7 @@ export class StatisticData {
     startDate: string = "";
     nextDate: string = "";
     prevDate: string = "";
+    endDate: string = "";
 }
 
 export const DEFAULT_LAYOUT = 

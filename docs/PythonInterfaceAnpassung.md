@@ -106,7 +106,7 @@ Definition des "traces"-Arrays:
 ```
 "options" : [
     {
-        "displayDefault" : <number>
+        "displayDefault" : "<numberAsString>"
     }
 ]
 ```
