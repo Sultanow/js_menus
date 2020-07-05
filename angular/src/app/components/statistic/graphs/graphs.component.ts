@@ -84,7 +84,7 @@ export class GraphsComponent implements OnInit, OnChanges {
       this.actuallStatisticData.layout = DEFAULT_LAYOUT;
     }
     this.actuallStatisticData.layout[ 'title' ] = this.actuallStatisticData.title;
-    // Is something els to do?
+    this.updateTime = this.actuallStatisticData.updateTime;
     this.basicChart();
   }
 
@@ -176,7 +176,7 @@ export class GraphsComponent implements OnInit, OnChanges {
     // First show the new data
     this.basicChart();
     // Get more data from Server
-    this.loadDataForDate(this.actuallStatisticData.startDate, false);
+    this.loadDataForDate(this.actuallStatisticData.startDate,"", false);
   }
 
   nextTimeseriesChart(): void {
@@ -189,30 +189,37 @@ export class GraphsComponent implements OnInit, OnChanges {
     // First show the new data
     this.basicChart();
     // Get more data from the server
-    this.loadDataForDate(this.actuallStatisticData.startDate, false);
+    this.loadDataForDate(this.actuallStatisticData.startDate,"", false);
   }
 
-  datepickerChangeEvent(date: string) {
+  datepickerChangeEvent(date: Map<string, string>) {
     console.log("Graphs Component ", date);
-    if (date === this.actuallStatisticData.nextDate)
-      this.nextTimeseriesChart();
-    else if (date === this.actuallStatisticData.prevDate)
-      this.prevTimeseriesChart();
-    else
-      this.loadDataForDate(date, true);
+    if (this.chart.multiple) {
+      let startDate = date.get('start');
+      let endDate = date.get('end');
+      this.loadDataForDate(startDate, endDate, true);
+      console.log(startDate, endDate)
+    } else {
+      if (date.get('start') === this.actuallStatisticData.nextDate)
+        this.nextTimeseriesChart();
+      else if (date.get('start') === this.actuallStatisticData.prevDate)
+        this.prevTimeseriesChart();
+      else
+        this.loadDataForDate(date.get('start'),"", true);
+    }
   }
 
-  private loadDataForDate(date: string, rebuildPlotAfterLoad: boolean) {
-    this.statisticService.getChartDataForDate(this.chartName, date).subscribe(result => {
+  private loadDataForDate(startdate: string, enddate: string, rebuildPlotAfterLoad: boolean) {
+    this.statisticService.getChartDataForDate(this.chartName, startdate, enddate).subscribe(result => {
       console.log(result);
       this.nextStatisticData = result;
       this.updateLocalStatisticData();
-      if(rebuildPlotAfterLoad === true) {
+      if (rebuildPlotAfterLoad === true) {
         this.basicChart();
       }
     },
       e => {
-        console.log("Could not get Data for Date ", date);
+        console.log("Could not get Data for Date ", startdate);
       });
   }
 
@@ -232,6 +239,9 @@ export class GraphsComponent implements OnInit, OnChanges {
       if (this.actuallStatisticData.prevDate !== this.nextStatisticData.prevDate) {
         this.actuallStatisticData.prevDate = this.nextStatisticData.prevDate;
         this.actuallStatisticData.prevTrace = this.nextStatisticData.prevTrace;
+      }
+      if(this.isMultiple) {
+        this.actuallStatisticData.endDate = this.nextStatisticData.endDate;
       }
       console.log("After");
       console.log("Actuall:", this.actuallStatisticData);

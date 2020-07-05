@@ -9,6 +9,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Path("/statistic")
@@ -34,7 +36,8 @@ public class StatisticController {
      * Request the chartData for a specific chart, date or get only an update one for a date
      *
      * @param chartName Name for the requested chart
-     * @param date Date for the timeseries information
+     * @param startDate Start Date for the timeseries information
+     * @param endDate  End Date for the timeseries information
      * @param update If "true" then only the trace information will send back to the caller.
      * @return The chart data locally cached.
      */
@@ -43,13 +46,21 @@ public class StatisticController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getChartDataForName(
             @DefaultValue("") @QueryParam("chart") String chartName,
-            @DefaultValue("") @QueryParam("date") String date,
+            @DefaultValue("") @QueryParam("startdate") String startDate,
+            @DefaultValue("") @QueryParam("enddate") String endDate,
             @DefaultValue("false") @QueryParam("update") String update
     ) {
         if (chartName.isEmpty()) {
             return Response.ok("No data").build();
         }
-        String chartData = statisticService.getChartDataForName(chartName, date, "true".equals(update));
+        Map<String, String> dates = new HashMap<>();
+        if(!startDate.isEmpty()) {
+            dates.put("start", startDate);
+        }
+        if(!endDate.isEmpty()) {
+            dates.put("end", endDate);
+        }
+        String chartData = statisticService.getChartDataForName(chartName, dates, "true".equals(update));
         return Response.ok(chartData).build();
     }
 

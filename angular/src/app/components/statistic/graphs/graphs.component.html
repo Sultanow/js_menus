@@ -19,7 +19,7 @@
         </div>
         <div class="Datefield" *ngIf="isTimeseries() && actuallStatisticData !== null">
             <a (click)="prevTimeseriesChart()" *ngIf="!isMultiple()" [ngClass]="{'btnDisabled': actuallStatisticData.prevDate === '' }">
-                <mat-icon [ngStyle]="{'color':'white'}" matTooltip="Vorangegangene Daten anzeigen">
+                <mat-icon [ngStyle]="{'color':'white'}" matTooltip="Vorherigen Datensatz anzeigen">
                     keyboard_arrow_left
                 </mat-icon>
             </a>
@@ -28,10 +28,12 @@
                 [accuracy]="getAccuracyForString(chart.accuracy)"
                 [availableDates]="timeSeriesDates"
                 [startDate]="actuallStatisticData.startDate"
+                [endDate]="actuallStatisticData.endDate"
+                [isMultiple]="chart.multiple"
                 (datepickerChangeEvent)="datepickerChangeEvent($event)"
             ></app-date-picker>
             <a (click)="nextTimeseriesChart()" *ngIf="!isMultiple()" [ngClass]="{'btnDisabled': actuallStatisticData.nextDate === '' }">
-                <mat-icon [ngStyle]="{'color':'white'}" matTooltip="Vorangegangene Daten anzeigen">
+                <mat-icon [ngStyle]="{'color':'white'}" matTooltip="Nächsten Datensatz anzeigen">
                     keyboard_arrow_right
                 </mat-icon>
             </a>
