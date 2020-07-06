@@ -29,7 +29,11 @@
             "scripts": [
               "src/assets/js/plotly-latest.min.js"
             ],
-            "es5BrowserSupport": true
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "uuid",
+              "fp-ts/lib/Option"
+           ]
           },
           "configurations": {
             "production": {
@@ -91,8 +95,6 @@
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
-              "src/assets/js/TweenMax.min.js"
             ],
             "assets": [
               "src/favicon.ico",

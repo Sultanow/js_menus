@@ -8,12 +8,12 @@ describe('ValidatorService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: ValidatorService = TestBed.get(ValidatorService);
+    const service: ValidatorService = TestBed.inject(ValidatorService);
     expect(service).toBeTruthy();
   });
 
   it('should correctly process valid customColumnOrders', () => {
-    const service: ValidatorService = TestBed.get(ValidatorService);
+    const service: ValidatorService = TestBed.inject(ValidatorService);
     const validCustomOrder: Array<keyof Folder> = [ 'backup', 'owner', 'protected', 'name' ];
     expect(service.validateCustomOrder(mockSearchableTree, validCustomOrder)).toEqual({
       valid: true,
@@ -22,7 +22,7 @@ describe('ValidatorService', () => {
   });
 
   it('should correctly process invalid customColumnOrders with missing properties', () => {
-    const service: ValidatorService = TestBed.get(ValidatorService);
+    const service: ValidatorService = TestBed.inject(ValidatorService);
     const invalidCustomOrder: Array<keyof Folder> = [ 'backup', 'owner', 'protected' ];
     expect(service.validateCustomOrder(mockSearchableTree, invalidCustomOrder)).toEqual({
       valid: false,
@@ -31,7 +31,7 @@ describe('ValidatorService', () => {
   });
 
   it('should correctly process invalid customColumnOrders with incorrect properties', () => {
-    const service: ValidatorService = TestBed.get(ValidatorService);
+    const service: ValidatorService = TestBed.inject(ValidatorService);
     const invalidCustomOrder: any = [ 'backup', 'owner', 'protected', 'name', 'notAValidProperty' ];
     expect(service.validateCustomOrder(mockSearchableTree, invalidCustomOrder)).toEqual({
       valid: false,
@@ -40,7 +40,7 @@ describe('ValidatorService', () => {
   });
 
   it('should correctly process invalid customColumnOrders with incorrect and missing properties', () => {
-    const service: ValidatorService = TestBed.get(ValidatorService);
+    const service: ValidatorService = TestBed.inject(ValidatorService);
     const invalidCustomOrder: any = [ 'backup', 'protected', 'name', 'notAValidProperty' ];
     expect(service.validateCustomOrder(mockSearchableTree, invalidCustomOrder)).toEqual({
       valid: false,

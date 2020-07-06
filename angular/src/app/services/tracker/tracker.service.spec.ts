@@ -6,7 +6,7 @@ describe('TrackerService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: TrackerService = TestBed.get(TrackerService);
+    const service: TrackerService = TestBed.inject(TrackerService);
     expect(service).toBeTruthy();
   });
 });
