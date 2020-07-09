@@ -6,14 +6,9 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Application;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 class StatisticControllerTest extends JerseyTest {
@@ -39,31 +34,7 @@ class StatisticControllerTest extends JerseyTest {
         rc.register(MultiPartFeature.class);
         return rc;
     }
+    
+    //TODO write Tests
 
-    @Test
-    void getAllChartNames() {
-        String responseMsg = target("/statistic/").request().get(String.class);
-        assertEquals("test", responseMsg);
-        //[{"groupName":"null","charts":["Test","Test2","Test3","Test4","Test5","Blank"]}]
-    }
-
-    @Test
-    void getChartDataForName() {
-    }
-
-    @Test
-    void uploadNewData() {
-    }
-
-    @Test
-    void createChart() {
-    }
-
-    @Test
-    void deleteChart() {
-    }
-
-    @Test
-    void getAllGroups() {
-    }
 }

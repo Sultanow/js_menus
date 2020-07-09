@@ -1,10 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { Batches } from 'src/app/model/batches';
 import { StatisticGroup } from './model/statisticGroup';
 import { StatisticService } from './services/statistic.service';
 import { StatisticChart } from './model/statisticChart';
-
-
 
 @Component({
   selector: 'app-statistic',
@@ -22,7 +19,8 @@ export class StatisticComponent implements OnInit, OnChanges {
   showGraphChart = false;
   chartName = "";
   activeChart: StatisticChart = null;
-  // Inits
+
+  constructor (private statisticService: StatisticService) { }
 
   ngOnInit(): void {
     if (this.showStatistic) {
@@ -30,9 +28,6 @@ export class StatisticComponent implements OnInit, OnChanges {
     }
   }
 
-  constructor (private statisticService: StatisticService) { }
-
-  // Methods
   ngOnChanges(changes: SimpleChanges): void {
     if (this.showStatistic) {
       this.reloadData();
@@ -43,6 +38,7 @@ export class StatisticComponent implements OnInit, OnChanges {
   reloadData() {
     this.statisticService.getChartNames().subscribe(result => {
       this.allCharts = result;
+      console.log(result);
       if (this.showGraphChart === false && this.showCreateChartContainer === false) {
         if (this.allCharts != null && this.allCharts.length > 0) {
           this.showChartView(null, Object.keys(this.allCharts[ 0 ].charts)[ 0 ]);
@@ -74,7 +70,6 @@ export class StatisticComponent implements OnInit, OnChanges {
       if (x.charts[ chart ])
         return chartItem = x.charts[ chart ];
     });
-    console.log(chartItem);
     return chartItem;
   }
 
@@ -87,8 +82,4 @@ export class StatisticComponent implements OnInit, OnChanges {
     this.showGraphChart = false;
     this.reloadData();
   }
-  // Old
-
-  @Input()
-  batchtimes: Batches[];
 }

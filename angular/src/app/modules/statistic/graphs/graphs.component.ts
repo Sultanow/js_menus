@@ -1,10 +1,11 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { SpinnerService } from 'src/app/services/spinner/spinner.service';
 import { StatisticService } from '../services/statistic.service';
 import { StatisticChart } from '../model/statisticChart';
 import { StatisticAccuracy } from '../model/statisticAccuracy';
 import { StatisticData, DEFAULT_LAYOUT } from '../model/statisticData';
+import { DialogDeleteChart } from './dialog-delete-chart.component';
 
 declare var Plotly: any;
 
@@ -13,7 +14,7 @@ declare var Plotly: any;
   templateUrl: './graphs.component.html',
   styleUrls: [ './graphs.component.css' ]
 })
-export class GraphsComponent implements OnInit, OnChanges {
+export class GraphsComponent implements OnInit, OnChanges, OnDestroy {
   @Input() showGraphChart: boolean;
   @Input() chart: StatisticChart;
   @Input() chartName: string;
@@ -25,7 +26,7 @@ export class GraphsComponent implements OnInit, OnChanges {
 
   graphData: string;
 
-  actuallStatisticData: StatisticData = null;
+  actualStatisticData: StatisticData = null;
   nextStatisticData: StatisticData = null;
 
   updateTime: string = "";
@@ -49,6 +50,10 @@ export class GraphsComponent implements OnInit, OnChanges {
     this.loadInitialGraphData();
   }
 
+  ngOnDestroy(): void {
+    this.destroyPlot();
+  }
+
   destroyPlot() {
     if (this.plotlyGraph && this.plotlyGraph.nativeElement)
       Plotly.purge(this.plotlyGraph.nativeElement);
@@ -59,55 +64,54 @@ export class GraphsComponent implements OnInit, OnChanges {
       this.spinnerService.show();
       this.statisticService.getChartData(this.chartName).subscribe(result => {
         if (result !== null) {
-          this.actuallStatisticData = this.nextStatisticData = result;
+          this.actualStatisticData = result;
+          this.nextStatisticData = result;
           this.parseChartData();
         }
         this.spinnerService.hide();
       }, e => {
         this.spinnerService.hide();
-        console.log("Could not get Data from backend!");
+        console.log("Could not get Data from backend!", e);
       });
 
       if (this.isTimeseries()) {
         this.statisticService.getTimeseriesDates(this.chartName).subscribe(result => {
-          console.log(result);
           this.timeSeriesDates = result;
         }, e => {
-          console.log("Could not get Timestamps for timeseries!");
+          console.log("Could not get Timestamps for timeseries!", e);
         });
       }
     }
   }
 
   parseChartData() {
-    if (this.actuallStatisticData.layout === null || this.nextStatisticData.layout === undefined) {
-      this.actuallStatisticData.layout = DEFAULT_LAYOUT;
+    if (this.actualStatisticData.layout === null || this.nextStatisticData.layout === undefined) {
+      this.actualStatisticData.layout = DEFAULT_LAYOUT;
     }
-    this.actuallStatisticData.layout[ 'title' ] = this.actuallStatisticData.title;
-    this.updateTime = this.actuallStatisticData.updateTime;
+    this.actualStatisticData.layout[ 'title' ] = this.actualStatisticData.title;
+    this.updateTime = this.actualStatisticData.updateTime;
     this.basicChart();
   }
 
   basicChart(): void {
     this.destroyPlot();
     const element = this.plotlyGraph.nativeElement;
-    const graphData = this.actuallStatisticData.traces;
-    const layout = this.actuallStatisticData.layout;
+    const graphData = this.actualStatisticData.traces;
+    const layout = this.actualStatisticData.layout;
     Plotly.newPlot(element, graphData, layout);
   }
 
   ngOnInit() {
-    console.log("Created chart");
     this.loadInitialGraphData();
   }
 
   onFileAdded(file) {
     this.spinnerService.show();
     this.statisticService.updateData(this.chartName, file).subscribe(result => {
-      console.log(result);
       this.loadInitialGraphData();
       this.spinnerService.hide();
     }, e => {
+      console.log("Could not add file", e);
       this.spinnerService.hide();
     });
   }
@@ -168,41 +172,38 @@ export class GraphsComponent implements OnInit, OnChanges {
 
   prevTimeseriesChart(): void {
     // Show prev Chart if multiple is false
-    this.actuallStatisticData.nextDate = this.actuallStatisticData.startDate;
-    this.actuallStatisticData.startDate = this.actuallStatisticData.prevDate;
-    this.actuallStatisticData.nextTrace = this.actuallStatisticData.traces;
-    this.actuallStatisticData.traces = this.actuallStatisticData.prevTrace;
-
+    this.actualStatisticData.nextDate = this.actualStatisticData.startDate;
+    this.actualStatisticData.startDate = this.actualStatisticData.prevDate;
+    this.actualStatisticData.nextTrace = this.actualStatisticData.traces;
+    this.actualStatisticData.traces = this.actualStatisticData.prevTrace;
     // First show the new data
     this.basicChart();
     // Get more data from Server
-    this.loadDataForDate(this.actuallStatisticData.startDate,"", false);
+    this.loadDataForDate(this.actualStatisticData.startDate,"", false);
   }
 
   nextTimeseriesChart(): void {
     // Show next Chart if multiple is false
-    this.actuallStatisticData.prevDate = this.actuallStatisticData.startDate;
-    this.actuallStatisticData.startDate = this.actuallStatisticData.nextDate;
-    this.actuallStatisticData.prevTrace = this.actuallStatisticData.traces;
-    this.actuallStatisticData.traces = this.actuallStatisticData.nextTrace;
+    this.actualStatisticData.prevDate = this.actualStatisticData.startDate;
+    this.actualStatisticData.startDate = this.actualStatisticData.nextDate;
+    this.actualStatisticData.prevTrace = this.actualStatisticData.traces;
+    this.actualStatisticData.traces = this.actualStatisticData.nextTrace;
 
     // First show the new data
     this.basicChart();
     // Get more data from the server
-    this.loadDataForDate(this.actuallStatisticData.startDate,"", false);
+    this.loadDataForDate(this.actualStatisticData.startDate,"", false);
   }
 
   datepickerChangeEvent(date: Map<string, string>) {
-    console.log("Graphs Component ", date);
     if (this.chart.multiple) {
       let startDate = date.get('start');
       let endDate = date.get('end');
       this.loadDataForDate(startDate, endDate, true);
-      console.log(startDate, endDate)
     } else {
-      if (date.get('start') === this.actuallStatisticData.nextDate)
+      if (date.get('start') === this.actualStatisticData.nextDate)
         this.nextTimeseriesChart();
-      else if (date.get('start') === this.actuallStatisticData.prevDate)
+      else if (date.get('start') === this.actualStatisticData.prevDate)
         this.prevTimeseriesChart();
       else
         this.loadDataForDate(date.get('start'),"", true);
@@ -211,7 +212,6 @@ export class GraphsComponent implements OnInit, OnChanges {
 
   private loadDataForDate(startdate: string, enddate: string, rebuildPlotAfterLoad: boolean) {
     this.statisticService.getChartDataForDate(this.chartName, startdate, enddate).subscribe(result => {
-      console.log(result);
       this.nextStatisticData = result;
       this.updateLocalStatisticData();
       if (rebuildPlotAfterLoad === true) {
@@ -219,53 +219,27 @@ export class GraphsComponent implements OnInit, OnChanges {
       }
     },
       e => {
-        console.log("Could not get Data for Date ", startdate);
+        console.log("Could not get Data for Date ", startdate, e);
       });
   }
 
   updateLocalStatisticData() {
     if (this.nextStatisticData != null) {
-      console.log("Before");
-      console.log("Actuall:", this.actuallStatisticData);
-      console.log("Next", this.nextStatisticData);
-      if (this.actuallStatisticData.startDate !== this.nextStatisticData.startDate) {
-        this.actuallStatisticData.startDate = this.nextStatisticData.startDate;
-        this.actuallStatisticData.traces = this.nextStatisticData.traces;
+      if (this.actualStatisticData.startDate !== this.nextStatisticData.startDate) {
+        this.actualStatisticData.startDate = this.nextStatisticData.startDate;
+        this.actualStatisticData.traces = this.nextStatisticData.traces;
       }
-      if (this.actuallStatisticData.nextDate !== this.nextStatisticData.nextDate) {
-        this.actuallStatisticData.nextDate = this.nextStatisticData.nextDate;
-        this.actuallStatisticData.nextTrace = this.nextStatisticData.nextTrace;
+      if (this.actualStatisticData.nextDate !== this.nextStatisticData.nextDate) {
+        this.actualStatisticData.nextDate = this.nextStatisticData.nextDate;
+        this.actualStatisticData.nextTrace = this.nextStatisticData.nextTrace;
       }
-      if (this.actuallStatisticData.prevDate !== this.nextStatisticData.prevDate) {
-        this.actuallStatisticData.prevDate = this.nextStatisticData.prevDate;
-        this.actuallStatisticData.prevTrace = this.nextStatisticData.prevTrace;
+      if (this.actualStatisticData.prevDate !== this.nextStatisticData.prevDate) {
+        this.actualStatisticData.prevDate = this.nextStatisticData.prevDate;
+        this.actualStatisticData.prevTrace = this.nextStatisticData.prevTrace;
       }
       if(this.isMultiple) {
-        this.actuallStatisticData.endDate = this.nextStatisticData.endDate;
+        this.actualStatisticData.endDate = this.nextStatisticData.endDate;
       }
-      console.log("After");
-      console.log("Actuall:", this.actuallStatisticData);
-      console.log("Next", this.nextStatisticData);
-
     }
-  }
-}
-
-@Component({
-  selector: 'dialog-delete-chart',
-  templateUrl: 'dialog-delete-chart.html',
-  styleUrls: [ './graphs.component.css' ]
-})
-export class DialogDeleteChart {
-
-  constructor (
-    public dialogRef: MatDialogRef<DialogDeleteChart>) { }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
-  onYesClick(): void {
-    this.dialogRef.close(true);
   }
 }

@@ -35,7 +35,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { SettingsPasswordComponent } from './components/settings-password/settings-password.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { MaterialModule } from './material.module';
-import { StatisticModule } from './components/statistic/statistic.module';
+import { StatisticModule } from './modules/statistic/statistic.module';
 
 @NgModule({
   declarations: [

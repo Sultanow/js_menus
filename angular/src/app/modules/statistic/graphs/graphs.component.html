@@ -7,7 +7,7 @@
                 [showUploadAreaFile]="showUploadAreaFile">
             </app-drag-and-drop>
             <a (click)="openDeleteDialog()">
-                <mat-icon [ngStyle]="{'color':'white'}" matTooltip="Chart löschen" matTooltipPosition="right">delete
+                <mat-icon class="iconNav" matTooltip="Chart löschen" matTooltipPosition="right">delete
                 </mat-icon>
             </a>
         </div>
@@ -17,9 +17,9 @@
         <div class="description">
 
         </div>
-        <div class="Datefield" *ngIf="isTimeseries() && actuallStatisticData !== null">
-            <a (click)="prevTimeseriesChart()" *ngIf="!isMultiple()" [ngClass]="{'btnDisabled': actuallStatisticData.prevDate === '' }">
-                <mat-icon [ngStyle]="{'color':'white'}" matTooltip="Vorherigen Datensatz anzeigen">
+        <div class="Datefield" *ngIf="isTimeseries() && actualStatisticData !== null">
+            <a (click)="prevTimeseriesChart()" *ngIf="!isMultiple()" [ngClass]="{'btnDisabled': !actualStatisticData.prevDate }">
+                <mat-icon class="iconNav" matTooltip="Vorherigen Datensatz anzeigen">
                     keyboard_arrow_left
                 </mat-icon>
             </a>
@@ -27,13 +27,13 @@
                 [title]="datePickerTitle"
                 [accuracy]="getAccuracyForString(chart.accuracy)"
                 [availableDates]="timeSeriesDates"
-                [startDate]="actuallStatisticData.startDate"
-                [endDate]="actuallStatisticData.endDate"
+                [startDate]="actualStatisticData.startDate"
+                [endDate]="actualStatisticData.endDate"
                 [isMultiple]="chart.multiple"
                 (datepickerChangeEvent)="datepickerChangeEvent($event)"
             ></app-date-picker>
-            <a (click)="nextTimeseriesChart()" *ngIf="!isMultiple()" [ngClass]="{'btnDisabled': actuallStatisticData.nextDate === '' }">
-                <mat-icon [ngStyle]="{'color':'white'}" matTooltip="Nächsten Datensatz anzeigen">
+            <a (click)="nextTimeseriesChart()" *ngIf="!isMultiple()" [ngClass]="{'btnDisabled': !actualStatisticData.nextDate }">
+                <mat-icon class="iconNav" matTooltip="Nächsten Datensatz anzeigen">
                     keyboard_arrow_right
                 </mat-icon>
             </a>

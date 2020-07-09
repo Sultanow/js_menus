@@ -21,7 +21,6 @@ export class DatePickerComponent implements OnInit, OnChanges {
   @Output() datepickerChangeEvent: EventEmitter<Map<string, string>> = new EventEmitter<Map<string, string>>();
 
   availableMomentDates: Set<moment.Moment> = new Set<moment.Moment>();
-  format: string;
   momentStartDate: moment.Moment = null;
 
   dateFormControl = new FormControl({ value: moment(), disabled: true });
@@ -44,45 +43,23 @@ export class DatePickerComponent implements OnInit, OnChanges {
   updateAvailableDates() {
     if (this.availableDates !== null && this.availableDates.length !== 0) {
       this.availableMomentDates.clear();
-      this.setFormat();
       this.availableDates.forEach(strDate => {
-        this.availableMomentDates.add(moment(strDate, this.format));
+        this.availableMomentDates.add(moment(strDate, this.accuracy));
       });
-      console.log(this.availableMomentDates);
     }
     if (this.isMultiple) {
-      if(this.startDate !== null && this.startDate != "" && this.endDate !== null && this.endDate !== "") {
-        this.pickerRangeGroup.controls['start'].setValue(moment(this.startDate, this.format));
-        this.pickerRangeGroup.controls['end'].setValue(moment(this.endDate, this.format));
+      if(this.startDate && this.endDate) {
+        this.pickerRangeGroup.controls['start'].setValue(moment(this.startDate, this.accuracy));
+        this.pickerRangeGroup.controls['end'].setValue(moment(this.endDate, this.accuracy));
       }
     } else {
       if (this.startDate !== null && this.startDate !== "") {
-        this.dateFormControl.setValue(moment(this.startDate, this.format));
+        this.dateFormControl.setValue(moment(this.startDate, this.accuracy));
       } else {
-        this.dateFormControl.setValue(moment().format(this.format));
+        this.dateFormControl.setValue(moment().format(this.accuracy));
       }
     }
 
-  }
-
-  /**
-   * Set the format based on the accuracy input.
-   */
-  setFormat() {
-    switch (this.accuracy) {
-      case StatisticAccuracy.MONTH:
-        this.format = "YYYY-MM";
-        break;
-      case StatisticAccuracy.YEAR:
-        this.format = "YYYY";
-        break;
-      case StatisticAccuracy.WEEK:
-        this.format = "YYYY-ww";
-        break;
-      case StatisticAccuracy.DAY:
-      default:
-        this.format = "YYYY-MM-DD";
-    }
   }
 
   dateClass = (d: moment.Moment): MatCalendarCellCssClasses => {
@@ -101,14 +78,13 @@ export class DatePickerComponent implements OnInit, OnChanges {
     if (event.value !== null) { // Value is null when end not selected.
       let result: Map<string, string> = new Map<string, string>();
       if (!this.isMultiple) {
-        let date = event.value.format(this.format);
+        let date = event.value.format(this.accuracy);
         result.set("start", date);
       } else {
         let start: moment.Moment = this.pickerRangeGroup.controls[ 'start' ].value;
         let end: moment.Moment = this.pickerRangeGroup.controls[ 'end' ].value;
-        console.log(start.format(this.format), ", ", end.format(this.format));
-        result.set("start", start.format(this.format));
-        result.set("end", end.format(this.format));
+        result.set("start", start.format(this.accuracy));
+        result.set("end", end.format(this.accuracy));
       }
       this.datepickerChangeEvent.emit(result);
     }
