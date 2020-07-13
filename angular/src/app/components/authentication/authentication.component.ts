@@ -11,7 +11,6 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 })
 export class AuthenticationComponent implements OnInit {
  
-  showSettings : boolean;
   loginForm: FormGroup;
   hide = true;
 
@@ -21,7 +20,6 @@ export class AuthenticationComponent implements OnInit {
      private authenticationService: AuthenticationService)
     { 
       this.loginForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
       })
     }
@@ -36,13 +34,13 @@ export class AuthenticationComponent implements OnInit {
       if(token)
       {
         this.authenticationService.setToken(token);
-        this.showSettings=true;
-        this.dialogRef.close(this.showSettings);
+        this.dialogRef.close(true);
       }else{
         this.dialogRef.close(false);
       }
     });
   }
+  
   ngOnInit() {
   }
 }

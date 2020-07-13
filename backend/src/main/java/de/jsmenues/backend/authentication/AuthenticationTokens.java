@@ -5,7 +5,6 @@ import java.util.Map;
 
 public class AuthenticationTokens {
 
-    // static variable single_instance of type AuthenticationTokens
     private static AuthenticationTokens single_instance = null;
     public static long VALID_PERIOD = 1000 * 60 * 60 * 12;
     private Map<String, Long> tokens;
@@ -14,15 +13,19 @@ public class AuthenticationTokens {
         return tokens;
     }
 
-    public void setTokens(Map<String, Long> tokens) {
-        this.tokens = tokens;
-    }
-
+    /**
+     * create tokens map to save all tokens
+     */
     private AuthenticationTokens() {
         tokens = new LinkedHashMap<String, Long>();
     }
 
-    // static method to create instance of AuthenticationTokens class
+    /**
+     * static method to create instance of AuthenticationTokens class
+     * 
+     * @param single_instance: create singleton instance of AuthenticationTokens class
+     *                        
+     */
     public static AuthenticationTokens getInstance() {
         if (single_instance == null)
             single_instance = new AuthenticationTokens();
@@ -30,13 +33,19 @@ public class AuthenticationTokens {
         return single_instance;
     }
 
-    public void addToken(String token) {
+    /**
+     * Add new token to tokens map
+     *
+     */
+    public Map<String, Long> addToken(String token) {
         long timestamp = System.currentTimeMillis();
         tokens.put(token, timestamp);
-
+        return tokens;
     }
 
-    // if token is valid
+    /**
+     * verify if a token has been valid yet
+     */
     public boolean isValid(String token) {
 
         if (tokens.isEmpty()) {
@@ -58,12 +67,18 @@ public class AuthenticationTokens {
 
     }
 
-    public void deleteOldTokens() {
+    /**
+     * Delete old tokens after 12 hours
+     * 
+     */
+    public String deleteOldTokens() {
         long unixTime = System.currentTimeMillis() / 1000L;
         for (Map.Entry<String, Long> token : tokens.entrySet()) {
             if (token.getValue() < unixTime + VALID_PERIOD) {
                 tokens.remove(token.getKey());
+                
             }
         }
+        return "is deleted";
     }
 }

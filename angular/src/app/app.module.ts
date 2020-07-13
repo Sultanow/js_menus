@@ -58,6 +58,7 @@ import { DragAndDropComponent } from './components/drag-and-drop/drag-and-drop.c
 import { DragAndDropDirective } from './components/drag-and-drop/drag-and-drop.directive';
 import { BasicAuthInterceptorService } from './services/authentication/basic-auth-interceptor.service';
 import { AuthenticationComponent } from './components/authentication/authentication.component';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import { AuthenticationComponent } from './components/authentication/authenticat
     SpinnerComponent,
     DragAndDropComponent,
     DragAndDropDirective,
-    AuthenticationComponent
+    AuthenticationComponent,
+    ChangePasswordComponent
   ],
   imports: [
     BrowserModule,

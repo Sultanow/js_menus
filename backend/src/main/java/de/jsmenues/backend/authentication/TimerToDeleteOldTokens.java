@@ -1,6 +1,11 @@
 package de.jsmenues.backend.authentication;
 
 import java.util.Date;
+
+/**
+ *this timer is used to delete old token 
+ * 
+ */
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -18,7 +23,7 @@ public class TimerToDeleteOldTokens {
         Date executionDate = new Date();
         timer.scheduleAtFixedRate(task, executionDate, delay);
     }
-    //timer to delet old tokens from map
+   
     private class LoopTask extends TimerTask {
         public void run() {
             AuthenticationTokens.getInstance().deleteOldTokens();

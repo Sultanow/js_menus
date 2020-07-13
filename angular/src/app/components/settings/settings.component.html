@@ -14,7 +14,8 @@
     </table>
     <button (click)="onSaveSettings($event)" style="cursor: pointer">Einstellungen Speichern</button>
     <div class="logoutPosition">
-        <button  (click)="logout()">logout</button>
+        <button  (click)="logout()">Logout</button>
+        <button  (click)="changePasswordDialog()">Passwort ändern</button>
     </div>
     <div class="versionPosition">Version :{{version}} </div>
 </div>

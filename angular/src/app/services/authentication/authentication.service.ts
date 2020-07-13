@@ -32,8 +32,17 @@ export class AuthenticationService {
   return this.http.post(`${this.backendUrl}/login`, password, { responseType: "text" });
 }
 
- async getIsValid():Promise<string>{
+  getIsValid():Observable<any>{
   let token =this.getToken();
-  return await this.http.post(`${this.backendUrl}/isvalid`,token, { responseType: "text" }).toPromise();
+  return  this.http.post(`${this.backendUrl}/isvalid`,token, { responseType: "text" });
+ }
+ changePassword(oldPassword: string, newPassword: string):Observable<any>{
+ let changedPassword= {
+   "oldPassword": oldPassword,
+   "newPassword": newPassword
+ }
+ let headers = {"content-type": "application/json"}
+
+  return  this.http.post(`${this.backendUrl}/changePassword`,changedPassword, {headers:headers, responseType: "text" });
  }
 }

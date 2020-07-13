@@ -262,17 +262,16 @@ export class AppComponent implements OnInit {
 
 	checkPasswordDialog() {
 		let isValid = false;
-		this.authenticationService.getIsValid().then((result) => {
-			isValid = result.toLowerCase() == "true";
+		this.authenticationService.getIsValid().subscribe(data => {
+			isValid = data.toLowerCase() == "true";
 			if (this.authenticationService.getToken() && isValid) {
 				this.openSettings();
 			}
 			else {
 				let dialogRef = this.dialog.open(AuthenticationComponent, {
-					width: "300 px",
-					disableClose: true,
+					disableClose: true
 				});
-				dialogRef.afterClosed().subscribe(result => {					
+				dialogRef.afterClosed().subscribe(result => {
 					if (result == null) {
 						return;
 					}

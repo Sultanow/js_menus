@@ -6,24 +6,28 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.UUID;
 
+import de.jsmenues.redis.repository.ConfigurationRepository;
 public class TokenGenerator {
     private final String admin = "admin";
     private final Charset charset = StandardCharsets.UTF_8;
-    private final static String password = "1234";
     String token = "";
-    //generate an individual token
+    
+    /**
+     * Generate an individual token 
+     * 
+     * @param pass: passing from fronted
+     */
     public String generateMapToken(String pass) {
-        if (pass.equals(getPassword())) {
+        
+        String currentPassword = ConfigurationRepository.getRepo().get("password").getValue();
+        
+        if (pass.equals(currentPassword)) {  
             UUID uuid = UUID.randomUUID();
             token = admin + ":" + pass + ":" + uuid;
             byte[] byteArrray = token.getBytes(charset);
             token = new String(Base64.getEncoder().encode(byteArrray));
-            AuthenticationTokens.getInstance().addToken(token);
+            AuthenticationTokens.getInstance().addToken(token);        
         }
         return token;
-    }
-
-    public static String getPassword() {
-        return password;
     }
 }

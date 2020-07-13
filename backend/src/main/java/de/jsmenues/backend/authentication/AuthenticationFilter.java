@@ -22,11 +22,13 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 
+import de.jsmenues.redis.repository.ConfigurationRepository;
+
 import javax.ws.rs.Priorities;
 
 /**
  * This filter verify the access permissions for a user based on username and
- * passowrd provided in request
+ * Password provided in request
  */
 @Provider
 @Priority(Priorities.AUTHENTICATION)
@@ -38,16 +40,19 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private static final String AUTHORIZATION_PROPERTY = "Authorization";
     private static final String AUTHENTICATION_SCHEME = "Basic";
     private final String admin = "admin";
+    private final String userRole = "ADMIN";
 
-    // filter for the annotation over the Methods
+    /**
+     * Filter for the annotation over the Methods
+     */
     @Override
     public void filter(ContainerRequestContext requestContext) {
 
         Method method = resourceInfo.getResourceMethod();
 
-        // all access
+        // All users have access
         if (!method.isAnnotationPresent(PermitAll.class)) {
-            // all deny
+            // all users deny
             if (method.isAnnotationPresent(DenyAll.class)) {
                 requestContext.abortWith(
                         Response.status(Response.Status.FORBIDDEN).entity("Access blocked for all users !!").build());
@@ -89,11 +94,14 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         requestContext.setSecurityContext(new Authorizer(user));
     }
 
-    // user allowed ?
+    /**
+     * Verify users access
+     */
     public boolean isUserAllowed(final String username, final String password, final Set<String> rolesSet) {
         boolean isAllowed = false;
-        if (username.equals(admin) && password.equals(TokenGenerator.getPassword())) {
-            String userRole = "ADMIN";
+        String pass = ConfigurationRepository.getRepo().get("password").getValue();
+        if (username.equals(admin) && password.equals(pass)) {
+
             if (rolesSet.contains(userRole)) {
                 isAllowed = true;
             }
@@ -101,7 +109,9 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         return isAllowed;
     }
 
-    // set user as Authorizser
+    /**
+     * set user as Authorizser
+     */
     public class Authorizer implements SecurityContext {
 
         private User user;
