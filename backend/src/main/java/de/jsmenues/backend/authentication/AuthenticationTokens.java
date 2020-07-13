@@ -6,7 +6,7 @@ import java.util.Map;
 public class AuthenticationTokens {
 
     private static AuthenticationTokens single_instance = null;
-    public static long VALID_PERIOD = 1000 * 60 * 60 * 12;
+    public static long VALID_PERIOD = 60 * 60 * 12 ;
     private Map<String, Long> tokens;
 
     public Map<String, Long> getTokens() {
@@ -38,7 +38,7 @@ public class AuthenticationTokens {
      *
      */
     public Map<String, Long> addToken(String token) {
-        long timestamp = System.currentTimeMillis();
+        long timestamp = System.currentTimeMillis()/ 1000L;
         tokens.put(token, timestamp);
         return tokens;
     }
@@ -53,7 +53,7 @@ public class AuthenticationTokens {
         }
         if (tokens.containsKey(token)) {
             long timestamp = tokens.get(token);
-            long unixTime = System.currentTimeMillis();
+            long unixTime = System.currentTimeMillis()/ 1000L;
             // tokens are 12 hour valid
             if (unixTime < timestamp + VALID_PERIOD) {
                 return true;
@@ -72,13 +72,14 @@ public class AuthenticationTokens {
      * 
      */
     public String deleteOldTokens() {
+        String status="";
         long unixTime = System.currentTimeMillis() / 1000L;
         for (Map.Entry<String, Long> token : tokens.entrySet()) {
-            if (token.getValue() < unixTime + VALID_PERIOD) {
+            if (unixTime > token.getValue() + VALID_PERIOD) {
                 tokens.remove(token.getKey());
-                
+                status+= "is deleted";
             }
         }
-        return "is deleted";
+        return status;
     }
 }

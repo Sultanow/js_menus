@@ -10,7 +10,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class TimerToDeleteOldTokens {
-    long timestamp = System.currentTimeMillis();
+    long timestamp = System.currentTimeMillis()/ 1000L;
     // delay in seconds
     long delay = AuthenticationTokens.VALID_PERIOD;
 
