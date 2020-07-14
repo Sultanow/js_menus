@@ -30,3 +30,17 @@
 .updateTime {
     padding-top: 0.4rem;
 }
+
+.btnDisabled {
+    pointer-events: none;
+}
+
+.btnDisabled > .iconNav {
+    color: grey;
+}
+
+.iconNav {
+    color: white;
+}
+
+

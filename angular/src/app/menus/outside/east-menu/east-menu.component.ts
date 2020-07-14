@@ -8,9 +8,6 @@ import { Component, OnInit, Input, EventEmitter, Output, OnChanges, SimpleChange
 export class EastMenuComponent implements OnInit, OnChanges {
 
   @Input() isOpen: boolean;
-  @Output() notifyStatisticOpen = new EventEmitter<boolean>();
-  @Output() notifyNewsOpen = new EventEmitter<boolean>();
-  @Output() notifyWarningOpen = new EventEmitter<boolean>();
   @Output() notifyEventOpen = new EventEmitter<string>();
 
   @Input() activeItems: string[] = [];
