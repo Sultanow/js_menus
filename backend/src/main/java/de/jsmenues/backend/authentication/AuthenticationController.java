@@ -16,7 +16,7 @@ public class AuthenticationController {
     /**
      * Generate a valid token for each correct login
      * 
-     * @param password: passing from frontend
+     * @param password passing from frontend
      */
     @PermitAll
     @POST
@@ -31,7 +31,7 @@ public class AuthenticationController {
     /**
      * verfiy if token is valid
      * 
-     * @param token : passing from frontend
+     * @param token passing from frontend
      */
     @PermitAll
     @POST
@@ -46,7 +46,7 @@ public class AuthenticationController {
     /**
      * to change password
      * 
-     * @param changePassword : json data content old and new password, passing from frontend
+     * @param changePassword json data content old and new password, passing from frontend
      */
     @RolesAllowed("ADMIN")
     @POST

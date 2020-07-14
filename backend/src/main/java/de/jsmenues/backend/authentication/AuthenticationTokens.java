@@ -23,7 +23,7 @@ public class AuthenticationTokens {
     /**
      * static method to create instance of AuthenticationTokens class
      * 
-     * @param single_instance: create singleton instance of AuthenticationTokens class
+     * @param single_instance create singleton instance of AuthenticationTokens class
      *                        
      */
     public static AuthenticationTokens getInstance() {

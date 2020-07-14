@@ -110,7 +110,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     }
 
     /**
-     * set user as Authorizser
+     * set user as Authorizer
      */
     public class Authorizer implements SecurityContext {
 
