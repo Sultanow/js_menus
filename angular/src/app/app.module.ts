@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+
 import { MatMenuModule } from '@angular/material/menu';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -40,8 +41,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { DependencyChartsComponent, EditDialog } from './components/dependencycharts/dependencycharts.component';
 import { CompareComponent } from './components/compare/compare.component';
 import { ViewboxComponent } from './components/viewbox/viewbox.component';
-import { StatisticComponent } from './components/statistic/statistic.component';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { WarningsComponent } from './components/warnings/warnings.component';
 import { NewsComponent } from './components/news/news.component';
 import { StatusWarningsComponent } from './components/status-warnings/status-warnings.component';
@@ -50,15 +49,15 @@ import { RightManagementComponent } from './components/right-management/right-ma
 import { TrackerComponent } from './components/tracker/tracker.component';
 import { TreetableModule } from './components/treetable/treetable.module';
 import { SettingsComponent } from './components/settings/settings.component';
-import { GraphsComponent, DialogDeleteChart } from './components/statistic/graphs/graphs.component';
-import { MatButtonModule } from '@angular/material/button';
-import { CreateChartComponent } from './components/statistic/create-chart/create-chart.component';
-import { SpinnerComponent } from './components/spinner/spinner.component';
-import { DragAndDropComponent } from './components/drag-and-drop/drag-and-drop.component';
-import { DragAndDropDirective } from './components/drag-and-drop/drag-and-drop.directive';
+
 import { BasicAuthInterceptorService } from './services/authentication/basic-auth-interceptor.service';
 import { AuthenticationComponent } from './components/authentication/authentication.component';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
+
+import { SpinnerComponent } from './components/spinner/spinner.component';
+import { MaterialModule } from './material.module';
+import { StatisticModule } from './modules/statistic/statistic.module';
+
 
 @NgModule({
   declarations: [
@@ -77,7 +76,6 @@ import { ChangePasswordComponent } from './components/change-password/change-pas
     EditDialog,
     CompareComponent,
     ViewboxComponent,
-    StatisticComponent,
     WarningsComponent,
     NewsComponent,
     StatusWarningsComponent,
@@ -85,39 +83,21 @@ import { ChangePasswordComponent } from './components/change-password/change-pas
     RightManagementComponent,
     TrackerComponent,
     SettingsComponent,
-    GraphsComponent,
-    CreateChartComponent,
-    DialogDeleteChart,
-    SpinnerComponent,
-    DragAndDropComponent,
-    DragAndDropDirective,
     AuthenticationComponent,
     ChangePasswordComponent
+    SettingsPasswordComponent,
+    SpinnerComponent,
+
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    MatCardModule,
-    MatIconModule,
-    MatDialogModule,
     BrowserAnimationsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatRadioModule,
-    MatSelectModule,
-    MatTableModule,
-    MatMenuModule,
     ReactiveFormsModule,
-    DragDropModule,
     TreetableModule,
-    MatMenuModule,
-    MatButtonModule,
-    MatAutocompleteModule,
-    MatTooltipModule,
-    MatSnackBarModule,
-    MatProgressSpinnerModule,
-    MatDividerModule
+    MaterialModule,
+    StatisticModule,
   ],
   providers: [
     DetailsComponent,
@@ -132,6 +112,7 @@ import { ChangePasswordComponent } from './components/change-password/change-pas
     },
   ],
   bootstrap: [ AppComponent ],
+
   entryComponents: [ EditDialog, DependencyChartsComponent, AuthenticationComponent, DialogDeleteChart ]
 
 })

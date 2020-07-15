@@ -10,12 +10,12 @@ describe('TreeService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: TreeService = TestBed.get(TreeService);
+    const service: TreeService = TestBed.inject(TreeService);
     expect(service).toBeTruthy();
   });
 
   it('should search for a node in a tree and return it warapped in Option<> if present', () => {
-    const service: TreeService = TestBed.get(TreeService);
+    const service: TreeService = TestBed.inject(TreeService);
     const tree = _.cloneDeep(mockSearchableTree);
     const expectedNode = tree.children[ 0 ];
     const expectedPathToRoot = [ tree ];
@@ -27,14 +27,14 @@ describe('TreeService', () => {
   });
 
   it('should search for a node in a tree and return none if not present', () => {
-    const service: TreeService = TestBed.get(TreeService);
+    const service: TreeService = TestBed.inject(TreeService);
     const tree = _.cloneDeep(mockSearchableTree);
     const id = '00000';
     expect(service.searchById(tree, id)).toEqual(none);
   });
 
   it('should traverse a tree and apply a function to all nodes', () => {
-    const service: TreeService = TestBed.get(TreeService);
+    const service: TreeService = TestBed.inject(TreeService);
     const tree = _.cloneDeep(mockSearchableTree);
     service.traverse(tree, node => node.value.name = node.value.name.toUpperCase());
     const compareNode = (originalNode: SearchableNode<Folder>, newNode: NodeInTree<Folder>) => {
@@ -46,7 +46,7 @@ describe('TreeService', () => {
   });
 
   it('should correctly flatten a tree', () => {
-    const service: TreeService = TestBed.get(TreeService);
+    const service: TreeService = TestBed.inject(TreeService);
     const tree = _.cloneDeep(mockSearchableTree);
     const expectedFlattenedTree = [
       tree,
@@ -62,7 +62,7 @@ describe('TreeService', () => {
   });
 
   it('should return the depth of a node that\'s in the tree', () => {
-    const service: TreeService = TestBed.get(TreeService);
+    const service: TreeService = TestBed.inject(TreeService);
     const tree = _.cloneDeep(mockSearchableTree);
     const firstLevelNode = tree.children[ 0 ];
     const secondLevelNode = tree.children[ 2 ].children[ 0 ];
@@ -74,7 +74,7 @@ describe('TreeService', () => {
   });
 
   it('should return a depth of -1 when the node is not in the tree', () => {
-    const service: TreeService = TestBed.get(TreeService);
+    const service: TreeService = TestBed.inject(TreeService);
     const tree = _.cloneDeep(mockSearchableTree);
     const node: SearchableNode<Folder> = {
       id: '0000',

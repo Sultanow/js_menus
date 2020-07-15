@@ -12,7 +12,7 @@
   <div id="view-box-content">
     <div id="box">
       <app-compare [showCompare]="showCompare" (notifyTitle)="onNotifyTitle($event)"></app-compare>
-      <app-statistic [showStatistic]="showStatistic" [batchtimes]="loadBatches" (notifyTitle)="onNotifyTitle($event)">
+      <app-statistic [showStatistic]="showStatistic" (notifyTitle)="onNotifyTitle($event)">
       </app-statistic>
       <app-batches [showBatches]="showBatches" (notifyTitle)="onNotifyTitle($event)"></app-batches>
       <app-dependencycharts [showDependency]="showDependency" (notifyTitle)="onNotifyTitle($event)">

@@ -8,8 +8,11 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 @Path("/statistic")
 public class StatisticController {
@@ -32,27 +35,44 @@ public class StatisticController {
     }
 
     /**
-     * Request the chartData for a specific chart
+     * Request the chartData for a specific chart, date or get only an update one for a date
      *
      * @param chartName Name for the requested chart
+     * @param startDate Start Date for the timeseries information
+     * @param endDate  End Date for the timeseries information
+     * @param update If "true" then only the trace information will send back to the caller.
      * @return The chart data locally cached.
      */
     @PermitAll
     @GET
     @Path("/chartData")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getChartDataForName(@DefaultValue("") @QueryParam("chart") String chartName) {
+
+    public Response getChartDataForName(
+            @DefaultValue("") @QueryParam("chart") String chartName,
+            @DefaultValue("") @QueryParam("startdate") String startDate,
+            @DefaultValue("") @QueryParam("enddate") String endDate,
+            @DefaultValue("false") @QueryParam("update") String update
+    ) {
         if (chartName.isEmpty()) {
             return Response.ok("No data").build();
         }
-        String chartData = statisticService.getChartDataForName(chartName);
+        Map<String, String> dates = new HashMap<>();
+        if(!startDate.isEmpty()) {
+            dates.put("start", startDate);
+        }
+        if(!endDate.isEmpty()) {
+            dates.put("end", endDate);
+        }
+        String chartData = statisticService.getChartDataForName(chartName, dates, "true".equals(update));
         return Response.ok(chartData).build();
     }
 
     /**
-     * Update chart data. The data file is sent to the python service. TODO Check
-     * why MediaType making problems which end in 404 Errors...
-     * 
+
+     * Update chart data. The data file is sent to the python service.
+     * TODO Check why MediaType making problems which end in 404 Errors...
+     *
      * @param chartName       Name of the chart to update
      * @param fileInputStream File data as stream
      * @param fileMetaData    File meta data containing the filename
@@ -61,9 +81,11 @@ public class StatisticController {
     @RolesAllowed("ADMIN")
     @POST
     @Path("/updateData")
-    // @Consumes(MediaType.MULTIPART_FORM_DATA)
-    // @Produces(MediaType.APPLICATION_JSON)
+
     public Response uploadNewData(@FormDataParam("chart") String chartName,
+
+    public Response uploadNewData(
+            @FormDataParam("chart") String chartName,
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileMetaData) {
         LOGGER.debug("Enter [POST] '/updateData'");
@@ -138,5 +160,22 @@ public class StatisticController {
         String groupNames = statisticService.getAllGroupNames();
         LOGGER.debug("Leave [GET] '/groups'");
         return Response.ok(groupNames).build();
+    }
+
+    /**
+     * All Statistic dates available for a timeseries chart
+     * @param chartName Name for the chart
+     * @return list of all dates data is available
+     */
+    @GET
+    @Path("/timeseriesDates")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTimeseriesDates(
+            @DefaultValue("") @QueryParam("chart") String chartName
+    ) {
+        LOGGER.debug("Enter [GET] '/timeseriesDates'");
+        String timeseriesDates = statisticService.getTimeseriesDates(chartName);
+        LOGGER.debug("Leave [GET] '/timeseriesDates'");
+        return Response.ok(timeseriesDates).build();
     }
 }

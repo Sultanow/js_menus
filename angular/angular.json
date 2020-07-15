@@ -29,7 +29,11 @@
             "scripts": [
               "src/assets/js/plotly-latest.min.js"
             ],
-            "es5BrowserSupport": true
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "uuid",
+              "fp-ts/lib/Option"
+           ]
           },
           "configurations": {
             "production": {
@@ -52,7 +56,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumError": "8mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -91,8 +95,6 @@
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
-              "src/assets/js/TweenMax.min.js"
             ],
             "assets": [
               "src/favicon.ico",
