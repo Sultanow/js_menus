@@ -6,7 +6,7 @@ import java.util.Map;
 public class AuthenticationTokens {
 
     private static AuthenticationTokens single_instance = null;
-    public static long VALID_PERIOD = 60 * 60 * 12 ;
+    public static long VALID_PERIOD = 60 * 60 * 12;
     private Map<String, Long> tokens;
 
     public Map<String, Long> getTokens() {
@@ -23,8 +23,9 @@ public class AuthenticationTokens {
     /**
      * static method to create instance of AuthenticationTokens class
      * 
-     * @param single_instance create singleton instance of AuthenticationTokens class
-     *                        
+     * @return single_instance create singleton instance of AuthenticationTokens
+     *         class
+     * 
      */
     public static AuthenticationTokens getInstance() {
         if (single_instance == null)
@@ -35,16 +36,23 @@ public class AuthenticationTokens {
 
     /**
      * Add new token to tokens map
-     *
+     * 
+     * @param token
+     * 
+     * @return mpa of tokens key:token , value:timestamp
      */
     public Map<String, Long> addToken(String token) {
-        long timestamp = System.currentTimeMillis()/ 1000L;
+        long timestamp = System.currentTimeMillis() / 1000L;
         tokens.put(token, timestamp);
         return tokens;
     }
 
     /**
-     * verify if a token has been valid yet
+     * verify if a token has been valid ye
+     * 
+     * @param token
+     * 
+     * @return token is valid true or false
      */
     public boolean isValid(String token) {
 
@@ -53,7 +61,7 @@ public class AuthenticationTokens {
         }
         if (tokens.containsKey(token)) {
             long timestamp = tokens.get(token);
-            long unixTime = System.currentTimeMillis()/ 1000L;
+            long unixTime = System.currentTimeMillis() / 1000L;
             // tokens are 12 hour valid
             if (unixTime < timestamp + VALID_PERIOD) {
                 return true;
@@ -68,16 +76,17 @@ public class AuthenticationTokens {
     }
 
     /**
-     * Delete old tokens after 12 hours
+     * Delete old tokens after VALID_PERIOD
      * 
+     * @return staus if tokens is deleted
      */
     public String deleteOldTokens() {
-        String status="";
+        String status = "";
         long unixTime = System.currentTimeMillis() / 1000L;
         for (Map.Entry<String, Long> token : tokens.entrySet()) {
             if (unixTime > token.getValue() + VALID_PERIOD) {
                 tokens.remove(token.getKey());
-                status+= "is deleted";
+                status += "is deleted";
             }
         }
         return status;

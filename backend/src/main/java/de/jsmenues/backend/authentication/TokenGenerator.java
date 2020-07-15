@@ -16,6 +16,8 @@ public class TokenGenerator {
      * Generate an individual token 
      * 
      * @param pass: passing from fronted
+     * 
+     * @return a valid token
      */
     public String generateMapToken(String pass) {
         

@@ -5,33 +5,33 @@ import de.jsmenues.redis.repository.ConfigurationRepository;
 
 public class Password {
     /**
-     * save Password in redis
+     * save rootPassword in redis
      * 
-     * @param rootPassword : rootPassword is saved als "1234" when  app begins
-     * @return 
+     * @param rootPassword  rootPassword is saved als "1234" when the application
+     *                     is deployed on the server if there is no password
+     * 
+     * @return password is saved in redis true or false
      */
     public static boolean setRootPassword(String rootPassword) {
-        boolean isSaved=false;
+
         ConfigurationRepository.getRepo().save(new Configuration("password", rootPassword));
         String currentPassword = ConfigurationRepository.getRepo().get("password").getValue();
-        if(rootPassword.equals(currentPassword))
-            isSaved= true;
-        return isSaved;
+        return rootPassword.equals(currentPassword);
     }
 
-     /**
+    /**
      * check old and new Password before change
      * 
-     * @param oldPssword and new Password passing from frontend
+     * @param oldPssword   passing from frontend
+     * @param new Password passing from frontend
+     * @return password is changend true or false
      */
     public static boolean changeRootPassword(String oldPassword, String newPassword) {
-        boolean isChanged = false;
         String currentPassword = ConfigurationRepository.getRepo().get("password").getValue();
 
         if (currentPassword.equals(oldPassword)) {
             ConfigurationRepository.getRepo().save(new Configuration("password", newPassword));
-            isChanged = true;
         }
-        return isChanged;
+        return currentPassword.equals(oldPassword);
     }
 }

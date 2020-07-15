@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class ChangePasswordComponent implements OnInit {
 
   changePasswordForm: FormGroup;
+  //hide is only used in HTML. Additionally typing here.
   hide = true;
 
   constructor(

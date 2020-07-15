@@ -39,8 +39,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private ResourceInfo resourceInfo;
     private static final String AUTHORIZATION_PROPERTY = "Authorization";
     private static final String AUTHENTICATION_SCHEME = "Basic";
-    private final String admin = "admin";
-    private final String userRole = "ADMIN";
+    public static final String ADMIN = "admin";
+    public static final String USER_ROLE = "ADMIN";
 
     /**
      * Filter for the annotation over the Methods
@@ -63,7 +63,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             final List<String> authorization = headers.get(AUTHORIZATION_PROPERTY);
             if (authorization == null || authorization.isEmpty()) {
                 requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
-                        .entity("You cannot access this resource1").build());
+                        .entity("You cannot access this resource").build());
                 return;
             }
             final String encodedUserPassword = authorization.get(0).replaceFirst(AUTHENTICATION_SCHEME + " ", "");
@@ -85,24 +85,30 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
                 if (!isUserAllowed(username, password, rolesSet)) {
                     requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
-                            .entity("You cannot access this resource2").build());
+                            .entity("You cannot access this resource").build());
                     return;
                 }
             }
         }
-        User user = new User(admin, "ADMIN");
+        User user = new User(ADMIN, "ADMIN");
         requestContext.setSecurityContext(new Authorizer(user));
     }
 
     /**
      * Verify users access
+     * 
+     * @param username  
+     * @param username 
+     * @param roleSet what permissions does the user have?
+     * 
+     * @return is user allowed true or false
      */
     public boolean isUserAllowed(final String username, final String password, final Set<String> rolesSet) {
         boolean isAllowed = false;
         String pass = ConfigurationRepository.getRepo().get("password").getValue();
-        if (username.equals(admin) && password.equals(pass)) {
+        if (username.equals(ADMIN) && password.equals(pass)) {
 
-            if (rolesSet.contains(userRole)) {
+            if (rolesSet.contains(USER_ROLE)) {
                 isAllowed = true;
             }
         }

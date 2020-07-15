@@ -1,10 +1,9 @@
-/**
- * 
- */
 package de.jsmenues.backend.authentication;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+import static org.mockito.Mockito.mock;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -16,23 +15,20 @@ import org.glassfish.jersey.test.TestProperties;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Answers;
 
-import static org.mockito.Mockito.mock;
 
 import de.jsmenues.redis.data.Configuration;
 import de.jsmenues.redis.repository.ConfigurationRepository;
 
 class AuthenticationTokensTest extends JerseyTest {
 
-    ConfigurationRepository repo = mock(ConfigurationRepository.class, Answers.RETURNS_DEEP_STUBS.get());
+    ConfigurationRepository repo = mock(ConfigurationRepository.class, RETURNS_DEEP_STUBS);
 
     static Map<String, Long> tokenMAp;
     static String token1 = "";
     static String token2 = "";
     static String token3 = "";
     static Map<String, Long> tokens;
-
 
     @Override
     public Application configure() {
@@ -73,9 +69,10 @@ class AuthenticationTokensTest extends JerseyTest {
 
     /**
      * Test to verify if a token exist in map.
+     * 
      */
     @Test
-    void isTokenExistInMap() {
+    public void isTokenExistInMap() {
         Map<String, Long> tokenMAp;
         TokenGenerator tokenGenerator = new TokenGenerator();
         when(repo.get("password")).thenReturn(new Configuration("password", "1234"));
@@ -92,7 +89,7 @@ class AuthenticationTokensTest extends JerseyTest {
      * Test to verify if a token is valid and deleted after 12 hours
      */
     @Test
-    void isTokenValid() {
+    public void isTokenValid() {
         Map<String, Long> tokenMAp1;
 
         TokenGenerator tokenGenerator = new TokenGenerator();
@@ -116,8 +113,7 @@ class AuthenticationTokensTest extends JerseyTest {
         assertFalse(isValid2);
         assertFalse(isValid3);
         assertEquals(result, "is deleted");
-        boolean isValid4 = AuthenticationTokens.getInstance().isValid(token3);
-        assertFalse(isValid4);
+        assertFalse(AuthenticationTokens.getInstance().isValid(token3));
     }
 
     /**
@@ -125,9 +121,9 @@ class AuthenticationTokensTest extends JerseyTest {
      */
     @Test
     public void changePasswordTest() {
-       String currentPassword= "1234";
-       String oldPassword = "1234";
-       String newPassword = "1111";
+        String currentPassword = "1234";
+        String oldPassword = "1234";
+        String newPassword = "1111";
         when(repo.get("password")).thenReturn(new Configuration("password", currentPassword));
         boolean isChanged = Password.changeRootPassword(oldPassword, newPassword);
         assertTrue(isChanged);
@@ -138,9 +134,9 @@ class AuthenticationTokensTest extends JerseyTest {
      */
     @Test
     public void setRootPassword() {
-       String rootPassword= "1234";
-       when(repo.get("password")).thenReturn(new Configuration("password", "1234"));
-       boolean isSaved = Password.setRootPassword(rootPassword);
+        String rootPassword = "1234";
+        when(repo.get("password")).thenReturn(new Configuration("password", "1234"));
+        boolean isSaved = Password.setRootPassword(rootPassword);
         assertTrue(isSaved);
     }
 }
