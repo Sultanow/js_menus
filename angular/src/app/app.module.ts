@@ -1,22 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { MatMenuModule } from '@angular/material/menu';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
-
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatSelectModule } from '@angular/material/select';
-import { MatTableModule } from '@angular/material/table';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatDividerModule } from '@angular/material/divider';
-
+import { MatDialogRef } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 
@@ -49,14 +34,13 @@ import { RightManagementComponent } from './components/right-management/right-ma
 import { TrackerComponent } from './components/tracker/tracker.component';
 import { TreetableModule } from './components/treetable/treetable.module';
 import { SettingsComponent } from './components/settings/settings.component';
-
 import { BasicAuthInterceptorService } from './services/authentication/basic-auth-interceptor.service';
 import { AuthenticationComponent } from './components/authentication/authentication.component';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
-
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { MaterialModule } from './material.module';
 import { StatisticModule } from './modules/statistic/statistic.module';
+import { DialogDeleteChart } from './modules/statistic/graphs/dialog-delete-chart.component';
 
 
 @NgModule({
@@ -84,8 +68,7 @@ import { StatisticModule } from './modules/statistic/statistic.module';
     TrackerComponent,
     SettingsComponent,
     AuthenticationComponent,
-    ChangePasswordComponent
-    SettingsPasswordComponent,
+    ChangePasswordComponent,
     SpinnerComponent,
 
   ],

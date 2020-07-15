@@ -4,7 +4,6 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
@@ -47,7 +46,6 @@ public class StatisticController {
     @GET
     @Path("/chartData")
     @Produces(MediaType.APPLICATION_JSON)
-
     public Response getChartDataForName(
             @DefaultValue("") @QueryParam("chart") String chartName,
             @DefaultValue("") @QueryParam("startdate") String startDate,
@@ -69,7 +67,6 @@ public class StatisticController {
     }
 
     /**
-
      * Update chart data. The data file is sent to the python service.
      * TODO Check why MediaType making problems which end in 404 Errors...
      *
@@ -78,16 +75,14 @@ public class StatisticController {
      * @param fileMetaData    File meta data containing the filename
      * @return Success information
      */
-    @RolesAllowed("ADMIN")
+    @PermitAll
     @POST
     @Path("/updateData")
-
-    public Response uploadNewData(@FormDataParam("chart") String chartName,
-
     public Response uploadNewData(
             @FormDataParam("chart") String chartName,
             @FormDataParam("file") InputStream fileInputStream,
-            @FormDataParam("file") FormDataContentDisposition fileMetaData) {
+            @FormDataParam("file") FormDataContentDisposition fileMetaData
+    ) {
         LOGGER.debug("Enter [POST] '/updateData'");
         boolean result = statisticService.updateData(chartName, fileInputStream, fileMetaData);
         Response response;
@@ -104,7 +99,7 @@ public class StatisticController {
      * Call this to create a new chart.
      * <p>
      * TODO: Charts should be created only if the user is authenticated! For this
-     * the password service have to be implemented.
+     * the password service have to be implemented. 
      *
      * @param chartName       new chartname
      * @param groupName       group for the chart
@@ -113,16 +108,18 @@ public class StatisticController {
      * @param fileMetaData    python file metadata
      * @return response if the create was successful.
      */
-    @RolesAllowed("ADMIN")
+    @PermitAll
     @POST
     @Path("/createChart")
-    public Response createChart(@FormDataParam("chartName") String chartName,
-            @FormDataParam("groupName") String groupName, @FormDataParam("description") String description,
+    public Response createChart(
+            @FormDataParam("chartName") String chartName,
+            @FormDataParam("groupName") String groupName,
+            @FormDataParam("description") String description,
             @FormDataParam("file") InputStream fileInputStream,
-            @FormDataParam("file") FormDataContentDisposition fileMetaData) {
+            @FormDataParam("file") FormDataContentDisposition fileMetaData
+    ) {
         LOGGER.debug("Enter [POST] '/createChart'");
-        Response response = statisticService.createChart(chartName, groupName, description, fileInputStream,
-                fileMetaData);
+        Response response = statisticService.createChart(chartName, groupName, description, fileInputStream, fileMetaData);
         LOGGER.debug("Leave [POST] '/createChart'");
         return response;
     }
@@ -130,16 +127,17 @@ public class StatisticController {
     /**
      * This can be called to delete a chart from the Service.
      * <p>
-     * TODO: Charts should be deleted only if the user is authenticated! For this
-     * the password service have to be implemented.
+     * TODO: Charts should be deleted only if the user is authenticated! For this the password service have to be implemented.
      *
      * @param chartName Chartname to delete from the repository
      * @return boolean as JSON which shows the success of the delete
      */
-    @RolesAllowed("ADMIN")
+    @PermitAll
     @DELETE
     @Path("/deleteChart")
-    public Response deleteChart(@DefaultValue("") @QueryParam("chart") String chartName) {
+    public Response deleteChart(
+            @DefaultValue("") @QueryParam("chart") String chartName
+    ) {
         LOGGER.debug("Enter [DELETE] '/deleteChart'");
         statisticService.deleteChart(chartName);
         LOGGER.debug("Leave [DELETE] '/deleteChart'");
@@ -167,6 +165,7 @@ public class StatisticController {
      * @param chartName Name for the chart
      * @return list of all dates data is available
      */
+    @PermitAll
     @GET
     @Path("/timeseriesDates")
     @Produces(MediaType.APPLICATION_JSON)
