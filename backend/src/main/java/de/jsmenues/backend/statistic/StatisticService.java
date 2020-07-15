@@ -19,18 +19,20 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import java.io.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
  * Statistic Service for communication with the python service and local caching in the redis db
  */
 class StatisticService {
-    private static Logger LOGGER = LoggerFactory.getLogger(StatisticService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StatisticService.class);
     private static final String UPDATE_URL = "http://python-nginx-service:80/updateData";
     private static final String CREATE_URL = "http://python-nginx-service:80/createChart";
 
-
     private static final String LOCAL_UPLOAD_PATH = "/tmp/";
+
+    Gson gson = new Gson();
 
     /**
      * Get all chart names.
@@ -38,7 +40,6 @@ class StatisticService {
      * @return the chart and group information as json
      */
     public String getAllChartNames() {
-        Gson gson = new Gson();
         return gson.toJson(this.getGroupsAndCharts());
     }
 
@@ -88,7 +89,6 @@ class StatisticService {
             if (responseText.isEmpty())
                 return false;
 
-            Gson gson = new Gson();
             StatisticInterface statisticInterface = gson.fromJson(responseText, StatisticInterface.class);
 
             LOGGER.error("StatisticInterface:\n\n " + statisticInterface);
@@ -102,8 +102,9 @@ class StatisticService {
                 }.getType());
                 LOGGER.warn(timeTrace.toString());
                 String savedTimes = this.getDataForChart(chartName, "savedTimes");
-                Set<String> savedTraceTimes = gson.fromJson(savedTimes, new TypeToken<Set<String>>(){}.getType());
-                if(savedTraceTimes == null) {
+                Set<String> savedTraceTimes = gson.fromJson(savedTimes, new TypeToken<Set<String>>() {
+                }.getType());
+                if (savedTraceTimes == null) {
                     savedTraceTimes = new HashSet<>();
                 }
                 for (StatisticTimeTrace trace : timeTrace) {
@@ -128,15 +129,13 @@ class StatisticService {
         String savedTraceTime = ConfigurationRepository.getRepo().get(sb.toString()).getValue();
         if (savedTraceTime.isEmpty())
             return "";
-        Gson gson = new Gson();
         return savedTraceTime;
     }
 
     private void saveDataForChart(String chartName, String part, String savedTraceTimes) {
-        Gson gson = new Gson();
         StringBuilder sb = new StringBuilder();
         sb.append("statistic.chart").append(chartName).append(".").append(part);
-        ConfigurationRepository.getRepo().save(new Configuration(sb.toString(),savedTraceTimes));
+        ConfigurationRepository.getRepo().save(new Configuration(sb.toString(), savedTraceTimes));
     }
 
 
@@ -146,10 +145,9 @@ class StatisticService {
      * @return List of group names.
      */
     public String getAllGroupNames() {
-        Gson gson = new Gson();
         List<StatisticGroup> statisticGroups = getGroupsAndCharts();
         ArrayList<String> groupList = new ArrayList<>();
-        if (statisticGroups != null && statisticGroups.size() != 0) {
+        if (statisticGroups != null && !statisticGroups.isEmpty()) {
             for (StatisticGroup item : statisticGroups) {
                 if (!item.groupName.equals("noGroup") && !groupList.contains(item.groupName)) {
                     groupList.add(item.groupName);
@@ -177,6 +175,8 @@ class StatisticService {
 
             this.saveScriptName(chartName, "");
             this.saveChartData(chartName, "", "");
+
+            // TODO delete timeseries data
         }
     }
 
@@ -233,9 +233,11 @@ class StatisticService {
      * Get the chart Data for a chart name.
      *
      * @param chartName Name of the chart (also with blanks) to get data from
+     * @param date      Trace requested for the date
+     * @param update    If true only an update is sent.
      * @return The data for the frontend to show a chart.
      */
-    public String getChartDataForName(String chartName) {
+    public String getChartDataForName(String chartName, Map<String, String> date, boolean update) {
         List<StatisticGroup> groups = getGroupsAndCharts();
         StatisticChart chart = null;
         String chartData = "";
@@ -247,7 +249,7 @@ class StatisticService {
         }
         if (chart != null) {
             if (chart.isTimeseries()) {
-                chartData = getTimeSeriesChartData(chartName, chart);
+                chartData = getTimeSeriesChartData(chartName, chart, date, update);
             } else {
                 if (chart.getDbName().isEmpty()) {
                     chartData = this.getChartData(chartName, "");
@@ -262,24 +264,173 @@ class StatisticService {
         return chartData;
     }
 
-    private String getTimeSeriesChartData(String chartName, StatisticChart chart) {
-        StatisticPlotly statisticPlotly = new StatisticPlotly();
-        Gson gson = new Gson();
-        statisticPlotly.setTitle(getDataForChart(chartName, "title"));
-        statisticPlotly.setUpdateTime(getDataForChart(chartName, "updateTime"));
-        statisticPlotly.setLayout(gson.fromJson(getDataForChart(chartName, "layout"), Object.class));
-        String json = getDataForChart(chartName, "savedTimes");
-        Set<String> savedTimeCharts = gson.fromJson(json, new TypeToken<Set<String>>(){}.getType());
+    /**
+     * Get all the timeseries dates where data is available.
+     *
+     * @param chartName name of the chart looking for the dates
+     * @return list of the saved dates for a chart.
+     */
+    public String getTimeseriesDates(String chartName) {
+        return getDataForChart(chartName, "savedTimes");
+    }
 
-        if(chart.isMultiple()) {
-            List<Object> traces = new ArrayList<>();
-            savedTimeCharts.forEach(time -> {
-                String data = getChartData(chartName, time);
-                traces.addAll(gson.fromJson(data, new TypeToken<List<Object>>() {}.getType()));
-            });
-            statisticPlotly.setTraces(traces);
+    /**
+     * Get the timeseries charts for a startDate.
+     *
+     * @param chartName the name of the chart looking for data
+     * @param chart     the chart with information about accuracy and timeseries.
+     * @param dates     If no startDate is given then the newest one is selected.
+     * @param update    If true only the trace data will returned.
+     * @return JSON encoded String of the statistic data
+     */
+    private String getTimeSeriesChartData(String chartName, StatisticChart chart, Map<String, String> dates, boolean update) {
+        StatisticPlotly statisticPlotly = new StatisticPlotly();
+        if (!update) {
+            statisticPlotly.setTitle(getDataForChart(chartName, "title"));
+            statisticPlotly.setUpdateTime(getDataForChart(chartName, "updateTime"));
+            statisticPlotly.setLayout(gson.fromJson(getDataForChart(chartName, "layout"), Object.class));
         }
+        String json = getDataForChart(chartName, "savedTimes");
+        Set<String> savedTimeCharts = gson.fromJson(json, new TypeToken<Set<String>>() {
+        }.getType());
+        DateTimeFormatter formatter = getDateTimeFormat(chart.getAccuracy());
+        List<LocalDate> localDates = getListOfLocalDatesFromString(savedTimeCharts, formatter);
+        List<Object> traces = new ArrayList<>();
+        if (chart.isMultiple()) {
+            Map<String, String> options = this.getChartOptions(chartName);
+            if (dates.containsKey("start") && dates.containsKey("end")) {
+                int indexStart = localDates.indexOf(LocalDate.parse(dates.get("start"), formatter));
+                int indexEnd = localDates.indexOf(LocalDate.parse(dates.get("end"), formatter));
+                if (indexStart > indexEnd) {
+                    throw new IllegalArgumentException();
+                }
+                for (int i = indexStart; i <= indexEnd; ++i) {
+                    String data = getChartData(chartName, localDates.get(i).format(formatter));
+                    traces.addAll(gson.fromJson(data, new TypeToken<List<Object>>() {
+                    }.getType()));
+                }
+                statisticPlotly.setStartDate(dates.get("start"));
+                statisticPlotly.setEndDate(dates.get("end"));
+            } else {
+                int displayItems = options.containsKey("displayDefault") ? Integer.parseInt(options.get("displayDefault")) : 5;
+                statisticPlotly.setEndDate(localDates.get(localDates.size()-1).format(formatter));
+                statisticPlotly.setStartDate(localDates.get(localDates.size()-1-displayItems).format(formatter));
+                for (int i = localDates.size()-1; i > localDates.size()-1-displayItems; --i) {
+                    String data = getChartData(chartName, localDates.get(i).format(formatter));
+                    traces.addAll(gson.fromJson(data, new TypeToken<List<Object>>() {
+                    }.getType()));
+                }
+            }
+        } else {
+            String startDate = dates.getOrDefault("start", "");
+            if (!startDate.isEmpty() && savedTimeCharts.contains(startDate)) {
+                // Get ChartData by startDate
+                LocalDate localDate = LocalDate.parse(startDate, formatter);
+                int index = localDates.indexOf(localDate);
+                if (index != -1) {
+                    statisticPlotly.setStartDate(localDates.get(index).format(formatter));
+                    if (index != 0) { // Get prev
+                        statisticPlotly.setPrevDate(localDates.get(index - 1).format(formatter));
+                    } else {
+                        statisticPlotly.setPrevDate("");
+                    }
+                    if (index != localDates.size() - 1) {
+                        statisticPlotly.setNextDate(localDates.get(index + 1).format(formatter));
+                    } else {
+                        statisticPlotly.setNextDate("");
+                    }
+                }
+            } else {
+                // If not in list, use the start startDate.
+                statisticPlotly.setStartDate(getLastDayInSet(localDates, formatter, 0));
+                statisticPlotly.setPrevDate(getLastDayInSet(localDates, formatter, 1));
+                statisticPlotly.setNextDate("");
+            }
+
+            if (!statisticPlotly.getStartDate().isEmpty()) {
+                String data = getChartData(chartName, statisticPlotly.getStartDate());
+                traces.addAll(gson.fromJson(data, new TypeToken<List<Object>>() {
+                }.getType()));
+            }
+            if (!statisticPlotly.getPrevDate().isEmpty()) {
+                String prevData = getChartData(chartName, statisticPlotly.getPrevDate());
+                statisticPlotly.setPrevTrace(gson.fromJson(prevData, new TypeToken<List<Object>>() {
+                }.getType()));
+            }
+            if (!statisticPlotly.getNextDate().isEmpty()) {
+                String prevData = getChartData(chartName, statisticPlotly.getNextDate());
+                statisticPlotly.setNextTrace(gson.fromJson(prevData, new TypeToken<List<Object>>() {
+                }.getType()));
+            }
+
+        }
+        statisticPlotly.setTraces(traces);
         return gson.toJson(statisticPlotly);
+    }
+
+    private Map<String, String> getChartOptions(String chartName) {
+        String opt = this.getDataForChart(chartName, "options");
+        Map<String,String> options =  gson.fromJson(opt, new TypeToken<HashMap<String, String>>() {
+        }.getType());
+        if(options == null)
+            options = new HashMap<>();
+        return options;
+    }
+
+    /**
+     * Get the formatter for parsing dates from strings by the accuracy of the chart
+     *
+     * @param accuracy the accuracy for a chart
+     * @return a formatter to parse dates
+     */
+    private DateTimeFormatter getDateTimeFormat(String accuracy) {
+        DateTimeFormatter formatter;
+        switch (accuracy) {
+            case "month":
+                formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+                break;
+            case "year":
+                formatter = DateTimeFormatter.ofPattern("yyyy");
+                break;
+            case "week":
+                formatter = DateTimeFormatter.ofPattern("yyyy-ww");
+                break;
+            default:
+                formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                break;
+        }
+        return formatter;
+    }
+
+    /**
+     * Get a list of local dates from a string list
+     *
+     * @param savedTimeCharts The String list
+     * @param formatter       Formatter in which format the string list is
+     * @return list of sorted localdates with the newest time at the end.
+     */
+    private List<LocalDate> getListOfLocalDatesFromString(Set<String> savedTimeCharts, DateTimeFormatter formatter) {
+        List<LocalDate> localDates = new ArrayList<>();
+        savedTimeCharts.forEach(time -> localDates.add(LocalDate.parse(time, formatter)));
+        localDates.sort(LocalDate::compareTo);
+        return localDates;
+    }
+
+    /**
+     * Get the last day of the list. If daysBeforeLastDay is 0.
+     *
+     * @param localDates       List of all Dates for TimeCharts
+     * @param formatter Formats the date in the correct format
+     * @param daysBevorLastDay Given number is used to select number days before last day
+     * @return String with the last day (or before)
+     */
+    private String getLastDayInSet(List<LocalDate> localDates, DateTimeFormatter formatter, int daysBevorLastDay) {
+        if (daysBevorLastDay == 0 || daysBevorLastDay > localDates.size()) {
+            LocalDate date = localDates.stream().max(LocalDate::compareTo).get();
+            return date.format(formatter);
+        } else {
+            return localDates.get(localDates.size() - 1 - daysBevorLastDay).format(formatter);
+        }
     }
 
     /**
@@ -314,7 +465,6 @@ class StatisticService {
         String groupNames = ConfigurationRepository.getRepo().get("statistic.allChartNames").getValue();
         if (groupNames.isEmpty())
             return new ArrayList<>();
-        Gson gson = new Gson();
         List<StatisticGroup> groups;
         try {
             groups = gson.fromJson(groupNames, new TypeToken<ArrayList<StatisticGroup>>() {
@@ -339,7 +489,6 @@ class StatisticService {
         ArrayList<StatisticGroup> groups = new ArrayList<>();
         // Do the magic converting:
         if (!groupNames.isEmpty()) {
-            Gson gson = new Gson();
             List<StatisticGroupOld> oldGroups = gson.fromJson(groupNames, new TypeToken<ArrayList<StatisticGroupOld>>() {
             }.getType());
             for (StatisticGroupOld group : oldGroups) {
@@ -365,7 +514,6 @@ class StatisticService {
      * @param groupsAndCharts List of all Groups containing the charts.
      */
     private void saveGroupsAndCharts(List<StatisticGroup> groupsAndCharts) {
-        Gson gson = new Gson();
         ConfigurationRepository.getRepo().save(new Configuration("statistic.allChartNames", gson.toJson(groupsAndCharts)));
     }
 
@@ -418,7 +566,7 @@ class StatisticService {
         if (!chartname.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             sb.append("statistic.chart.").append(chartname).append(".data");
-            if(time != null && !time.isEmpty()) {
+            if (time != null && !time.isEmpty()) {
                 sb.append(time);
             }
             return ConfigurationRepository.getRepo().get(sb.toString()).getValue();
@@ -436,15 +584,13 @@ class StatisticService {
      * @return Response Object of the client call to the python service or Response 401 if a exception is thrown.
      */
     private Response sendFileDataToPythonService(String url, String fileName, String fieldName, String fieldValue) {
-        try {
+        try (FormDataMultiPart formDataMultiPart = new FormDataMultiPart()) {
             final Client client = ClientBuilder.newBuilder().register(MultiPartFeature.class).build();
             final FileDataBodyPart filePart = new FileDataBodyPart("file", new File(fileName));
-            FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
             final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart.field(fieldName, fieldValue).bodyPart(filePart);
 
             final WebTarget target = client.target(url);
             final Response response = target.request().post(Entity.entity(multipart, multipart.getMediaType()));
-            formDataMultiPart.close();
             multipart.close();
 
             return response;
@@ -469,7 +615,7 @@ class StatisticService {
                 StatisticChart chart = group.charts.get(chartName);
                 chart.setMultiple(multiple);
                 chart.setTimeseries(timeseries);
-                if (ValidAccuracyParameter(accuracy)) {
+                if (validAccuracyParameter(accuracy)) {
                     chart.setAccuracy(accuracy);
                 } else {
                     chart.setAccuracy("none");
@@ -485,7 +631,7 @@ class StatisticService {
      * @param accuracy given by the python script.
      * @return true if the accuracy is one of the allowed values
      */
-    private boolean ValidAccuracyParameter(String accuracy) {
+    private boolean validAccuracyParameter(String accuracy) {
         return accuracy.matches("none|year|month|day|week");
     }
 
@@ -523,5 +669,4 @@ class StatisticService {
         }
         return false;
     }
-
 }
