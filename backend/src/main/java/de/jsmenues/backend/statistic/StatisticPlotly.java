@@ -18,7 +18,9 @@ class StatisticPlotly {
     private List<Object> prevTrace;
     private String startDate;
     private String prevDate;
+    private String prevEndDate;
     private String nextDate;
+    private String nextEndDate;
     private String endDate;
 
     public String getEndDate() {
@@ -101,6 +103,22 @@ class StatisticPlotly {
         return prevTrace;
     }
 
+    public String getPrevEndDate() {
+        return prevEndDate;
+    }
+
+    public void setPrevEndDate(String prevEndDate) {
+        this.prevEndDate = prevEndDate;
+    }
+
+    public String getNextEndDate() {
+        return nextEndDate;
+    }
+
+    public void setNextEndDate(String nextEndDate) {
+        this.nextEndDate = nextEndDate;
+    }
+
     @Override
     public String toString() {
         return "StatisticPlotly{" +
@@ -112,7 +130,9 @@ class StatisticPlotly {
                 ", prevTrace=" + prevTrace +
                 ", startDate='" + startDate + '\'' +
                 ", prevDate='" + prevDate + '\'' +
+                ", prevEndDate='" + prevEndDate + '\'' +
                 ", nextDate='" + nextDate + '\'' +
+                ", nextEndDate='" + nextEndDate + '\'' +
                 ", endDate='" + endDate + '\'' +
                 '}';
     }
@@ -121,22 +141,24 @@ class StatisticPlotly {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        StatisticPlotly that = (StatisticPlotly) o;
-        return Objects.equals(updateTime, that.updateTime) &&
-                Objects.equals(title, that.title) &&
-                Objects.equals(traces, that.traces) &&
-                Objects.equals(layout, that.layout) &&
-                Objects.equals(nextTrace, that.nextTrace) &&
-                Objects.equals(prevTrace, that.prevTrace) &&
-                Objects.equals(startDate, that.startDate) &&
-                Objects.equals(prevDate, that.prevDate) &&
-                Objects.equals(nextDate, that.nextDate) &&
-                Objects.equals(endDate, that.endDate);
+        StatisticPlotly plotly = (StatisticPlotly) o;
+        return Objects.equals(updateTime, plotly.updateTime) &&
+                Objects.equals(title, plotly.title) &&
+                Objects.equals(traces, plotly.traces) &&
+                Objects.equals(layout, plotly.layout) &&
+                Objects.equals(nextTrace, plotly.nextTrace) &&
+                Objects.equals(prevTrace, plotly.prevTrace) &&
+                Objects.equals(startDate, plotly.startDate) &&
+                Objects.equals(prevDate, plotly.prevDate) &&
+                Objects.equals(prevEndDate, plotly.prevEndDate) &&
+                Objects.equals(nextDate, plotly.nextDate) &&
+                Objects.equals(nextEndDate, plotly.nextEndDate) &&
+                Objects.equals(endDate, plotly.endDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(updateTime, title, traces, layout, nextTrace, prevTrace, startDate, prevDate, nextDate, endDate);
+        return Objects.hash(updateTime, title, traces, layout, nextTrace, prevTrace, startDate, prevDate, prevEndDate, nextDate, nextEndDate, endDate);
     }
 
 }

@@ -61,8 +61,9 @@ export class StatisticService {
     let params = new HttpParams()
       .set("chart", chartName)
       .set("startdate", startDate)
-      .set("update", "true")
-      .set("enddate", endDate);
+      .set("update", "true");
+    if (endDate)
+      params = params.append("enddate", endDate);
     return this.http.get<StatisticData>(`${this.backendURLStatistic}/chartData`, { params });
   }
 }
