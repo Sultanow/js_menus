@@ -1,33 +1,20 @@
 <svg:g class="south-menu" *ngIf="isOpen" transform="translate(228 654)">
-  <g class="conf-button" transform="translate(120 24)" (click)="openConfig()" [ngClass]="{'disabled': !compareActive }">
-    <title>Konfiguration</title>
-    <circle class="Oval-2-Copy-8" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"
-      [ngClass]="{'disabledCircle': !compareActive }" />
-    <!-- Konfiguration Icon -->
-    <g transform="translate(24 24)">
-      <use xlink:href="assets/symbol-defs.svg#icon-config"></use>
-    </g>
-    <!-- / Konfiguration Icon -->
+  <!-- Konfiguration-->
+  <g menu-icon [iconMainPositionX]="120" [iconMainPositionY]="24" [title]="'Konfiguration'" [icon]="'icon-configuration-new'"
+    [iconText]="'icon-configuration-text'" [iconTextPositionX]="-51" [iconTextPositionY]="20" [iconPositionX]="39"
+    [iconPositionY]="28" (click)="openConfig()" [buttonActive]="compareActive">
   </g>
-  <g class="server-button" (click)="openServer()" [ngClass]="{'disabled': !serverconfigActive }">
-    <title>Konfigurationsübersicht</title>
-    <circle class="Oval-2-Copy-9" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"
-      [ngClass]="{'disabledCircle': !serverconfigActive }" />
-    <!-- Server Icon -->
-    <g transform="translate(24 24)">
-      <use xlink:href="assets/symbol-defs.svg#icon-server"></use>
-    </g>
-    <!-- / Server Icon -->
+
+  <!-- Server -->
+  <g menu-icon [iconMainPositionX]="-20" [iconMainPositionY]="-15" [title]="'Konfigurationsübersicht'"
+    [icon]="'icon-config-overview-new'" [iconText]="'icon-config-overview-text'" [iconTextPositionX]="-51" [iconTextPositionY]="15"
+    [iconPositionX]="35" [iconPositionY]="22" (click)="openServer()" [buttonActive]="serverconfigActive">
   </g>
-  <g class="batches-button" transform="translate(240)" (click)="openBatches()"
-    [ngClass]="{'disabled': !batchesActive }">
-    <title>Batches</title>
-    <circle class="Oval-2-Copy-10" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"
-      [ngClass]="{'disabledCircle': !batchesActive }" />
-    <!-- Batches Icon -->
-    <g transform="translate(24 24)">
-      <use xlink:href="assets/symbol-defs.svg#icon-batches"></use>
-    </g>
-    <!-- / Batches Icon -->
+
+  <!-- Batches -->
+  <g menu-icon [iconMainPositionX]="260" [iconMainPositionY]="-15" [title]="'Batches'" [icon]="'icon-batches'"
+    [iconText]="'icon-batches-text'" [iconTextPositionX]="-51" [iconTextPositionY]="20" [iconPositionX]="24"
+    [iconPositionY]="15" (click)="openBatches()" [buttonActive]="batchesActive">
   </g>
+
 </svg:g>

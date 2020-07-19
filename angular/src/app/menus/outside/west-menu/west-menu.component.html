@@ -1,34 +1,20 @@
 <svg:g class="west-menu" *ngIf="isOpen" transform="translate(18 229)">
-  <g class="confluence-button" transform="translate(0 120)" (click)="openConfluence()"
-    [ngClass]="{'disabled': !confluenceActive }">
-    <title>Confluence</title>
-    <circle class="Oval-2-Copy-7" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"
-      [ngClass]="{'disabledCircle': !confluenceActive }" />
-    <!-- Confluence Icon -->
-    <g transform="translate(24 24)">
-      <use xlink:href="assets/symbol-defs.svg#icon-confluence"></use>
-    </g>
-    <!-- / Confluence Icon -->
+  <!-- Confluence-->
+  <g menu-icon [iconMainPositionX]="0" [iconMainPositionY]="120" [title]="'Confluence'" [icon]="'icon-confluence'"
+    [iconText]="'icon-confluence-text'" [iconTextPositionX]="-51" [iconTextPositionY]="15" [iconPositionX]="38"
+    [iconPositionY]="20" (click)="openConfluence()" [buttonActive]="confluenceActive">
   </g>
-  <g class="jira-button" transform="translate(24)" (click)="openJira()" [ngClass]="{'disabled': !jiraActive }">
-    <title>Jira</title>
-    <circle class="Oval-2-Copy-7" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"
-      [ngClass]="{'disabledCircle': !jiraActive }" />
-    <!-- Jira Icon -->
-    <g transform="translate(24 24)">
-      <use xlink:href="assets/symbol-defs.svg#icon-jira"></use>
-    </g>
-    <!-- / Jira Icon -->
+
+  <!-- Jira -->
+  <g menu-icon [iconMainPositionX]="24" [iconMainPositionY]="0" [title]="'Jira'" [icon]="'icon-jira'"
+    [iconText]="'icon-jira-text'" [iconTextPositionX]="-51" [iconTextPositionY]="15" [iconPositionX]="38"
+    [iconPositionY]="20" (click)="openJira()" [buttonActive]="jiraActive">
   </g>
-  <g class="bitbucket-button" transform="translate(24 240)" (click)="openBitbucket()"
-    [ngClass]="{'disabled': !bitbucketActive }">
-    <title>Bitbucket</title>
-    <circle class="Oval-2-Copy-7" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"
-      [ngClass]="{'disabledCircle': !bitbucketActive }" />
-    <!-- Bitbucket Icon -->
-    <g transform="translate(24 24)">
-      <use xlink:href="assets/symbol-defs.svg#icon-bitbucket"></use>
-    </g>
-    <!-- / Bitbucket Icon -->
+
+  <!-- Bitbucket -->
+  <g menu-icon [iconMainPositionX]="24" [iconMainPositionY]="240" [title]="'Jira'" [icon]="'icon-bitbucket'"
+    [iconText]="'icon-bitbucket-text'" [iconTextPositionX]="-51" [iconTextPositionY]="15" [iconPositionX]="38"
+    [iconPositionY]="20" (click)="openBitbucket()" [buttonActive]="bitbucketActive">
   </g>
+
 </svg:g>

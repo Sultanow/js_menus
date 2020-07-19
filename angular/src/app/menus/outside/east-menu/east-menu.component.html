@@ -1,34 +1,20 @@
 <svg:g class="east-menu" *ngIf="isOpen" transform="translate(654 229)">
-  <g class="writing-button" transform="translate(24 120)" (click)="openWarning()"
-    [ngClass]="{'disabled': !warningActive }">
-    <title>Warnungen</title>
-    <circle class="Oval-2-Copy-11" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"
-      [ngClass]="{'disabledCircle': !warningActive }" />
-    <!-- Warnung Icon -->
-    <g transform="translate(24 24)">
-      <use xlink:href="assets/symbol-defs.svg#icon-warnings"></use>
-    </g>
-    <!-- / Warnung Icon -->
+    <!-- Warnings-->
+    <g menu-icon [iconMainPositionX]="24" [iconMainPositionY]="120" [title]="'Warnungen'" [icon]="'icon-warning-new'"
+    [iconText]="'icon-warning-text'" [iconTextPositionX]="-51" [iconTextPositionY]="15" [iconPositionX]="38"
+    [iconPositionY]="24" (click)="openWarning()" [buttonActive]="warningActive">
   </g>
-  <g class="news-button" (click)="openNews()" [ngClass]="{'disabled': !newsActive }">
-    <title>Neuigkeiten</title>
-    <circle class="Oval-2-Copy-13" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"
-      [ngClass]="{'disabledCircle': !newsActive }" />
-    <!-- Neuigkeiten Icon -->
-    <g transform="translate(24 24)">
-      <use xlink:href="assets/symbol-defs.svg#icon-news"></use>
-    </g>
-    <!-- / Neuigkeiten Icon -->
+
+  <!-- News -->
+  <g menu-icon [iconMainPositionX]="0" [iconMainPositionY]="0" [title]="'Neuigkeiten'"
+    [icon]="'icon-news-new'" [iconText]="'icon-news-text'" [iconTextPositionX]="-51" [iconTextPositionY]="15"
+    [iconPositionX]="38" [iconPositionY]="24" (click)="openNews()" [buttonActive]="newsActive">
   </g>
-  <g class="stats-button" transform="translate(0 240)" (click)="openStatistic()"
-    [ngClass]="{'disabled': !statisticActive }">
-    <title>Statistiken</title>statisticActive
-    <circle class="Oval-2-Copy-12" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"
-      [ngClass]="{'disabledCircle': !statisticActive }" />
-    <!-- Statistiken Icon -->
-    <g transform="translate(24 24)">
-      <use xlink:href="assets/symbol-defs.svg#icon-stats"></use>
-    </g>
-    <!-- / Statistiken Icon -->
+
+  <!-- Statistics -->
+  <g menu-icon [iconMainPositionX]="0" [iconMainPositionY]="240" [title]="'Statistiken'" [icon]="'icon-statistic-new'"
+    [iconText]="'icon-statistic-text'" [iconTextPositionX]="-51" [iconTextPositionY]="15" [iconPositionX]="39"
+    [iconPositionY]="24" (click)="openStatistic()" [buttonActive]="statisticActive">
   </g>
+
 </svg:g>
