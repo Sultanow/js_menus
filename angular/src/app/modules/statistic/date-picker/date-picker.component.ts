@@ -3,6 +3,8 @@ import { StatisticAccuracy } from '../model/statisticAccuracy';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import * as moment from 'moment';
 import { FormControl, FormGroup } from '@angular/forms';
+import { of } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-date-picker',
@@ -72,17 +74,16 @@ export class DatePickerComponent implements OnInit, OnChanges {
     this.updateDates = false;
   }
 
-  dateFilter = (d: moment.Moment | null): boolean => {
+  dateFilter = (d: moment.Moment): boolean => {
     let ret = false;
-    setTimeout(() =>
-      this.updateDayStyles()
-    );
     this.availableMomentDates.forEach(item => {
       if (item.isSame(d)) {
         ret = true;
         return;
       }
     });
+    of(true).pipe(delay(100)).subscribe(() => this.updateDayStyles());
+    
     return ret;
   };
 

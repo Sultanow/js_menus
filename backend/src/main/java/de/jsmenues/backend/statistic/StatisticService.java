@@ -89,7 +89,6 @@ class StatisticService {
             scriptname = updateScriptNameLocation(chartName);
         }
         Response response = sendFileDataToPythonService(UPDATE_URL, filename, "script", scriptname);
-        LOGGER.info(response.toString());
         if (response.getStatus() == 200) {
             String responseText = response.readEntity(String.class);
             LOGGER.warn("Response Text: " + responseText);
@@ -652,7 +651,6 @@ class StatisticService {
             final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart.field(fieldName, fieldValue).bodyPart(filePart);
 
             final WebTarget target = client.target(url);
-            LOGGER.info(multipart.getMediaType().toString());
             final Response response = target.request().post(Entity.entity(multipart, multipart.getMediaType()));
             multipart.close();
 

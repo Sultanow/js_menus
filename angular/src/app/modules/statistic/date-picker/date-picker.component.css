@@ -2,12 +2,12 @@
     color: lightgray;
 }
 
-::ng-deep tr>td:first-of-type>.tooltip .tooltiptext {
+:host ::ng-deep tr>td:first-of-type>.tooltip .tooltiptext {
     left: 0;
     margin-left: 0;
 }
 
-::ng-deep tr>td:nth-of-type(7)>.tooltip .tooltiptext, ::ng-deep tr:first-of-type>td:last-of-type>.tooltip .tooltiptext {
+:host ::ng-deep tr>td:nth-of-type(7)>.tooltip .tooltiptext, :host ::ng-deep tr:first-of-type>td:last-of-type>.tooltip .tooltiptext {
     right: 0;
     margin-left: 0;
     left: auto;
