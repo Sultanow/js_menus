@@ -16,13 +16,12 @@
 }
 
 .disabledButton {
-    color: lightgray !important;
     pointer-events: none;
+    color: #aaaaaa !important;
 }
 
 .disabled {
     pointer-events: none;
-    color: lightgray !important;
 
 }
 
@@ -31,6 +30,6 @@
 }
 
 .highlight {
-    color: #19A6AC;
+    color: #20cfd6;
 }
 
