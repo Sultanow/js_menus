@@ -26,3 +26,7 @@
     cursor: pointer;
     margin: .5em;
 }
+
+.settings {
+    cursor: pointer;
+}

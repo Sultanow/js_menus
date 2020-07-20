@@ -12,7 +12,7 @@
                     name="{{setting.key}}">{{setting.value}}</textarea></td>
         </tr>
     </table>
-    <button (click)="onSaveSettings($event)" style="cursor: pointer">Einstellungen Speichern</button>
+    <button (click)="onSaveSettings($event)" class="settings">Einstellungen Speichern</button>
     <div class="logoutPosition">
         <button  (click)="logout()">Logout</button>
         <button  (click)="changePasswordDialog()">Passwort ändern</button>

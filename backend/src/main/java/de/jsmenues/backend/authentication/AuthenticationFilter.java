@@ -39,8 +39,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private ResourceInfo resourceInfo;
     private static final String AUTHORIZATION_PROPERTY = "Authorization";
     private static final String AUTHENTICATION_SCHEME = "Basic";
-    public static final String ADMIN = "admin";
-    public static final String USER_ROLE = "ADMIN";
+    public static final String  USER_ADMIN = "admin";
+    public static final String USER_ROLE_ADMIN = "ADMIN";
 
     /**
      * Filter for the annotation over the Methods
@@ -90,7 +90,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                 }
             }
         }
-        User user = new User(ADMIN, "ADMIN");
+        User user = new User(USER_ADMIN, "ADMIN");
         requestContext.setSecurityContext(new Authorizer(user));
     }
 
@@ -106,9 +106,9 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     public boolean isUserAllowed(final String username, final String password, final Set<String> rolesSet) {
         boolean isAllowed = false;
         String pass = ConfigurationRepository.getRepo().get("password").getValue();
-        if (username.equals(ADMIN) && password.equals(pass)) {
+        if (username.equals(USER_ADMIN) && password.equals(pass)) {
 
-            if (rolesSet.contains(USER_ROLE)) {
+            if (rolesSet.contains(USER_ROLE_ADMIN)) {
                 isAllowed = true;
             }
         }
