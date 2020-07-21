@@ -15,7 +15,7 @@ public class TimerToDeleteOldTokens {
     long delay = AuthenticationTokens.VALID_PERIOD;
 
     LoopTask task = new LoopTask();
-    Timer timer = new Timer("TaskName");
+    Timer timer = new Timer("DeletOldTokens");
 
     /**
      * start function to start this timer
@@ -23,7 +23,7 @@ public class TimerToDeleteOldTokens {
      */
     public void start() {
         timer.cancel();
-        timer = new Timer("TaskName");
+        timer = new Timer("DeletOldTokens");
         Date executionDate = new Date();
         timer.scheduleAtFixedRate(task, executionDate, delay);
     }
