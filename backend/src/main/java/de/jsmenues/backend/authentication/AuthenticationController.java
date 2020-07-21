@@ -48,7 +48,7 @@ public class AuthenticationController {
     }
 
     /**
-     * to change password
+     * used to change password
      * 
      * @param changePassword json data content old and new password, passing from frontend
      * @return password is changed "true" or "false"

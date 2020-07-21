@@ -48,7 +48,7 @@ public class AuthenticationTokens {
     }
 
     /**
-     * verify if a token has been valid ye
+     * verify if a token has been valid yet
      * 
      * @param token
      * 

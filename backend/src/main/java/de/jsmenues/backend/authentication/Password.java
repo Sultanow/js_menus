@@ -22,8 +22,8 @@ public class Password {
     /**
      * check old and new Password before change
      * 
-     * @param oldPssword   passing from frontend
-     * @param new Password passing from frontend
+     * @param oldPssword  passing from frontend
+     * @param newPassword passing from frontend
      * @return password is changend true or false
      */
     public static boolean changeRootPassword(String oldPassword, String newPassword) {

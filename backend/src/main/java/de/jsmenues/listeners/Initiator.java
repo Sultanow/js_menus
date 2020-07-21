@@ -7,16 +7,15 @@ import de.jsmenues.backend.authentication.Password;
 import de.jsmenues.backend.authentication.TimerToDeleteOldTokens;
 import de.jsmenues.redis.repository.ConfigurationRepository;
 
-/*
+/**
  * 
  * Initiator is notified when the application is deployed on the server
- *
  */
 public class Initiator implements ServletContextListener {
     private final static String rootPassword = "1234";
     private ServletContext context = null;
 
-    /*
+    /**
      * This method is invoked when the Web Application has been removed
      * and is no longer able to accept requests
      * 
@@ -25,7 +24,7 @@ public class Initiator implements ServletContextListener {
         this.context = null;
     }
 
-    /*
+    /**
      * This method is invoked when the Web Application is ready to service requests
      * 
      */
