@@ -8,7 +8,6 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
-import org.jvnet.hk2.annotations.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +21,8 @@ import javax.ws.rs.core.Response;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.*;
 
 /**
@@ -401,11 +402,12 @@ class StatisticService {
 
     /**
      * Get Trace Data for a chart for a specific time
-     * @param chartName to get Data for
-     * @param formatter for formatting the date to the correct string format
+     *
+     * @param chartName  to get Data for
+     * @param formatter  for formatting the date to the correct string format
      * @param localDates list of all dates with available data
      * @param indexStart start index for the list
-     * @param indexEnd end index for the list
+     * @param indexEnd   end index for the list
      * @return A list of traces containing the date traces for the indexStart to indexEnd
      */
     private List<Object> getTraceDataForRange(String chartName, DateTimeFormatter formatter, List<LocalDate> localDates, int indexStart, int indexEnd) {
@@ -445,10 +447,17 @@ class StatisticService {
         DateTimeFormatter formatter;
         switch (accuracy) {
             case "month":
-                formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+                formatter = new DateTimeFormatterBuilder()
+                        .appendPattern("yyyy-MM")
+                        .parseDefaulting(ChronoField.DAY_OF_MONTH, 1)
+                        .toFormatter();
                 break;
             case "year":
-                formatter = DateTimeFormatter.ofPattern("yyyy");
+                formatter = new DateTimeFormatterBuilder()
+                        .appendPattern("yyyy")
+                        .parseDefaulting(ChronoField.DAY_OF_MONTH, 1)
+                        .parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
+                        .toFormatter();
                 break;
             case "week":
                 formatter = DateTimeFormatter.ofPattern("yyyy-ww");
