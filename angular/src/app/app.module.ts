@@ -36,6 +36,7 @@ import { SettingsPasswordComponent } from './components/settings-password/settin
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { MaterialModule } from './material.module';
 import { StatisticModule } from './modules/statistic/statistic.module';
+import { IconHelperModule } from './modules/icon-helper/icon-helper.module'; 
 
 @NgModule({
   declarations: [
@@ -75,6 +76,7 @@ import { StatisticModule } from './modules/statistic/statistic.module';
     TreetableModule,
     MaterialModule,
     StatisticModule,
+    IconHelperModule
   ],
   providers: [
     DetailsComponent

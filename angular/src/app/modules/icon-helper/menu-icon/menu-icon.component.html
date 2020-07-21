@@ -1,0 +1,13 @@
+<svg:g class="-button" attr.transform="translate({{iconMainPositionX}} {{iconMainPositionY}})"
+    [ngClass]="{'disabled': !buttonActive }">
+    <title>{{title}}</title>
+    <circle class="Oval" cx="48" cy="48" r="48" fill="#000" fill-opacity="0.01" />
+    <g attr.transform="translate({{iconPositionX}} {{iconPositionY}})"
+        [ngClass]="{ 'disabledButton': !buttonActive, 'highlight': buttonHighlight }" class="icon-color">
+        <use attr.xlink:href="/assets/symbol-defs.svg#{{icon}}"></use>
+    </g>
+    <g attr.transform="translate({{iconTextPositionX}} {{iconTextPositionY}})"
+        [ngClass]="{ 'disabledButton': !buttonActive, 'highlight': buttonHighlight }" class="icon-color">
+        <use attr.xlink:href="/assets/symbol-defs.svg#{{iconText}}" width="200px" height="100px"></use>
+    </g>
+</svg:g>

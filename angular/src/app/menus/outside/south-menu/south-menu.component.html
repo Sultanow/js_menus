@@ -1,52 +1,20 @@
 <svg:g class="south-menu" *ngIf="isOpen" transform="translate(228 654)">
-  <g class="conf-button" transform="translate(120 24)" (click)="openConfig()" [ngClass]="{'disabled': !compareActive }">
-    <title>Konfiguration</title>
-    <circle class="Oval-2-Copy-8" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"
-      [ngClass]="{'disabledCircle': !compareActive }" />
-    <!-- Konfiguration Icon -->
-    <g transform="translate(24 24)">
-      <path d="M13.109,36.388l0,-9.079" style="fill:none;stroke:#fff;stroke-width:2.59px;" />
-      <path d="M13.109,22.121l0,-9.078" style="fill:none;stroke:#fff;stroke-width:2.59px;" />
-      <path d="M23.485,36.388l0,-11.673" style="fill:none;stroke:#fff;stroke-width:2.59px;" />
-      <path d="M23.485,19.527l0,-6.484" style="fill:none;stroke:#fff;stroke-width:2.59px;" />
-      <path d="M33.86,36.388l0,-6.485" style="fill:none;stroke:#fff;stroke-width:2.59px;" />
-      <path d="M33.86,24.715l0,-11.672" style="fill:none;stroke:#fff;stroke-width:2.59px;" />
-      <path d="M9.218,27.309l7.782,0" style="fill:none;stroke:#fff;stroke-width:2.59px;" />
-      <path d="M19.594,19.527l7.781,0" style="fill:none;stroke:#fff;stroke-width:2.59px;" />
-      <path d="M29.969,29.903l7.782,0" style="fill:none;stroke:#fff;stroke-width:2.59px;" />
-    </g>
-    <!-- / Konfiguration Icon -->
+  <!-- Konfiguration-->
+  <g menu-icon [iconMainPositionX]="120" [iconMainPositionY]="24" [title]="'Konfiguration'" [icon]="'icon-configuration-new'"
+    [iconText]="'icon-configuration-text'" [iconTextPositionX]="-51" [iconTextPositionY]="20" [iconPositionX]="39"
+    [iconPositionY]="28" (click)="openConfig()" [buttonActive]="compareActive">
   </g>
-  <g class="server-button" (click)="openServer()" [ngClass]="{'disabled': !serverconfigActive }">
-    <title>Konfigurationsübersicht</title>
-    <circle class="Oval-2-Copy-9" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"
-      [ngClass]="{'disabledCircle': !serverconfigActive }" />
-    <!-- Server Icon -->
-    <g transform="translate(24 24)">
-      <path
-        d="M35.366,14.907c0,-1.255 -1.018,-2.273 -2.273,-2.273l-18.186,0c-1.255,0 -2.273,1.018 -2.273,2.273l0,4.547c0,1.254 1.018,2.273 2.273,2.273l18.186,0c1.255,0 2.273,-1.019 2.273,-2.273l0,-4.547Z"
-        style="fill:none;stroke:#fff;stroke-width:2.27px;" />
-      <path
-        d="M35.366,28.546c0,-1.254 -1.018,-2.273 -2.273,-2.273l-18.186,0c-1.255,0 -2.273,1.019 -2.273,2.273l0,4.547c0,1.255 1.018,2.273 2.273,2.273l18.186,0c1.255,0 2.273,-1.018 2.273,-2.273l0,-4.547Z"
-        style="fill:none;stroke:#fff;stroke-width:2.27px;" />
-      <ellipse cx="16.434" cy="17.18" rx="1.339" ry="1.304" style="fill:#fff;" />
-      <ellipse cx="16.434" cy="30.82" rx="1.339" ry="1.304" style="fill:#fff;" />
-      <circle cx="45" cy="5" r="2" style="fill:#f00;stroke:#f00;stroke-width:3px;"></circle>
-    </g>
-    <!-- / Server Icon -->
+
+  <!-- Server -->
+  <g menu-icon [iconMainPositionX]="-20" [iconMainPositionY]="-15" [title]="'Konfigurationsübersicht'"
+    [icon]="'icon-config-overview-new'" [iconText]="'icon-config-overview-text'" [iconTextPositionX]="-51" [iconTextPositionY]="15"
+    [iconPositionX]="35" [iconPositionY]="22" (click)="openServer()" [buttonActive]="serverconfigActive">
   </g>
-  <g class="batches-button" transform="translate(240)" (click)="openBatches()"
-    [ngClass]="{'disabled': !batchesActive }">
-    <title>Batches</title>
-    <circle class="Oval-2-Copy-10" cx="48" cy="48" r="48" fill="#00F7FF" opacity=".6"
-      [ngClass]="{'disabledCircle': !batchesActive }" />
-    <!-- Batches Icon -->
-    <g transform="translate(24 24)">
-      <path d="M24,10.004l-13.996,6.998l13.996,6.998l13.996,-6.998l-13.996,-6.998Z"
-        style="fill:none;stroke:#fff;stroke-width:2.8px;" />
-      <path d="M10.004,30.998l13.996,6.998l13.996,-6.998" style="fill:none;stroke:#fff;stroke-width:2.8px;" />
-      <path d="M10.004,24l13.996,6.998l13.996,-6.998" style="fill:none;stroke:#fff;stroke-width:2.8px;" />
-    </g>
-    <!-- / Batches Icon -->
+
+  <!-- Batches -->
+  <g menu-icon [iconMainPositionX]="260" [iconMainPositionY]="-15" [title]="'Batches'" [icon]="'icon-batches'"
+    [iconText]="'icon-batches-text'" [iconTextPositionX]="-51" [iconTextPositionY]="20" [iconPositionX]="24"
+    [iconPositionY]="15" (click)="openBatches()" [buttonActive]="batchesActive">
   </g>
+
 </svg:g>
