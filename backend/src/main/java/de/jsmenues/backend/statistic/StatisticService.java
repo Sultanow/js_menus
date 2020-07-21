@@ -12,6 +12,7 @@ import org.jvnet.hk2.annotations.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Singleton;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -26,7 +27,7 @@ import java.util.*;
 /**
  * Statistic Service for communication with the python service and local caching in the redis db
  */
-@Service
+@Singleton
 class StatisticService {
     private static final Logger LOGGER = LoggerFactory.getLogger(StatisticService.class);
     private static final String UPDATE_URL = "http://python-nginx-service:80/updateData";

@@ -5,6 +5,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -17,8 +18,12 @@ import java.util.Map;
 public class StatisticController {
     private static final Logger LOGGER = LoggerFactory.getLogger(StatisticController.class);
 
-    private StatisticService statisticService = new StatisticService();
+    private StatisticService statisticService;
 
+    @Inject
+    public StatisticController(StatisticService service) {
+        this.statisticService = service;
+    }
     /**
      * Returns all the chart names and the groups.
      *
