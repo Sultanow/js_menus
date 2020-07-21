@@ -38,7 +38,6 @@ export class StatisticComponent implements OnInit, OnChanges {
   reloadData() {
     this.statisticService.getChartNames().subscribe(result => {
       this.allCharts = result;
-      console.log(result);
       if (this.showGraphChart === false && this.showCreateChartContainer === false) {
         if (this.allCharts != null && this.allCharts.length > 0) {
           this.showChartView(null, Object.keys(this.allCharts[ 0 ].charts)[ 0 ]);

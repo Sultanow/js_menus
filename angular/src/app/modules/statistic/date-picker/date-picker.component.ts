@@ -1,8 +1,10 @@
 import { Component, OnInit, Input, ViewEncapsulation, OnChanges, SimpleChanges, EventEmitter, Output } from '@angular/core';
 import { StatisticAccuracy } from '../model/statisticAccuracy';
-import { MatCalendarCellCssClasses, MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import * as moment from 'moment';
 import { FormControl, FormGroup } from '@angular/forms';
+import { of } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-date-picker',
@@ -23,12 +25,16 @@ export class DatePickerComponent implements OnInit, OnChanges {
   availableMomentDates: Set<moment.Moment> = new Set<moment.Moment>();
   momentStartDate: moment.Moment = null;
 
+  startView: string = "month";
+
   dateFormControl = new FormControl({ value: moment(), disabled: true });
 
   pickerRangeGroup = new FormGroup({
     start: new FormControl({ value: moment(), disabled: true }),
     end: new FormControl({ value: moment(), disabled: true })
   });
+
+  updateDates: boolean = false;
 
   constructor () { }
 
@@ -41,6 +47,7 @@ export class DatePickerComponent implements OnInit, OnChanges {
   }
 
   updateAvailableDates() {
+    this.updateDates = true;
     if (this.availableDates !== null && this.availableDates.length !== 0) {
       this.availableMomentDates.clear();
       this.availableDates.forEach(strDate => {
@@ -48,21 +55,26 @@ export class DatePickerComponent implements OnInit, OnChanges {
       });
     }
     if (this.isMultiple) {
-      if(this.startDate && this.endDate) {
-        this.pickerRangeGroup.controls['start'].setValue(moment(this.startDate, this.accuracy));
-        this.pickerRangeGroup.controls['end'].setValue(moment(this.endDate, this.accuracy));
+      if (this.startDate && this.endDate) {
+        this.pickerRangeGroup.controls[ 'start' ].setValue(moment(this.startDate, this.accuracy));
+        this.pickerRangeGroup.controls[ 'end' ].setValue(moment(this.endDate, this.accuracy));
       }
     } else {
-      if (this.startDate !== null && this.startDate !== "") {
+      if (this.startDate) {
         this.dateFormControl.setValue(moment(this.startDate, this.accuracy));
       } else {
         this.dateFormControl.setValue(moment().format(this.accuracy));
       }
     }
-
+    if (this.accuracy == StatisticAccuracy.MONTH) {
+      this.startView = "year";
+    } else if (this.accuracy == StatisticAccuracy.YEAR) {
+      this.startView = "multi-year";
+    }
+    this.updateDates = false;
   }
 
-  dateClass = (d: moment.Moment): MatCalendarCellCssClasses => {
+  dateFilter = (d: moment.Moment): boolean => {
     let ret = false;
     this.availableMomentDates.forEach(item => {
       if (item.isSame(d)) {
@@ -70,12 +82,13 @@ export class DatePickerComponent implements OnInit, OnChanges {
         return;
       }
     });
-    return ret ? 'activeDate' : 'inactiveDate';
+    of(true).pipe(delay(100)).subscribe(() => this.updateDayStyles());
+    
+    return ret;
   };
 
   dateChangeEvent(event: MatDatepickerInputEvent<moment.Moment>) {
-    console.log(event);
-    if (event.value !== null) { // Value is null when end not selected.
+    if (event.value !== null && !this.updateDates) { // Value is null when end not selected.
       let result: Map<string, string> = new Map<string, string>();
       if (!this.isMultiple) {
         let date = event.value.format(this.accuracy);
@@ -88,5 +101,47 @@ export class DatePickerComponent implements OnInit, OnChanges {
       }
       this.datepickerChangeEvent.emit(result);
     }
+  }
+
+  updateDayStyles() {
+    // Appended from https://stackblitz.com/edit/mat-date-tooltip
+    let elements = document.querySelectorAll(".mat-calendar-body");
+    let x: any = elements.length > 0 ? elements[ 0 ].querySelectorAll('.mat-calendar-body-cell') : [];
+    x.forEach(y => {
+      let found = false;
+      let ret = false;
+      this.availableMomentDates.forEach(t => {
+        let f = moment(y.getAttribute('aria-label'), "YYYY-MMM-DD", 'de');
+        if (f.isSame(t)) {
+          ret = true;
+        }
+      });
+      if (!ret) {
+        found = true;
+        let div = y.querySelectorAll('div')[ 0 ];
+        div.classList.add('tooltip');
+        let spans = y.querySelectorAll('span');
+        if (spans.length > 0) {
+          let span = spans[ 0 ];
+          span.innerHTML = "Keine Daten verfügbar";
+        }
+        else {
+          let span = document.createElement('span');
+          span.innerHTML = "Keine Daten verfügbar";
+          span.classList.add('tooltiptext');
+          div.appendChild(span);
+        }
+      }
+      if (!found) {
+        let div = y.querySelectorAll('div')[ 0 ];
+        div.classList.remove('tooltip');
+        let spans = y.querySelectorAll('span');
+        if (spans.length > 0) {
+          spans.forEach(span => {
+            div.removeChild(span);
+          });
+        }
+      }
+    });
   }
 }

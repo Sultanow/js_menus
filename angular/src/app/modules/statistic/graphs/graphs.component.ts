@@ -36,6 +36,8 @@ export class GraphsComponent implements OnInit, OnChanges, OnDestroy {
   // DatePicker Properties
   datePickerTitle = "Datum";
   timeSeriesDates: string[] = [];
+  prevChartsTooltip: string = "Vorherigen Datensatz anzeigen";
+  nextChartsTooltip: string = "Nächsten Datensatz anzeigen";
 
 
   constructor (
@@ -90,7 +92,19 @@ export class GraphsComponent implements OnInit, OnChanges, OnDestroy {
     }
     this.actualStatisticData.layout[ 'title' ] = this.actualStatisticData.title;
     this.updateTime = this.actualStatisticData.updateTime;
+    this.updateTooltips();
     this.basicChart();
+  }
+
+  updateTooltips() {
+    if (this.isMultiple()) {
+      if (this.actualStatisticData.prevTrace) {
+        this.prevChartsTooltip = "Vorherige " + this.actualStatisticData.prevTrace.length + " Datensätze anzeigen";
+      }
+      if (this.actualStatisticData.nextTrace) {
+        this.nextChartsTooltip = "Nächsten " + this.actualStatisticData.nextTrace.length + " Datensätze anzeigen";
+      }
+    }
   }
 
   basicChart(): void {
@@ -171,42 +185,52 @@ export class GraphsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   prevTimeseriesChart(): void {
-    // Show prev Chart if multiple is false
+    // Show prev Chart
     this.actualStatisticData.nextDate = this.actualStatisticData.startDate;
     this.actualStatisticData.startDate = this.actualStatisticData.prevDate;
     this.actualStatisticData.nextTrace = this.actualStatisticData.traces;
     this.actualStatisticData.traces = this.actualStatisticData.prevTrace;
+    this.actualStatisticData.nextEndDate = this.actualStatisticData.endDate;
+    this.actualStatisticData.endDate = this.actualStatisticData.prevEndDate;
     // First show the new data
+    this.updateTooltips();
     this.basicChart();
     // Get more data from Server
-    this.loadDataForDate(this.actualStatisticData.startDate,"", false);
+    this.loadDataForDate(this.actualStatisticData.startDate, this.actualStatisticData.endDate, false);
   }
 
   nextTimeseriesChart(): void {
-    // Show next Chart if multiple is false
+    // Show next Chart 
     this.actualStatisticData.prevDate = this.actualStatisticData.startDate;
     this.actualStatisticData.startDate = this.actualStatisticData.nextDate;
     this.actualStatisticData.prevTrace = this.actualStatisticData.traces;
     this.actualStatisticData.traces = this.actualStatisticData.nextTrace;
-
+    this.actualStatisticData.prevEndDate = this.actualStatisticData.endDate;
+    this.actualStatisticData.endDate = this.actualStatisticData.nextEndDate;
     // First show the new data
+    this.updateTooltips();
     this.basicChart();
     // Get more data from the server
-    this.loadDataForDate(this.actualStatisticData.startDate,"", false);
+    this.loadDataForDate(this.actualStatisticData.startDate, this.actualStatisticData.endDate, false);
   }
 
   datepickerChangeEvent(date: Map<string, string>) {
-    if (this.chart.multiple) {
+    if (this.isMultiple()) {
       let startDate = date.get('start');
       let endDate = date.get('end');
-      this.loadDataForDate(startDate, endDate, true);
+      if (startDate === this.actualStatisticData.nextDate && endDate === this.actualStatisticData.nextEndDate)
+        this.nextTimeseriesChart();
+      else if (startDate === this.actualStatisticData.prevDate && endDate === this.actualStatisticData.prevEndDate)
+        this.prevTimeseriesChart();
+      else
+        this.loadDataForDate(startDate, endDate, true);
     } else {
       if (date.get('start') === this.actualStatisticData.nextDate)
         this.nextTimeseriesChart();
       else if (date.get('start') === this.actualStatisticData.prevDate)
         this.prevTimeseriesChart();
       else
-        this.loadDataForDate(date.get('start'),"", true);
+        this.loadDataForDate(date.get('start'), "", true);
     }
   }
 
@@ -225,10 +249,8 @@ export class GraphsComponent implements OnInit, OnChanges, OnDestroy {
 
   updateLocalStatisticData() {
     if (this.nextStatisticData != null) {
-      if (this.actualStatisticData.startDate !== this.nextStatisticData.startDate) {
-        this.actualStatisticData.startDate = this.nextStatisticData.startDate;
-        this.actualStatisticData.traces = this.nextStatisticData.traces;
-      }
+      this.actualStatisticData.startDate = this.nextStatisticData.startDate;
+      this.actualStatisticData.traces = this.nextStatisticData.traces;
       if (this.actualStatisticData.nextDate !== this.nextStatisticData.nextDate) {
         this.actualStatisticData.nextDate = this.nextStatisticData.nextDate;
         this.actualStatisticData.nextTrace = this.nextStatisticData.nextTrace;
@@ -237,9 +259,12 @@ export class GraphsComponent implements OnInit, OnChanges, OnDestroy {
         this.actualStatisticData.prevDate = this.nextStatisticData.prevDate;
         this.actualStatisticData.prevTrace = this.nextStatisticData.prevTrace;
       }
-      if(this.isMultiple) {
+      if (this.isMultiple) {
         this.actualStatisticData.endDate = this.nextStatisticData.endDate;
+        this.actualStatisticData.nextEndDate = this.nextStatisticData.nextEndDate;
+        this.actualStatisticData.prevEndDate = this.nextStatisticData.prevEndDate;
       }
+      this.updateTooltips();
     }
   }
 }

@@ -53,7 +53,6 @@ export class CreateChartComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (this.showCreateChartContainer) {
       this.statisticService.getGroups().subscribe(result => {
-        console.log(result);
         this.groups = result;
       });
     }
