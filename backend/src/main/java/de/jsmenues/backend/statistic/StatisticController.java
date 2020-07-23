@@ -6,6 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+
+
+import javax.inject.Inject;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -17,8 +21,12 @@ import java.util.Map;
 public class StatisticController {
     private static final Logger LOGGER = LoggerFactory.getLogger(StatisticController.class);
 
-    private static StatisticService statisticService = new StatisticService();
+    private StatisticService statisticService;
 
+    @Inject
+    public StatisticController(StatisticService service) {
+        this.statisticService = service;
+    }
     /**
      * Returns all the chart names and the groups.
      *
@@ -139,7 +147,9 @@ public class StatisticController {
             @DefaultValue("") @QueryParam("chart") String chartName
     ) {
         LOGGER.debug("Enter [DELETE] '/deleteChart'");
-        statisticService.deleteChart(chartName);
+        if(!chartName.isEmpty()) {
+            statisticService.deleteChart(chartName);
+        }
         LOGGER.debug("Leave [DELETE] '/deleteChart'");
         return Response.ok().build();
     }

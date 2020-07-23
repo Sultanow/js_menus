@@ -39,7 +39,7 @@ import { ChangePasswordComponent } from './components/change-password/change-pas
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { MaterialModule } from './material.module';
 import { StatisticModule } from './modules/statistic/statistic.module';
-import { DialogDeleteChart } from './modules/statistic/graphs/dialog-delete-chart.component';
+import { IconHelperModule } from './modules/icon-helper/icon-helper.module'; 
 
 
 @NgModule({
@@ -80,6 +80,7 @@ import { DialogDeleteChart } from './modules/statistic/graphs/dialog-delete-char
     TreetableModule,
     MaterialModule,
     StatisticModule,
+    IconHelperModule
   ],
   providers: [
     DetailsComponent,

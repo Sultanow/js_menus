@@ -18,22 +18,17 @@
 
         </div>
         <div class="Datefield" *ngIf="isTimeseries() && actualStatisticData !== null">
-            <a (click)="prevTimeseriesChart()" *ngIf="!isMultiple()" [ngClass]="{'btnDisabled': !actualStatisticData.prevDate }">
-                <mat-icon class="iconNav" matTooltip="Vorherigen Datensatz anzeigen">
+            <a (click)="prevTimeseriesChart()" [ngClass]="{'btnDisabled': !actualStatisticData.prevDate }">
+                <mat-icon class="iconNav" matTooltip="{{ prevChartsTooltip }}">
                     keyboard_arrow_left
                 </mat-icon>
             </a>
-            <app-date-picker
-                [title]="datePickerTitle"
-                [accuracy]="getAccuracyForString(chart.accuracy)"
-                [availableDates]="timeSeriesDates"
-                [startDate]="actualStatisticData.startDate"
-                [endDate]="actualStatisticData.endDate"
-                [isMultiple]="chart.multiple"
-                (datepickerChangeEvent)="datepickerChangeEvent($event)"
-            ></app-date-picker>
-            <a (click)="nextTimeseriesChart()" *ngIf="!isMultiple()" [ngClass]="{'btnDisabled': !actualStatisticData.nextDate }">
-                <mat-icon class="iconNav" matTooltip="Nächsten Datensatz anzeigen">
+            <app-date-picker [title]="datePickerTitle" [accuracy]="getAccuracyForString(chart.accuracy)"
+                [availableDates]="timeSeriesDates" [startDate]="actualStatisticData.startDate"
+                [endDate]="actualStatisticData.endDate" [isMultiple]="chart.multiple"
+                (datepickerChangeEvent)="datepickerChangeEvent($event)"></app-date-picker>
+            <a (click)="nextTimeseriesChart()" [ngClass]="{'btnDisabled': !actualStatisticData.nextDate }">
+                <mat-icon class="iconNav" matTooltip="{{ nextChartsTooltip }}">
                     keyboard_arrow_right
                 </mat-icon>
             </a>

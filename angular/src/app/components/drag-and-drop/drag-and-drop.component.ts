@@ -15,7 +15,6 @@ export class DragAndDropComponent implements OnInit, OnChanges {
   constructor () { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
     if (changes.reset && changes.reset.currentValue === true) {
       this.reset = false;
       this.deleteFile();

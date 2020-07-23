@@ -94,7 +94,7 @@ export class AppComponent implements OnInit {
 		// Middle
 		this.animate_middle
 			.from(".middle-layer", 0.5, {
-				transformOrigin: "50% 50%",
+				transformOrigin: "70% 75%",
 				scale: "0"
 			}, 0)
 			.from(".middle-layer .button-group", 0.75, {
