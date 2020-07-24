@@ -92,7 +92,7 @@ import { IconHelperModule } from './modules/icon-helper/icon-helper.module';
   ],
   bootstrap: [ AppComponent ],
 
-  entryComponents: [ EditDialog, DependencyChartsComponent, AuthenticationComponent, DialogDeleteChart ]
+  entryComponents: [ EditDialog, DependencyChartsComponent, AuthenticationComponent]
 
 })
 export class AppModule { }

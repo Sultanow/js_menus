@@ -27,6 +27,6 @@
     margin: .5em;
 }
 
-.settings {
+.saveSettingsButton{
     cursor: pointer;
 }
