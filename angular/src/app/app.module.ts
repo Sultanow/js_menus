@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 
@@ -19,7 +20,7 @@ import { WestMenuComponent as O_WestMenuComponent } from './menus/outside/west-m
 import { DetailsComponent } from './components/details/details.component';
 import { BatchesComponent } from './components/batches/batches.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { DependencyChartsComponent, EditDialog } from './components/dependencycharts/dependencycharts.component';
 import { CompareComponent } from './components/compare/compare.component';
@@ -32,11 +33,14 @@ import { RightManagementComponent } from './components/right-management/right-ma
 import { TrackerComponent } from './components/tracker/tracker.component';
 import { TreetableModule } from './components/treetable/treetable.module';
 import { SettingsComponent } from './components/settings/settings.component';
-import { SettingsPasswordComponent } from './components/settings-password/settings-password.component';
+import { BasicAuthInterceptorService } from './services/authentication/basic-auth-interceptor.service';
+import { AuthenticationComponent } from './components/authentication/authentication.component';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { MaterialModule } from './material.module';
 import { StatisticModule } from './modules/statistic/statistic.module';
 import { IconHelperModule } from './modules/icon-helper/icon-helper.module'; 
+
 
 @NgModule({
   declarations: [
@@ -45,7 +49,6 @@ import { IconHelperModule } from './modules/icon-helper/icon-helper.module';
     M_EastMenuComponent,
     M_SouthMenuComponent,
     M_WestMenuComponent,
-
     O_NorthMenuComponent,
     O_EastMenuComponent,
     O_SouthMenuComponent,
@@ -63,7 +66,8 @@ import { IconHelperModule } from './modules/icon-helper/icon-helper.module';
     RightManagementComponent,
     TrackerComponent,
     SettingsComponent,
-    SettingsPasswordComponent,
+    AuthenticationComponent,
+    ChangePasswordComponent,
     SpinnerComponent,
 
   ],
@@ -79,10 +83,16 @@ import { IconHelperModule } from './modules/icon-helper/icon-helper.module';
     IconHelperModule
   ],
   providers: [
-    DetailsComponent
+    DetailsComponent,
+    {
+      provide : HTTP_INTERCEPTORS,
+      useClass: BasicAuthInterceptorService,
+      multi:true
+    },
   ],
   bootstrap: [ AppComponent ],
-  entryComponents: [ EditDialog, DependencyChartsComponent, SettingsPasswordComponent ]
+
+  entryComponents: [ EditDialog, DependencyChartsComponent, AuthenticationComponent]
 
 })
 export class AppModule { }

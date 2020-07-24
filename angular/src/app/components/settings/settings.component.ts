@@ -2,14 +2,17 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Configuration } from 'src/app/model/configuration';
 import { SettingsService } from 'src/app/services/settings/settings.service';
 import { Title } from '@angular/platform-browser';
+import { MatDialog } from '@angular/material/dialog';
+import { ChangePasswordComponent } from '../change-password/change-password.component';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styleUrls: [ './settings.component.css' ]
+  styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
   @Input() showSettings: boolean;
+  @Output() notifyshowViewBoxClose = new EventEmitter<boolean>();
   @Output() notifyTitle = new EventEmitter<string>();
 
   settings: Configuration[];
@@ -18,7 +21,9 @@ export class SettingsComponent implements OnInit {
 
 
 
-  constructor (private settingsService: SettingsService, private titleService: Title) {
+  constructor(private settingsService: SettingsService,
+    private titleService: Title,
+    public dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -87,5 +92,16 @@ export class SettingsComponent implements OnInit {
       console.log(this.version);
     });
 
+  }
+
+  logout() {
+    localStorage.removeItem("token");
+    this.notifyshowViewBoxClose.emit(true);
+  }
+
+  changePasswordDialog() {
+    this.dialog.open(ChangePasswordComponent, {
+      disableClose: true
+    });
   }
 }

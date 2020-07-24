@@ -1,3 +1,4 @@
+
 <div *ngIf="showSettings">
     <table>
         <caption>Einstellungen</caption>
@@ -11,6 +12,10 @@
                     name="{{setting.key}}">{{setting.value}}</textarea></td>
         </tr>
     </table>
-    <button (click)="onSaveSettings($event)" style="cursor: pointer">Einstellungen Speichern</button>
+    <button (click)="onSaveSettings($event)" class="saveSettingsButton">Einstellungen Speichern</button>
+    <div class="logoutPosition">
+        <button  (click)="logout()">Logout</button>
+        <button  (click)="changePasswordDialog()">Passwort ändern</button>
+    </div>
     <div class="versionPosition">Version :{{version}} </div>
 </div>

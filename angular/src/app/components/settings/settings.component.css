@@ -3,14 +3,30 @@
     font-style: italic;
     padding-top: 3rem;
     float: right;
-   
 }
-.textarea_items{
+
+.textarea_items {
     width: 20rem;
     height: 1.5rem;
     font: 0.8rem Arial, sans-serif;
     padding: 0.2rem;
 }
-.settingKey{
+
+.settingKey {
     padding: 0.2rem;
+}
+
+.logoutPosition {
+    position: relative;
+    padding-top: 3rem;
+}
+
+.logoutPosition button {
+    padding: 0.5rem;
+    cursor: pointer;
+    margin: .5em;
+}
+
+.saveSettingsButton{
+    cursor: pointer;
 }

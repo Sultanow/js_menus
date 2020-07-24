@@ -3,13 +3,15 @@ import { TimelineLite } from "gsap";
 import { SettingsService } from './services/settings/settings.service';
 import { Title } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
-import { SettingsPasswordComponent } from './components/settings-password/settings-password.component';
 
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthenticationService } from './services/authentication/authentication.service';
+import { AuthenticationComponent } from './components/authentication/authentication.component';
 
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
-	styleUrls: [ './app.component.css' ]
+	styleUrls: ['./app.component.css']
 })
 
 export class AppComponent implements OnInit {
@@ -46,23 +48,27 @@ export class AppComponent implements OnInit {
 	activeItems: string[] = [];
 
 	ngOnInit() {
-			this.initAnimations();
-			this.initAnimationButton(this.animate_north, "north-menu");
-			this.initAnimationButton(this.animate_east, "east-menu");
-			this.initAnimationButton(this.animate_south, "south-menu");
-			this.initAnimationButton(this.animate_west, "west-menu");
-			this.settingsService.getActiveItems().subscribe(result => {
-				if (result && result.activeItems && Array.isArray(result.activeItems))
-					this.activeItems = result.activeItems;
-			});
-			this.updateTitle();
+		this.clearLocalStorge();
+		this.timerToClearStorge();
+		this.initAnimations();
+		this.initAnimationButton(this.animate_north, "north-menu");
+		this.initAnimationButton(this.animate_east, "east-menu");
+		this.initAnimationButton(this.animate_south, "south-menu");
+		this.initAnimationButton(this.animate_west, "west-menu");
+		this.settingsService.getActiveItems().subscribe(result => {
+			if (result && result.activeItems && Array.isArray(result.activeItems))
+				this.activeItems = result.activeItems;
+		});
+		this.updateTitle();
 	}
 
-	constructor (
+	constructor(
+		private authenticationService: AuthenticationService,
+		private snackBar: MatSnackBar,
 		private settingsService: SettingsService,
 		private titleService: Title,
 		public dialog: MatDialog) {
-			if (/MSIE |Trident\//.test(window.navigator.userAgent)) { window.location.replace("unsupported.html"); }
+		if (/MSIE |Trident\//.test(window.navigator.userAgent)) { window.location.replace("unsupported.html"); }
 	}
 	updateTitle() {
 		this.settingsService.getTitel().subscribe(title => {
@@ -77,13 +83,11 @@ export class AppComponent implements OnInit {
 		console.log(event);
 		this.showViewBox = true;
 		this.showView = event;
-		this.updateTitle();
 	}
 
 	onNotifyViewBoxClose() {
 		this.showViewBox = false;
 		this.showView = "";
-		this.updateTitle();
 	}
 
 	initAnimations() {
@@ -247,7 +251,6 @@ export class AppComponent implements OnInit {
 
 
 	openSettings() {
-		this.updateTitle();
 		if (this.showViewBox && this.showView === "settings") {
 			this.showView = "";
 			this.showViewBox = false;
@@ -258,19 +261,35 @@ export class AppComponent implements OnInit {
 	}
 
 	checkPasswordDialog() {
-		let dialogRef = this.dialog.open(SettingsPasswordComponent, {
-			width: "300 px",
-			disableClose: true,
-		});
-		dialogRef.afterClosed().subscribe(result => {
-			if (result == null) {
-				return;
-			}
-			if (result) {
+		let isValid = false;
+		this.authenticationService.getIsValid().subscribe(data => {
+			isValid = data.toLowerCase() == "true";
+			if (this.authenticationService.getToken() && isValid) {
 				this.openSettings();
-			} else {
-				alert("Passwort ist Falsch");
+			}
+			else {
+				let dialogRef = this.dialog.open(AuthenticationComponent, {
+					disableClose: true
+				});
+				dialogRef.afterClosed().subscribe(result => {
+					if (result == null) {
+						return;
+					}
+					if (result) {
+						this.openSettings();
+						this.snackBar.open("Anmeldung erfolgreich", "Done", { duration: 3000 });
+					} else {
+						this.snackBar.open("Password ist Falsch", "", { duration: 3000 });
+					}
+				});
 			}
 		});
+	}
+	clearLocalStorge() {
+		this.authenticationService.ClearLocalStorgeAfter12Hour();
+
+	}
+	timerToClearStorge() {
+		setInterval(() => { this.clearLocalStorge() }, 1000 * 60 * 60 * 12);
 	}
 }

@@ -7,6 +7,8 @@ import de.jsmenues.redis.repository.ConfigurationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -16,23 +18,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-
 @Path("/settings")
 public class SettingsController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SettingsController.class);
 
-    private static ArrayList<String> allConfigurationItems = new ArrayList<>(Arrays.asList(
-            "configuration.zabbix.User",
-            "configuration.zabbix.Password",
-            "configuration.zabbix.URL",
-            "configuration.zabbix.filterGroup",
-            "configuration.zabbix.items",
-            "configuration.frontend.title",
-            "configuration.frontend.logo",
-            "configuration.dummy.statuswarning",
-            "configuration.servercompare.config",
-            "configuration.activeitems"));
+    private static ArrayList<String> allConfigurationItems = new ArrayList<>(Arrays.asList("configuration.zabbix.User",
+            "configuration.zabbix.Password", "configuration.zabbix.URL", "configuration.zabbix.filterGroup",
+            "configuration.zabbix.items", "configuration.frontend.title", "configuration.frontend.logo",
+            "configuration.dummy.statuswarning", "configuration.servercompare.config", "configuration.activeitems"));
 
+    @RolesAllowed("ADMIN")
     @GET
     @Path("/getZabbixConfig")
     @Produces(MediaType.TEXT_PLAIN)
@@ -41,10 +36,10 @@ public class SettingsController {
         return user.toString();
     }
 
+    @RolesAllowed("ADMIN")
     @GET
     @Path("/setZabbixConfig")
-    public Response setZabbixConfig(
-            @DefaultValue("") @QueryParam("zabbixUser") String user,
+    public Response setZabbixConfig(@DefaultValue("") @QueryParam("zabbixUser") String user,
             @DefaultValue("") @QueryParam("zabbixPassword") String pass,
             @DefaultValue("") @QueryParam("zabbixURL") String url) {
         ZabbixUser zabbixUser = new ZabbixUser(user, pass, url);
@@ -53,6 +48,7 @@ public class SettingsController {
         return Response.ok().build();
     }
 
+    @PermitAll
     @GET
     @Path("/title")
     @Produces(MediaType.TEXT_PLAIN)
@@ -62,6 +58,7 @@ public class SettingsController {
         return Response.ok(siteTitle).build();
     }
 
+    @RolesAllowed("ADMIN")
     @POST
     @Path("/title")
     public Response setTitle(String title) {
@@ -69,6 +66,7 @@ public class SettingsController {
         return Response.ok().build();
     }
 
+    @PermitAll
     @GET
     @Path("/logo")
     public Response getLogoSVG() {
@@ -76,6 +74,7 @@ public class SettingsController {
         return Response.ok(siteLogo).build();
     }
 
+    @RolesAllowed("ADMIN")
     @POST
     @Path("/logo")
     public Response setLogo(String logo) {
@@ -83,6 +82,7 @@ public class SettingsController {
         return Response.ok().build();
     }
 
+    @RolesAllowed("ADMIN")
     @GET
     @Path("/getAllConfig")
     public Response getAllConfig() {
@@ -92,6 +92,7 @@ public class SettingsController {
         return Response.ok(returnItems, MediaType.APPLICATION_JSON).build();
     }
 
+    @RolesAllowed("ADMIN")
     @POST
     @Path("/setConfig")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -105,6 +106,7 @@ public class SettingsController {
         return Response.ok().build();
     }
 
+    @PermitAll
     @GET
     @Path("/dummyStatusWarnings")
     public Response getDummyStatusWarnings() {
@@ -112,6 +114,7 @@ public class SettingsController {
         return Response.ok(value).build();
     }
 
+    @PermitAll
     @GET
     @Path("/servercompareconfig")
     public Response getServerCompareConfig() {
@@ -119,6 +122,7 @@ public class SettingsController {
         return Response.ok(value).build();
     }
 
+    @PermitAll
     @GET
     @Path("/version")
     public Response getVersion() {
@@ -133,6 +137,7 @@ public class SettingsController {
         return Response.ok(version).build();
     }
 
+    @PermitAll
     @GET
     @Path("/activeItems")
     public Response getActiveItems() {

@@ -4,15 +4,18 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
+
 
 import javax.inject.Inject;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-
 
 @Path("/statistic")
 public class StatisticController {
@@ -29,6 +32,7 @@ public class StatisticController {
      *
      * @return Chart names and groups.
      */
+    @PermitAll
     @GET
     @Path("/allChartNames")
     public Response getAllChartNames() {
@@ -46,6 +50,7 @@ public class StatisticController {
      * @param update If "true" then only the trace information will send back to the caller.
      * @return The chart data locally cached.
      */
+    @PermitAll
     @GET
     @Path("/chartData")
     @Produces(MediaType.APPLICATION_JSON)
@@ -78,6 +83,7 @@ public class StatisticController {
      * @param fileMetaData    File meta data containing the filename
      * @return Success information
      */
+    @PermitAll
     @POST
     @Path("/updateData")
     public Response uploadNewData(
@@ -100,7 +106,8 @@ public class StatisticController {
     /**
      * Call this to create a new chart.
      * <p>
-     * TODO: Charts should be created only if the user is authenticated! For this the password service have to be implemented.
+     * TODO: Charts should be created only if the user is authenticated! For this
+     * the password service have to be implemented. 
      *
      * @param chartName       new chartname
      * @param groupName       group for the chart
@@ -109,6 +116,7 @@ public class StatisticController {
      * @param fileMetaData    python file metadata
      * @return response if the create was successful.
      */
+    @PermitAll
     @POST
     @Path("/createChart")
     public Response createChart(
@@ -132,6 +140,7 @@ public class StatisticController {
      * @param chartName Chartname to delete from the repository
      * @return boolean as JSON which shows the success of the delete
      */
+    @PermitAll
     @DELETE
     @Path("/deleteChart")
     public Response deleteChart(
@@ -150,6 +159,7 @@ public class StatisticController {
      *
      * @return The groupList JSON encoded string.
      */
+    @PermitAll
     @GET
     @Path("/groups")
     @Produces(MediaType.APPLICATION_JSON)
@@ -165,6 +175,7 @@ public class StatisticController {
      * @param chartName Name for the chart
      * @return list of all dates data is available
      */
+    @PermitAll
     @GET
     @Path("/timeseriesDates")
     @Produces(MediaType.APPLICATION_JSON)
