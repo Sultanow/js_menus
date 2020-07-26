@@ -1,0 +1,65 @@
+version: '3.5'
+services:
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
+    container_name: elasticsearch
+    environment:
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    volumes:
+      - ./elasticsearch/data-master/:/usr/share/elasticsearch/data
+      - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add: 
+      - IPC_LOCK  
+    ports:
+      - 9200:9200
+    networks:
+      - cockpit-net 
+
+  elasticsearch-data1:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
+    container_name: elasticsearch-data1
+    environment:  
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    volumes:
+      - ./elasticsearch-data1/data1/:/usr/share/elasticsearch/data
+      - ./elasticsearch-data1/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add: 
+      - IPC_LOCK 
+    links:
+      - elasticsearch
+    networks:
+      - cockpit-net  
+     
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.8.0
+    volumes:
+      - ../kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - 5601:5601
+    links:
+      - elasticsearch
+    networks:
+      - cockpit-net
+
+networks:
+  cockpit-net:
+    name: cockpit-net
+    

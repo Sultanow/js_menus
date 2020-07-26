@@ -1,0 +1,20 @@
+cluster.name: "elastic-cluster"
+node.name: elasticsearch-data1
+bootstrap.memory_lock: true
+discovery.seed_hosts:
+  [
+    "elasticsearch",
+    "elasticsearch-data2",
+    "elasticsearch-coordinating",
+  ]
+xpack.security.enabled: false
+node.master: true
+node.voting_only: false
+node.data: true
+node.ingest: false
+node.ml: false
+xpack.ml.enabled: false
+node.transform: true
+node.remote_cluster_client: false
+xpack.monitoring.enabled: false
+network.host: 0.0.0.0

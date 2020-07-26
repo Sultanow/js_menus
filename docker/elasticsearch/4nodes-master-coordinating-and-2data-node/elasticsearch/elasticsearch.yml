@@ -1,0 +1,22 @@
+cluster.name: "elastic-cluster"
+node.name: elasticsearch
+cluster.initial_master_nodes: elasticsearch
+bootstrap.memory_lock: true
+discovery.seed_hosts:
+  [
+    "elasticsearch-data1",
+    "elasticsearch-data2",
+    "elasticsearch-coordinating",
+  ]
+node.master: true
+node.voting_only: false
+node.data: false
+node.ingest: false
+node.ml: false
+xpack.ml.enabled: false
+node.transform: true
+node.remote_cluster_client: false
+xpack.security.enabled: false
+xpack.monitoring.enabled: false
+network.host: 0.0.0.0
+http.port: 9200

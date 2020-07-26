@@ -131,7 +131,13 @@ backend/.idea
 docker/redis/data/*
 docker/zabbix/zbx_env/var/lib/mysql/*
 docker/redis/conf/redis.log
-
-
 docker/python/data/__pycache__/*
 
+docker/elasticsearch/single-node/elasticsearch/data-master/*
+
+docker/elasticsearch/2nodes-master-and-1data-node/elasticsearch/data-master/*
+docker/elasticsearch/2nodes-master-and-1data-node/elasticsearch-data1/data1/*
+
+docker/elasticsearch/4nodes-master-coordinating-and-2data-node/elasticsearch/data-master/*
+docker/elasticsearch/4nodes-master-coordinating-and-2data-node/elasticsearch-data1/data1/*
+docker/elasticsearch/4nodes-master-coordinating-and-2data-node/elasticsearch-data2/data2/*
