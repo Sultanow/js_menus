@@ -39,12 +39,7 @@ public class ElasticsearchController {
 
     /**
      * Get cluster health
-<<<<<<< HEAD
      * @param indexName
-=======
-     *
->>>>>>> 86580d5fe7e41ab365dbf0070865896f051afdf1
-     * @return index status
      */
     @PermitAll
     @POST

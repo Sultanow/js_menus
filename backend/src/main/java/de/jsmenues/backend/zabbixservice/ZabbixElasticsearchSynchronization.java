@@ -3,15 +3,22 @@ package de.jsmenues.backend.zabbixservice;
 import de.jsmenues.backend.elasticsearch.ElasticsearchConnecter;
 import de.jsmenues.backend.elasticsearch.dao.HistoryDao;
 import de.jsmenues.backend.elasticsearch.dao.InformationHostDao;
+import de.jsmenues.listeners.Initiator;
+
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.indices.PutIndexTemplateRequest;
+import org.elasticsearch.common.settings.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +44,7 @@ public class ZabbixElasticsearchSynchronization {
 
         public void run() {
 
-            LOGGER.info("Timer is starting");
+            LOGGER.info("Synchronization is starting");
             ZabbixService zabbixService = new ZabbixService();
             List<Map<String, List<Object>>> allHostsInfo = zabbixService.getHostInfos();
             List<Map<String, Object>> histories = zabbixService.getHistory();
@@ -48,16 +55,43 @@ public class ZabbixElasticsearchSynchronization {
 
             ElasticsearchConnecter.makeConnection();
             LOGGER.info("Connection opend with elasticsearch");
-            ClusterHealthRequest request = new ClusterHealthRequest(".kibana_1");
+
             ClusterHealthResponse response = null;
             String kibanStatus = null;
 
+            if (Initiator.firstCall) {
+                try {
+                    ClusterHealthRequest clusterRequest = new ClusterHealthRequest();
+                    LOGGER.info("ClusterHealthReques");
+                    ClusterHealthResponse clusterResponse = ElasticsearchConnecter.restHighLevelClient.cluster()
+                            .health(clusterRequest, RequestOptions.DEFAULT);
+                    int numberOfNodes = clusterResponse.getNumberOfDataNodes();
+                    LOGGER.info("numberOfNodes " + numberOfNodes);
+                    if (numberOfNodes == 1) {
+                        PutIndexTemplateRequest putIndexTemplateRequest = new PutIndexTemplateRequest(
+                                "settings-template");
+                        LOGGER.info("template1111111 " + putIndexTemplateRequest);
+
+                        putIndexTemplateRequest.patterns(Arrays.asList("history*", "host*"));
+                        putIndexTemplateRequest.settings(Settings.builder().put("index.number_of_replicas", 0));
+                        AcknowledgedResponse putTemplateResponse = ElasticsearchConnecter.restHighLevelClient.indices()
+                                .putTemplate(putIndexTemplateRequest, RequestOptions.DEFAULT);
+
+                        Initiator.firstCall = !putTemplateResponse.isAcknowledged();
+                        LOGGER.info("index number_of_replicas = 0 ");
+                    }
+                } catch (Exception e2) {
+                    LOGGER.error(e2.getMessage() + "\n elasticsearch is not avalible");
+                }
+            }
+
             try {
+                ClusterHealthRequest request = new ClusterHealthRequest(".kibana_1");
                 response = ElasticsearchConnecter.restHighLevelClient.cluster().health(request, RequestOptions.DEFAULT);
                 kibanStatus = response.getStatus().toString();
                 LOGGER.info("Kibana Status: " + kibanStatus);
             } catch (IOException e1) {
-                LOGGER.error(e1.getMessage() + "\n Kibana is not avalible");
+                LOGGER.error(e1.getMessage() + "\n Kibana is not avalible");               
             }
 
             try {
@@ -68,7 +102,7 @@ public class ZabbixElasticsearchSynchronization {
                 } else {
                     LOGGER.error("\n Kibana hasn't been avalible yet ");
                 }
-            } catch (Exception e) {
+            } catch (Exception e) {              
                 LOGGER.error(e.getMessage() + "\n elasticsearch is not avalible");
             }
         }

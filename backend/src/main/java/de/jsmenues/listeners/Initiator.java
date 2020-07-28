@@ -19,6 +19,7 @@ import de.jsmenues.redis.repository.ConfigurationRepository;
  * Initiator is notified when the application is deployed on the server
  */
 public class Initiator implements ServletContextListener {
+    public static boolean firstCall = true;
     private static Logger LOGGER = LoggerFactory.getLogger(Initiator.class);
     private final static String rootPassword = "1234";
     private ServletContext context = null;
@@ -38,6 +39,7 @@ public class Initiator implements ServletContextListener {
     public void contextInitialized(ServletContextEvent event) {
 
         LOGGER.info("Application start");
+       
 
         // make sure that old connection is closed
         if (ElasticsearchConnecter.restHighLevelClient != null) {
