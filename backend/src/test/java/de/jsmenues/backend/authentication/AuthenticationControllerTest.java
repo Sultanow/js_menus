@@ -40,7 +40,7 @@ public class AuthenticationControllerTest extends JerseyTest {
     /**
      * Redis mock
      */
-    private void setRedisMock(ConfigurationRepository mock) {
+    void setRedisMock(ConfigurationRepository mock) {
         try {
             Field instance = ConfigurationRepository.class.getDeclaredField("instance");
             instance.setAccessible(true);
@@ -71,7 +71,7 @@ public class AuthenticationControllerTest extends JerseyTest {
      * Test "login" and "isvalid" endpoint
      */
     @Test
-    public void loginTest() {
+    void loginTest() {
 
         when(repo.get("password")).thenReturn(new Configuration("password", "1234"));
         String pass = ConfigurationRepository.getRepo().get("password").getValue();

@@ -41,7 +41,7 @@ public class AuthenticationFilterTest extends JerseyTest {
     /**
      * Redis mock
      */
-    private void setRedisMock(ConfigurationRepository mock) {
+    void setRedisMock(ConfigurationRepository mock) {
         try {
             Field instance = ConfigurationRepository.class.getDeclaredField("instance");
             instance.setAccessible(true);
@@ -71,7 +71,7 @@ public class AuthenticationFilterTest extends JerseyTest {
      * Test if user is allwoed to access
      */
     @Test
-    public void isUserAllowedTest() {
+    void isUserAllowedTest() {
 
         AuthenticationFilter authenticationFilter = new AuthenticationFilter();
 
@@ -88,7 +88,7 @@ public class AuthenticationFilterTest extends JerseyTest {
      * Test Autroiazation
      */
     @Test
-    public void AutorizerClass() {
+    void AutorizerClass() {
         AuthenticationFilter authenticationFilter = new AuthenticationFilter();
         AuthenticationResource authenticationResource = new AuthenticationResource();
         authenticationResource.getInstances();

@@ -19,7 +19,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import de.jsmenues.backend.authentication.TimerToDeleteOldTokens.LoopTask;
 import de.jsmenues.redis.data.Configuration;
 import de.jsmenues.redis.repository.ConfigurationRepository;
 
@@ -43,7 +42,7 @@ class AuthenticationTokensTest extends JerseyTest {
     /**
      * Redis mock
      */
-    private void setRedisMock(ConfigurationRepository mock) {
+    void setRedisMock(ConfigurationRepository mock) {
         try {
             Field instance = ConfigurationRepository.class.getDeclaredField("instance");
             instance.setAccessible(true);
@@ -75,7 +74,7 @@ class AuthenticationTokensTest extends JerseyTest {
      * 
      */
     @Test
-    public void isTokenExistInMap() {
+    void isTokenExistInMap() {
         Map<String, Long> tokenMAp;
         TokenGenerator tokenGenerator = new TokenGenerator();
         when(repo.get("password")).thenReturn(new Configuration("password", "1234"));
@@ -92,7 +91,7 @@ class AuthenticationTokensTest extends JerseyTest {
      * Test to verify if a token is valid and deleted after 12 hours
      */
     @Test
-    public void isTokenValid() {
+    void isTokenValid() {
         Map<String, Long> tokenMAp1;
 
         TokenGenerator tokenGenerator = new TokenGenerator();
@@ -123,7 +122,7 @@ class AuthenticationTokensTest extends JerseyTest {
      * Test to verify if a password is changed.
      */
     @Test
-    public void changePasswordTest() {
+    void changePasswordTest() {
         Password password = new Password();
         String currentPassword = "1234";
         String oldPassword = "1234";
@@ -137,7 +136,7 @@ class AuthenticationTokensTest extends JerseyTest {
      * Test set password to Redis
      */
     @Test
-    public void setRootPassword() {
+    void setRootPassword() {
         String rootPassword = "1234";
         when(repo.get("password")).thenReturn(new Configuration("password", "1234"));
         boolean isSaved = Password.setRootPassword(rootPassword);
@@ -145,19 +144,12 @@ class AuthenticationTokensTest extends JerseyTest {
     }
 
     /**
-     * Test timer to delete old tokens 
+     * Test timer to delete old tokens
      */
     @Test
-    public void timerToDeleteOldTokensTest() {
-        boolean ifStart = false;
+    void timerToDeleteOldTokensTest() {
         TimerToDeleteOldTokens timerToDeleteOldTokens = new TimerToDeleteOldTokens();
+        assertDoesNotThrow(() -> timerToDeleteOldTokens.start());
 
-        try {
-            timerToDeleteOldTokens.start();
-            ifStart = true;
-        } catch (Exception e) {
-            ifStart = false;
-        }
-        assertTrue(ifStart);
     }
 }
