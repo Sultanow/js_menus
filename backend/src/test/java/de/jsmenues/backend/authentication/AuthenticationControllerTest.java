@@ -91,7 +91,7 @@ public class AuthenticationControllerTest extends JerseyTest {
      * Test "changePassword" endpoint
      */
     @Test
-    public void changePasswordTest() {
+    void changePasswordTest() {
         when(repo.get("password")).thenReturn(new Configuration("password", "1234"));
         String oldPass = ConfigurationRepository.getRepo().get("password").getValue();
         String newPass = "1111";
