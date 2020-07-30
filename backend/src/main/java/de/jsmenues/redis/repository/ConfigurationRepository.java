@@ -12,8 +12,8 @@ import java.util.List;
 /**
  * Configuration Access to Redis
  */
-public class ConfigurationRepository {
-    private static ConfigurationRepository instance;
+public class ConfigurationRepository implements IConfigurationRepository{
+    private static IConfigurationRepository instance;
     private JedisPool configurationPool;
 
     private ConfigurationRepository() {
@@ -30,11 +30,11 @@ public class ConfigurationRepository {
     private void saveConfigItemIfNotExist(String item) {
         try (Jedis jedis = configurationPool.getResource()) {
             if (jedis.get(item) == null)
-                save(new Configuration(item, ""));
+                save(item, "");
         }
     }
 
-    public static ConfigurationRepository getRepo() {
+    public static IConfigurationRepository getRepo() {
         if (instance == null) {
             instance = new ConfigurationRepository();
         }
@@ -46,6 +46,8 @@ public class ConfigurationRepository {
      *
      * @param config - The config
      */
+    @Override
+    @Deprecated
     public void save(Configuration config) {
         try (Jedis jedis = configurationPool.getResource()) {
             if (jedis.get(config.getKey()) != null) {
@@ -63,6 +65,8 @@ public class ConfigurationRepository {
      * @param key
      * @return Configuration, if a value was found
      */
+    @Override
+    @Deprecated
     public Configuration get(String key) {
         try (Jedis jedis = configurationPool.getResource()) {
             String value = jedis.get(key);
@@ -73,6 +77,7 @@ public class ConfigurationRepository {
         }
     }
 
+    @Override
     public List<Configuration> getAll(List<String> keys) {
         List<Configuration> configurations = new ArrayList<>();
         try (Jedis jedis = configurationPool.getResource()) {
@@ -87,6 +92,39 @@ public class ConfigurationRepository {
             }
         }
         return configurations;
+    }
+
+    /**
+     * The new version for saving data to redis
+     * @param key key with which the specified value is to be associated
+     * @param val value to be associated with the specified key
+     */
+    @Override
+    public void save(String key, String val) {
+        try (Jedis jedis = configurationPool.getResource()) {
+            if (jedis.get(key) != null) {
+                jedis.set(key, val);
+                return;
+            }
+
+            jedis.append(key, val);
+        }
+    }
+
+    /**
+     * Get a value for a specific key
+     * @param key Name for the search parameter
+     * @return The Value for a key or an empty string if not exists
+     */
+    @Override
+    public String getVal(String key) {
+        try (Jedis jedis = configurationPool.getResource()) {
+            String value = jedis.get(key);
+            if (value == null) {
+                return "";
+            }
+            return value;
+        }
     }
 
 }
