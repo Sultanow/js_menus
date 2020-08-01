@@ -25,13 +25,8 @@ public class HostsDao {
     /**
      * Insert all hosts from zabbix to elasticsearch
      * 
-<<<<<<< HEAD
      * @param hosts
      * @return status if new hosts are inserted, updated or not
-=======
-     * @param hosts hosts from zabbix
-     * @return status if new hosts are inserted ,updated or not
->>>>>>> 86580d5fe7e41ab365dbf0070865896f051afdf1
      */
     public static String insertAllHosts(List<Map<String, Object>> hosts) throws IOException {
 
@@ -74,12 +69,7 @@ public class HostsDao {
 
     /**
      * Delete host by id from elasticsearch
-<<<<<<< HEAD
      * @param hostId
-=======
-     *
->>>>>>> 86580d5fe7e41ab365dbf0070865896f051afdf1
-     * @return response from delete request
      */
     public static String deleteHostById(String hostId) throws IOException {
 
@@ -91,12 +81,9 @@ public class HostsDao {
 
     /**
      * Delete host info by id from elasticsearch
-<<<<<<< HEAD
+     * 
      * @param hostId
-=======
      *
->>>>>>> 86580d5fe7e41ab365dbf0070865896f051afdf1
-     * @return response from delete request
      */
     public static String deleteHostInfoById(String hostId) throws IOException {
         DeleteRequest deleteRequestInfo = new DeleteRequest(HostInformationService.INDEX, hostId);

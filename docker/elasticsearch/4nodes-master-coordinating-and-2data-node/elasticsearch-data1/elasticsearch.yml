@@ -17,4 +17,5 @@ xpack.ml.enabled: false
 node.transform: true
 node.remote_cluster_client: false
 xpack.monitoring.enabled: false
+path.repo: ../elasticsearch/backup
 network.host: 0.0.0.0

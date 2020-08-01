@@ -13,5 +13,6 @@ node.transform: true
 node.remote_cluster_client: false
 xpack.monitoring.enabled: false
 xpack.security.enabled: false
+path.repo: ./backup
 network.host: 0.0.0.0
 http.port: 9200

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import de.jsmenues.backend.authentication.Password;
 import de.jsmenues.backend.authentication.TimerToDeleteOldTokens;
 import de.jsmenues.backend.elasticsearch.ElasticsearchConnecter;
+import de.jsmenues.backend.elasticsearch.dao.SnapshotDao;
 import de.jsmenues.backend.zabbixservice.ZabbixElasticsearchSynchronization;
 import de.jsmenues.redis.repository.ConfigurationRepository;
 
@@ -20,6 +21,7 @@ import de.jsmenues.redis.repository.ConfigurationRepository;
  */
 public class Initiator implements ServletContextListener {
     public static boolean firstCall = true;
+    public static int callCounter = 0;
     private static Logger LOGGER = LoggerFactory.getLogger(Initiator.class);
     private final static String rootPassword = "1234";
     private ServletContext context = null;
@@ -39,17 +41,49 @@ public class Initiator implements ServletContextListener {
     public void contextInitialized(ServletContextEvent event) {
 
         LOGGER.info("Application start");
-       
 
         // make sure that old connection is closed
         if (ElasticsearchConnecter.restHighLevelClient != null) {
             try {
                 ElasticsearchConnecter.closeConnection();
                 LOGGER.info("old connection is closed");
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+        ElasticsearchConnecter.makeConnection();
+        LOGGER.info("Connection opend with elasticsearch");
+
+        try {
+            if (!SnapshotDao.ifRepositoryExist()) {
+                SnapshotDao.creatRepository();
+                LOGGER.info("backup repository is created");
+            } else {
+                LOGGER.info("backup repository exist");
+            }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage() + "snopshot reopsitory ist not created");
+        }
+
+        try {
+            if (SnapshotDao.createLifecycle()) {         
+                LOGGER.info("snapshot lifecycle is created");
+            } else {
+                LOGGER.info("snapshot lifecycle is not created");
+            }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage() + "snapshot lifecycle ist not created");
+        }
+        
+        try {
+            if (SnapshotDao.startLifeCycle()) {         
+                LOGGER.info("lifecycle is started");
+            } else {
+                LOGGER.info("lifecycle is not started");
+            }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage() + "lifecycle is not started");
         }
 
         // set once the rootPassword as "1234" when Web Application begins and there is

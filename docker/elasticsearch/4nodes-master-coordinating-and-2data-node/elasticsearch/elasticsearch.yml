@@ -18,6 +18,7 @@ node.transform: true
 node.remote_cluster_client: false
 xpack.security.enabled: false
 xpack.monitoring.enabled: false
+path.repo: ./backup
 #gateway.recover_after_nodes: 8 //if you have moer than 8 nodes
 network.host: 0.0.0.0
 http.port: 9200

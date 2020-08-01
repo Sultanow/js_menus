@@ -4,6 +4,7 @@ import java.io.IOException;
 import javax.annotation.security.PermitAll;
 
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -39,15 +40,16 @@ public class ElasticsearchController {
 
     /**
      * Get cluster health
+     * 
      * @param indexName
      */
     @PermitAll
-    @POST
+    @GET
     @Path("/indexhealth")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getClusterhealth(@QueryParam("indexname") String indexName) throws IOException {
+    public Response getClusterhealth() throws IOException {
 
-        String result = ElasticsearchDao.getClusterHealth(indexName);
+        String result = ElasticsearchDao.getClusterHealth();
         return Response.ok(result).build();
     }
 

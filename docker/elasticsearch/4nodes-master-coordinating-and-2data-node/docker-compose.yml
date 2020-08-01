@@ -8,6 +8,7 @@ services:
     volumes:
       - ./elasticsearch/data-master/:/usr/share/elasticsearch/data
       - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./elasticsearch/backup:/usr/share/elasticsearch/backup
 
     ulimits:
       memlock:

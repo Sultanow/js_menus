@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import org.codehaus.jackson.type.TypeReference;
+import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
@@ -90,6 +91,13 @@ public class HistoryDao {
                                         .source(history).id(stringHistoryClock);
                                 IndexResponse indexResponse = ElasticsearchConnecter.restHighLevelClient
                                         .index(indexRequest, RequestOptions.DEFAULT);
+
+                                ClusterHealthRequest clusterHealthRequest = new ClusterHealthRequest(
+                                        "history-" + hostName + "-" + stringKey);
+                                clusterHealthRequest.waitForGreenStatus();
+
+                                ElasticsearchConnecter.restHighLevelClient.cluster().health(clusterHealthRequest,
+                                        RequestOptions.DEFAULT);
                                 numberOfHistoryRecords++;
                                 LOGGER.info(indexResponse + "\n" + numberOfHistoryRecords
                                         + " history records are inserted");
