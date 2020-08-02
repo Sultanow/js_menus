@@ -269,19 +269,21 @@ public class SnapshotDao {
      * @return restore information
      * 
      */
-    public static RestoreInfo restoreIndexfromSnapshot(String snapshotName, String indexPattern) {
+    increase    public static RestoreInfo restoreIndexfromSnapshot(String snapshotName, String indexPattern, String renameReplacement) {
         RestoreInfo restoreInfo = null;
 
         try {
             RestoreSnapshotRequest restoreSnapshotRequest = new RestoreSnapshotRequest("backup", snapshotName);
             restoreSnapshotRequest.indices(indexPattern);
+            restoreSnapshotRequest.renamePattern(indexPattern+"(.+)"); 
+            restoreSnapshotRequest.renameReplacement(renameReplacement+"$1");
             restoreSnapshotRequest.ignoreIndexSettings("index.refresh_interval", "index.search.idle.after");
             restoreSnapshotRequest.waitForCompletion(true);
             RestoreSnapshotResponse restoreSnapshotResponse = ElasticsearchConnecter.restHighLevelClient.snapshot()
                     .restore(restoreSnapshotRequest, RequestOptions.DEFAULT);
             restoreInfo = restoreSnapshotResponse.getRestoreInfo();
         } catch (Exception e) {
-            LOGGER.error(e.getMessage() + snapshotName + "isn't exist or somethings wrong with elasticsearch");
+            LOGGER.error(e.getMessage() + snapshotName + "isn't exist, somethings wrong with elasticsearch or rename the index");
 
         }
         return restoreInfo;

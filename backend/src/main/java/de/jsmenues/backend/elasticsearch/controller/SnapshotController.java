@@ -92,9 +92,9 @@ public class SnapshotController {
     @Path("/restoreIndex")
     @Produces(MediaType.TEXT_PLAIN)
     public Response restoreAllIndex(@QueryParam("snapshotname") String snapshotName,
-            @QueryParam("indexpattern") String indexPattern) throws IOException {
+            @QueryParam("indexpattern") String indexPattern, @QueryParam("rename") String rename) throws IOException {
 
-        RestoreInfo result = SnapshotDao.restoreIndexfromSnapshot(snapshotName, indexPattern);
+        RestoreInfo result = SnapshotDao.restoreIndexfromSnapshot(snapshotName, indexPattern, rename);
         String stringResult = String.valueOf(result);
         return Response.ok(stringResult).build();
     }
