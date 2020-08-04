@@ -266,17 +266,18 @@ public class SnapshotDao {
      * 
      * @param snapshotName
      * @param indexPattern
+     * @param indexNewName
      * @return restore information
      * 
      */
-    increase    public static RestoreInfo restoreIndexfromSnapshot(String snapshotName, String indexPattern, String renameReplacement) {
+    public static RestoreInfo restoreIndexfromSnapshot(String snapshotName, String indexPattern, String indexNewName) {
         RestoreInfo restoreInfo = null;
 
         try {
             RestoreSnapshotRequest restoreSnapshotRequest = new RestoreSnapshotRequest("backup", snapshotName);
             restoreSnapshotRequest.indices(indexPattern);
             restoreSnapshotRequest.renamePattern(indexPattern+"(.+)"); 
-            restoreSnapshotRequest.renameReplacement(renameReplacement+"$1");
+            restoreSnapshotRequest.renameReplacement(indexNewName+"$1");
             restoreSnapshotRequest.ignoreIndexSettings("index.refresh_interval", "index.search.idle.after");
             restoreSnapshotRequest.waitForCompletion(true);
             RestoreSnapshotResponse restoreSnapshotResponse = ElasticsearchConnecter.restHighLevelClient.snapshot()
