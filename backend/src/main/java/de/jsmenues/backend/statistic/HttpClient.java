@@ -41,7 +41,7 @@ public class HttpClient {
             return response;
         } catch (Exception e) {
             LOGGER.warn("Exception: " + e.getMessage());
-            return Response.status(401).build();
+            return Response.status(500).build();
         }
     }
 

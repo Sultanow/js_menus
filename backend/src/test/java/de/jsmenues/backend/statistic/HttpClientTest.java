@@ -30,7 +30,7 @@ class HttpClientTest extends JerseyTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpClientTest.class);
     private HttpServer server;
     private static final String BASE_URI = "http://localhost:8081/test";
-    private HttpClient client = new HttpClient();
+    private final HttpClient client = new HttpClient();
 
     @TempDir
     Path tempDir;
@@ -66,18 +66,23 @@ class HttpClientTest extends JerseyTest {
 
     @Test
     void sendFileDataToPythonService() throws IOException {
+        //given
         Path filePath = tempDir.resolve("test.txt");
         Files.write(filePath, Arrays.asList("1","2"));
         javax.ws.rs.core.Response response;
+        //when
         response = client.sendFileDataToPythonService(BASE_URI,filePath.toFile().getAbsolutePath(), "", "");
-        LOGGER.warn(response.toString());
+        //then
         assertEquals(200, response.getStatus());
     }
 
     @Test
     void sendFileDataToPythonServiceWithNotExistingFile() {
+        //given
         javax.ws.rs.core.Response response;
+        //when
         response =  client.sendFileDataToPythonService(BASE_URI, "notExisitingFile.txt", "", "");
-        assertEquals(401, response.getStatus());
+        //then
+        assertEquals(500, response.getStatus());
     }
 }

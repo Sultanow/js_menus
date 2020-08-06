@@ -31,8 +31,6 @@ import static org.mockito.Mockito.*;
 
 
 class StatisticControllerTest extends JerseyTest {
-    static final Logger LOGGER = LoggerFactory.getLogger(StatisticControllerTest.class);
-    ConfigurationRepository repo = mock(ConfigurationRepository.class, RETURNS_DEEP_STUBS);
     StatisticService service = mock(StatisticService.class, RETURNS_DEEP_STUBS);
     IConfigurationRepository repoMock = spy(new ConfigurationRepositoryMock());
 
@@ -74,118 +72,154 @@ class StatisticControllerTest extends JerseyTest {
     }
 
     @Test
-    void testGetAllChartNames() {
+    void getAllChartNames() {
+        //given
         repoMock.save("statistic.allChartNames", "[]");
-        String responseMsg = target("/statistic/allChartNames").request().get(String.class);
+        //when
+        target("/statistic/allChartNames").request().get(String.class);
+        //then
         verify(service, times(1)).getAllChartNames();
     }
 
     @Test
-    void testGetChartDataForNameBlank() {
+    void getChartDataForNameBlank() {
+        //given
         initDefaultChartNames();
+        ///when
         String responseMsg = target("/statistic/chartData").request().get(String.class);
+        //then
         assertEquals("No data", responseMsg);
     }
 
     @Test
-    void testGetChartDataForName() {
+    void getChartDataForName() {
+        //given
+        //when
         String responseMsg = target("/statistic/chartData").queryParam("chart", "Chart1").request().get(String.class);
+        //then
         verify(service, times(1)).getChartDataForName(anyString(), anyMap(), anyBoolean());
     }
 
     @Test
-    void testGetChartDataForNameWithStartDate() {
+    void getChartDataForNameWithStartDate() {
+        //given
+        //when
         String responseMsg = target("/statistic/chartData")
                 .queryParam("chart", "Chart1")
                 .queryParam("startdate", "2020-05-02")
                 .request()
                 .get(String.class);
+        //then
         verify(service, times(1)).getChartDataForName(anyString(), anyMap(), anyBoolean());
     }
 
     @Test
-    void testGetChartDataForNameWithStartAndEndDate() {
+    void getChartDataForNameWithStartAndEndDate() {
+        //given
+        //when
         String responseMsg = target("/statistic/chartData")
                 .queryParam("chart", "Chart1")
                 .queryParam("startdate", "2020-05-02")
                 .queryParam("enddate", "2020-05-09")
                 .request()
                 .get(String.class);
+        //then
         verify(service, times(1)).getChartDataForName(anyString(), anyMap(), anyBoolean());
     }
 
     @Test
-    void testGetChartDataForNameWithoutStartDateWithEndDate() {
+    void getChartDataForNameWithoutStartDateWithEndDate() {
+        //given
+        //wehn
         Response response = target("/statistic/chartData")
                 .queryParam("chart", "Chart1")
                 .queryParam("enddate", "2020-05-02")
                 .request()
                 .get();
+        //then
         verify(service, times(0)).getChartDataForName(anyString(), anyMap(), anyBoolean());
         assertEquals(400, response.getStatus());
     }
 
     @Test
-    void testGetChartDataForNameWithNotVaildDates() {
+    void getChartDataForNameWithNotVaildDates() {
+        //given
         when(service.getChartDataForName(anyString(), anyMapOf(String.class, String.class), anyBoolean())).thenThrow(IllegalArgumentException.class);
+        //when
         Response response = target("/statistic/chartData")
                 .queryParam("chart", "Chart1")
                 .queryParam("startdate", "2020-04-02")
                 .request()
                 .get();
+        //then
         assertEquals(400, response.getStatus());
     }
 
     @Test
-    void testUploadNewDataWithResultFalse() {
+    void uploadNewDataWithResultFalse() {
+        //given
         FormDataMultiPart multiPart = new FormDataMultiPart();
         multiPart.bodyPart(new FormDataBodyPart("chartName", ""));
         multiPart.setMediaType(MediaType.MULTIPART_FORM_DATA_TYPE);
         when(service.updateData(anyString(), any(InputStream.class), any(FormDataContentDisposition.class))).thenReturn(false);
+        //when
         Response response = target("/statistic/updateData").request().post(Entity.entity(multiPart, multiPart.getMediaType()), Response.class);
+        //then
         assertEquals(401, response.getStatus());
     }
 
     @Test
-    void testUploadNewDataWithResultTrue() {
+    void uploadNewDataWithResultTrue() {
+        //given
         FormDataMultiPart multiPart = new FormDataMultiPart();
         multiPart.bodyPart(new FormDataBodyPart("chartName", ""));
         multiPart.setMediaType(MediaType.MULTIPART_FORM_DATA_TYPE);
         when(service.updateData(anyString(), any(InputStream.class), any(FormDataContentDisposition.class))).thenReturn(true);
+        //when
         Response response = target("/statistic/updateData").request().post(Entity.entity(multiPart, multiPart.getMediaType()), Response.class);
+        //then
         assertEquals(200, response.getStatus());
     }
 
     @Test
-    void testCreateChartWithEmptyName() {
+    void createChartWithEmptyName() {
+        //given
         FormDataMultiPart multiPart = new FormDataMultiPart();
         multiPart.bodyPart(new FormDataBodyPart("chartName", ""));
         multiPart.setMediaType(MediaType.MULTIPART_FORM_DATA_TYPE);
+        //when
         Response response = target("/statistic/createChart").request().post(Entity.entity(multiPart, multiPart.getMediaType()), Response.class);
-
+        //then
         assertEquals(400, response.getStatus());
     }
 
     @Test
-    void testCreateChartWithNullChartName() {
+    void createChartWithNullChartName() {
+        //given
         FormDataMultiPart multiPart = new FormDataMultiPart();
         multiPart.setMediaType(MediaType.MULTIPART_FORM_DATA_TYPE);
         multiPart.bodyPart(new FormDataBodyPart("someBody", ""));
+        //when
         Response response = target("/statistic/createChart").request().post(Entity.entity(multiPart, multiPart.getMediaType()), Response.class);
+        //then
         assertEquals(400, response.getStatus());
     }
 
     @Test
-    void testCreateChartWithNullInputStream() {
+    void createChartWithNullInputStream() {
+        //given
         FormDataMultiPart multiPart = new FormDataMultiPart();
         multiPart.bodyPart(new FormDataBodyPart("chartName", "TestChart"));
         multiPart.setMediaType(MediaType.MULTIPART_FORM_DATA_TYPE);
+        //when
         Response response = target("/statistic/createChart").request().post(Entity.entity(multiPart, multiPart.getMediaType()), Response.class);
+        //then
         assertEquals(400, response.getStatus());
     }
 
     @Test
-    void testCreateChartWithInputStreamAndChartName() {
+    void createChartWithInputStreamAndChartName() {
+        //given
         FormDataMultiPart multiPart = new FormDataMultiPart();
         multiPart.bodyPart(new FormDataBodyPart("chartName", "TestChart"));
         multiPart.bodyPart(new FormDataBodyPart("file", String.valueOf(new ByteArrayInputStream(new byte[0]))));
@@ -193,47 +227,62 @@ class StatisticControllerTest extends JerseyTest {
         Response mockResonse = Response.ok().build();
         when(service.createChart(anyString(), anyString(), anyString(), any(InputStream.class), any(FormDataContentDisposition.class))).thenReturn(mockResonse);
         Response response = target("/statistic/createChart").request().post(Entity.entity(multiPart, multiPart.getMediaType()), Response.class);
+        //when
         verify(service, times(1)).createChart(anyString(), anyString(), anyString(), any(InputStream.class), any(FormDataContentDisposition.class));
+        //then
         assertEquals(200, response.getStatus());
     }
 
     @Test
-    void testDeleteChartWithoutChartName() {
-        String responseMsg = target("/statistic/deleteChart").request().delete(String.class);
-        LOGGER.info(responseMsg);
+    void deleteChartWithoutChartName() {
+        //given
+        //when
+        target("/statistic/deleteChart").request().delete(String.class);
+        //then
         verify(service, times(0)).deleteChart("");
     }
 
     @Test
-    void testDeleteChartWithChartName() {
+    void deleteChartWithChartName() {
+        //given
         initDefaultChartNames();
-        String responseMsg = target("/statistic/deleteChart").queryParam("chart", "Timenotmultiple").request().delete(String.class);
+        //when
+        target("/statistic/deleteChart").queryParam("chart", "Timenotmultiple").request().delete(String.class);
+        //then
         verify(service, times(1)).deleteChart("Timenotmultiple");
     }
 
     @Test
-    void testGetAllGroups() {
+    void getAllGroups() {
+        //given
         when(service.getAllGroupNames()).thenReturn("[\"Group1\"]");
+        //when
         String responseMsg = target("/statistic/groups").request().get(String.class);
-        LOGGER.info(responseMsg);
+        //then
         assertEquals("[\"Group1\"]", responseMsg);
     }
 
     @Test
-    void testGetTimeseriesDatesWithoutChart() {
+    void getTimeseriesDatesWithoutChart() {
+        //given
+        when(service.getTimeseriesDates("TestChart")).thenReturn("");
+        //when
         String responseMsg = target("/statistic/timeseriesDates")
                 .queryParam("chart", "TestChart")
                 .request()
                 .get(String.class);
-        when(service.getTimeseriesDates("TestChart")).thenReturn("");
+        //then
         assertEquals("", responseMsg);
     }
 
     @Test
-    void testGetTimeseriesDatesWithChart() {
+    void getTimeseriesDatesWithChart() {
+        //given
+        //when
         String responseMsg = target("/statistic/timeseriesDates")
                 .request()
                 .get(String.class);
+        //then
         assertEquals("", responseMsg);
     }
 

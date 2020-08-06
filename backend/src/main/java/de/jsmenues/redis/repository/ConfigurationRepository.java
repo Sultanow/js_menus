@@ -14,25 +14,12 @@ import java.util.List;
  */
 public class ConfigurationRepository implements IConfigurationRepository{
     private static IConfigurationRepository instance;
-    private JedisPool configurationPool;
+    private final JedisPool configurationPool;
 
     private ConfigurationRepository() {
         configurationPool = new JedisPool(new JedisPoolConfig(), "redis-service", 6379, 60, "password");
-        checkMinimalConfiguration();
     }
 
-    private void checkMinimalConfiguration() {
-        saveConfigItemIfNotExist("zabbixURL");
-        saveConfigItemIfNotExist("zabbixUser");
-        saveConfigItemIfNotExist("zabbixPass");
-    }
-
-    private void saveConfigItemIfNotExist(String item) {
-        try (Jedis jedis = configurationPool.getResource()) {
-            if (jedis.get(item) == null)
-                save(item, "");
-        }
-    }
 
     public static IConfigurationRepository getRepo() {
         if (instance == null) {
@@ -45,6 +32,7 @@ public class ConfigurationRepository implements IConfigurationRepository{
      * Save a config in redis
      *
      * @param config - The config
+     * @Deprecated: The class Configuration will removed in future. Use save(String key, String val).
      */
     @Override
     @Deprecated
@@ -62,8 +50,9 @@ public class ConfigurationRepository implements IConfigurationRepository{
     /**
      * Get configuration entry by key
      *
-     * @param key
+     * @param key Key for the saving point in Redis.
      * @return Configuration, if a value was found
+     * @Deprecated: The class Configuration will removed in future. Use getVal(String key).
      */
     @Override
     @Deprecated
