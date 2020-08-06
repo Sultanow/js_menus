@@ -31,3 +31,6 @@ TODO neues Bild generieren
 ## Verarbeitende Services
 + [Python](https://www.python.org/)
 
+# Data Analytics
+## Workflow zur visualisierten Anomaly-Erkennung
++ [Workflow](docs/data-analytics)
