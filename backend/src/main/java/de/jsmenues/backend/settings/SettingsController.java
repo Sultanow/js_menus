@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import de.jsmenues.backend.zabbixapi.ZabbixUser;
 import de.jsmenues.redis.data.Configuration;
 import de.jsmenues.redis.repository.ConfigurationRepository;
+import de.jsmenues.redis.repository.IConfigurationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,7 +99,7 @@ public class SettingsController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response setConfig(SettingItem[] config) {
         LOGGER.info("Size of config: " + config.length);
-        ConfigurationRepository repo = ConfigurationRepository.getRepo();
+        IConfigurationRepository repo = ConfigurationRepository.getRepo();
         for (SettingItem settingItem : config) {
             LOGGER.error(settingItem.toString());
             repo.save(new Configuration(settingItem.getKey(), settingItem.getValue()));

@@ -2,6 +2,7 @@ package de.jsmenues.backend.zabbixapi;
 
 import de.jsmenues.redis.data.Configuration;
 import de.jsmenues.redis.repository.ConfigurationRepository;
+import de.jsmenues.redis.repository.IConfigurationRepository;
 
 public class ZabbixUser {
     private String username;
@@ -39,7 +40,7 @@ public class ZabbixUser {
     }
 
     public void saveUser() {
-        ConfigurationRepository repo = ConfigurationRepository.getRepo();
+        IConfigurationRepository repo = ConfigurationRepository.getRepo();
         Configuration userConfiguration = new Configuration("configuration.zabbix.User", this.username);
         repo.save(userConfiguration);
         Configuration passConfiguration = new Configuration("configuration.zabbix.Password", this.password);

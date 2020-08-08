@@ -4,12 +4,9 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
-
-
 import javax.inject.Inject;
-
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -27,6 +24,7 @@ public class StatisticController {
     public StatisticController(StatisticService service) {
         this.statisticService = service;
     }
+
     /**
      * Returns all the chart names and the groups.
      *
@@ -46,8 +44,8 @@ public class StatisticController {
      *
      * @param chartName Name for the requested chart
      * @param startDate Start Date for the timeseries information
-     * @param endDate  End Date for the timeseries information
-     * @param update If "true" then only the trace information will send back to the caller.
+     * @param endDate   End Date for the timeseries information
+     * @param update    If "true" then only the trace information will send back to the caller.
      * @return The chart data locally cached.
      */
     @PermitAll
@@ -55,23 +53,34 @@ public class StatisticController {
     @Path("/chartData")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getChartDataForName(
-            @DefaultValue("") @QueryParam("chart") String chartName,
-            @DefaultValue("") @QueryParam("startdate") String startDate,
-            @DefaultValue("") @QueryParam("enddate") String endDate,
+            @QueryParam("chart") String chartName,
+            @QueryParam("startdate") String startDate,
+            @QueryParam("enddate") String endDate,
             @DefaultValue("false") @QueryParam("update") String update
     ) {
-        if (chartName.isEmpty()) {
+        if (null == chartName || chartName.isEmpty()) {
             return Response.ok("No data").build();
         }
         Map<String, String> dates = new HashMap<>();
-        if(!startDate.isEmpty()) {
+        if (null != startDate && !startDate.isEmpty()) {
             dates.put("start", startDate);
         }
-        if(!endDate.isEmpty()) {
+        if (null != endDate && !endDate.isEmpty()) {
             dates.put("end", endDate);
         }
-        String chartData = statisticService.getChartDataForName(chartName, dates, "true".equals(update));
-        return Response.ok(chartData).build();
+        Response response;
+        if( dates.size() == 1 && dates.containsKey("end")) {
+            // Only Enddate is set without start date. So send response 401
+            response = Response.status(400, "Missing User input Startdate for given Enddate").build();
+        } else {
+            try {
+                String chartData = statisticService.getChartDataForName(chartName, dates, "true".equals(update));
+                response = Response.ok(chartData).build();
+            } catch (IllegalArgumentException e) {
+                response = Response.status(400, "Start- and/or End-Date not valid").build();
+            }
+        }
+        return response;
     }
 
     /**
@@ -107,7 +116,7 @@ public class StatisticController {
      * Call this to create a new chart.
      * <p>
      * TODO: Charts should be created only if the user is authenticated! For this
-     * the password service have to be implemented. 
+     * the password service have to be implemented.
      *
      * @param chartName       new chartname
      * @param groupName       group for the chart
@@ -127,7 +136,12 @@ public class StatisticController {
             @FormDataParam("file") FormDataContentDisposition fileMetaData
     ) {
         LOGGER.debug("Enter [POST] '/createChart'");
-        Response response = statisticService.createChart(chartName, groupName, description, fileInputStream, fileMetaData);
+        Response response;
+        if (chartName == null || chartName.isEmpty() || fileInputStream == null) {
+            response = Response.status(400, "Missing user input data").build();
+        } else {
+            response = statisticService.createChart(chartName, groupName, description, fileInputStream, fileMetaData);
+        }
         LOGGER.debug("Leave [POST] '/createChart'");
         return response;
     }
@@ -147,7 +161,7 @@ public class StatisticController {
             @DefaultValue("") @QueryParam("chart") String chartName
     ) {
         LOGGER.debug("Enter [DELETE] '/deleteChart'");
-        if(!chartName.isEmpty()) {
+        if (!chartName.isEmpty()) {
             statisticService.deleteChart(chartName);
         }
         LOGGER.debug("Leave [DELETE] '/deleteChart'");
@@ -172,6 +186,7 @@ public class StatisticController {
 
     /**
      * All Statistic dates available for a timeseries chart
+     *
      * @param chartName Name for the chart
      * @return list of all dates data is available
      */
@@ -180,9 +195,12 @@ public class StatisticController {
     @Path("/timeseriesDates")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTimeseriesDates(
-            @DefaultValue("") @QueryParam("chart") String chartName
+            @QueryParam("chart") String chartName
     ) {
         LOGGER.debug("Enter [GET] '/timeseriesDates'");
+        if (null == chartName || chartName.isEmpty()) {
+            return Response.ok("").build();
+        }
         String timeseriesDates = statisticService.getTimeseriesDates(chartName);
         LOGGER.debug("Leave [GET] '/timeseriesDates'");
         return Response.ok(timeseriesDates).build();
