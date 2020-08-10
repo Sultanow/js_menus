@@ -5,14 +5,12 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Configuration Access to Redis
  */
-public class ConfigurationRepository implements IConfigurationRepository{
+public class ConfigurationRepository implements IConfigurationRepository {
     private static IConfigurationRepository instance;
     private final JedisPool configurationPool;
 
@@ -85,6 +83,7 @@ public class ConfigurationRepository implements IConfigurationRepository{
 
     /**
      * The new version for saving data to redis
+     *
      * @param key key with which the specified value is to be associated
      * @param val value to be associated with the specified key
      */
@@ -102,6 +101,7 @@ public class ConfigurationRepository implements IConfigurationRepository{
 
     /**
      * Get a value for a specific key
+     *
      * @param key Name for the search parameter
      * @return The Value for a key or an empty string if not exists
      */
@@ -116,4 +116,31 @@ public class ConfigurationRepository implements IConfigurationRepository{
         }
     }
 
+    /**
+     * Get all Configurations by a pattern
+     *
+     * @param pattern The serach pattern.
+     * @return list of all maching keys for the given pattern.
+     */
+    public Map<String, String> getAllByPattern(String pattern) {
+        Map<String,String> repoItems = new HashMap<>();
+        try (Jedis jedis = configurationPool.getResource()) {
+            Set<String> keys = jedis.keys(pattern);
+            for (String key : keys) {
+                repoItems.put(key, this.getVal(key));
+            }
+        }
+        return repoItems;
+    }
+
+    /**
+     * Deletes a key from the redis database
+     * @param key Key to delete
+     */
+    @Override
+    public void delete(String key) {
+        try(Jedis jedis = configurationPool.getResource()) {
+            jedis.del(key);
+        }
+    }
 }
