@@ -1,6 +1,7 @@
 package de.jsmenues.backend.elasticsearch.dao;
 
 import de.jsmenues.backend.elasticsearch.ElasticsearchConnecter;
+import de.jsmenues.backend.elasticsearch.saveitem.SollWerte;
 import de.jsmenues.backend.elasticsearch.service.HistoryServiece;
 import de.jsmenues.backend.elasticsearch.service.HostInformationService;
 import java.io.IOException;
@@ -47,7 +48,7 @@ public class HistoryDao {
         try {
             List<Map<String, List<Object>>> hostsInfo = InformationHostDao.getAllHostInformation();
             insert: for (Map<String, List<Object>> hostInfo : hostsInfo) {
-                Object hostName = hostInfo.get("name");
+                String hostName = String.valueOf(hostInfo.get("name"));
                 List<Object> items = hostInfo.get("items");
                 mapItems = HistoryServiece.MAPPER.convertValue(items, new TypeReference<List<Object>>() {
                 });
@@ -70,7 +71,8 @@ public class HistoryDao {
                         long unixTime = System.currentTimeMillis() / 1000L;
 
                         if (itemid.equals(historyItemid)) {
-                            history.put("sollvalue", "");
+                            String sollVlaue = SollWerte.getSollValueByHostnameAndKey(hostName, key);
+                            history.put("sollvalue", sollVlaue);
                             history.put("key", key);
                             history.put("timestamp", dateTime);
                             history.put("hostname", hostName);
