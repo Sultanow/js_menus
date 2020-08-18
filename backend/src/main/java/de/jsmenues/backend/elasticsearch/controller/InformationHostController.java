@@ -2,6 +2,7 @@ package de.jsmenues.backend.elasticsearch.controller;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ public class InformationHostController {
     @PermitAll
     @POST
     @Path("/inserthostinformation")
-    public Response InsertAllHostInformation() throws IOException, ParseException {
+    public Response insertAllHostInformation() throws IOException, ParseException {
 
         ZabbixService zabbixService = new ZabbixService();
         List<Map<String, List<Object>>> result = zabbixService.getHostInfos();
@@ -57,18 +58,57 @@ public class InformationHostController {
     }
 
     /**
-     * Get all host information from elasticsearch
+     * Get  host information from elasticsearch
      *
-     * @param hostName
+     * @param hostNames list of hostName
      * @return list of host information
      */
     @PermitAll
-    @POST
-    @Path("/gethostinformationByName")
+    @GET
+    @Path("/getHostInformationByListOfNames")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getHostInformationById(@QueryParam("hostname") String hostName) throws IOException {
+    public Response gethostinformationByListOfNames(@QueryParam("hostname") List<String> hostNames) {
+        List<Map<String, List<Object>>> result = new ArrayList<Map<String, List<Object>>>();
+        try {
+            for (String hostName : hostNames) {
+                Map<String, List<Object>> map = InformationHostDao.getHostInformationByHostName(hostName);
+                result.add(map);
+            }
+            return Response.ok(result).build();
+        } catch (Exception e) {
+            return Response.ok(e.getMessage()).build();
+        }
 
-        List<Map<String, List<Object>>> result = InformationHostDao.getHostInformationByHostName(hostName);
+    }
+
+    /**
+     * Get all keys from elasticsearch
+     *
+     * @return list of keys
+     */
+    @PermitAll
+    @GET
+    @Path("/getAllKeys")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllKeys() throws IOException {
+        List<String> result = InformationHostDao.getAllKeys();
+        return Response.ok(result).build();
+    }
+
+    /**
+     * Get last value's an item by key and hostname
+     *
+     * @param hostName
+     * @param key
+     * @return last value
+     */
+    @PermitAll
+    @GET
+    @Path("/getLastValue")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response getLastValue(@QueryParam("hostname") String hostName, @QueryParam("itemkey") String itemKey)
+            throws IOException {
+        String result = InformationHostDao.getLastValuByKey(hostName, itemKey);
         return Response.ok(result).build();
     }
 

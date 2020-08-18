@@ -6,11 +6,11 @@ export class ConfigurationItem {
     soll: string;
     identic: boolean;
 
-    constructor (env: string, key: string, value: string) {
+    constructor(env: string, key: string, value: string, soll: string) {
         this.env = env;
         this.key = key;
         this.value = value;
-        this.soll = value;
-        this.identic = true;
+        this.soll = soll;
+        this.identic = (this.value ===  this.soll);
     }
 }

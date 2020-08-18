@@ -49,37 +49,31 @@ public class HostInformationService {
     }
 
     /**
-     * Get last value an item from a host
+     * Get host information by name
      * 
-     * @param hostId
-     * @param itemId
-     * @return last value form an item
+     * @param hostName
+     * @return list of host information of name
      */
-    public static String getLastValuById(String hostId, String itemId) throws IOException {
+    public static List<Map<String, List<Object>>> getHostInformationByName(String hostName) throws IOException {
 
-        String lastVlaue = "";
-        List<Map<String, List<Object>>> getHostInfoById = getHostInformationById(hostId);
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.termQuery("name", hostName));
+        SearchRequest searchRequest = new SearchRequest(INDEX).source(searchSourceBuilder);
+        SearchResponse response = ElasticsearchConnecter.restHighLevelClient.search(searchRequest,
+                RequestOptions.DEFAULT);
+        SearchHit[] searchHits = response.getHits().getHits();
+        List<Map<String, Object>> tempMap = new ArrayList<Map<String, Object>>();
 
-
-        for (Map<String, List<Object>> tempMap : getHostInfoById) {
-            List<Object> items = tempMap.get("items");
-
-            for (Object item : items) {
-                @SuppressWarnings("unchecked")
-                Map<String, Object> mapItem = MAPPER.convertValue(item, Map.class);
-                Object lastvalue = mapItem.get("lastvalue");
-                Object itmeid = mapItem.get("itemid");
-                String itmeId = String.valueOf(itmeid);
-
-                if (itmeId.equals(itemId)) {
-
-                    lastVlaue = String.valueOf(lastvalue);
-                    break;
-                }
-            }
+        for (SearchHit hit : searchHits) {
+            Map<String, Object> result = hit.getSourceAsMap();
+            tempMap.add(result);
         }
-        return lastVlaue;
+        List<Map<String, List<Object>>> results = MAPPER.convertValue(tempMap,
+                new TypeReference<List<Map<String, Object>>>() {
+                });
+        return results;
     }
+
 
     /**
      * Get last update an item from a host
@@ -115,11 +109,13 @@ public class HostInformationService {
         return lastUpdate;
     }
 
+
     /**
-     * Get all host information from elasticsearch
+     * Update host by id
      * 
      * @param hostId
-     * @return  list of item from host
+     * @param items  list of item
+     * @return update response
      */
     public static UpdateResponse UpdateHostById(String hostId, List<Object> items) throws IOException {
 

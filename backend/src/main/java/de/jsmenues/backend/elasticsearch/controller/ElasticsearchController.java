@@ -29,12 +29,27 @@ public class ElasticsearchController {
      * @return names of indices
      */
     @PermitAll
-    @POST
+    @GET
     @Path("/indexname")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getIndicesName(@QueryParam("patternindexname") String patternIndexName) throws IOException {
+    public Response getIndexNames(@QueryParam("patternindexname") String patternIndexName) throws IOException {
 
         String[] result = ElasticsearchDao.getIdexName(patternIndexName);
+        return Response.ok(result).build();
+    }
+
+    /**
+     * Get all history index names
+     *
+     * @return names of historyindices
+     */
+    @PermitAll
+    @GET
+    @Path("/allHistoryIndexName")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getIAllIndexNames() throws IOException {
+
+        String[] result = ElasticsearchDao.getIdexName("history-*");
         return Response.ok(result).build();
     }
 
@@ -70,6 +85,5 @@ public class ElasticsearchController {
             LOGGER.error(indexName + "is not exist");
         }
         return Response.ok("deleted: " + result).build();
-
     }
 }

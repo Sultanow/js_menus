@@ -3,6 +3,7 @@ package de.jsmenues.backend.zabbixservice;
 import de.jsmenues.backend.elasticsearch.ElasticsearchConnecter;
 import de.jsmenues.backend.elasticsearch.dao.ElasticsearchDao;
 import de.jsmenues.backend.elasticsearch.dao.HistoryDao;
+import de.jsmenues.backend.elasticsearch.dao.HostsDao;
 import de.jsmenues.backend.elasticsearch.dao.InformationHostDao;
 import de.jsmenues.listeners.Initiator;
 
@@ -47,6 +48,7 @@ public class ZabbixElasticsearchSynchronization {
                 ZabbixService zabbixService = new ZabbixService();
                 List<Map<String, List<Object>>> allHostsInfo = zabbixService.getHostInfos();
                 List<Map<String, Object>> histories = zabbixService.getHistory();
+                List<Map<String, Object>> allHosts = zabbixService.getAllHosts();
                 if (allHostsInfo == null && histories == null) {
                     LOGGER.info("there is not right connection with zabbix");
                     return;
@@ -72,8 +74,10 @@ public class ZabbixElasticsearchSynchronization {
 
                 try {
                     if (kibanStatus.equals("GREEN")) {
+                       // HistoryDao.DeletehistoryRecordsAfterTwoYears();
                         InformationHostDao.insertAllHostInformation(allHostsInfo);
                         HistoryDao.insertHistory(histories);
+                        HostsDao.insertAllHosts(allHosts);
 
                     } else {
                         LOGGER.error("\n Kibana hasn't been avalible yet ");

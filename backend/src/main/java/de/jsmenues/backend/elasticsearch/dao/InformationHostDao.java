@@ -43,16 +43,16 @@ public class InformationHostDao {
         int numberOfHosts = 0;
         try {
             insert: for (Map<String, List<Object>> hostInfo : hostsInfo) {
-                Object hostid = hostInfo.get("hostid");
                 List<Object> items = hostInfo.get("items");
-                String stringHostid = String.valueOf(hostid);
+                String hostid = String.valueOf(hostInfo.get("hostid"));
+                String hostname = String.valueOf(hostInfo.get("name"));
 
-                GetRequest getRequest = new GetRequest(HostInformationService.INDEX, stringHostid);
+                GetRequest getRequest = new GetRequest(HostInformationService.INDEX, hostid);
                 boolean exists = ElasticsearchConnecter.restHighLevelClient.exists(getRequest, RequestOptions.DEFAULT);
 
                 if (!exists) {
                     IndexRequest indexRequest = new IndexRequest(HostInformationService.INDEX).source(hostInfo)
-                            .id(stringHostid);
+                            .id(hostid);
                     indexResponse = ElasticsearchConnecter.restHighLevelClient.index(indexRequest,
                             RequestOptions.DEFAULT);
                     LOGGER.info(indexResponse + "\n host information are inserted");
@@ -66,15 +66,13 @@ public class InformationHostDao {
 
                     for (Map<String, Object> item : mapItems) {
 
-                        Object itemid = item.get("itemid");
-                        Object lastvalue = item.get("lastvalue");
-                        String stringItemId = String.valueOf(itemid);
-                        String lastValue = String.valueOf(lastvalue);
-                        String getLastValueById = HostInformationService.getLastValuById(stringHostid, stringItemId);
+                        String lastValue = String.valueOf(item.get("lastvalue"));
+                        String key = String.valueOf(item.get("key_"));
+                        String getLastValueById = getLastValuByKey(hostname, key);
 
                         if (!getLastValueById.equals(lastValue)) {
-                            updateResponse = HostInformationService.UpdateHostById(stringHostid, items);
-                            LOGGER.info(updateResponse + "\n" + stringItemId + "information are updated");
+                            updateResponse = HostInformationService.UpdateHostById(hostid, items);
+                            LOGGER.info(updateResponse + "\n" + key + "information are updated");
                             numberOfHosts++;
                             if (numberOfHosts == 100)
                                 break insert;
@@ -133,7 +131,7 @@ public class InformationHostDao {
      * @param hostName
      * @return list of host information
      */
-    public static List<Map<String, List<Object>>> getHostInformationByHostName(String hostName) throws IOException {
+    public static Map<String, List<Object>> getHostInformationByHostName(String hostName) throws IOException {
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(QueryBuilders.termQuery("name", hostName));
@@ -150,9 +148,95 @@ public class InformationHostDao {
         List<Map<String, List<Object>>> results = HostInformationService.MAPPER.convertValue(tempMap,
                 new TypeReference<List<Map<String, Object>>>() {
                 });
-        return results;
+        
+        return results.get(0);
     }
 
+    /**
+     * Get all keys
+     * 
+     * @return list of keys
+     */
+    public static List<String> getAllKeys() throws IOException {
+        List<String> keys = new ArrayList<String>();
+        try {
+            List<Map<String, List<Object>>> AllHostInformation = getAllHostInformation();
+            for (Map<String, List<Object>> hostInfo : AllHostInformation) {
+                List<Object> items = hostInfo.get("items");
+                List<Map<String, Object>> mapItems = HostInformationService.MAPPER.convertValue(items,
+                        new TypeReference<List<Object>>() {
+                        });
+                for (Map<String, Object> item : mapItems) {
+
+                    String key = String.valueOf(item.get("key_"));
+                    if(!keys.contains(key))
+                    keys.add(key);
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage()+"elasticsearch is not avalible");
+        }
+        return keys;
+    }
+    
+
+    /**
+     * Get last value an item from a host by key and hostname
+     * 
+     * @param hostName
+     * @param itemKey
+     * @return last value form an item
+     */
+    public static String getLastValuByKey(String hostName, String itemKey) throws IOException {
+
+        String lastVlaue = "";
+        List<Map<String, List<Object>>> getHostInfoByName = HostInformationService.getHostInformationByName(hostName);
+
+
+        for (Map<String, List<Object>> tempMap : getHostInfoByName) {
+            List<Object> items = tempMap.get("items");
+
+            for (Object item : items) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> mapItem = HostInformationService.MAPPER.convertValue(item, Map.class);
+                String itmeId = String.valueOf(mapItem.get("key_"));
+                if (itmeId.equals(itemKey)) {
+                  lastVlaue = String.valueOf(mapItem.get("lastvalue"));
+                    break;
+                }
+            }
+        }
+        return lastVlaue;
+    }
+
+    /**
+     * Get item id an item from a host by key and hostname
+     * 
+     * @param hostName
+     * @param itemKey
+     * @return item id
+     */
+    public static String getItemId(String hostName, String itemKey) throws IOException {
+
+        String itemId = "";
+        List<Map<String, List<Object>>> getHostInfoByName = HostInformationService.getHostInformationByName(hostName);
+
+
+        for (Map<String, List<Object>> tempMap : getHostInfoByName) {
+            List<Object> items = tempMap.get("items");
+
+            for (Object item : items) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> mapItem = HostInformationService.MAPPER.convertValue(item, Map.class);
+                String itmeId = String.valueOf(mapItem.get("key_"));
+                if (itmeId.equals(itemKey)) {
+                  itemId = String.valueOf(mapItem.get("itemid"));
+                    break;
+                }
+            }
+        }
+        return itemId;
+    }
     /**
      * Delete host information by id
      *

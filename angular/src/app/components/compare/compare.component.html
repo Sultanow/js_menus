@@ -11,10 +11,32 @@
       </svg>
     </div>
   </div>
+  <form [formGroup]='historyForm'></form>
+  <div class="history">
+    <mat-form-field class="historyForm">
+      <mat-label>History Index auswählen</mat-label>
+      <mat-select [(ngModel)]="selected" id="selected" (click)="getIndexNames()">
+        <mat-option formControlField="historyIndex" *ngFor="let index of indexNames" [value]="index" >
+          {{index}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <mat-label for="firstDate">Anfangsdatum </mat-label>
+      <input matInput type="date" formControlField="firstDate"  #input1 ngModle />
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <mat-label for="secondDate">Enddatum</mat-label>
+      <input matInput id= "today" type="date" formControlField="secondDate"   #input2 ngModle />
+    </mat-form-field>
+    <button mat-button (click)="sendDates(input1.value,input2.value);displayHistoryBetweenTwoDates()">senden</button>
+  </div>
   <div id="dropdownListEnv">Liste mit auswählbaren Environments
     <mat-form-field>
       <mat-label>Environment auswählen</mat-label>
-      <mat-select (selectionChange)="setSelectedValue($event)" class= "selectionChange">
+      <mat-select (selectionChange)="setSelectedValue($event)" (click)="generateShowlists()" class="selectionChange">
         <mat-option *ngFor="let env of otherEnvs" [value]="env">
           {{env}}
         </mat-option>
@@ -23,9 +45,11 @@
     <button mat-button (click)="onAddEnv($event)">
       Add
     </button>
+    <br>
+    <u (click)="displayAllkeys()" class="allkeys">Mögliche Konfigurationsparameters</u>
+    <br>
   </div>
-  <treetable [tree]="nodesTree" (nodeClicked)="logNode($event)" [body]="treetableDesign">
-  </treetable>
+  <treetable [(tree)]="nodesTree" (nodeClicked)="logNode($event)" [body]="treetableDesign"> </treetable>
 </div>
 
 <ng-template #treetableDesign let-el>
@@ -38,9 +62,12 @@
   <div class="treeTableElement">
     <div *ngIf="el.element.value[el.column]">
       <div class="textarea_1">
-        <textarea class="textarea_items">{{el.element.value[el.column].soll}}</textarea>
+        <textarea class="textarea_items" #input ngModle>{{el.element.value[el.column].soll}}</textarea>
         <textarea disabled="true" class="textarea_items">{{el.element.value[el.column].ist}}</textarea>
       </div>
+      <button class="saveChange"
+        (click)="saveSollValue(el.column, el.element.value.Konfigurationsparameter, el.element.value[el.column].ist, input.value)">
+        speichern</button>
       <div *ngIf="!el.element.value[el.column].identic" class="checkItem">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="red"
           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
@@ -55,6 +82,5 @@
         </svg>
       </div>
     </div>
-
   </div>
 </ng-template>

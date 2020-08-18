@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.security.PermitAll;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -69,14 +70,17 @@ public class HistoryController {
      * @return list of history records between tow selected Dates
      */
     @PermitAll
-    @POST
+    @GET
     @Path("/gethistorybetweentowdatum")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getHistorytowdatum1(@QueryParam("unixtime1") String unixTime1,
-            @QueryParam("unixtime2") String unixTime2, @QueryParam("indexname") String indexName) throws IOException {
-
-        List<Map<String, Object>> result = HistoryDao.getHistoryRecordBetweenTowDatesByIndexName(unixTime1, unixTime2,
-                indexName);
-        return Response.ok(result).build();
+            @QueryParam("unixtime2") String unixTime2, @QueryParam("indexname") String indexName)  {
+        try {
+            List<Map<String, Object>> result = HistoryDao.getHistoryRecordBetweenTowDatesByIndexName(unixTime1, unixTime2,
+                    indexName);
+            return Response.ok(result).build();
+        } catch (Exception e) {
+            return Response.ok(e.getMessage()).build();
+        }
     }
 }

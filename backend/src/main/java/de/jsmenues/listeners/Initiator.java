@@ -32,6 +32,11 @@ public class Initiator implements ServletContextListener {
      */
     public void contextDestroyed(ServletContextEvent event) {
         this.context = null;
+        try {
+            ElasticsearchConnecter.closeConnection();
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage()+"contextDestroyed");
+        }
     }
 
     /**
@@ -41,16 +46,6 @@ public class Initiator implements ServletContextListener {
     public void contextInitialized(ServletContextEvent event) {
 
         LOGGER.info("Application start");
-
-        // make sure that old connection is closed
-        if (ElasticsearchConnecter.restHighLevelClient != null) {
-            try {
-                ElasticsearchConnecter.closeConnection();
-                LOGGER.info("old connection is closed");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
 
         ElasticsearchConnecter.makeConnection();
         LOGGER.info("Connection opend with elasticsearch");

@@ -28,7 +28,7 @@ public class HostController {
     /**
      * insert all hosts from zabbix to elasticsearch
      *
-     * @return status new hosts are inserted ,updated or not
+     * @return list of hosts
      */
     @PermitAll
     @POST
@@ -37,9 +37,8 @@ public class HostController {
 
         ZabbixService zabbixService = new ZabbixService();
         List<Map<String, Object>> result = zabbixService.getAllHosts();
-        String status = "";
-        status = HostsDao.insertAllHosts(result);
-        return Response.ok(status).build();
+        HostsDao.insertAllHosts(result);
+        return Response.ok(result).build();
     }
 
     /**
@@ -58,9 +57,24 @@ public class HostController {
     }
 
     /**
+     * Get all host names
+     *
+     * @return list of hsotnames
+     */
+    @PermitAll
+    @GET
+    @Path("/getAllHostName")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllHostName() throws IOException {
+
+        List<String> result = HostsDao.getAllHostName();
+        return Response.ok(result).build();
+    }
+
+    /**
      * Delete host by id from elasticsearch
      *
-     * @param hostid
+     * @param hostId
      * @return response about delete request
      */
     @PermitAll
