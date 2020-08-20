@@ -71,7 +71,11 @@ public class HistoryDao {
                         long unixTime = System.currentTimeMillis() / 1000L;
 
                         if (itemid.equals(historyItemid)) {
+                            String istValue = String.valueOf(history.get("value"));
                             String sollVlaue = SollWerte.getSollValueByHostnameAndKey(hostName, key);
+                            if(sollVlaue == "") {
+                                sollVlaue = istValue ;
+                            }
                             history.put("sollvalue", sollVlaue);
                             history.put("key", key);
                             history.put("timestamp", dateTime);
