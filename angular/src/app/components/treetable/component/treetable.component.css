@@ -45,21 +45,21 @@ td div {
   caret-color: #fff;
 }
 
-::ng-deep.mat-focused .mat-form-field-label {
+:host ::ng-deep.mat-focused .mat-form-field-label {
   /*change color of label*/
   color: white !important;
 }
 
-::ng-deep.mat-form-field-underline {
+:host ::ng-deep.mat-form-field-underline {
   /*change color of underline*/
   background-color: white !important;
 }
 
-::ng-deep.mat-form-field-ripple {
+:host ::ng-deep.mat-form-field-ripple {
   /*change color of underline when focused*/
   background-color: white !important;
 }
 
-::ng-deep.mat-form-field-label {
+:host ::ng-deep.mat-form-field-label {
   color: white !important;
 }

@@ -50,3 +50,33 @@
 .disabledCircle {
   fill: transparent;
 }
+
+.overlay-open {
+  right: 20vw;
+}
+
+.overlay-closed {
+  right: 0px;
+}
+
+.overlay-icon {
+  color: white;
+  background: rgba(0, 0, 0, 0.60);
+  font-size: large;
+  height: 40px;
+  width: 40px;
+  text-align: center;
+  position: absolute;
+  top: 30vh;
+  cursor: pointer;
+  z-index: 100;
+}
+
+.overlay-icon-mat {
+  vertical-align: middle;
+  font-size: 30px;
+  height: 30px;
+  width: 30px;
+  margin-top: 5px;
+  cursor: pointer;
+}

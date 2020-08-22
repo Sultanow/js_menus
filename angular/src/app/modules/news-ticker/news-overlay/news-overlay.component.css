@@ -1,0 +1,27 @@
+.news-overlay {
+    height: calc(100vh - 2.4rem);
+    width: 20%;
+    background: rgba(0, 0, 0, 0.60);
+    right: 0px;
+    top: 2.4rem;
+    position: absolute;
+}
+
+.title-box {
+    margin-bottom: 0.5rem;
+    text-align: center;
+    color: white;
+}
+
+.card-title {
+    font-size: large;
+}
+
+.card-content {
+    font-size: small;
+}
+
+.card {
+    margin: 0rem 0.2rem 0.2rem 0.2rem;
+    padding: 0.4rem;
+}

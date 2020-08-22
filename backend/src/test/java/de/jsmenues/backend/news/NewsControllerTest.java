@@ -86,7 +86,7 @@ class NewsControllerTest extends JerseyTest {
         NewsItem item = new NewsItem();
         item.setTitle(null);
         //when
-        Response response = target("/news/create").request().put(Entity.entity(item, MediaType.APPLICATION_JSON));
+        Response response = target("/news").request().put(Entity.entity(item, MediaType.APPLICATION_JSON));
         //then
         assertEquals(400, response.getStatus());
         verify(service, times(0)).saveNews(any(NewsItem.class));
@@ -99,7 +99,7 @@ class NewsControllerTest extends JerseyTest {
         item.setTitle("Test");
         when(service.saveNews(any(NewsItem.class))).thenReturn(1);
         //when
-        Response response = target("/news/create").request().put(Entity.entity(item, MediaType.APPLICATION_JSON));
+        Response response = target("/news").request().put(Entity.entity(item, MediaType.APPLICATION_JSON));
         //then
         assertEquals(200, response.getStatus());
         verify(service,times(1)).saveNews(any(NewsItem.class));

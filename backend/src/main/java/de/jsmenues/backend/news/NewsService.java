@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import de.jsmenues.redis.repository.ConfigurationRepository;
 import de.jsmenues.redis.repository.IConfigurationRepository;
-import org.glassfish.hk2.api.InjectionPointIndicator;
 
 import javax.inject.Singleton;
 import java.util.Arrays;

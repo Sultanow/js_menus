@@ -119,12 +119,13 @@ public class ConfigurationRepository implements IConfigurationRepository {
     /**
      * Get all Configurations by a pattern
      *
-     * @param pattern The serach pattern.
-     * @return list of all maching keys for the given pattern.
+     * @param pattern The search pattern.
+     * @return list of all matching keys for the given pattern.
      */
     public Map<String, String> getAllByPattern(String pattern) {
         Map<String,String> repoItems = new HashMap<>();
         try (Jedis jedis = configurationPool.getResource()) {
+            pattern = "*"+pattern+"*";
             Set<String> keys = jedis.keys(pattern);
             for (String key : keys) {
                 repoItems.put(key, this.getVal(key));

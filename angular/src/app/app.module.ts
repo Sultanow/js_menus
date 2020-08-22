@@ -26,7 +26,6 @@ import { DependencyChartsComponent, EditDialog } from './components/dependencych
 import { CompareComponent } from './components/compare/compare.component';
 import { ViewboxComponent } from './components/viewbox/viewbox.component';
 import { WarningsComponent } from './components/warnings/warnings.component';
-import { NewsComponent } from './components/news/news.component';
 import { StatusWarningsComponent } from './components/status-warnings/status-warnings.component';
 import { ConfigurationViewComponent } from './components/configuration-view/configuration-view.component';
 import { RightManagementComponent } from './components/right-management/right-management.component';
@@ -40,6 +39,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
 import { MaterialModule } from './material.module';
 import { StatisticModule } from './modules/statistic/statistic.module';
 import { IconHelperModule } from './modules/icon-helper/icon-helper.module'; 
+import { NewsTickerModule } from './modules/news-ticker/news-ticker.module';
 
 
 @NgModule({
@@ -60,7 +60,6 @@ import { IconHelperModule } from './modules/icon-helper/icon-helper.module';
     CompareComponent,
     ViewboxComponent,
     WarningsComponent,
-    NewsComponent,
     StatusWarningsComponent,
     ConfigurationViewComponent,
     RightManagementComponent,
@@ -80,7 +79,8 @@ import { IconHelperModule } from './modules/icon-helper/icon-helper.module';
     TreetableModule,
     MaterialModule,
     StatisticModule,
-    IconHelperModule
+    IconHelperModule,
+    NewsTickerModule
   ],
   providers: [
     DetailsComponent,

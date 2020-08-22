@@ -45,7 +45,6 @@ public class NewsController {
 
     @PermitAll
     @PUT
-    @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createNewsItem(NewsItem item) {
         logger.warn(item.toString());
