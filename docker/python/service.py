@@ -6,14 +6,14 @@ from werkzeug.utils import secure_filename
 
 
 UPLOAD_FOLDER= '/app/data/'
-UPLOAD_SCRIPT_FOLDER= '/app/'
+UPLOAD_SCRIPT_FOLDER= '/app/scripts/'
 
 app = Flask(__name__)
 @app.route('/')
 def hello_world():
-    return 'Hello world!'
+    return '' # Send empty String back.
 
-@app.route('/updateData', methods=["POST"])
+@app.route('/update', methods=["POST"])
 def update_data():
     if 'file' not in request.files:
         abort(Response('No file part'))
@@ -28,7 +28,7 @@ def update_data():
     else:
         abort(Response("There is an error with the file"))
     scriptname = request.form.get('script')
-    processname = "python /app/" + scriptname + " " + UPLOAD_FOLDER + filename
+    processname = "python "+ UPLOAD_SCRIPT_FOLDER + scriptname + " " + UPLOAD_FOLDER + filename
 
     p = Popen(processname, shell=True, stdout=PIPE)
     output, err = p.communicate(timeout=600)
@@ -36,7 +36,7 @@ def update_data():
     print(output)
     return output, err
 
-@app.route('/createChart', methods=["POST"])
+@app.route('/save', methods=["POST"])
 def create_chart():
     if 'file' not in request.files:
         abort(Response('No file part'))

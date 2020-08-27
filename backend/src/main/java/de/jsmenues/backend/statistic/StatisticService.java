@@ -25,8 +25,10 @@ import java.util.*;
 @Singleton
 class StatisticService {
     private static final Logger LOGGER = LoggerFactory.getLogger(StatisticService.class);
-    private static final String UPDATE_URL = "http://python-nginx-service:80/updateData";
-    private static final String CREATE_URL = "http://python-nginx-service:80/createChart";
+    // Use the traefik container directly cause the DNS Server is still Docker.
+    // TODO make the Server configurable
+    private static final String UPDATE_URL = "http://traefik-service:81/update";
+    private static final String CREATE_URL = "http://traefik-service:81/save";
 
     private static final String LOCAL_UPLOAD_PATH = "/tmp/";
 

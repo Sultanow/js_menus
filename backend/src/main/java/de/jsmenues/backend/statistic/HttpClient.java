@@ -1,5 +1,6 @@
 package de.jsmenues.backend.statistic;
 
+import org.glassfish.jersey.internal.util.ExceptionUtils;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
@@ -41,6 +42,7 @@ public class HttpClient {
             return response;
         } catch (Exception e) {
             LOGGER.warn("Exception: " + e.getMessage());
+            LOGGER.info("Stacktrace: ", e);
             return Response.status(500).build();
         }
     }

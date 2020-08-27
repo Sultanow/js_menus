@@ -1,20 +1,19 @@
-version: '3.5'
+version: '3.7'
 services:
-
   redis:
-    image: redis
+    image: redis:6.0.6
     command: /home/redis.conf 
     volumes:
       - ./redis/conf:/home
       - ./redis/data:/data
     container_name: redis-service
-    ports:
-    - "6379:6379"
     networks:
       - cockpit-net 
+    labels:
+      - "traefik.enable=false"
 
   payara:
-    image: payara/server-full
+    image: payara/server-full:5.2020.4-jdk11
     volumes:
       - ./../target/autodeploy:/opt/payara/appserver/glassfish/domains/production/autodeploy
       - ./payara/config/:/opt/payara/deployments/
@@ -22,38 +21,52 @@ services:
     environment: 
       - POSTBOOT_COMMANDS=/opt/payara/deployments/commands.asadmin
     ports:
-    - "4848:4848"
-    - "8080:8080"
+      - "4848:4848"
+      - "8080:8080"
     links: 
-    - redis
+      - redis
     networks: 
       - cockpit-net
-
-  flask:
-    image: webapp-flask
-    container_name: python-service
-    build:
-      context: ./python/data
-      dockerfile: Dockerfile-flask
-    volumes:
-      - "./python/data/:/app"
-    networks: 
-      - cockpit-net
-
-  nginx:
-    image: webapp-nginx
-    container_name: python-nginx-service
-    build:
-      context: ./python/data
-      dockerfile: Dockerfile-nginx
-    ports:
-      - 5000:80
-    depends_on:
-      - flask
-    networks: 
-      - cockpit-net
-
+    labels:
+      - "traefik.enable=false"
   
+  traefik:
+    image: traefik:v2.3
+    container_name: traefik-service
+    command: 
+      - "--api.insecure=true"
+      - "--log.level=DEBUG"
+      - "--entrypoints.python.address=:81"
+      - "--providers.docker.network=cockpit-net"
+      - --accesslog=true
+      - --accesslog.filepath=/var/log/access.log
+    labels:
+      - "traefik.enable=true"
+    networks: 
+      - cockpit-net
+    ports:
+      # The Web UI (enabled by --api.insecure=true)
+      - "8082:8080"
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - './traefik/logs/:/var/log/'
+ 
+  python:
+    image: gunicorn-flask
+    build:
+      context: ./python
+      dockerfile: Dockerfile-gunicorn-flask
+    volumes:
+      - "./python/app-data/:/app/scripts"
+    networks:
+      - cockpit-net
+    labels:
+      - "traefik.http.routers.python_router.rule=Method(`POST`) && Path(`/update`, `/save`)"
+      - "traefik.http.routers.python_router.entrypoints=python"
+      - "traefik.port=5000"
+      - "traefik.enable=true"
+      - "traefik.http.services.python.loadbalancer.server.port=5000"
+
 networks:
   cockpit-net:
     name: cockpit-net
