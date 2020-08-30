@@ -37,7 +37,7 @@ public class NewsController {
 
     @PermitAll
     @GET
-    @Path("/{tag}")
+    @Path("/tag/{tag}")
     public Response getNewsByTag(@PathParam("tag") String tag) {
         Set<NewsItem> news = newsService.getAllNewsByTag(tag);
         return Response.ok(news).build();

@@ -31,7 +31,7 @@ export class NewsService {
   }
 
   findNewsByTag(searchValue: string) : Observable<NewsItem[]>{
-    return this.http.get<NewsItem[]>(`${this.backendURLNews}/${searchValue}`);
+    return this.http.get<NewsItem[]>(`${this.backendURLNews}/tag/${searchValue}`);
   }
   
 

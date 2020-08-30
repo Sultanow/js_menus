@@ -74,7 +74,7 @@ class NewsControllerTest extends JerseyTest {
         //given
         when(service.getAllNewsByTag(anyString())).thenReturn(Collections.emptySet());
         //when
-        Response response = target("/news/test").request().get();
+        Response response = target("/news/tag/test").request().get();
         //then
         assertEquals(200, response.getStatus());
         assertEquals(Collections.emptySet(), response.readEntity(new GenericType<Set<NewsItem>>(){}));
