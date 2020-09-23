@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 public class ZabbixElasticsearchSynchronization {
     private static Logger LOGGER = LoggerFactory.getLogger(ZabbixElasticsearchSynchronization.class);
     public static boolean stopSynchronization = false;
-    long delay = 240000; // delay in milliseconds 4 minutes
+    long delay = 300000; // delay in milliseconds 5 minutes
     LoopTask task = new LoopTask();
     Timer timer = new Timer("Synchronization");
 
@@ -76,8 +76,9 @@ public class ZabbixElasticsearchSynchronization {
                     if (kibanStatus.equals("GREEN")) {
                        // HistoryDao.DeletehistoryRecordsAfterTwoYears();
                         InformationHostDao.insertAllHostInformation(allHostsInfo);
-                        HistoryDao.insertHistory(histories);
                         HostsDao.insertAllHosts(allHosts);
+                        HistoryDao.insertHistory(histories);
+                        
 
                     } else {
                         LOGGER.error("\n Kibana hasn't been avalible yet ");

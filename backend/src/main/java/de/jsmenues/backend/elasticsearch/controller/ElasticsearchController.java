@@ -47,7 +47,7 @@ public class ElasticsearchController {
     @GET
     @Path("/allHistoryIndexName")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getIAllIndexNames() throws IOException {
+    public Response getHistoryIndexNames() throws IOException {
 
         String[] result = ElasticsearchDao.getIdexName("history-*");
         return Response.ok(result).build();

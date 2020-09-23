@@ -63,28 +63,27 @@ export class CompareComponent implements OnInit {
   refreshItemlist(): void {
     this.configItemService.currentItemlist.subscribe(itemlist => {
       this.configItemService.itemlist = itemlist;
-      console.log(itemlist);
     });
   }
 
   ngOnChanges(changes): void {
     if (this.showCompare) {
       this.getIndexNames();
-      this.saveCurrentSollValues();
+      this.saveCurrentExpectedValuesDelay();
       this.notifyTitle.emit("Konfigurationsübersicht");
       this.getServerConfiguration();
       this.elasticService.getAllHostName().subscribe(data => {
         this.allHosts = data;
-        this.generateShowlists();
+        this.generateCompareTable();
         this.ref.detectChanges();
       });
 
-      this.generateShowlists();
+      this.generateCompareTable();
       this.ref.detectChanges();
     }
   }
 
-  generateShowlists(): void{
+  generateCompareTable(): void{
     if (this.selectedEnvs === null)
       this.selectedEnvs = ["dev1", "dev2"];
     this.otherEnvs = [];
@@ -102,9 +101,9 @@ export class CompareComponent implements OnInit {
     if (!this.selectedEnvs.includes(this.selectedValue) && (this.selectedValue != "")) {
       this.selectedEnvs.push(this.selectedValue);
     }
-    this.generateShowlists();
+    this.generateCompareTable();
     this.getServerConfiguration();
-    this.saveCurrentSollValues();
+    this.saveCurrentExpectedValuesDelay();
 
 
   }
@@ -114,11 +113,9 @@ export class CompareComponent implements OnInit {
       envs = this.selectedEnvs;
     this.elasticService.getHostinformationByNames(envs).subscribe(data => {
       let updateTime = this.configItemService.getUpdateTime(data);
-      console.log("lastclock: " + updateTime);
       let temp = new Date();
       temp.setTime(updateTime * 1000);
       this.lastUpdate = temp;
-      console.log("lastUpdate: " + this.lastUpdate);
       this.configItemService.createServerConf();
       this.generateTree();
 
@@ -131,40 +128,37 @@ export class CompareComponent implements OnInit {
 
   onDeleteEnv(event, env): void {
     this.selectedEnvs = this.selectedEnvs.filter(e => e !== env);
-    this.generateShowlists();
+    this.generateCompareTable();
     this.ref.detectChanges();
     this.configItemService.generateTree(this.selectedEnvs);
 
   }
 
-  saveCurrentSollValue(): void {
-    console.log("saveCurrentSollValue")
+  saveCurrentExpectedValues(): void {
     let envs = ServerConfiguration.ENV_LIST;
     if (this.selectedEnvs) {
       envs = this.selectedEnvs;
-      this.configItemService.saveAllSollValue(envs);
+      this.configItemService.saveAllExpectedValues(envs);
     }
   }
 
-  saveSollValue(hostName: string, key: string, istValue: string, sollValue: string): void {
+  saveExpectedValue(hostName: string, key: string, actualValue: string, expectedValue: string): void {
     if (this.selectedEnvs) {
-      this.elasticService.saveSollwerte(hostName, key, sollValue).subscribe(data => {
-        console.log(data);
-        let confItem: ConfigurationItem = this.configItemService.createItem(hostName, key, istValue, sollValue)
-        console.log(confItem)
+      this.elasticService.saveExpectedValue(hostName, key, expectedValue).subscribe(data => {
+        let confItem: ConfigurationItem = this.configItemService.createItem(hostName, key, actualValue, expectedValue)
+
         this.configItemService.addConfigItem(confItem);
         this.refreshItemlist();
         this.generateTree();
 
       });
     }
-    this.elasticService.saveHistorySollWerte(hostName, key, sollValue).subscribe(data => {
-      console.log(data);
+    this.elasticService.saveHistoryExpectedValue(hostName, key, expectedValue).subscribe(data => {
     })
   }
 
-  saveCurrentSollValues(): void {
-    setTimeout(() => this.saveCurrentSollValue(), 4000); // 4000 is millisecond
+  saveCurrentExpectedValuesDelay(): void {
+    setTimeout(() => this.saveCurrentExpectedValues(), 4000); // 4000 is millisecond
   }
 
   generateTree(): void {
@@ -181,6 +175,7 @@ export class CompareComponent implements OnInit {
   getIndexNames(): void {
     this.elasticService.getHistoryindexnames().subscribe(data => {
       this.indexNames = data;
+      console.log(this.indexNames);
     })
   }
 
@@ -193,7 +188,7 @@ export class CompareComponent implements OnInit {
     });
   }
 
-  displayHistoryBetweenTwoDates(): void {
+  displayHistoryBetweenTwoDatesDelay(): void {
     setTimeout(() => this.displayHistorybetweenTwoDates(), 2000); // 2000 is millisecond
   }
 

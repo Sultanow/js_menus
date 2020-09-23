@@ -30,27 +30,27 @@ export class ElasticService {
     return this.http.get<JSON>(`${this.backendElasticsearchUrl}/getallhostinformation`);
   }
 
-  saveSollwerte(hostName: string, key: string, sollValue: string): Observable<any> {
+  saveExpectedValue(hostName: string, key: string, expectedValue: string): Observable<any> {
     let params = new HttpParams();
 
     params = params.append('hostname', hostName);
     params = params.append('key', key);
-    params = params.append('sollvalue', sollValue);
+    params = params.append('expectedvalue', expectedValue);
 
-    return this.http.get(`${this.backendElasticsearchUrl}/insertSollWerte`, { params: params, responseType: "text" });
+    return this.http.get(`${this.backendElasticsearchUrl}/insertExpectedValues`, { params: params, responseType: "text" });
   }
 
-  getSollwerte(): Observable<any> {
-    return this.http.get<JSON>(`${this.backendElasticsearchUrl}/getSollWerte`, {});
+  getExpectedValues(): Observable<any> {
+    return this.http.get<JSON>(`${this.backendElasticsearchUrl}/getExpectedValues`, {});
   }
 
-  getSollValue(hostName: string, key: string): Observable<any> {
+  getExpectedValueByHostnameAndKey(hostName: string, key: string): Observable<any> {
     let params = new HttpParams();
 
     params = params.append('hostname', hostName);
     params = params.append('key', key);
 
-    return this.http.get(`${this.backendElasticsearchUrl}/getSollWValueByHostnameAndKey`,
+    return this.http.get(`${this.backendElasticsearchUrl}/getExpectedValueByHostnameAndKey`,
       { params: params, responseType: "text" });
   }
 
@@ -63,14 +63,14 @@ export class ElasticService {
       { params: params });
   }
 
-  saveHistorySollWerte(hostName: string, key: string, sollValue: string) {
+  saveHistoryExpectedValue(hostName: string, key: string, expectedValue: string) {
     let params = new HttpParams();
 
     params = params.append('hostname', hostName);
     params = params.append('key', key);
-    params = params.append('sollvalue', sollValue);
+    params = params.append('expectedvalue', expectedValue);
 
-    return this.http.get(`${this.backendElasticsearchUrl}/insertHistorySollWert`, { params: params, responseType: "text" });
+    return this.http.get(`${this.backendElasticsearchUrl}/insertHistoryExpectedValue`, { params: params, responseType: "text" });
   }
 
   getHistoryBetweenTwoDates(firstDate: string, secondDate: string, indexName: string) {
@@ -80,7 +80,7 @@ export class ElasticService {
     params = params.append('unixtime2', secondDate);
     params = params.append('indexname', indexName);
     console.log(params)
-    return this.http.get<string[]>(`${this.backendElasticsearchUrl}/gethistorybetweentowdatum`, { params: params });
+    return this.http.get<string[]>(`${this.backendElasticsearchUrl}/getHistoryBetweenTwoDate`, { params: params });
   }
 
   getHistoryindexnames() {

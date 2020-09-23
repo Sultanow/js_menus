@@ -53,7 +53,7 @@ export class ConfigurationItemsService implements OnDestroy {
     this._itemlist.value.forEach(item => {
       if (item.key === elem.key && item.env === elem.env) {
         item.value = elem.value;
-        item.soll = elem.soll;
+        item.expected = elem.expected;
         update = true;
         return;
       }
@@ -67,8 +67,8 @@ export class ConfigurationItemsService implements OnDestroy {
       data.forEach(elem => {
         let host = elem.host;
         elem.items.forEach(item => {
-          this.elasticService.getSollValue(host, item.key_).subscribe(sollValue => {
-            this.addConfigItem(this.createItem(host, item.key_, item.lastvalue, sollValue))
+          this.elasticService.getExpectedValueByHostnameAndKey(host, item.key_).subscribe(expectedValue => {
+            this.addConfigItem(this.createItem(host, item.key_, item.lastvalue, expectedValue))
           });
         });
       });
@@ -127,8 +127,8 @@ export class ConfigurationItemsService implements OnDestroy {
     items.push(this.createItem("Dev1", "xyz", "nein", ""));
     return items;
   }
-  createItem(env: string, key: string, val: string, soll: string): ConfigurationItem {
-    return new ConfigurationItem(env, key, val, soll);
+  createItem(env: string, key: string, val: string, expected: string): ConfigurationItem {
+    return new ConfigurationItem(env, key, val, expected);
   }
 
   generateTree(env?: string[]): void {
@@ -172,18 +172,18 @@ export class ConfigurationItemsService implements OnDestroy {
   fillValues(node: Node<ENVCONFIG>): void {
     if (this.itemlist && this.itemlist.length != 0) {
       this.itemlist.forEach(i => {
-        if (i.key == node.value.Konfigurationsparameter && node.value[i.env] === "") {
-          if (i.soll === "") {
-            i.soll = i.value
+        if (i.key == node.value.Konfigurationsparameter&& node.value[i.env] === "") {
+          if (i.expected === "") {
+            i.expected = i.value
             i.identic = true;
-          } else if (i.soll == i.value) {
+          } else if (i.expected == i.value) {
             i.identic = true
           } else {
             i.identic = false;
           }
           let item: ENVVAL = {
-            ist: i.value,
-            soll: i.soll,
+            actual: i.value,
+            expected: i.expected,
             identic: i.identic
           };
           node.value[i.env] = item;
@@ -198,18 +198,17 @@ export class ConfigurationItemsService implements OnDestroy {
     }
   }
 
-  saveAllSollValue(hosts: string[]): void {
+  saveAllExpectedValues(hosts: string[]): void {
     if (hosts) {
       hosts.forEach(host => {
         this.itemlist.forEach(item => {
           if (item.env === host) {
-            this.elasticService.saveSollwerte(item.env, item.key, item.soll).subscribe(data => {
+            this.elasticService.saveExpectedValue(item.env, item.key, item.expected).subscribe(data => {
               console.log(data);
             })
           }
         })
       });
-
     }
   }
 }

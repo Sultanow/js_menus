@@ -71,7 +71,7 @@ public class HistoryController {
      */
     @PermitAll
     @GET
-    @Path("/gethistorybetweentowdatum")
+    @Path("/getHistoryBetweenTwoDate")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getHistorytowdatum1(@QueryParam("unixtime1") String unixTime1,
             @QueryParam("unixtime2") String unixTime2, @QueryParam("indexname") String indexName)  {

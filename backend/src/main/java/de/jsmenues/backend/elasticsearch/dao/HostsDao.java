@@ -8,7 +8,10 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,6 +59,12 @@ public class HostsDao {
     public static List<Map<String, Object>> getAllHosts() throws IOException {
 
         SearchRequest searchRequest = new SearchRequest(INDEX);
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+        searchSourceBuilder.size(10000);
+        searchRequest.source(searchSourceBuilder);
+        searchRequest.scroll(TimeValue.timeValueSeconds(30L));
+
         SearchResponse response = ElasticsearchConnecter.restHighLevelClient.search(searchRequest,
                 RequestOptions.DEFAULT);
         SearchHit[] searchHits = response.getHits().getHits();

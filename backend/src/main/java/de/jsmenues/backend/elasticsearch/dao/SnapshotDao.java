@@ -109,7 +109,7 @@ public class SnapshotDao {
             CreateSnapshotRequest snapshotRequest = new CreateSnapshotRequest();
             snapshotRequest.repository("backup");
             snapshotRequest.snapshot(snapshotName);
-            snapshotRequest.indices("history*", "host*", "sollwerte");
+            snapshotRequest.indices("history*", "host*", "expectedvalues");
             snapshotRequest.partial(true);
             snapshotRequest.waitForCompletion(true);
             CreateSnapshotResponse snapshotResponse = ElasticsearchConnecter.restHighLevelClient.snapshot()
@@ -135,7 +135,7 @@ public class SnapshotDao {
             Map<String, Object> config = new HashMap<>();
             config.put("history*", Collections.singletonList("idx1"));
             config.put("host*", Collections.singletonList("idx2"));
-            config.put("sollwerte", Collections.singletonList("idx3"));
+            config.put("expectedvalue", Collections.singletonList("idx3"));
             SnapshotRetentionConfiguration retention = new SnapshotRetentionConfiguration(TimeValue.timeValueDays(30),
                     1, 30);
             // A snapshot is taken every day at 03:00 Am in Europ/Berlin zone and saved 30

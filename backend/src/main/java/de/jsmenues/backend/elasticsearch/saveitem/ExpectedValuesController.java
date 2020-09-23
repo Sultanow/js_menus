@@ -17,28 +17,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Path("/elasticsearch")
-public class SollWetController {
+public class ExpectedValuesController {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(SollWetController.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(ExpectedValuesController.class);
 
     /**
-     * insert sollwerte from frontend
+     * insert expected values from frontend
      * 
      * @param hostName
      * @param key
-     * @param sollValue
+     * @param expectedValue
      * 
      * @return response about stored data
      */
     @PermitAll
     @GET
-    @Path("/insertSollWerte")
+    @Path("/insertExpectedValues")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response insertSollWerte(@QueryParam("hostname") String hostName, @QueryParam("key") String key,
-            @QueryParam("sollvalue") String sollValue) throws IOException {
+    public Response insertExpectedValues(@QueryParam("hostname") String hostName, @QueryParam("key") String key,
+            @QueryParam("expectedvalue") String expectedValue) throws IOException {
         String resulte = "";
         try {
-            resulte = SollWerte.insertSollWerte(hostName, key, sollValue);
+            resulte = ExpectedValues.insertExpectedValues(hostName, key, expectedValue);
             if (resulte != null) {
                 return Response.ok(resulte.toString()).build();
             }
@@ -49,39 +49,39 @@ public class SollWetController {
     }
 
     /**
-     * Get sollwerte from elasticsearch
+     * Get expected Values from elasticsearch
      *
-     * @return list of soll werte
+     * @return list of expectedValue
      */
     @PermitAll
     @GET
-    @Path("/getSollWerte")
+    @Path("/getExpectedValues")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSollWerte() {
+    public Response getExpectedValues() {
         try {
-            List<Map<String, Object>> result = SollWerte.getSollWerte();
+            List<Map<String, Object>> result = ExpectedValues.getExpectedValues();
             return Response.ok(result).build();
         } catch (Exception e) {
-            return Response.ok("soll werte are not exist").build();
+            return Response.ok("Expected value  are not exist").build();
         }
     }
 
     /**
-     * Get a soll value from elasticsearch by host name and key
+     * Get a expected value from elasticsearch by host name and key
      * 
      * @param hostName
      * @param key
      * 
-     * @return soll value
+     * @return expected value
      */
     @PermitAll
     @GET
-    @Path("/getSollWValueByHostnameAndKey")
+    @Path("/getExpectedValueByHostnameAndKey")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response getSollWValueByHostnameAndKey(@QueryParam("hostname") String hostName,
+    public Response getExpectedValueByHostnameAndKey(@QueryParam("hostname") String hostName,
             @QueryParam("key") String key) {              
         try {
-            String result = SollWerte.getSollValueByHostnameAndKey(hostName, key);
+            String result = ExpectedValues.getExpectedValueByHostnameAndKey(hostName, key);
             if(result!= null){
                 return Response.ok(result).build();
             }else{
@@ -93,24 +93,24 @@ public class SollWetController {
     }
 
     /**
-     * insert history sollwerte from frontend
+     * insert history expected Value from frontend
      * 
      * @param hostName
      * @param key
-     * @param sollValue
+     * @param expectedValue
      * 
      * @return response about stored data
      */
     @PermitAll
     @GET
-    @Path("/insertHistorySollWert")
+    @Path("/insertHistoryExpectedValue")
     @Produces(MediaType.TEXT_PLAIN)
 
-    public Response insertHistorySollWert(@QueryParam("hostname") String hostName, @QueryParam("key") String key,
-            @QueryParam("sollvalue") String sollValue) throws IOException {
+    public Response insertHistoryExpectedValue(@QueryParam("hostname") String hostName, @QueryParam("key") String key,
+            @QueryParam("expectedvalue") String expectedValue) throws IOException {
         IndexResponse resulte = null;
         try {
-            resulte = SollWerte.inserHistorySollWert(hostName, key, sollValue);
+            resulte = ExpectedValues.inserHistoryExpectedValue(hostName, key, expectedValue);
             if (resulte != null) {
                 return Response.ok(resulte.toString()).build();
             }

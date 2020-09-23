@@ -1,9 +1,11 @@
 package de.jsmenues.backend.elasticsearch.dao;
 
 import de.jsmenues.backend.elasticsearch.ElasticsearchConnecter;
-import de.jsmenues.backend.elasticsearch.saveitem.SollWerte;
+import de.jsmenues.backend.elasticsearch.saveitem.ExpectedValues;
 import de.jsmenues.backend.elasticsearch.service.HistoryServiece;
 import de.jsmenues.backend.elasticsearch.service.HostInformationService;
+import de.jsmenues.backend.zabbixservice.ZabbixElasticsearchSynchronization;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,6 +46,7 @@ public class HistoryDao {
      */
     public static void insertHistory(List<Map<String, Object>> histories) throws IOException, ParseException {
         int numberOfHistoryRecords = 0;
+        ZabbixElasticsearchSynchronization.stopSynchronization = true;
         List<Map<String, Object>> mapItems = null;
         try {
             List<Map<String, List<Object>>> hostsInfo = InformationHostDao.getAllHostInformation();
@@ -71,12 +74,15 @@ public class HistoryDao {
                         long unixTime = System.currentTimeMillis() / 1000L;
 
                         if (itemid.equals(historyItemid)) {
-                            String istValue = String.valueOf(history.get("value"));
-                            String sollVlaue = SollWerte.getSollValueByHostnameAndKey(hostName, key);
-                            if(sollVlaue == "") {
-                                sollVlaue = istValue ;
+                            String actualValue = String.valueOf(history.get("value"));
+                            String expectedValue = "";
+                            try {
+                                expectedValue = ExpectedValues.getExpectedValueByHostnameAndKey(hostName, key);
+                            } catch (Exception e) {
+                                expectedValue = actualValue;
                             }
-                            history.put("sollvalue", sollVlaue);
+
+                            history.put("expectedvalue", expectedValue);
                             history.put("key", key);
                             history.put("timestamp", dateTime);
                             history.put("hostname", hostName);
@@ -112,6 +118,7 @@ public class HistoryDao {
                 }
             }
             LOGGER.info(numberOfHistoryRecords + " history records are inserted");
+            ZabbixElasticsearchSynchronization.stopSynchronization = false;
         } catch (Exception e) {
             LOGGER.error(e.getMessage() + "\n elasticsearch is not avalible or something wrong with elasticsearch");
         }

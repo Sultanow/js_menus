@@ -31,12 +31,12 @@
       <mat-label for="secondDate">Enddatum</mat-label>
       <input matInput id= "today" type="date" formControlField="secondDate"   #input2 ngModle />
     </mat-form-field>
-    <button mat-button (click)="sendDates(input1.value,input2.value);displayHistoryBetweenTwoDates()">senden</button>
+    <button mat-button (click)="sendDates(input1.value,input2.value);displayHistoryBetweenTwoDatesDelay()">senden</button>
   </div>
   <div id="dropdownListEnv">Liste mit auswählbaren Environments
     <mat-form-field>
       <mat-label>Environment auswählen</mat-label>
-      <mat-select (selectionChange)="setSelectedValue($event)" (click)="generateShowlists()" class="selectionChange">
+      <mat-select (selectionChange)="setSelectedValue($event)" (click)="generateCompareTable()" class="selectionChange">
         <mat-option *ngFor="let env of otherEnvs" [value]="env">
           {{env}}
         </mat-option>
@@ -62,11 +62,11 @@
   <div class="treeTableElement">
     <div *ngIf="el.element.value[el.column]">
       <div class="textarea_1">
-        <textarea class="textarea_items" #input ngModle>{{el.element.value[el.column].soll}}</textarea>
-        <textarea disabled="true" class="textarea_items">{{el.element.value[el.column].ist}}</textarea>
+        <textarea class="textarea_items" #input ngModle>{{el.element.value[el.column].expected}}</textarea>
+        <textarea disabled="true" class="textarea_items">{{el.element.value[el.column].actual}}</textarea>
       </div>
       <button class="saveChange"
-        (click)="saveSollValue(el.column, el.element.value.Konfigurationsparameter, el.element.value[el.column].ist, input.value)">
+        (click)="saveExpectedValue(el.column, el.element.value.Konfigurationsparameter, el.element.value[el.column].actual, input.value)">
         speichern</button>
       <div *ngIf="!el.element.value[el.column].identic" class="checkItem">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="red"

@@ -31,20 +31,20 @@ import de.jsmenues.backend.elasticsearch.dao.HistoryDao;
 import de.jsmenues.backend.elasticsearch.dao.InformationHostDao;
 import de.jsmenues.backend.elasticsearch.service.HostInformationService;
 
-public class SollWerte {
-    private static Logger LOGGER = LoggerFactory.getLogger(SollWerte.class);
-    public static final String INDEX = "sollwerte";
+public class ExpectedValues {
+    private static Logger LOGGER = LoggerFactory.getLogger(ExpectedValues.class);
+    public static final String INDEX = "expectedvalues";
 
     /**
-     * insert soll werte in Elasticseach from frontend
+     * insert expected values  in Elasticseach from frontend
      * 
      * @param hostName
      * @param key
-     * @param sollValue
+     * @param expectedValue
      * @return respons about stored data
      * @throws Exception
      */
-    public static final String insertSollWerte(String hostName, String key, String sollValue) throws Exception {
+    public static final String insertExpectedValues(String hostName, String key, String expectedValue) throws Exception {
         IndexResponse indexResponse = null;
         UpdateResponse updateResponse = null;
         Date date = new Date();
@@ -56,7 +56,7 @@ public class SollWerte {
         Map<String, Object> itemMap = new HashMap<>();
         itemMap.put("hostname", hostName);
         itemMap.put("key", key);
-        itemMap.put("sollvalue", sollValue);
+        itemMap.put("expectedvalue", expectedValue);
         itemMap.put("itemstamp", dateTime);
 
         GetRequest getRequest = new GetRequest(INDEX, hostName + "-" + key);
@@ -67,8 +67,8 @@ public class SollWerte {
             LOGGER.info("\n item is  inserted");
             return indexResponse.toString();
         } else {
-            String lastSollValue = getSollValueByHostnameAndKey(hostName, key);
-            if (!lastSollValue.equals(sollValue)) {
+            String lastexpectedValue = getExpectedValueByHostnameAndKey(hostName, key);
+            if (!lastexpectedValue.equals(expectedValue)) {
                 UpdateRequest updateRequest = new UpdateRequest(INDEX, hostName + "-" + key).doc(itemMap);
                 updateResponse = ElasticsearchConnecter.restHighLevelClient.update(updateRequest,
                         RequestOptions.DEFAULT);
@@ -80,14 +80,14 @@ public class SollWerte {
     }
 
     /**
-     * insert history soll wert to Elasticseach from frontend
+     * insert history expected value to Elasticseach from frontend
      * 
      * @param hostName
      * @param key
-     * @param sollValue
+     * @param expectedValue
      * @return respons about history data
      */
-    public static final IndexResponse inserHistorySollWert(String hostName, String key, String sollValue)
+    public static final IndexResponse inserHistoryExpectedValue(String hostName, String key, String expectedValue)
             throws Exception {
         Date date = new Date();
         SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -102,7 +102,7 @@ public class SollWerte {
         itemMap.put("clock", unixTime);
         itemMap.put("itemid", itemId);
         itemMap.put("value", lastValue);
-        itemMap.put("sollvalue", sollValue);
+        itemMap.put("expectedvalue", expectedValue);
         itemMap.put("key", key);
         itemMap.put("timestamp", dateTime);
         itemMap.put("hostname", hostName);
@@ -115,11 +115,11 @@ public class SollWerte {
     }
 
     /**
-     * Get all soll werte from Elasticsearch
+     * Get all expected Value from Elasticsearch
      * 
-     * @return soll werte
+     * @return expectedValue
      */
-    public static final List<Map<String, Object>> getSollWerte() throws Exception {
+    public static final List<Map<String, Object>> getExpectedValues() throws Exception {
 
         SearchRequest searchRequest = new SearchRequest(INDEX);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -144,30 +144,30 @@ public class SollWerte {
     }
 
     /**
-     * Get a soll wert from Elasticsearch by host name and key
+     * Get a expected value  from Elasticsearch by host name and key
      * 
      * @param hostName
      * @param key
-     * @return soll value
+     * @return expected value
      * @throws Exception
      */
-    public static final String getSollValueByHostnameAndKey(String hostName, String key) {
+    public static final String getExpectedValueByHostnameAndKey(String hostName, String key) {
 
-        String sollValue = "";
+        String expectedValue = "";
         try {
-            List<Map<String, Object>> getSollWerte = getSollWerte();
+            List<Map<String, Object>> expectedValues = getExpectedValues();
 
-            for (Map<String, Object> tempMap : getSollWerte) {
+            for (Map<String, Object> tempMap : expectedValues) {
                 String host = String.valueOf(tempMap.get("hostname"));
                 String key_ = String.valueOf(tempMap.get("key"));
                 if (host.equals(hostName) && key_.equals(key)) {
-                    sollValue = String.valueOf(tempMap.get("sollvalue"));
+                    expectedValue = String.valueOf(tempMap.get("expectedvalue"));
                 }
             }
-            return sollValue;
+            return expectedValue;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            return sollValue;
+            return expectedValue;
         }
     }
 }
