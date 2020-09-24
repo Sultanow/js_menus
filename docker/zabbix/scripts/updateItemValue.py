@@ -25,11 +25,7 @@ m18 = ZabbixMetric('dev3', 'config.silbentrennung', 'test-silbentrennung')
 m19 = ZabbixMetric('dev4', 'config.silbentrennung', 'test-silbentrennung')
 m20 = ZabbixMetric('dev5', 'config.silbentrennung', 'test-silbentrennung')
 
-m21 = ZabbixMetric('dev1', 'cpu.usage', '20')
-m22 = ZabbixMetric('dev2', 'cpu.usage', '30')
-m23 = ZabbixMetric('dev3', 'cpu.usage', '40')
-m24 = ZabbixMetric('dev4', 'cpu.usage', '50')
-m25 = ZabbixMetric('dev5', 'cpu.usage', '60')
+
 
 metrics.append(m1)
 metrics.append(m2)
@@ -55,11 +51,6 @@ metrics.append(m18)
 metrics.append(m19)
 metrics.append(m20)
 
-metrics.append(m21)
-metrics.append(m22)
-metrics.append(m23)
-metrics.append(m24)
-metrics.append(m25)
 
 zbx = ZabbixSender('127.0.0.1',10051)
 zbx.send(metrics)

@@ -16,7 +16,7 @@ export class ElasticService {
     return this.http.get<string[]>(`${this.backendElasticsearchUrl}/getAllKeys`, {});
   }
   getAllHostName(): Observable<any> {
-    return this.http.get<string[]>(`${this.backendElasticsearchUrl}/getAllHostName`, {});
+    return this.http.get<string[]>(`${this.backendElasticsearchUrl}/hostnames`, {});
   }
   getLastValue(hostName: string, itemKey: string): Observable<any> {
     let params = new HttpParams();
@@ -31,27 +31,17 @@ export class ElasticService {
   }
 
   saveExpectedValue(hostName: string, key: string, expectedValue: string): Observable<any> {
-    let params = new HttpParams();
-
-    params = params.append('hostname', hostName);
-    params = params.append('key', key);
-    params = params.append('expectedvalue', expectedValue);
-
-    return this.http.get(`${this.backendElasticsearchUrl}/insertExpectedValues`, { params: params, responseType: "text" });
+    console.log(hostName+'/'+key+'/'+expectedValue);
+    return this.http.put(`${this.backendElasticsearchUrl}/expectedValues/`+hostName+'/'+key+'/'+expectedValue,{});
   }
 
   getExpectedValues(): Observable<any> {
-    return this.http.get<JSON>(`${this.backendElasticsearchUrl}/getExpectedValues`, {});
+    return this.http.get<JSON>(`${this.backendElasticsearchUrl}/expectedValues`, {});
   }
 
   getExpectedValueByHostnameAndKey(hostName: string, key: string): Observable<any> {
-    let params = new HttpParams();
-
-    params = params.append('hostname', hostName);
-    params = params.append('key', key);
-
-    return this.http.get(`${this.backendElasticsearchUrl}/getExpectedValueByHostnameAndKey`,
-      { params: params, responseType: "text" });
+    return this.http.get(`${this.backendElasticsearchUrl}/expectedValue/`+hostName+'/'+key+'/',
+      { responseType: "text" });
   }
 
   getHostinformationByNames(hsots: string[]): Observable<any> {
@@ -64,13 +54,9 @@ export class ElasticService {
   }
 
   saveHistoryExpectedValue(hostName: string, key: string, expectedValue: string) {
-    let params = new HttpParams();
 
-    params = params.append('hostname', hostName);
-    params = params.append('key', key);
-    params = params.append('expectedvalue', expectedValue);
-
-    return this.http.get(`${this.backendElasticsearchUrl}/insertHistoryExpectedValue`, { params: params, responseType: "text" });
+    return this.http.put(`${this.backendElasticsearchUrl}/historyExpectedValue/`+hostName+'/'+key+'/'+expectedValue, 
+    {});
   }
 
   getHistoryBetweenTwoDates(firstDate: string, secondDate: string, indexName: string) {

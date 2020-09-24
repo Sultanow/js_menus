@@ -57,7 +57,6 @@ export class CompareComponent implements OnInit {
 
   ngOnInit() {
     this.configItemService.createServerConf();
-
   }
 
   refreshItemlist(): void {
@@ -69,7 +68,6 @@ export class CompareComponent implements OnInit {
   ngOnChanges(changes): void {
     if (this.showCompare) {
       this.getIndexNames();
-      this.saveCurrentExpectedValuesDelay();
       this.notifyTitle.emit("Konfigurationsübersicht");
       this.getServerConfiguration();
       this.elasticService.getAllHostName().subscribe(data => {
@@ -103,10 +101,8 @@ export class CompareComponent implements OnInit {
     }
     this.generateCompareTable();
     this.getServerConfiguration();
-    this.saveCurrentExpectedValuesDelay();
-
-
   }
+  
   getServerConfiguration(): void {
     let envs = ServerConfiguration.ENV_LIST;
     if (this.selectedEnvs)
@@ -134,13 +130,7 @@ export class CompareComponent implements OnInit {
 
   }
 
-  saveCurrentExpectedValues(): void {
-    let envs = ServerConfiguration.ENV_LIST;
-    if (this.selectedEnvs) {
-      envs = this.selectedEnvs;
-      this.configItemService.saveAllExpectedValues(envs);
-    }
-  }
+
 
   saveExpectedValue(hostName: string, key: string, actualValue: string, expectedValue: string): void {
     if (this.selectedEnvs) {
@@ -157,9 +147,6 @@ export class CompareComponent implements OnInit {
     })
   }
 
-  saveCurrentExpectedValuesDelay(): void {
-    setTimeout(() => this.saveCurrentExpectedValues(), 4000); // 4000 is millisecond
-  }
 
   generateTree(): void {
     setTimeout(() => this.configItemService.generateTree(this.selectedEnvs), 2000);
@@ -175,7 +162,6 @@ export class CompareComponent implements OnInit {
   getIndexNames(): void {
     this.elasticService.getHistoryindexnames().subscribe(data => {
       this.indexNames = data;
-      console.log(this.indexNames);
     })
   }
 

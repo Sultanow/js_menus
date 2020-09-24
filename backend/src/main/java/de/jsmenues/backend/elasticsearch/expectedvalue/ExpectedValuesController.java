@@ -1,4 +1,4 @@
-package de.jsmenues.backend.elasticsearch.saveitem;
+package de.jsmenues.backend.elasticsearch.expectedvalue;
 
 import java.io.IOException;
 import java.util.List;
@@ -6,13 +6,13 @@ import java.util.Map;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.elasticsearch.action.index.IndexResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,18 +31,15 @@ public class ExpectedValuesController {
      * @return response about stored data
      */
     @PermitAll
-    @GET
-    @Path("/insertExpectedValues")
+    @PUT
+    @Path("/expectedValues/{hostname}/{key}/{expectedvalue}")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response insertExpectedValues(@QueryParam("hostname") String hostName, @QueryParam("key") String key,
-            @QueryParam("expectedvalue") String expectedValue) throws IOException {
-        String resulte = "";
+    public Response insertExpectedValues(@PathParam("hostname") String hostName, @PathParam("key") String key,
+            @PathParam("expectedvalue") String expectedValue) throws IOException {
+
         try {
-            resulte = ExpectedValues.insertExpectedValues(hostName, key, expectedValue);
-            if (resulte != null) {
-                return Response.ok(resulte.toString()).build();
-            }
-            return Response.ok("no update").build();
+            ExpectedValues.insertExpectedValues(hostName, key, expectedValue);
+            return Response.ok().build();
         } catch (Exception e) {
             return Response.ok(e.getMessage()).build();
         }
@@ -55,7 +52,7 @@ public class ExpectedValuesController {
      */
     @PermitAll
     @GET
-    @Path("/getExpectedValues")
+    @Path("/expectedValues")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getExpectedValues() {
         try {
@@ -76,10 +73,10 @@ public class ExpectedValuesController {
      */
     @PermitAll
     @GET
-    @Path("/getExpectedValueByHostnameAndKey")
+    @Path("/expectedValue/{hostname}/{key}")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response getExpectedValueByHostnameAndKey(@QueryParam("hostname") String hostName,
-            @QueryParam("key") String key) {              
+    public Response getExpectedValueByHostnameAndKey(@PathParam("hostname") String hostName,
+            @PathParam("key") String key) {              
         try {
             String result = ExpectedValues.getExpectedValueByHostnameAndKey(hostName, key);
             if(result!= null){
@@ -102,19 +99,16 @@ public class ExpectedValuesController {
      * @return response about stored data
      */
     @PermitAll
-    @GET
-    @Path("/insertHistoryExpectedValue")
+    @PUT
+    @Path("/historyExpectedValue/{hostname}/{key}/{expectedvalue}")
     @Produces(MediaType.TEXT_PLAIN)
 
-    public Response insertHistoryExpectedValue(@QueryParam("hostname") String hostName, @QueryParam("key") String key,
-            @QueryParam("expectedvalue") String expectedValue) throws IOException {
-        IndexResponse resulte = null;
+    public Response insertHistoryExpectedValue(@PathParam("hostname") String hostName, @PathParam("key") String key,
+            @PathParam("expectedvalue") String expectedValue) throws IOException {
+
         try {
-            resulte = ExpectedValues.inserHistoryExpectedValue(hostName, key, expectedValue);
-            if (resulte != null) {
-                return Response.ok(resulte.toString()).build();
-            }
-            return Response.ok("history data is not inserted").build();
+            ExpectedValues.inserHistoryExpectedValue(hostName, key, expectedValue);
+            return Response.ok().build();
         } catch (Exception e) {
             return Response.ok(e.getMessage()).build();
         }

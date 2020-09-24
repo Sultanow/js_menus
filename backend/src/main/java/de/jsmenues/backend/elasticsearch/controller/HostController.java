@@ -9,8 +9,8 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -48,7 +48,7 @@ public class HostController {
      */
     @PermitAll
     @GET
-    @Path("/getallhosts")
+    @Path("/hosts")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllHosts() throws IOException {
 
@@ -63,7 +63,7 @@ public class HostController {
      */
     @PermitAll
     @GET
-    @Path("/getAllHostName")
+    @Path("/hostnames")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllHostName() throws IOException {
 
@@ -79,8 +79,8 @@ public class HostController {
      */
     @PermitAll
     @DELETE
-    @Path("/deletehostById")
-    public Response deleteHostByID(@QueryParam("hostid") String hostId) throws IOException {
+    @Path("/host/{hostid}")
+    public Response deleteHostByID(@PathParam("hostid") String hostId) throws IOException {
 
         String result1 = HostsDao.deleteHostById(hostId);
         String result2 = HostsDao.deleteHostInfoById(hostId);

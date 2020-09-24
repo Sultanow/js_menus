@@ -1,10 +1,10 @@
 package de.jsmenues.backend.elasticsearch.dao;
 
 import de.jsmenues.backend.elasticsearch.ElasticsearchConnecter;
-import de.jsmenues.backend.elasticsearch.saveitem.ExpectedValues;
+import de.jsmenues.backend.elasticsearch.expectedvalue.ExpectedValues;
 import de.jsmenues.backend.elasticsearch.service.HistoryServiece;
 import de.jsmenues.backend.elasticsearch.service.HostInformationService;
-import de.jsmenues.backend.zabbixservice.ZabbixElasticsearchSynchronization;
+
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -46,7 +46,7 @@ public class HistoryDao {
      */
     public static void insertHistory(List<Map<String, Object>> histories) throws IOException, ParseException {
         int numberOfHistoryRecords = 0;
-        ZabbixElasticsearchSynchronization.stopSynchronization = true;
+       
         List<Map<String, Object>> mapItems = null;
         try {
             List<Map<String, List<Object>>> hostsInfo = InformationHostDao.getAllHostInformation();
@@ -118,7 +118,7 @@ public class HistoryDao {
                 }
             }
             LOGGER.info(numberOfHistoryRecords + " history records are inserted");
-            ZabbixElasticsearchSynchronization.stopSynchronization = false;
+            
         } catch (Exception e) {
             LOGGER.error(e.getMessage() + "\n elasticsearch is not avalible or something wrong with elasticsearch");
         }

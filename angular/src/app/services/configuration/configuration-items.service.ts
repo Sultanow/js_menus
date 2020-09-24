@@ -87,46 +87,8 @@ export class ConfigurationItemsService implements OnDestroy {
   }
 
 
-  getDummyServerConfiguration(): ConfigurationItem[] {
-    let items: ConfigurationItem[] = [];
-    items.push(this.createItem("Dev1", "SW-Version", "20.02.00_5", ""));
-    items.push(this.createItem("Dev1", "Silbentrennung", "an", ""));
-    items.push(this.createItem("Dev1", "Text-Version", "V20.02.00_2", ""));
-    items.push(this.createItem("Dev1", "Hilfsapplication-Version", "2.03.1", ""));
-    items.push(this.createItem("Dev4", "SW-Version", "19.02.00_52", ""));
-    return items;
-  }
 
-  getBatchConfiguration(): ConfigurationItem[] {
-    return this.getDummyBatchConfig();
-  }
 
-  getDummyBatchConfig(): ConfigurationItem[] {
-    let items: ConfigurationItem[] = [];
-    items.push(this.createItem("A2145", "Parameter 1", "5", ""));
-    items.push(this.createItem("A2145", "Parameter 2", "x", ""));
-    items.push(this.createItem("TL244", "Parameter 1", "test", ""));
-    return items;
-  }
-
-  getRightConfigurationTest(): ConfigurationItem[] {
-    return this.getDummyRightConfiguration();
-  }
-
-  getRightConfigurationDev(): ConfigurationItem[] {
-    return this.getDummyRightConfiguration();
-  }
-
-  getRightConfigurationProd(): ConfigurationItem[] {
-    return this.getDummyRightConfiguration();
-  }
-
-  getDummyRightConfiguration(): ConfigurationItem[] {
-    let items: ConfigurationItem[] = [];
-    items.push(this.createItem("Dev1", "abc", "ja", ""));
-    items.push(this.createItem("Dev1", "xyz", "nein", ""));
-    return items;
-  }
   createItem(env: string, key: string, val: string, expected: string): ConfigurationItem {
     return new ConfigurationItem(env, key, val, expected);
   }
@@ -194,20 +156,6 @@ export class ConfigurationItemsService implements OnDestroy {
             this.fillValues(c);
           });
         }
-      });
-    }
-  }
-
-  saveAllExpectedValues(hosts: string[]): void {
-    if (hosts) {
-      hosts.forEach(host => {
-        this.itemlist.forEach(item => {
-          if (item.env === host) {
-            this.elasticService.saveExpectedValue(item.env, item.key, item.expected).subscribe(data => {
-              console.log(data);
-            })
-          }
-        })
       });
     }
   }

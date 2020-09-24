@@ -1,4 +1,4 @@
-package de.jsmenues.backend.elasticsearch.saveitem;
+package de.jsmenues.backend.elasticsearch.expectedvalue;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.jsmenues.backend.elasticsearch.ElasticsearchConnecter;
-import de.jsmenues.backend.elasticsearch.dao.HistoryDao;
 import de.jsmenues.backend.elasticsearch.dao.InformationHostDao;
 import de.jsmenues.backend.elasticsearch.service.HostInformationService;
 
@@ -44,9 +43,7 @@ public class ExpectedValues {
      * @return respons about stored data
      * @throws Exception
      */
-    public static final String insertExpectedValues(String hostName, String key, String expectedValue) throws Exception {
-        IndexResponse indexResponse = null;
-        UpdateResponse updateResponse = null;
+    public static final void insertExpectedValues(String hostName, String key, String expectedValue) throws Exception {
         Date date = new Date();
         SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         isoFormat.setTimeZone(TimeZone.getTimeZone("Europe/Berlin"));
@@ -63,19 +60,19 @@ public class ExpectedValues {
         boolean exists = ElasticsearchConnecter.restHighLevelClient.exists(getRequest, RequestOptions.DEFAULT);
         if (!exists) {
             IndexRequest indexRequest = new IndexRequest(INDEX).source(itemMap).id(hostName + "-" + key);
-            indexResponse = ElasticsearchConnecter.restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
-            LOGGER.info("\n item is  inserted");
-            return indexResponse.toString();
+            IndexResponse indexResponse = ElasticsearchConnecter.restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
+            LOGGER.info(indexResponse+"\n item is  inserted");
+          
         } else {
             String lastexpectedValue = getExpectedValueByHostnameAndKey(hostName, key);
             if (!lastexpectedValue.equals(expectedValue)) {
                 UpdateRequest updateRequest = new UpdateRequest(INDEX, hostName + "-" + key).doc(itemMap);
-                updateResponse = ElasticsearchConnecter.restHighLevelClient.update(updateRequest,
+                UpdateResponse   updateResponse = ElasticsearchConnecter.restHighLevelClient.update(updateRequest,
                         RequestOptions.DEFAULT);
-                LOGGER.info(indexResponse + "\n item is updated");
-                return updateResponse.toString();
+                LOGGER.info(updateResponse + "\n item is updated");
+              
             }
-            return "no change";
+            
         }
     }
 
@@ -87,7 +84,7 @@ public class ExpectedValues {
      * @param expectedValue
      * @return respons about history data
      */
-    public static final IndexResponse inserHistoryExpectedValue(String hostName, String key, String expectedValue)
+    public static final void inserHistoryExpectedValue(String hostName, String key, String expectedValue)
             throws Exception {
         Date date = new Date();
         SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -110,8 +107,7 @@ public class ExpectedValues {
         IndexRequest indexRequest = new IndexRequest("history-" + hostName + "-" + key).source(itemMap).id(unixTime);
 
         IndexResponse indexResponse = ElasticsearchConnecter.restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
-
-        return indexResponse;
+        LOGGER.info(indexResponse.toString());
     }
 
     /**
@@ -144,7 +140,7 @@ public class ExpectedValues {
     }
 
     /**
-     * Get a expected value  from Elasticsearch by host name and key
+     * Get an expected value  from Elasticsearch by host name and key
      * 
      * @param hostName
      * @param key
