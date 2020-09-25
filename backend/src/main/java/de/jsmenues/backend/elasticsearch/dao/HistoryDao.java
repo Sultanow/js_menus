@@ -167,7 +167,7 @@ public class HistoryDao {
     }
 
     /**
-     * Delet history records after 2 years
+     * Delete history records after 2 years
      *
      */
     public static void DeletehistoryRecordsAfterTwoYears() {
