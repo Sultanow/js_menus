@@ -8,7 +8,9 @@ import java.util.Map;
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -20,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import de.jsmenues.backend.elasticsearch.dao.HistoryDao;
 import de.jsmenues.backend.zabbixservice.ZabbixService;
 
-@Path("/elasticsearch")
+@Path("/elasticsearch/history")
 public class HistoryController {
 
     private static Logger LOGGER = LoggerFactory.getLogger(HistoryController.class);
@@ -31,8 +33,8 @@ public class HistoryController {
      * @return list of history records
      */
     @PermitAll
-    @POST
-    @Path("/inserthistory")
+    @PUT
+    @Path("/")
     @Produces(MediaType.TEXT_PLAIN)
     public Response insertHistory() throws IOException, ParseException {
 
@@ -51,9 +53,9 @@ public class HistoryController {
      */
     @PermitAll
     @POST
-    @Path("/gethistorybyindex")
+    @Path("/{patternindexname}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getHistoryRecordsByIndex(@QueryParam("patternindexname") String patternIndexName)
+    public Response getHistoryRecordsByIndex(@PathParam("patternindexname") String patternIndexName)
             throws IOException {
 
         List<Map<String, Object>> result = HistoryDao.getHistoryRecordsByIndex(patternIndexName);
@@ -71,10 +73,10 @@ public class HistoryController {
      */
     @PermitAll
     @GET
-    @Path("/getHistoryBetweenTwoDate")
+    @Path("/{unixtime1}/{unixtime2}/{indexname}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getHistorytowdatum1(@QueryParam("unixtime1") String unixTime1,
-            @QueryParam("unixtime2") String unixTime2, @QueryParam("indexname") String indexName)  {
+    public Response getHistorytowdatum1(@PathParam("unixtime1") String unixTime1,
+            @PathParam("unixtime2") String unixTime2, @PathParam("indexname") String indexName)  {
         try {
             List<Map<String, Object>> result = HistoryDao.getHistoryRecordBetweenTowDatesByIndexName(unixTime1, unixTime2,
                     indexName);

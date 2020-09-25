@@ -65,23 +65,19 @@ export class ConfigurationItemsService implements OnDestroy {
   createServerConf(): void{
     this.elasticService.getHostInformation().subscribe(data => {
       data.forEach(elem => {
-        let host = elem.host;
-        elem.items.forEach(item => {
-          this.elasticService.getExpectedValueByHostnameAndKey(host, item.key_).subscribe(expectedValue => {
-            this.addConfigItem(this.createItem(host, item.key_, item.lastvalue, expectedValue))
+          this.elasticService.getExpectedValueByHostnameAndKey(elem.hostname, elem.key_).subscribe(expectedValue => {
+            this.addConfigItem(this.createItem(elem.hostname, elem.key_, elem.lastvalue, expectedValue))
           });
         });
-      });
     });
   }
 
   getUpdateTime(data: any): number {
+
     let time: number = 0;
-    data.forEach(elem => {
-      elem.items.forEach(item => {
-        if (item.lastclock !== '' && item.lastclock > time)
-          time = item.lastclock;
-      });
+    data.forEach(elem => {  
+        if (elem.lastclock !== '' && elem.lastclock > time)
+          time = elem.lastclock;
     });
     return time;
   }

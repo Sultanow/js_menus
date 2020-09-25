@@ -35,57 +35,14 @@ public class ExpectedValues {
     public static final String INDEX = "expectedvalues";
 
     /**
-     * insert expected values  in Elasticseach from frontend
-     * 
-     * @param hostName
-     * @param key
-     * @param expectedValue
-     * @return respons about stored data
-     * @throws Exception
-     */
-    public static final void insertExpectedValues(String hostName, String key, String expectedValue) throws Exception {
-        Date date = new Date();
-        SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        isoFormat.setTimeZone(TimeZone.getTimeZone("Europe/Berlin"));
-        String timestamp = isoFormat.format(date);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime dateTime = LocalDateTime.parse(timestamp, formatter);
-        Map<String, Object> itemMap = new HashMap<>();
-        itemMap.put("hostname", hostName);
-        itemMap.put("key", key);
-        itemMap.put("expectedvalue", expectedValue);
-        itemMap.put("itemstamp", dateTime);
-
-        GetRequest getRequest = new GetRequest(INDEX, hostName + "-" + key);
-        boolean exists = ElasticsearchConnecter.restHighLevelClient.exists(getRequest, RequestOptions.DEFAULT);
-        if (!exists) {
-            IndexRequest indexRequest = new IndexRequest(INDEX).source(itemMap).id(hostName + "-" + key);
-            IndexResponse indexResponse = ElasticsearchConnecter.restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
-            LOGGER.info(indexResponse+"\n item is  inserted");
-          
-        } else {
-            String lastexpectedValue = getExpectedValueByHostnameAndKey(hostName, key);
-            if (!lastexpectedValue.equals(expectedValue)) {
-                UpdateRequest updateRequest = new UpdateRequest(INDEX, hostName + "-" + key).doc(itemMap);
-                UpdateResponse   updateResponse = ElasticsearchConnecter.restHighLevelClient.update(updateRequest,
-                        RequestOptions.DEFAULT);
-                LOGGER.info(updateResponse + "\n item is updated");
-              
-            }
-            
-        }
-    }
-
-    /**
-     * insert history expected value to Elasticseach from frontend
+     * insert expected values in Elasticseach from frontend
      * 
      * @param hostName
      * @param key
      * @param expectedValue
      * @return respons about history data
      */
-    public static final void inserHistoryExpectedValue(String hostName, String key, String expectedValue)
-            throws Exception {
+    public static final void insertExpectedValues(String hostName, String key, String expectedValue) throws Exception {
         Date date = new Date();
         SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         isoFormat.setTimeZone(TimeZone.getTimeZone("Europe/Berlin"));
@@ -95,7 +52,7 @@ public class ExpectedValues {
         String unixTime = String.valueOf(System.currentTimeMillis() / 1000L);
         Map<String, Object> itemMap = new HashMap<>();
         String lastValue = InformationHostDao.getLastValuByKey(hostName, key);
-        String itemId    = InformationHostDao.getItemId(hostName, key);
+        String itemId = InformationHostDao.getItemId(hostName, key);
         itemMap.put("clock", unixTime);
         itemMap.put("itemid", itemId);
         itemMap.put("value", lastValue);
@@ -103,10 +60,28 @@ public class ExpectedValues {
         itemMap.put("key", key);
         itemMap.put("timestamp", dateTime);
         itemMap.put("hostname", hostName);
+        GetRequest getRequest = new GetRequest(INDEX, hostName + "-" + key);
+        boolean exists = ElasticsearchConnecter.restHighLevelClient.exists(getRequest, RequestOptions.DEFAULT);
+        if (!exists) {
+            IndexRequest indexRequest = new IndexRequest(INDEX).source(itemMap).id(hostName + "-" + key);
+            IndexResponse indexResponse = ElasticsearchConnecter.restHighLevelClient.index(indexRequest,
+                    RequestOptions.DEFAULT);
+            LOGGER.info(indexResponse + "\n item is  inserted");
 
-        IndexRequest indexRequest = new IndexRequest("history-" + hostName + "-" + key).source(itemMap).id(unixTime);
+        } else {
+            String lastexpectedValue = getExpectedValueByHostnameAndKey(hostName, key);
+            if (!lastexpectedValue.equals(expectedValue)) {
+                UpdateRequest updateRequest = new UpdateRequest(INDEX, hostName + "-" + key).doc(itemMap);
+                UpdateResponse updateResponse = ElasticsearchConnecter.restHighLevelClient.update(updateRequest,
+                        RequestOptions.DEFAULT);
+                LOGGER.info(updateResponse + "\n item is updated");
+            }
+        }
+        IndexRequest indexHistoryRequest = new IndexRequest("history-" + hostName + "-" + key).source(itemMap)
+                .id(unixTime);
 
-        IndexResponse indexResponse = ElasticsearchConnecter.restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
+        IndexResponse indexResponse = ElasticsearchConnecter.restHighLevelClient.index(indexHistoryRequest,
+                RequestOptions.DEFAULT);
         LOGGER.info(indexResponse.toString());
     }
 
@@ -140,7 +115,7 @@ public class ExpectedValues {
     }
 
     /**
-     * Get an expected value  from Elasticsearch by host name and key
+     * Get an expected value from Elasticsearch by host name and key
      * 
      * @param hostName
      * @param key

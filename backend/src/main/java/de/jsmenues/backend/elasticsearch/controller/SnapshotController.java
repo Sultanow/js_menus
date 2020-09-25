@@ -2,22 +2,18 @@ package de.jsmenues.backend.elasticsearch.controller;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.elasticsearch.client.indexlifecycle.LifecyclePolicyMetadata;
-import org.elasticsearch.client.slm.SnapshotInvocationRecord;
-import org.elasticsearch.client.slm.SnapshotLifecyclePolicyMetadata;
-import org.elasticsearch.common.collect.ImmutableOpenMap;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.snapshots.RestoreInfo;
 import org.elasticsearch.snapshots.SnapshotInfo;
@@ -27,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import de.jsmenues.backend.elasticsearch.dao.SnapshotDao;
 import de.jsmenues.backend.zabbixservice.ZabbixElasticsearchSynchronization;
 
-@Path("/elasticsearch")
+@Path("/elasticsearch/snapshot")
 public class SnapshotController {
     private static Logger LOGGER = LoggerFactory.getLogger(SnapshotController.class);
 
@@ -38,10 +34,10 @@ public class SnapshotController {
      * @return snapshot is created true or false
      */
     @PermitAll
-    @POST
-    @Path("/creatSnapshot")
+    @PUT
+    @Path("/{snapshotname}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createSnapshot(@QueryParam("snapshotname") String snapshotName) throws IOException {
+    public Response createSnapshot(@PathParam("snapshotname") String snapshotName) throws IOException {
 
         RestStatus result = SnapshotDao.creatSnapshot(snapshotName);
         return Response.ok(result.toString()).build();
@@ -54,10 +50,10 @@ public class SnapshotController {
      * @return list of snapshot info
      */
     @PermitAll
-    @POST
-    @Path("/getSnapshot")
+    @GET
+    @Path("/{snapshotname}")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response getSnapshotByName(@QueryParam("snapshotname") String snapshotName) throws IOException {
+    public Response getSnapshotByName(@PathParam("snapshotname") String snapshotName) throws IOException {
 
         List<SnapshotInfo> result = SnapshotDao.getSnapshot(snapshotName);
 
@@ -72,9 +68,9 @@ public class SnapshotController {
      */
     @PermitAll
     @DELETE
-    @Path("/deleteSnapshotByName")
+    @Path("/{snapshotname}")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response deleteSnapshot(@QueryParam("snapshotname") String snapshotName) throws IOException {
+    public Response deleteSnapshot(@PathParam("snapshotname") String snapshotName) throws IOException {
 
         boolean result = SnapshotDao.deleteSnapshot(snapshotName);
         String stringResult = String.valueOf(result);
@@ -88,11 +84,11 @@ public class SnapshotController {
      * @return restore info
      */
     @PermitAll
-    @POST
-    @Path("/restoreIndex")
+    @GET
+    @Path("/restore/{snapshotname}/{indexpattern}/{rename}")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response restoreAllIndex(@QueryParam("snapshotname") String snapshotName,
-            @QueryParam("indexpattern") String indexPattern, @QueryParam("rename") String rename) throws IOException {
+    public Response restoreAllIndex(@PathParam("snapshotname") String snapshotName,
+            @PathParam("indexpattern") String indexPattern, @PathParam("rename") String rename) throws IOException {
 
         RestoreInfo result = SnapshotDao.restoreIndexfromSnapshot(snapshotName, indexPattern, rename);
         String stringResult = String.valueOf(result);
@@ -105,8 +101,8 @@ public class SnapshotController {
      * @return lifecycle is created true or false
      */
     @PermitAll
-    @POST
-    @Path("/createLifeCycle")
+    @PUT
+    @Path("/lifeCycle")
     @Produces(MediaType.TEXT_PLAIN)
     public Response createLifecycle() throws IOException {
 
@@ -122,7 +118,7 @@ public class SnapshotController {
      */
     @PermitAll
     @POST
-    @Path("/satrtLifeCycle")
+    @Path("/lifeCycle/start")
     @Produces(MediaType.TEXT_PLAIN)
     public Response startLifecycle() throws IOException {
 
@@ -138,7 +134,7 @@ public class SnapshotController {
      */
     @PermitAll
     @POST
-    @Path("/stopLifeCycle")
+    @Path("/lifeCycle/stop")
     @Produces(MediaType.TEXT_PLAIN)
     public Response stopLifecycle() throws IOException {
 
@@ -153,8 +149,8 @@ public class SnapshotController {
      * @return snopshot name
      */
     @PermitAll
-    @POST
-    @Path("/getLastSuccessSnapshotName")
+    @GET
+    @Path("/lastSuccessSnapshotName")
     @Produces(MediaType.TEXT_PLAIN)
     public Response getLifecycle() throws IOException {
 
@@ -170,7 +166,7 @@ public class SnapshotController {
      * @return true or false
      */
     @PermitAll
-    @POST
+    @GET
     @Path("/ifRepositoryExist")
     @Produces(MediaType.TEXT_PLAIN)
     public Response getRepo() throws IOException {

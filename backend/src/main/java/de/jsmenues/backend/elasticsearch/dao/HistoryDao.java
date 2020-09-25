@@ -2,9 +2,6 @@ package de.jsmenues.backend.elasticsearch.dao;
 
 import de.jsmenues.backend.elasticsearch.ElasticsearchConnecter;
 import de.jsmenues.backend.elasticsearch.expectedvalue.ExpectedValues;
-import de.jsmenues.backend.elasticsearch.service.HistoryServiece;
-import de.jsmenues.backend.elasticsearch.service.HostInformationService;
-
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -16,7 +13,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
-import org.codehaus.jackson.type.TypeReference;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -46,79 +42,73 @@ public class HistoryDao {
      */
     public static void insertHistory(List<Map<String, Object>> histories) throws IOException, ParseException {
         int numberOfHistoryRecords = 0;
-       
-        List<Map<String, Object>> mapItems = null;
         try {
-            List<Map<String, List<Object>>> hostsInfo = InformationHostDao.getAllHostInformation();
-            insert: for (Map<String, List<Object>> hostInfo : hostsInfo) {
-                String hostName = String.valueOf(hostInfo.get("name"));
-                List<Object> items = hostInfo.get("items");
-                mapItems = HistoryServiece.MAPPER.convertValue(items, new TypeReference<List<Object>>() {
-                });
+            List<Map<String, Object>> hostsInfo = InformationHostDao.getAllHostInformation();
+            insert: for (Map<String, Object> hostInfo : hostsInfo) {
+                String hostName = String.valueOf(hostInfo.get("hostname"));
 
-                for (Map<String, Object> item : mapItems) {
-                    Object itemid = item.get("itemid");
-                    String key = String.valueOf(item.get("key_"));
+                String itemid = String.valueOf(hostInfo.get("itemid"));
+                String key = String.valueOf(hostInfo.get("key_"));
 
-                    for (Map<String, Object> history : histories) {
-                        Object historyItemid = history.get("itemid");
-                        String historyClock = String.valueOf(history.get("clock"));
-                        long longPostHistoryClock = Long.valueOf(historyClock);
-                        Date date = new Date();
-                        date.setTime(longPostHistoryClock * 1000);
-                        SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                        isoFormat.setTimeZone(TimeZone.getTimeZone("Europe/Berlin"));
-                        String timestamp = isoFormat.format(date);
-                        LocalDateTime dateTime = LocalDateTime.parse(timestamp, formatter);
-                        long unixTime = System.currentTimeMillis() / 1000L;
+                for (Map<String, Object> history : histories) {
+                    Object historyItemid = history.get("itemid");
+                    String historyClock = String.valueOf(history.get("clock"));
+                    long longPostHistoryClock = Long.valueOf(historyClock);
+                    Date date = new Date();
+                    date.setTime(longPostHistoryClock * 1000);
+                    SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    isoFormat.setTimeZone(TimeZone.getTimeZone("Europe/Berlin"));
+                    String timestamp = isoFormat.format(date);
+                    LocalDateTime dateTime = LocalDateTime.parse(timestamp, formatter);
+                    long unixTime = System.currentTimeMillis() / 1000L;
 
-                        if (itemid.equals(historyItemid)) {
-                            String actualValue = String.valueOf(history.get("value"));
-                            String expectedValue = "";
-                            try {
-                                expectedValue = ExpectedValues.getExpectedValueByHostnameAndKey(hostName, key);
-                            } catch (Exception e) {
-                                expectedValue = actualValue;
-                            }
+                    if (itemid.equals(historyItemid)) {
+                        String actualValue = String.valueOf(history.get("value"));
+                        String expectedValue = "";
 
-                            history.put("expectedvalue", expectedValue);
-                            history.put("key", key);
-                            history.put("timestamp", dateTime);
-                            history.put("hostname", hostName);
-                            String IndexName = "history-" + hostName + "-" + key;
+                        expectedValue = ExpectedValues.getExpectedValueByHostnameAndKey(hostName, key);
+                        if (expectedValue == "") {
+                            expectedValue = actualValue;
+                        }
 
-                            GetRequest getRequest = new GetRequest(IndexName, historyClock);
-                            boolean exists = ElasticsearchConnecter.restHighLevelClient.exists(getRequest,
+                        history.put("expectedvalue", expectedValue);
+                        history.put("key", key);
+                        history.put("timestamp", dateTime);
+                        history.put("hostname", hostName);
+                        String IndexName = "history-" + hostName + "-" + key;
+
+                        GetRequest getRequest = new GetRequest(IndexName, historyClock);
+                        boolean exists = ElasticsearchConnecter.restHighLevelClient.exists(getRequest,
+                                RequestOptions.DEFAULT);
+                        String hostNameLowCase = hostName.toLowerCase();
+                        // save years of OLD_OF_HISTORY_RECORDS
+                        if (!exists && (unixTime - longPostHistoryClock < OLD_OF_HISTORY_RECORDS)) {
+                            IndexRequest indexRequest = new IndexRequest("history-" + hostNameLowCase + "-" + key)
+                                    .source(history).id(historyClock);
+                            IndexResponse indexResponse = ElasticsearchConnecter.restHighLevelClient.index(indexRequest,
                                     RequestOptions.DEFAULT);
 
-                            // save years of OLD_OF_HISTORY_RECORDS
-                            if (!exists && (unixTime - longPostHistoryClock < OLD_OF_HISTORY_RECORDS)) {
-                                IndexRequest indexRequest = new IndexRequest("history-" + hostName + "-" + key)
-                                        .source(history).id(historyClock);
-                                IndexResponse indexResponse = ElasticsearchConnecter.restHighLevelClient
-                                        .index(indexRequest, RequestOptions.DEFAULT);
+                            ClusterHealthRequest clusterHealthRequest = new ClusterHealthRequest(
+                                    "history-" + hostNameLowCase + "-" + key);
+                            clusterHealthRequest.waitForGreenStatus();
 
-                                ClusterHealthRequest clusterHealthRequest = new ClusterHealthRequest(
-                                        "history-" + hostName + "-" + key);
-                                clusterHealthRequest.waitForGreenStatus();
-
-                                ElasticsearchConnecter.restHighLevelClient.cluster().health(clusterHealthRequest,
-                                        RequestOptions.DEFAULT);
-                                numberOfHistoryRecords++;
-                                LOGGER.info(indexResponse + "\n" + numberOfHistoryRecords
-                                        + " history records are inserted");
-                            }
+                            ElasticsearchConnecter.restHighLevelClient.cluster().health(clusterHealthRequest,
+                                    RequestOptions.DEFAULT);
+                            numberOfHistoryRecords++;
+                            LOGGER.info(
+                                    indexResponse + "\n" + numberOfHistoryRecords + " history records are inserted");
                         }
-                        if (numberOfHistoryRecords == 100) {
-                            LOGGER.info(numberOfHistoryRecords + " history records are inserted");
-                            break insert;
-                        }
+                    }
+                    if (numberOfHistoryRecords == 100) {
+                        LOGGER.info(numberOfHistoryRecords + " history records are inserted");
+                        break insert;
                     }
                 }
             }
+
             LOGGER.info(numberOfHistoryRecords + " history records are inserted");
-            
+
         } catch (Exception e) {
             LOGGER.error(e.getMessage() + "\n elasticsearch is not avalible or something wrong with elasticsearch");
         }

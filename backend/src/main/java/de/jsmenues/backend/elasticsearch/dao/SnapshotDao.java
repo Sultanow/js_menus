@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import org.elasticsearch.action.admin.cluster.repositories.get.GetRepositoriesRequest;
 import org.elasticsearch.action.admin.cluster.repositories.get.GetRepositoriesResponse;
 import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryRequest;
@@ -135,7 +134,7 @@ public class SnapshotDao {
             Map<String, Object> config = new HashMap<>();
             config.put("history*", Collections.singletonList("idx1"));
             config.put("host*", Collections.singletonList("idx2"));
-            config.put("expectedvalue", Collections.singletonList("idx3"));
+            config.put("expected*", Collections.singletonList("idx3"));
             SnapshotRetentionConfiguration retention = new SnapshotRetentionConfiguration(TimeValue.timeValueDays(30),
                     1, 30);
             // A snapshot is taken every day at 03:00 Am in Europ/Berlin zone and saved 30
@@ -158,9 +157,9 @@ public class SnapshotDao {
      * @returnn lastSuccess snapshot
      * 
      */
-    public static String getLastSuccessSnapshotName(){
-       
-         GetSnapshotLifecyclePolicyRequest getSnapshotLifecyclePolicyRequest = new GetSnapshotLifecyclePolicyRequest(
+    public static String getLastSuccessSnapshotName() {
+
+        GetSnapshotLifecyclePolicyRequest getSnapshotLifecyclePolicyRequest = new GetSnapshotLifecyclePolicyRequest(
                 "00");
         GetSnapshotLifecyclePolicyResponse getResponse = null;
         try {
@@ -277,15 +276,16 @@ public class SnapshotDao {
         try {
             RestoreSnapshotRequest restoreSnapshotRequest = new RestoreSnapshotRequest("backup", snapshotName);
             restoreSnapshotRequest.indices(indexPattern);
-            restoreSnapshotRequest.renamePattern(indexPattern+"(.+)"); 
-            restoreSnapshotRequest.renameReplacement(indexNewName+"$1");
+            restoreSnapshotRequest.renamePattern(indexPattern + "(.+)");
+            restoreSnapshotRequest.renameReplacement(indexNewName + "$1");
             restoreSnapshotRequest.ignoreIndexSettings("index.refresh_interval", "index.search.idle.after");
             restoreSnapshotRequest.waitForCompletion(true);
             RestoreSnapshotResponse restoreSnapshotResponse = ElasticsearchConnecter.restHighLevelClient.snapshot()
                     .restore(restoreSnapshotRequest, RequestOptions.DEFAULT);
             restoreInfo = restoreSnapshotResponse.getRestoreInfo();
         } catch (Exception e) {
-            LOGGER.error(e.getMessage() + snapshotName + "isn't exist, somethings wrong with elasticsearch or rename the index");
+            LOGGER.error(e.getMessage() + snapshotName
+                    + "isn't exist, somethings wrong with elasticsearch or rename the index");
 
         }
         return restoreInfo;

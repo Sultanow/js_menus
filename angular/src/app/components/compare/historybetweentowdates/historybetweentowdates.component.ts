@@ -14,6 +14,5 @@ export class HistorybetweentowdatesComponent implements OnInit {
   records: string[];
   ngOnInit(): void {
     this.records = this.configItemService.historyRecords;
-    console.log(this.records);
   }
 }

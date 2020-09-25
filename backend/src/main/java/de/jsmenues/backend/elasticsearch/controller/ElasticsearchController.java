@@ -7,6 +7,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -30,9 +31,9 @@ public class ElasticsearchController {
      */
     @PermitAll
     @GET
-    @Path("/indexname")
+    @Path("/indexname/{patternindexname}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getIndexNames(@QueryParam("patternindexname") String patternIndexName) throws IOException {
+    public Response getIndexNames(@PathParam("patternindexname") String patternIndexName) throws IOException {
 
         String[] result = ElasticsearchDao.getIdexName(patternIndexName);
         return Response.ok(result).build();
@@ -45,7 +46,7 @@ public class ElasticsearchController {
      */
     @PermitAll
     @GET
-    @Path("/allHistoryIndexName")
+    @Path("/historyIndexNames")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getHistoryIndexNames() throws IOException {
 
@@ -76,8 +77,8 @@ public class ElasticsearchController {
      */
     @PermitAll
     @DELETE
-    @Path("/deleteindexbyname")
-    public Response deleteIndexByDate(@QueryParam("indexname") String indexName) throws IOException {
+    @Path("/{indexname}")
+    public Response deleteIndexByDate(@PathParam("indexname") String indexName) throws IOException {
         boolean result = false;
         try {
             result = ElasticsearchDao.deleteIndexByName(indexName);

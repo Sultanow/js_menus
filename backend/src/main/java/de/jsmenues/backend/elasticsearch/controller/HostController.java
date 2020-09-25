@@ -8,6 +8,7 @@ import javax.annotation.security.PermitAll;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -20,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import de.jsmenues.backend.elasticsearch.dao.HostsDao;
 import de.jsmenues.backend.zabbixservice.ZabbixService;
 
-@Path("/elasticsearch")
+@Path("/elasticsearch/hosts")
 public class HostController {
 
     private static Logger LOGGER = LoggerFactory.getLogger(HostController.class);
@@ -31,14 +32,14 @@ public class HostController {
      * @return list of hosts
      */
     @PermitAll
-    @POST
-    @Path("/insertallhosts")
+    @PUT
+    @Path("/")
     public Response InsertAllHosts() throws IOException {
 
         ZabbixService zabbixService = new ZabbixService();
         List<Map<String, Object>> result = zabbixService.getAllHosts();
         HostsDao.insertAllHosts(result);
-        return Response.ok(result).build();
+        return Response.ok().build();
     }
 
     /**
@@ -48,7 +49,7 @@ public class HostController {
      */
     @PermitAll
     @GET
-    @Path("/hosts")
+    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllHosts() throws IOException {
 
@@ -79,7 +80,7 @@ public class HostController {
      */
     @PermitAll
     @DELETE
-    @Path("/host/{hostid}")
+    @Path("/{hostid}")
     public Response deleteHostByID(@PathParam("hostid") String hostId) throws IOException {
 
         String result1 = HostsDao.deleteHostById(hostId);

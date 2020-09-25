@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Path("/elasticsearch")
+@Path("/elasticsearch/expectedValues")
 public class ExpectedValuesController {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ExpectedValuesController.class);
@@ -32,7 +32,7 @@ public class ExpectedValuesController {
      */
     @PermitAll
     @PUT
-    @Path("/expectedValues/{hostname}/{key}/{expectedvalue}")
+    @Path("/{hostname}/{key}/{expectedvalue}")
     @Produces(MediaType.TEXT_PLAIN)
     public Response insertExpectedValues(@PathParam("hostname") String hostName, @PathParam("key") String key,
             @PathParam("expectedvalue") String expectedValue) throws IOException {
@@ -52,7 +52,7 @@ public class ExpectedValuesController {
      */
     @PermitAll
     @GET
-    @Path("/expectedValues")
+    @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getExpectedValues() {
         try {
@@ -73,44 +73,21 @@ public class ExpectedValuesController {
      */
     @PermitAll
     @GET
-    @Path("/expectedValue/{hostname}/{key}")
+    @Path("/{hostname}/{key}")
     @Produces(MediaType.TEXT_PLAIN)
     public Response getExpectedValueByHostnameAndKey(@PathParam("hostname") String hostName,
-            @PathParam("key") String key) {              
+            @PathParam("key") String key) {
+
         try {
             String result = ExpectedValues.getExpectedValueByHostnameAndKey(hostName, key);
-            if(result!= null){
+            if (result != "") {
                 return Response.ok(result).build();
-            }else{
+            } else {
                 return Response.ok("").build();
-            }         
+            }
         } catch (Exception e) {
             return Response.ok("").build();
         }
     }
 
-    /**
-     * insert history expected Value from frontend
-     * 
-     * @param hostName
-     * @param key
-     * @param expectedValue
-     * 
-     * @return response about stored data
-     */
-    @PermitAll
-    @PUT
-    @Path("/historyExpectedValue/{hostname}/{key}/{expectedvalue}")
-    @Produces(MediaType.TEXT_PLAIN)
-
-    public Response insertHistoryExpectedValue(@PathParam("hostname") String hostName, @PathParam("key") String key,
-            @PathParam("expectedvalue") String expectedValue) throws IOException {
-
-        try {
-            ExpectedValues.inserHistoryExpectedValue(hostName, key, expectedValue);
-            return Response.ok().build();
-        } catch (Exception e) {
-            return Response.ok(e.getMessage()).build();
-        }
-    }
 }

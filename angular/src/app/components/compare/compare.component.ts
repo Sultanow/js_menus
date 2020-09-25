@@ -2,7 +2,6 @@ import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } fro
 import { Node, Options } from '../treetable/treetable.module';
 import { ENVCONFIG } from 'src/app/model/evntreetable';
 import { ConfigurationItemsService } from 'src/app/services/configuration/configuration-items.service';
-import { ServerConfiguration } from 'src/config/ServerConfiguration';
 import { Subscription } from 'rxjs';
 import { ElasticService } from 'src/app/services/elasticsearch/elastic.service';
 import { ConfigurationItem } from 'src/app/model/configurationItem';
@@ -19,7 +18,7 @@ import { HistorybetweentowdatesComponent } from './historybetweentowdates/histor
 export class CompareComponent implements OnInit {
   historyForm: FormGroup;
   nodesSubscription: Subscription;
-  constructor( private configItemService: ConfigurationItemsService, private ref: ChangeDetectorRef,
+  constructor(private configItemService: ConfigurationItemsService, private ref: ChangeDetectorRef,
     private elasticService: ElasticService,
     private dialog: MatDialog, private formBuilder: FormBuilder,
   ) {
@@ -57,6 +56,7 @@ export class CompareComponent implements OnInit {
 
   ngOnInit() {
     this.configItemService.createServerConf();
+    this.getServerConfiguration();
   }
 
   refreshItemlist(): void {
@@ -81,7 +81,7 @@ export class CompareComponent implements OnInit {
     }
   }
 
-  generateCompareTable(): void{
+  generateCompareTable(): void {
     if (this.selectedEnvs === null)
       this.selectedEnvs = ["dev1", "dev2"];
     this.otherEnvs = [];
@@ -102,20 +102,18 @@ export class CompareComponent implements OnInit {
     this.generateCompareTable();
     this.getServerConfiguration();
   }
-  
+
   getServerConfiguration(): void {
-    let envs = ServerConfiguration.ENV_LIST;
-    if (this.selectedEnvs)
-      envs = this.selectedEnvs;
-    this.elasticService.getHostinformationByNames(envs).subscribe(data => {
+    this.elasticService.getHostInformation().subscribe(data => {
       let updateTime = this.configItemService.getUpdateTime(data);
       let temp = new Date();
       temp.setTime(updateTime * 1000);
       this.lastUpdate = temp;
       this.configItemService.createServerConf();
       this.generateTree();
-
     });
+
+
   }
 
   setSelectedValue(event): void {
@@ -143,8 +141,6 @@ export class CompareComponent implements OnInit {
 
       });
     }
-    this.elasticService.saveHistoryExpectedValue(hostName, key, expectedValue).subscribe(data => {
-    })
   }
 
 
@@ -171,17 +167,11 @@ export class CompareComponent implements OnInit {
     let selectedIndex: string = this.selected;
     this.elasticService.getHistoryBetweenTwoDates(unixtimestamp1, unixtimestamp2, selectedIndex).subscribe(data => {
       this.configItemService.historyRecords = data;
-    });
-  }
-
-  displayHistoryBetweenTwoDatesDelay(): void {
-    setTimeout(() => this.displayHistorybetweenTwoDates(), 2000); // 2000 is millisecond
-  }
-
-  displayHistorybetweenTwoDates(): void {
-    this.dialog.open(HistorybetweentowdatesComponent, {
-      disableClose: false,
-      data: { records: this.configItemService.historyRecords }
+      console.log(data);
+      this.dialog.open(HistorybetweentowdatesComponent, {
+        disableClose: false,
+        data: data
+      });
     });
   }
 }
