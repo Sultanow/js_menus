@@ -71,20 +71,5 @@ public class HostInformationService {
         }
         return lastUpdate;
     }
-
-    /**
-     * Update host by id
-     * 
-     * @param hostId
-     * @param items  list of item
-     * @return update response
-     */
-    public static UpdateResponse UpdateHostById(String hostId, Map<String, Object> item) throws IOException {
-
-        UpdateRequest updateRequest = new UpdateRequest(HostInformationService.INDEX, hostId).doc("items", item);
-
-        UpdateResponse updateResponse = ElasticsearchConnecter.restHighLevelClient.update(updateRequest,
-                RequestOptions.DEFAULT);
-        return updateResponse;
-    }
 }
+

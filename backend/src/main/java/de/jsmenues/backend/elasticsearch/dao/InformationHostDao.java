@@ -8,6 +8,7 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.common.unit.TimeValue;
@@ -67,9 +68,11 @@ public class InformationHostDao {
                         String actualValue = String.valueOf(item.get("lastvalue"));
                         String key = String.valueOf(item.get("key_"));
                         String itemid = String.valueOf(item.get("itemid"));
+                        String lastClock = String.valueOf(item.get("lastclock"));
 
                         String expectedValue = "";
                         expectedValue = ExpectedValues.getExpectedValueByHostnameAndKey(hostname, key);
+
                         if (expectedValue == "") {
                             expectedValue = actualValue;
                         }
@@ -94,11 +97,26 @@ public class InformationHostDao {
                                 break insert;
                         } else {
 
-                            String getLastValueById = getLastValuByKey(hostname, key);
+                            String getLastValueByKey = getLastValuByKey(hostname, key);
 
-                            if (!getLastValueById.equals(actualValue)) {
-                                updateResponse = HostInformationService.UpdateHostById(docId, item);
-                                LOGGER.info(updateResponse + "\n" + key + "information are updated");
+                            String getExpectedValue = getExpectedValuByKey(hostname, key);
+
+                            if (!getLastValueByKey.equals(actualValue)) {
+                                UpdateRequest updateActualValue = new UpdateRequest(HostInformationService.INDEX, docId)
+                                        .doc("lastvalue", actualValue, "lastclock", lastClock);
+                                UpdateResponse updateResponseActualValue = ElasticsearchConnecter.restHighLevelClient
+                                        .update(updateActualValue, RequestOptions.DEFAULT);
+                                LOGGER.info(updateResponseActualValue.toString());
+                                numberOfHosts++;
+                                if (numberOfHosts == 100)
+                                    break insert;
+                            }
+                            if (!getExpectedValue.equals(expectedValue)) {
+                                UpdateRequest updateExpectdValue = new UpdateRequest(HostInformationService.INDEX,
+                                        docId).doc("expectedvalue", expectedValue);
+                                UpdateResponse updateResponseExpectdValue = ElasticsearchConnecter.restHighLevelClient
+                                        .update(updateExpectdValue, RequestOptions.DEFAULT);
+                                LOGGER.info(updateResponseExpectdValue.toString());
                                 numberOfHosts++;
                                 if (numberOfHosts == 100)
                                     break insert;
@@ -109,13 +127,7 @@ public class InformationHostDao {
                 }
 
             }
-            if (indexResponse == null && updateResponse == null) {
-                LOGGER.info("There haven't been any update yet");
-
-            } else {
-                LOGGER.info("Insert host information are finish");
-            }
-        }catch(Exception e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage() + "\n elasticsearch is not avalible or something wrong with elasticsearch");
         }
     }
@@ -204,12 +216,33 @@ public class InformationHostDao {
         String lastVlaue = "";
         List<Map<String, Object>> hostInfoByName = getHostInformationByHostName(hostName);
         for (Map<String, Object> item : hostInfoByName) {
-        String itmeId = String.valueOf(item.get("key_"));
-        if (itmeId.equals(itemKey)) {
-            lastVlaue = String.valueOf(item.get("lastvalue"));
-        }
+            String itmeId = String.valueOf(item.get("key_"));
+            if (itmeId.equals(itemKey)) {
+                lastVlaue = String.valueOf(item.get("lastvalue"));
+            }
         }
         return lastVlaue;
+    }
+
+    /**
+     * Get expected value an item from host_information index by key and hostname
+     * fro
+     * 
+     * @param hostName
+     * @param itemKey
+     * @return expected value
+     */
+    public static String getExpectedValuByKey(String hostName, String itemKey) throws IOException {
+
+        String expectedvalue = "";
+        List<Map<String, Object>> hostInfoByName = getHostInformationByHostName(hostName);
+        for (Map<String, Object> item : hostInfoByName) {
+            String itmeId = String.valueOf(item.get("key_"));
+            if (itmeId.equals(itemKey)) {
+                expectedvalue = String.valueOf(item.get("expectedvalue"));
+            }
+        }
+        return expectedvalue;
     }
 
     /**
