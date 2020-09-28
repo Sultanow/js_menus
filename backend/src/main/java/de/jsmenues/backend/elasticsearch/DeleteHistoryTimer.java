@@ -24,7 +24,7 @@ public class DeleteHistoryTimer {
     private class LoopTask extends TimerTask {
 
         public void run() {           
-            HistoryDao.DeletehistoryRecordsAfterTwoYears();
+            HistoryDao.DeletehistoryRecordsAfterCertainTime();
         }
     }
 }

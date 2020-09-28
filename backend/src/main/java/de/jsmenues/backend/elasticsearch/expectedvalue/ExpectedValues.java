@@ -136,7 +136,7 @@ public class ExpectedValues {
                 }
             }
             return expectedValue;
-        } catch (Exception e) {
+        }catch(Exception e) {
             LOGGER.error(e.getMessage());
             return expectedValue;
         }

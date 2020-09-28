@@ -16,14 +16,14 @@ export class ElasticService {
   private backendElasticsearchUrlExpValue: string = 'backend/elasticsearch/expectedValues';
   constructor(private http: HttpClient) { }
 
-  getAllKeys(): Observable<any> {
+  getAllKeys(): Observable<string[]> {
     return this.http.get<string[]>(`${this.backendElasticsearchUrlHostInfo}/all/keys`, {});
   }
-  getAllHostName(): Observable<any> {
+  getAllHostName(): Observable<string[]> {
     return this.http.get<string[]>(`${this.backendElasticsearchUrlHosts}/hostnames/`, {});
   }
 
-  getLastValue(hostName: string, itemKey: string): Observable<any> {
+  getLastValue(hostName: string, itemKey: string): Observable<string> {
     return this.http.get<string>(`${this.backendElasticsearchUrlHostInfo}/lastValue/` + hostName + '/' + itemKey, {});
   }
 
@@ -32,34 +32,21 @@ export class ElasticService {
   }
 
   saveExpectedValue(hostName: string, key: string, expectedValue: string): Observable<any> {
-    console.log(hostName + '/' + key + '/' + expectedValue);
     return this.http.put(`${this.backendElasticsearchUrlExpValue}/` + hostName + '/' + key + '/' + expectedValue, {});
   }
 
-  // getExpectedValues(): Observable<any> {
-  //   return this.http.get<JSON>(`${this.backendElasticsearchUrlExpValue}/all`, {});
-  // }
 
   getExpectedValueByHostnameAndKey(hostName: string, key: string):Observable<any> {
     return this.http.get(`${this.backendElasticsearchUrlExpValue}/` + hostName + '/' + key,{responseType:"text"});
   }
- public listhost: string[] = [];
-  getHostinformationByNames(hosts: string[]): void{
-    hosts.forEach(host => {
-      let hostName: string = host
-      this.http.get<string>(`${this.backendElasticsearchUrlHostInfo}/` + hostName, {}).subscribe(data =>{
-        this.listhost.push(data);
-      });  
-    });
-  }
 
 
-  getHistoryBetweenTwoDates(firstDate: string, secondDate: string, indexName: string):Observable<any> {
+  getHistoryBetweenTwoDates(firstDate: string, secondDate: string, indexName: string):Observable<string[]> {
     return this.http.get<string[]>(`${this.backendElasticsearchUrlHistory}/` + firstDate + '/' + secondDate + '/' + indexName,
       {});
   }
 
-  getHistoryindexnames():Observable<any> {
+  getHistoryindexnames():Observable<string[]> {
     return this.http.get<string[]>(`${this.backendElasticsearchUrl}/historyIndexNames`, {});
   }
 }

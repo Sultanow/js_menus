@@ -167,7 +167,6 @@ export class CompareComponent implements OnInit {
     let selectedIndex: string = this.selected;
     this.elasticService.getHistoryBetweenTwoDates(unixtimestamp1, unixtimestamp2, selectedIndex).subscribe(data => {
       this.configItemService.historyRecords = data;
-      console.log(data);
       this.dialog.open(HistorybetweentowdatesComponent, {
         disableClose: false,
         data: data

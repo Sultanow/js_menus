@@ -115,9 +115,7 @@ public class InformationHostDao {
             } else {
                 LOGGER.info("Insert host information are finish");
             }
-        } catch (
-
-        Exception e) {
+        }catch(Exception e) {
             LOGGER.error(e.getMessage() + "\n elasticsearch is not avalible or something wrong with elasticsearch");
         }
     }
@@ -145,7 +143,7 @@ public class InformationHostDao {
                 results.add(result);
             }
 
-        } catch (IOException e) {
+        }catch(IOException e) {
             LOGGER.error(e.getMessage() + "something wrong with elasticsearch");
         }
         return results;
@@ -188,7 +186,7 @@ public class InformationHostDao {
                 if (!keys.contains(key))
                     keys.add(key);
             }
-        } catch (Exception e) {
+        }catch(Exception e) {
             LOGGER.error(e.getMessage() + "elasticsearch is not avalible");
         }
         return keys;

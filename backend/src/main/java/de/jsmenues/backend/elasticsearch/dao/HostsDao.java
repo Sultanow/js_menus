@@ -90,7 +90,7 @@ public class HostsDao {
                 String hostName = String.valueOf(host.get("host"));
                 hostNames.add(hostName);
                 }
-        } catch (IOException e) {
+        }catch(IOException e) {
           
             e.printStackTrace();
         }    

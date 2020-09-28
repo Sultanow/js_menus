@@ -109,7 +109,7 @@ public class HistoryDao {
 
             LOGGER.info(numberOfHistoryRecords + " history records are inserted");
 
-        } catch (Exception e) {
+        } catch(Exception e) {
             LOGGER.error(e.getMessage() + "\n elasticsearch is not avalible or something wrong with elasticsearch");
         }
     }
@@ -167,10 +167,10 @@ public class HistoryDao {
     }
 
     /**
-     * Delete history records after 2 years
+     * Delete history records after a certain time
      *
      */
-    public static void DeletehistoryRecordsAfterTwoYears() {
+    public static void DeletehistoryRecordsAfterCertainTime() {
         DeleteResponse deleteResponse = null;
         try {
             String[] historyIndexNames = ElasticsearchDao.getIdexName("history*");
@@ -194,7 +194,7 @@ public class HistoryDao {
                 }
 
             }
-        } catch (Exception e) {
+        }catch(Exception e) {
             LOGGER.error(e.getMessage());
         }
 

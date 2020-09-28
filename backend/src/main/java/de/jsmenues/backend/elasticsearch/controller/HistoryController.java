@@ -33,7 +33,7 @@ public class HistoryController {
      * @return list of history records
      */
     @PermitAll
-    @PUT
+    @GET
     @Path("/")
     @Produces(MediaType.TEXT_PLAIN)
     public Response insertHistory() throws IOException, ParseException {
