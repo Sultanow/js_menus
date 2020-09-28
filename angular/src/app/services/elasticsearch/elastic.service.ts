@@ -41,7 +41,7 @@ export class ElasticService {
   }
 
 
-  getHistoryBetweenTwoDates(firstDate: string, secondDate: string, indexName: string):Observable<string[]> {
+  getHistoryBetweenTwoDates(firstDate: string, secondDate: string, indexName: string):Observable<any> {
     return this.http.get<string[]>(`${this.backendElasticsearchUrlHistory}/` + firstDate + '/' + secondDate + '/' + indexName,
       {});
   }

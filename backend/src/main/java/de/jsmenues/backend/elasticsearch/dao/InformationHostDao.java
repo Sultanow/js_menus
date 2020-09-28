@@ -79,7 +79,7 @@ public class InformationHostDao {
                         item.put("groupname", groupName);
                         String docId = hostid + itemid;
 
-                        GetRequest getRequest = new GetRequest(HostInformationService.INDEX, hostid);
+                        GetRequest getRequest = new GetRequest(HostInformationService.INDEX, docId);
                         boolean exists = ElasticsearchConnecter.restHighLevelClient.exists(getRequest,
                                 RequestOptions.DEFAULT);
 
@@ -97,7 +97,7 @@ public class InformationHostDao {
                             String getLastValueById = getLastValuByKey(hostname, key);
 
                             if (!getLastValueById.equals(actualValue)) {
-                                updateResponse = HostInformationService.UpdateHostById(hostid, item);
+                                updateResponse = HostInformationService.UpdateHostById(docId, item);
                                 LOGGER.info(updateResponse + "\n" + key + "information are updated");
                                 numberOfHosts++;
                                 if (numberOfHosts == 100)
@@ -234,13 +234,13 @@ public class InformationHostDao {
     }
 
     /**
-     * Delete host information by id
+     * Delete host information by Id
      *
-     * @param hostId
+     * @param docId : docId = "hostid"+"itemid"
      * @return response about delete
      */
-    public static String deleteHostInformationById(String hostId) throws IOException {
-        DeleteRequest deleteRequest = new DeleteRequest(HostInformationService.INDEX, hostId);
+    public static String deleteHostInformationById(String docId) throws IOException {
+        DeleteRequest deleteRequest = new DeleteRequest(HostInformationService.INDEX, docId);
 
         DeleteResponse deleteResponse = ElasticsearchConnecter.restHighLevelClient.delete(deleteRequest,
                 RequestOptions.DEFAULT);

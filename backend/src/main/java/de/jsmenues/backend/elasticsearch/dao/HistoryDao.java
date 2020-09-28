@@ -2,6 +2,7 @@ package de.jsmenues.backend.elasticsearch.dao;
 
 import de.jsmenues.backend.elasticsearch.ElasticsearchConnecter;
 import de.jsmenues.backend.elasticsearch.expectedvalue.ExpectedValues;
+import de.jsmenues.redis.repository.ConfigurationRepository;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -30,10 +31,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class HistoryDao {
-    private static Logger LOGGER = LoggerFactory.getLogger(HistoryDao.class);
+   private static Logger LOGGER = LoggerFactory.getLogger(HistoryDao.class);
+   
+   public static String stringNumberOfyears= ConfigurationRepository.getRepo().get("configuration.delete.history.data").getValue();
 
-    public static final long OLD_OF_HISTORY_RECORDS = 60 * 60 * 24 * 30 * 12 * 2; // 2 years
+   static int  numberOfyears = Integer.parseInt(stringNumberOfyears);
+    public static final long OLD_OF_HISTORY_RECORDS = 60 * 60 * 24 * 30 * 12 * numberOfyears; 
 
+    
     /**
      * insert 200 history records from zabbix to elasticsearch
      *
@@ -41,7 +46,7 @@ public class HistoryDao {
      * @return if new records are inserted or not
      */
     public static void insertHistory(List<Map<String, Object>> histories) throws IOException, ParseException {
-        int numberOfHistoryRecords = 0;
+        int numberOfHistoryRecords = 0; 
         try {
             List<Map<String, Object>> hostsInfo = InformationHostDao.getAllHostInformation();
             insert: for (Map<String, Object> hostInfo : hostsInfo) {
@@ -172,6 +177,9 @@ public class HistoryDao {
      */
     public static void DeletehistoryRecordsAfterCertainTime() {
         DeleteResponse deleteResponse = null;
+        if (stringNumberOfyears == "") {
+            stringNumberOfyears = "2";
+        }
         try {
             String[] historyIndexNames = ElasticsearchDao.getIdexName("history*");
             for (String index : historyIndexNames) {
