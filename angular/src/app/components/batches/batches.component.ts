@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Batch } from '../../model/batch';
 import { BatchService } from '../../services/batches/batches.service';
+import { ElasticService } from 'src/app/services/elasticsearch/elastic.service';
 
 @Component({
   selector: 'app-batches',
@@ -13,7 +14,7 @@ export class BatchesComponent implements OnInit {
   @Input() editOn: boolean;
   selectedBatch: Batch;
 
-  constructor (private batchService: BatchService) { }
+  constructor (private batchService: BatchService, private elasticService: ElasticService) { }
 
   ngOnInit() {
     this.getBatches();
