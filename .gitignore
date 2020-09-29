@@ -133,5 +133,5 @@ docker/zabbix/zbx_env/var/lib/mysql/*
 docker/redis/conf/redis.log
 
 
-docker/python/data/__pycache__/*
-
+docker/python/__pycache__/*
+docker/python/app-data/*
