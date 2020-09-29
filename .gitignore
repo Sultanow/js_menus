@@ -136,6 +136,7 @@ docker/python/data/__pycache__/*
 docker/elasticsearch/single-node/elasticsearch/data-master/*
 docker/elasticsearch/single-node/elasticsearch/backup/*
 
+
 docker/elasticsearch/2nodes-master-and-1data-node/elasticsearch/data-master/*
 docker/elasticsearch/2nodes-master-and-1data-node/elasticsearch-data1/data1/*
 docker/elasticsearch/2nodes-master-and-1data-node/elasticsearch/backup/*
@@ -144,3 +145,7 @@ docker/elasticsearch/4nodes-master-coordinating-and-2data-node/elasticsearch/dat
 docker/elasticsearch/4nodes-master-coordinating-and-2data-node/elasticsearch-data1/data1/*
 docker/elasticsearch/4nodes-master-coordinating-and-2data-node/elasticsearch-data2/data2/*
 docker/elasticsearch/4nodes-master-coordinating-and-2data-node/elasticsearch/backup/*
+
+docker/python/__pycache__/*
+docker/python/app-data/*
+

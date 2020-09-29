@@ -5,18 +5,12 @@ import com.google.gson.reflect.TypeToken;
 import de.jsmenues.redis.data.Configuration;
 import de.jsmenues.redis.repository.ConfigurationRepository;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataMultiPart;
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
-import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import java.io.*;
 import java.time.LocalDate;
@@ -31,12 +25,21 @@ import java.util.*;
 @Singleton
 class StatisticService {
     private static final Logger LOGGER = LoggerFactory.getLogger(StatisticService.class);
-    private static final String UPDATE_URL = "http://python-nginx-service:80/updateData";
-    private static final String CREATE_URL = "http://python-nginx-service:80/createChart";
+    // Use the traefik container directly cause the DNS Server is still Docker.
+    // TODO make the Server configurable
+    private static final String UPDATE_URL = "http://traefik-service:81/update";
+    private static final String CREATE_URL = "http://traefik-service:81/save";
 
     private static final String LOCAL_UPLOAD_PATH = "/tmp/";
 
     Gson gson = new Gson();
+
+    private HttpClient httpClient;
+
+    @Inject
+    StatisticService(HttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
 
     /**
      * Get all chart names.
@@ -85,10 +88,10 @@ class StatisticService {
     private boolean updateSingleChart(String chartName, StatisticChart statisticChart, String filename) {
         String scriptname = statisticChart.getScriptName();
         LOGGER.warn("ScriptName: " + scriptname);
-        if (scriptname.isEmpty()) {
+        if (null == scriptname || scriptname.isEmpty() || "null".equals(scriptname)) {
             scriptname = updateScriptNameLocation(chartName);
         }
-        Response response = sendFileDataToPythonService(UPDATE_URL, filename, "script", scriptname);
+        Response response = httpClient.sendFileDataToPythonService(UPDATE_URL, filename, "script", scriptname);
         if (response.getStatus() == 200) {
             String responseText = response.readEntity(String.class);
             LOGGER.warn("Response Text: " + responseText);
@@ -97,12 +100,12 @@ class StatisticService {
 
             StatisticInterface statisticInterface = gson.fromJson(responseText, StatisticInterface.class);
 
-            LOGGER.error("StatisticInterface:\n\n " + statisticInterface);
             if (statisticInterface.timeseries) {
                 // TODO better converting
                 this.saveDataForChart(chartName, "title", statisticInterface.title);
                 this.saveDataForChart(chartName, "layout", gson.toJson(statisticInterface.layout));
                 this.saveDataForChart(chartName, "updateTime", statisticInterface.updateTime);
+                this.saveChartOptions(chartName, statisticInterface.options);
                 String json = gson.toJson(statisticInterface.traces);
                 List<StatisticTimeTrace> timeTrace = gson.fromJson(json, new TypeToken<ArrayList<StatisticTimeTrace>>() {
                 }.getType());
@@ -124,7 +127,7 @@ class StatisticService {
             this.updateChartMeta(chartName, statisticInterface.timeseries, statisticInterface.multiple, statisticInterface.accuracy);
             return true;
         } else {
-            LOGGER.warn(response.toString());
+            LOGGER.warn("Status is not 200: " + response.toString());
             return false;
         }
     }
@@ -194,16 +197,14 @@ class StatisticService {
      * @return The success status as Response
      */
     public Response createChart(String chartName, String groupName, String description, InputStream fileInputStream, FormDataContentDisposition fileMetaData) {
-        if (!chartName.isEmpty() && !existChart(chartName)) {
+        if (null != chartName && !chartName.isEmpty() && !existChart(chartName)) {
             String filename = saveFileToTmpFolder(fileInputStream, fileMetaData);
             // Save chartname and scriptname to redis database
-            Response response = sendFileDataToPythonService(CREATE_URL, filename, "", "");
+            Response response = httpClient.sendFileDataToPythonService(CREATE_URL, filename, "", "");
 
             if (response.getStatus() == 200) { // Successfull placed script on Server.
                 List<StatisticGroup> groupsAndCharts = getGroupsAndCharts();
-                if (groupsAndCharts == null)
-                    groupsAndCharts = new ArrayList<>();
-                if (groupName.isEmpty()) groupName = "noGroup";
+                if (null == groupName || groupName.isEmpty()) groupName = "noGroup";
                 boolean added = false;
                 StatisticChart chart = new StatisticChart();
                 chart.setScriptName(fileMetaData.getFileName());
@@ -286,7 +287,7 @@ class StatisticService {
      * @param update    If true only the trace data will returned.
      * @return JSON encoded String of the statistic data
      */
-    private String getTimeSeriesChartData(String chartName, StatisticChart chart, Map<String, String> dates, boolean update) {
+    private String getTimeSeriesChartData(String chartName, StatisticChart chart, Map<String, String> dates, boolean update) throws IllegalArgumentException {
         StatisticPlotly statisticPlotly = new StatisticPlotly();
         if (!update) {
             statisticPlotly.setTitle(getDataForChart(chartName, "title"));
@@ -311,7 +312,7 @@ class StatisticService {
             if (dates.containsKey("start") && dates.containsKey("end")) {
                 indexStart = localDates.indexOf(LocalDate.parse(dates.get("start"), formatter));
                 indexEnd = localDates.indexOf(LocalDate.parse(dates.get("end"), formatter));
-                if (indexStart > indexEnd) {
+                if (indexStart > indexEnd || indexEnd == -1 || indexStart == -1) {
                     throw new IllegalArgumentException();
                 }
                 statisticPlotly.setStartDate(dates.get("start"));
@@ -341,6 +342,7 @@ class StatisticService {
             }
 
             // Get the Start and End date for the Next trace.
+            // Compare with less than, cause we want to check if there are more traces available.
             if (indexEnd < localDates.size() - 1) {
                 nextStart = indexEnd + 1;
                 nextEnd = nextStart + range;
@@ -438,6 +440,19 @@ class StatisticService {
     }
 
     /**
+     * Save the Options
+     */
+    private void saveChartOptions(String chartName, List<Object> options) {
+        Map<String, String> chartOptions = new HashMap<>();
+        for (Object o : options) {
+            String json = gson.toJson(o);
+            chartOptions.putAll(gson.fromJson(json, new TypeToken<HashMap<String, String>>() {
+            }.getType()));
+        }
+        this.saveDataForChart(chartName, "options", gson.toJson(chartOptions));
+    }
+
+    /**
      * Get the formatter for parsing dates from strings by the accuracy of the chart
      *
      * @param accuracy the accuracy for a chart
@@ -488,17 +503,17 @@ class StatisticService {
     /**
      * Get the last day of the list. If daysBeforeLastDay is 0.
      *
-     * @param localDates       List of all Dates for TimeCharts
-     * @param formatter        Formats the date in the correct format
-     * @param daysBevorLastDay Given number is used to select number days before last day
+     * @param localDates        List of all Dates for TimeCharts
+     * @param formatter         Formats the date in the correct format
+     * @param daysBeforeLastDay Given number is used to select number days before last day
      * @return String with the last day (or before)
      */
-    private String getLastDayInSet(List<LocalDate> localDates, DateTimeFormatter formatter, int daysBevorLastDay) {
-        if (daysBevorLastDay == 0 || daysBevorLastDay > localDates.size()) {
+    private String getLastDayInSet(List<LocalDate> localDates, DateTimeFormatter formatter, int daysBeforeLastDay) {
+        if (daysBeforeLastDay == 0 || daysBeforeLastDay > localDates.size()) {
             LocalDate date = localDates.stream().max(LocalDate::compareTo).get();
             return date.format(formatter);
         } else {
-            return localDates.get(localDates.size() - 1 - daysBevorLastDay).format(formatter);
+            return localDates.get(localDates.size() - 1 - daysBeforeLastDay).format(formatter);
         }
     }
 
@@ -643,31 +658,6 @@ class StatisticService {
         return "";
     }
 
-    /**
-     * Send a file to the python web service and wait for the answer.
-     *
-     * @param url        URL to access
-     * @param fileName   Filename with full path
-     * @param fieldName  Additional Field Name
-     * @param fieldValue Additional Field Value
-     * @return Response Object of the client call to the python service or Response 401 if a exception is thrown.
-     */
-    Response sendFileDataToPythonService(String url, String fileName, String fieldName, String fieldValue) {
-        try (FormDataMultiPart formDataMultiPart = new FormDataMultiPart()) {
-            final Client client = ClientBuilder.newBuilder().register(MultiPartFeature.class).build();
-            final FileDataBodyPart filePart = new FileDataBodyPart("file", new File(fileName));
-            final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart.field(fieldName, fieldValue).bodyPart(filePart);
-
-            final WebTarget target = client.target(url);
-            final Response response = target.request().post(Entity.entity(multipart, multipart.getMediaType()));
-            multipart.close();
-
-            return response;
-        } catch (Exception e) {
-            LOGGER.warn("Exception: " + e.getMessage());
-            return Response.status(401).build();
-        }
-    }
 
     /**
      * Update the Chart Meta data in the DB.

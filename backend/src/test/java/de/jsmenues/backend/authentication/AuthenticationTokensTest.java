@@ -6,7 +6,10 @@ import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 
 import java.lang.reflect.Field;
+import java.util.Date;
 import java.util.Map;
+import java.util.Timer;
+
 import javax.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.ResourceConfig;
@@ -15,7 +18,6 @@ import org.glassfish.jersey.test.TestProperties;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 
 import de.jsmenues.redis.data.Configuration;
 import de.jsmenues.redis.repository.ConfigurationRepository;
@@ -40,7 +42,7 @@ class AuthenticationTokensTest extends JerseyTest {
     /**
      * Redis mock
      */
-    private void setRedisMock(ConfigurationRepository mock) {
+    void setRedisMock(ConfigurationRepository mock) {
         try {
             Field instance = ConfigurationRepository.class.getDeclaredField("instance");
             instance.setAccessible(true);
@@ -72,7 +74,7 @@ class AuthenticationTokensTest extends JerseyTest {
      * 
      */
     @Test
-    public void isTokenExistInMap() {
+    void isTokenExistInMap() {
         Map<String, Long> tokenMAp;
         TokenGenerator tokenGenerator = new TokenGenerator();
         when(repo.get("password")).thenReturn(new Configuration("password", "1234"));
@@ -89,7 +91,7 @@ class AuthenticationTokensTest extends JerseyTest {
      * Test to verify if a token is valid and deleted after 12 hours
      */
     @Test
-    public void isTokenValid() {
+    void isTokenValid() {
         Map<String, Long> tokenMAp1;
 
         TokenGenerator tokenGenerator = new TokenGenerator();
@@ -120,12 +122,13 @@ class AuthenticationTokensTest extends JerseyTest {
      * Test to verify if a password is changed.
      */
     @Test
-    public void changePasswordTest() {
+    void changePasswordTest() {
+        Password password = new Password();
         String currentPassword = "1234";
         String oldPassword = "1234";
         String newPassword = "1111";
         when(repo.get("password")).thenReturn(new Configuration("password", currentPassword));
-        boolean isChanged = Password.changeRootPassword(oldPassword, newPassword);
+        boolean isChanged = password.changeRootPassword(oldPassword, newPassword);
         assertTrue(isChanged);
     }
 
@@ -133,10 +136,20 @@ class AuthenticationTokensTest extends JerseyTest {
      * Test set password to Redis
      */
     @Test
-    public void setRootPassword() {
+    void setRootPassword() {
         String rootPassword = "1234";
         when(repo.get("password")).thenReturn(new Configuration("password", "1234"));
         boolean isSaved = Password.setRootPassword(rootPassword);
         assertTrue(isSaved);
+    }
+
+    /**
+     * Test timer to delete old tokens
+     */
+    @Test
+    void timerToDeleteOldTokensTest() {
+        TimerToDeleteOldTokens timerToDeleteOldTokens = new TimerToDeleteOldTokens();
+        assertDoesNotThrow(() -> timerToDeleteOldTokens.start());
+
     }
 }

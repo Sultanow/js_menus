@@ -36,7 +36,7 @@
 
 ## Automatisiertes Bauen ohne lokal installierte Build-Umgebung
 
-1. Der Anleitung für [Build mit Docker](DockerBuildUse.md) befolgen.
+1. Der Anleitung für [Build mit Docker](DockerBuilderUse.md) befolgen.
 2. Für den ersten Startup sollten das Startup Skript verwendet werden, da dies auch zusätzliche initialisierungen übernimmt.
 
 ## Aufbau einer Elasticsearch-Datenbank 
