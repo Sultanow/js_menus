@@ -8,9 +8,10 @@ import javax.annotation.security.PermitAll;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -20,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import de.jsmenues.backend.elasticsearch.dao.HostsDao;
 import de.jsmenues.backend.zabbixservice.ZabbixService;
 
-@Path("/elasticsearch")
+@Path("/elasticsearch/hosts")
 public class HostController {
 
     private static Logger LOGGER = LoggerFactory.getLogger(HostController.class);
@@ -28,18 +29,17 @@ public class HostController {
     /**
      * insert all hosts from zabbix to elasticsearch
      *
-     * @return status new hosts are inserted ,updated or not
+     * @return list of hosts
      */
     @PermitAll
-    @POST
-    @Path("/insertallhosts")
+    @PUT
+    @Path("/")
     public Response InsertAllHosts() throws IOException {
 
         ZabbixService zabbixService = new ZabbixService();
         List<Map<String, Object>> result = zabbixService.getAllHosts();
-        String status = "";
-        status = HostsDao.insertAllHosts(result);
-        return Response.ok(status).build();
+        HostsDao.insertAllHosts(result);
+        return Response.ok().build();
     }
 
     /**
@@ -49,7 +49,7 @@ public class HostController {
      */
     @PermitAll
     @GET
-    @Path("/getallhosts")
+    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllHosts() throws IOException {
 
@@ -58,15 +58,30 @@ public class HostController {
     }
 
     /**
+     * Get all host names
+     *
+     * @return list of hsotnames
+     */
+    @PermitAll
+    @GET
+    @Path("/hostnames")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllHostName() throws IOException {
+
+        List<String> result = HostsDao.getAllHostName();
+        return Response.ok(result).build();
+    }
+
+    /**
      * Delete host by id from elasticsearch
      *
-     * @param hostid
+     * @param hostId
      * @return response about delete request
      */
     @PermitAll
     @DELETE
-    @Path("/deletehostById")
-    public Response deleteHostByID(@QueryParam("hostid") String hostId) throws IOException {
+    @Path("/{hostid}")
+    public Response deleteHostByID(@PathParam("hostid") String hostId) throws IOException {
 
         String result1 = HostsDao.deleteHostById(hostId);
         String result2 = HostsDao.deleteHostInfoById(hostId);

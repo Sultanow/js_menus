@@ -88,7 +88,7 @@ public class ElasticsearchDao {
                 Initiator.firstCall = !putTemplateResponse.isAcknowledged();
                 LOGGER.info("index number_of_replicas = 0 ");
             }
-        } catch (Exception e) {
+        }catch(Exception e) {
             LOGGER.error(e.getMessage() + "\n elasticsearch is not avalible");
         }
         return Initiator.firstCall;

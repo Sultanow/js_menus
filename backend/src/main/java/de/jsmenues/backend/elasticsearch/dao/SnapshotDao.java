@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import org.elasticsearch.action.admin.cluster.repositories.get.GetRepositoriesRequest;
 import org.elasticsearch.action.admin.cluster.repositories.get.GetRepositoriesResponse;
 import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryRequest;
@@ -109,7 +108,7 @@ public class SnapshotDao {
             CreateSnapshotRequest snapshotRequest = new CreateSnapshotRequest();
             snapshotRequest.repository("backup");
             snapshotRequest.snapshot(snapshotName);
-            snapshotRequest.indices("history*", "host*");
+            snapshotRequest.indices("history*", "host*", "expectedvalues");
             snapshotRequest.partial(true);
             snapshotRequest.waitForCompletion(true);
             CreateSnapshotResponse snapshotResponse = ElasticsearchConnecter.restHighLevelClient.snapshot()
@@ -135,6 +134,7 @@ public class SnapshotDao {
             Map<String, Object> config = new HashMap<>();
             config.put("history*", Collections.singletonList("idx1"));
             config.put("host*", Collections.singletonList("idx2"));
+            config.put("expected*", Collections.singletonList("idx3"));
             SnapshotRetentionConfiguration retention = new SnapshotRetentionConfiguration(TimeValue.timeValueDays(30),
                     1, 30);
             // A snapshot is taken every day at 03:00 Am in Europ/Berlin zone and saved 30
@@ -145,7 +145,7 @@ public class SnapshotDao {
             org.elasticsearch.client.core.AcknowledgedResponse resp = ElasticsearchConnecter.restHighLevelClient
                     .indexLifecycle().putSnapshotLifecyclePolicy(request, RequestOptions.DEFAULT);
             isCreated = resp.isAcknowledged();
-        } catch (Exception e) {
+        } catch(Exception e){
             LOGGER.error(e.getMessage() + "somethings wrong with elasticsearch");
         }
         return isCreated;
@@ -157,15 +157,15 @@ public class SnapshotDao {
      * @returnn lastSuccess snapshot
      * 
      */
-    public static String getLastSuccessSnapshotName(){
-       
-         GetSnapshotLifecyclePolicyRequest getSnapshotLifecyclePolicyRequest = new GetSnapshotLifecyclePolicyRequest(
+    public static String getLastSuccessSnapshotName() {
+
+        GetSnapshotLifecyclePolicyRequest getSnapshotLifecyclePolicyRequest = new GetSnapshotLifecyclePolicyRequest(
                 "00");
         GetSnapshotLifecyclePolicyResponse getResponse = null;
         try {
             getResponse = ElasticsearchConnecter.restHighLevelClient.indexLifecycle()
                     .getSnapshotLifecyclePolicy(getSnapshotLifecyclePolicyRequest, RequestOptions.DEFAULT);
-        } catch (Exception e) {
+        }catch(Exception e) {
             LOGGER.error(e.getMessage() + "somethings wrong with elasticsearch");
         }
         SnapshotLifecyclePolicyMetadata policyMeta = getResponse.getPolicies().get("00");
@@ -189,7 +189,7 @@ public class SnapshotDao {
                     .indexLifecycle().startSLM(startSLMRequest, RequestOptions.DEFAULT);
 
             isStarted = response.isAcknowledged();
-        } catch (Exception e) {
+        }catch(Exception e) {
             LOGGER.error(e.getMessage() + " somethings wrong with elasticsearch");
         }
         return isStarted;
@@ -210,7 +210,7 @@ public class SnapshotDao {
                     .indexLifecycle().stopSLM(stopSLMRequest, RequestOptions.DEFAULT);
 
             isStoped = response.isAcknowledged();
-        } catch (Exception e) {
+        }catch(Exception e) {
             LOGGER.error(e.getMessage() + " somethings wrong with elasticsearch");
         }
         return isStoped;
@@ -231,7 +231,7 @@ public class SnapshotDao {
                     .indexLifecycle().deleteSnapshotLifecyclePolicy(deleteRequest, RequestOptions.DEFAULT);
 
             isDeleted = response.isAcknowledged();
-        } catch (Exception e) {
+        }catch(Exception e) {
             LOGGER.error(e.getMessage() + " somethings wrong with elasticsearch");
         }
         return isDeleted;
@@ -255,7 +255,7 @@ public class SnapshotDao {
             GetSnapshotsResponse getSnapshotsResponse = ElasticsearchConnecter.restHighLevelClient.snapshot()
                     .get(getSnapshotsRequest, RequestOptions.DEFAULT);
             listOfSnapshotInfo = getSnapshotsResponse.getSnapshots();
-        } catch (Exception e) {
+        }catch(Exception e) {
             LOGGER.error(e.getMessage() + snapshotName + " isn't exist or somethings wrong with elasticsearch");
         }
         return listOfSnapshotInfo;
@@ -276,15 +276,16 @@ public class SnapshotDao {
         try {
             RestoreSnapshotRequest restoreSnapshotRequest = new RestoreSnapshotRequest("backup", snapshotName);
             restoreSnapshotRequest.indices(indexPattern);
-            restoreSnapshotRequest.renamePattern(indexPattern+"(.+)"); 
-            restoreSnapshotRequest.renameReplacement(indexNewName+"$1");
+            restoreSnapshotRequest.renamePattern(indexPattern + "(.+)");
+            restoreSnapshotRequest.renameReplacement(indexNewName + "$1");
             restoreSnapshotRequest.ignoreIndexSettings("index.refresh_interval", "index.search.idle.after");
             restoreSnapshotRequest.waitForCompletion(true);
             RestoreSnapshotResponse restoreSnapshotResponse = ElasticsearchConnecter.restHighLevelClient.snapshot()
                     .restore(restoreSnapshotRequest, RequestOptions.DEFAULT);
             restoreInfo = restoreSnapshotResponse.getRestoreInfo();
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage() + snapshotName + "isn't exist, somethings wrong with elasticsearch or rename the index");
+        }catch(Exception e) {
+            LOGGER.error(e.getMessage() + snapshotName
+                    + "isn't exist, somethings wrong with elasticsearch or rename the index");
 
         }
         return restoreInfo;
@@ -305,7 +306,7 @@ public class SnapshotDao {
             AcknowledgedResponse response = ElasticsearchConnecter.restHighLevelClient.snapshot()
                     .delete(deleteSnapshotRequest, RequestOptions.DEFAULT);
             isDeleted = response.isAcknowledged();
-        } catch (Exception e) {
+        }catch(Exception e) {
             LOGGER.error(e.getMessage() + snapshotName + " isn't exist or somethings wrong with elasticsearch");
         }
         return isDeleted;

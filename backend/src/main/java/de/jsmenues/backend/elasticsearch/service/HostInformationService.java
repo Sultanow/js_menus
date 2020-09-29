@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
@@ -28,57 +27,20 @@ public class HostInformationService {
      * @param hostId
      * @return list of host information of id
      */
-    public static List<Map<String, List<Object>>> getHostInformationById(String hostId) throws IOException {
-
+    public static List<Map<String, Object>> getHostInformationById(String hostId) throws IOException {
+        List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(QueryBuilders.termQuery("hostid", hostId));
         SearchRequest searchRequest = new SearchRequest(INDEX).source(searchSourceBuilder);
         SearchResponse response = ElasticsearchConnecter.restHighLevelClient.search(searchRequest,
                 RequestOptions.DEFAULT);
         SearchHit[] searchHits = response.getHits().getHits();
-        List<Map<String, Object>> tempMap = new ArrayList<Map<String, Object>>();
 
         for (SearchHit hit : searchHits) {
             Map<String, Object> result = hit.getSourceAsMap();
-            tempMap.add(result);
+            results.add(result);
         }
-        List<Map<String, List<Object>>> results = MAPPER.convertValue(tempMap,
-                new TypeReference<List<Map<String, Object>>>() {
-                });
         return results;
-    }
-
-    /**
-     * Get last value an item from a host
-     * 
-     * @param hostId
-     * @param itemId
-     * @return last value form an item
-     */
-    public static String getLastValuById(String hostId, String itemId) throws IOException {
-
-        String lastVlaue = "";
-        List<Map<String, List<Object>>> getHostInfoById = getHostInformationById(hostId);
-
-
-        for (Map<String, List<Object>> tempMap : getHostInfoById) {
-            List<Object> items = tempMap.get("items");
-
-            for (Object item : items) {
-                @SuppressWarnings("unchecked")
-                Map<String, Object> mapItem = MAPPER.convertValue(item, Map.class);
-                Object lastvalue = mapItem.get("lastvalue");
-                Object itmeid = mapItem.get("itemid");
-                String itmeId = String.valueOf(itmeid);
-
-                if (itmeId.equals(itemId)) {
-
-                    lastVlaue = String.valueOf(lastvalue);
-                    break;
-                }
-            }
-        }
-        return lastVlaue;
     }
 
     /**
@@ -89,44 +51,25 @@ public class HostInformationService {
      * 
      * @return last update form an item
      */
-    @SuppressWarnings("unchecked")
 
     public static long getLastUpdate(String hostId, String itemId) throws IOException {
         long lastUpdate = 0;
-        List<Map<String, List<Object>>> getHostInfoById = getHostInformationById(hostId);
+        List<Map<String, Object>> hostInfoById = getHostInformationById(hostId);
 
-        for (Map<String, List<Object>> tempMap : getHostInfoById) {
-            List<Object> items = tempMap.get("items");
-            for (Object item : items) {
-                Map<String, Object> mapItem = MAPPER.convertValue(item, Map.class);
-                Object lastclock = mapItem.get("lastclock");
-                Object itmeid = mapItem.get("itemid");
-                String lastClock = String.valueOf(lastclock);
+        for (Map<String, Object> hostiInfo : hostInfoById) {
+            Object lastclock = hostiInfo.get("lastclock");
+            Object itmeid = hostiInfo.get("itemid");
+            String lastClock = String.valueOf(lastclock);
 
-                String itmeId = String.valueOf(itmeid);
+            String itmeId = String.valueOf(itmeid);
 
-                if (itmeId.equals(itemId)) {
+            if (itmeId.equals(itemId)) {
 
-                    lastUpdate = Long.valueOf(lastClock);
-                    break;
-                }
+                lastUpdate = Long.valueOf(lastClock);
+                break;
             }
         }
         return lastUpdate;
     }
-
-    /**
-     * Get all host information from elasticsearch
-     * 
-     * @param hostId
-     * @return  list of item from host
-     */
-    public static UpdateResponse UpdateHostById(String hostId, List<Object> items) throws IOException {
-
-        UpdateRequest updateRequest = new UpdateRequest(HostInformationService.INDEX, hostId).doc("items", items);
-
-        UpdateResponse updateResponse = ElasticsearchConnecter.restHighLevelClient.update(updateRequest,
-                RequestOptions.DEFAULT);
-        return updateResponse;
-    }
 }
+

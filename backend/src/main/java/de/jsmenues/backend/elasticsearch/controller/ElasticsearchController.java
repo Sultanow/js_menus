@@ -7,6 +7,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -29,12 +30,27 @@ public class ElasticsearchController {
      * @return names of indices
      */
     @PermitAll
-    @POST
-    @Path("/indexname")
+    @GET
+    @Path("/indexname/{patternindexname}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getIndicesName(@QueryParam("patternindexname") String patternIndexName) throws IOException {
+    public Response getIndexNames(@PathParam("patternindexname") String patternIndexName) throws IOException {
 
         String[] result = ElasticsearchDao.getIdexName(patternIndexName);
+        return Response.ok(result).build();
+    }
+
+    /**
+     * Get all history index names
+     *
+     * @return names of historyindices
+     */
+    @PermitAll
+    @GET
+    @Path("/historyIndexNames")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getHistoryIndexNames() throws IOException {
+
+        String[] result = ElasticsearchDao.getIdexName("history-*");
         return Response.ok(result).build();
     }
 
@@ -61,8 +77,8 @@ public class ElasticsearchController {
      */
     @PermitAll
     @DELETE
-    @Path("/deleteindexbyname")
-    public Response deleteIndexByDate(@QueryParam("indexname") String indexName) throws IOException {
+    @Path("/{indexname}")
+    public Response deleteIndexByDate(@PathParam("indexname") String indexName) throws IOException {
         boolean result = false;
         try {
             result = ElasticsearchDao.deleteIndexByName(indexName);
@@ -70,6 +86,5 @@ public class ElasticsearchController {
             LOGGER.error(indexName + "is not exist");
         }
         return Response.ok("deleted: " + result).build();
-
     }
 }

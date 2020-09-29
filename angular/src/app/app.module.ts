@@ -39,7 +39,9 @@ import { ChangePasswordComponent } from './components/change-password/change-pas
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { MaterialModule } from './material.module';
 import { StatisticModule } from './modules/statistic/statistic.module';
-import { IconHelperModule } from './modules/icon-helper/icon-helper.module'; 
+import { IconHelperModule } from './modules/icon-helper/icon-helper.module';
+import { AllkeysComponent } from './components/compare/allkeys/allkeys.component';
+import { HistorybetweentowdatesComponent } from './components/compare/historybetweentowdates/historybetweentowdates.component'; 
 
 
 @NgModule({
@@ -69,6 +71,8 @@ import { IconHelperModule } from './modules/icon-helper/icon-helper.module';
     AuthenticationComponent,
     ChangePasswordComponent,
     SpinnerComponent,
+    AllkeysComponent,
+    HistorybetweentowdatesComponent,
 
   ],
   imports: [

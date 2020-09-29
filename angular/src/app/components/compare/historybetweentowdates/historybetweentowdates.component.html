@@ -1,0 +1,26 @@
+<mat-dialog-content>
+<div class="dashboard-table">
+   
+    <table>
+        <thead>
+            <th>Host</th>
+            <th>Key</th>
+            <th>Wert</th>
+            <th>SollWert</th>
+            <th>Datum</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let record of records">
+                <td>{{record.hostname}}</td>
+                <td>{{record.key}}</td>
+                <td>{{record.value}}</td>
+                <td>{{record.expectedvalue}}</td>
+                <td>{{record.timestamp}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<mat-dialog-actions>
+<button mat-button mat-dialog-close>Exit</button>
+</mat-dialog-actions>
+</mat-dialog-content>

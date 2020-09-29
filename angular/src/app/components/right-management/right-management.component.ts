@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ConfigurationItem } from 'src/app/model/configurationItem';
-import { ConfigurationItemsService } from 'src/app/services/configuration/configuration-items.service';
+
 
 @Component({
   selector: 'app-right-management',
@@ -15,8 +15,6 @@ export class RightManagementComponent implements OnInit {
   headline: string;
   infos: ConfigurationItem[];
 
-  constructor (private configurationService: ConfigurationItemsService) { }
-
   ngOnInit() {
   }
 
@@ -24,15 +22,12 @@ export class RightManagementComponent implements OnInit {
     if (this.showRightManagement) {
       if (this.viewType === "test") {
         this.headline = "Rechte für Testumgebungen";
-        this.infos = this.configurationService.getRightConfigurationTest();
         this.notifyTitle.emit("Test");
       } else if (this.viewType === "dev") {
         this.headline = "Rechte für Dev-Umgebungen";
-        this.infos = this.configurationService.getRightConfigurationDev();
         this.notifyTitle.emit("Dev");
       } else if (this.viewType === "prod") {
         this.headline = "Rechte für Prod-Umgebungen";
-        this.infos = this.configurationService.getRightConfigurationProd();
         this.notifyTitle.emit("Confluence");
       }
     }

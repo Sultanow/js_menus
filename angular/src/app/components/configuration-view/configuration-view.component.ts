@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ConfigurationItemsService } from 'src/app/services/configuration/configuration-items.service';
 import { ConfigurationItem } from 'src/app/model/configurationItem';
-import { ServerConfiguration } from 'src/config/ServerConfiguration';
 
 @Component({
   selector: 'app-configuration-view',
@@ -20,11 +19,9 @@ export class ConfigurationViewComponent implements OnInit {
 
   }
 
-  async ngOnChanges(changes) {
+  ngOnChanges(changes) {
     if (this.showConfigView) {
-      this.configService.getServerConfiguration(ServerConfiguration.ENV_LIST).subscribe(data => {
-        this.configService.addConfiguration(this.configService.createServerConf(data));
-      });
+      this.config = this.configService.itemlist;
       console.log("After");
     }
   }
