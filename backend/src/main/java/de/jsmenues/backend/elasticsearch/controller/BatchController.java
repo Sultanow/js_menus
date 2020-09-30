@@ -34,12 +34,9 @@ public class BatchController {
     @PermitAll
     @PUT
     @Path("/")
-    public Response InsertAllBatcs() throws IOException {
-
-        ZabbixService zabbixService = new ZabbixService();
-        List<Map<String, Object>> result = zabbixService.getAllBatches();
-        BatchDao.insertAllBatches(result);
-        return Response.ok().build();
+    public Response InsertAllBatcs(batches) throws IOException {
+        BatchDao.insertAllBatches(batches);
+        return Response.ok(batches).build();
     }
 
     /**
@@ -49,26 +46,11 @@ public class BatchController {
      */
     @PermitAll
     @GET
-    @Path("/")
+    @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllBatches() throws IOException {
 
         List<Map<String, Object>> result = BatchDao.getAllBatches();
-        return Response.ok(result).build();
-    }
-
-    /**
-     * Get all batch names
-     *
-     * @return list of hsotnames
-     */
-    @PermitAll
-    @GET
-    @Path("/batchnames")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllHostName() throws IOException {
-
-        List<String> result = BatchDao.getAllHostName();
         return Response.ok(result).build();
     }
 
@@ -82,10 +64,8 @@ public class BatchController {
     @DELETE
     @Path("/{batchid}")
     public Response deleteHostByID(@PathParam("batchid") String batchId) throws IOException {
-
         String result1 = BatchDao.deleteHostById(batchId);
-        String result2 = BatchDao.deleteHostInfoById(batchId);
-        return Response.ok(result1 + "\n" + result2).build();
+        return Response.ok(result1).build();
     }
 
 }

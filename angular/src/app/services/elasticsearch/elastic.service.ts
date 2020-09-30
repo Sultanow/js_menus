@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -11,6 +10,7 @@ export class ElasticService {
 
   private backendElasticsearchUrl: string = 'backend/elasticsearch';
   private backendElasticsearchUrlHosts: string = 'backend/elasticsearch/hosts';
+  private backendElasticsearchUrlBatches: string = 'backend/elasticsearch/batches';
   private backendElasticsearchUrlHostInfo: string = 'backend/elasticsearch/hostInformation';
   private backendElasticsearchUrlHistory: string = 'backend/elasticsearch/history';
   private backendElasticsearchUrlExpValue: string = 'backend/elasticsearch/expectedValues';
@@ -21,6 +21,10 @@ export class ElasticService {
   }
   getAllHostName(): Observable<string[]> {
     return this.http.get<string[]>(`${this.backendElasticsearchUrlHosts}/hostnames/`, {});
+  }
+
+  getAllBatches(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.backendElasticsearchUrlBatches}/hostnames/`, {});
   }
 
   getLastValue(hostName: string, itemKey: string): Observable<string> {
