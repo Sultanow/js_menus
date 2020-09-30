@@ -149,3 +149,6 @@ Die Konfiguration folgt folgendem Beispiel:
  "activeItems": ["statistic","configoverview"]
 }
 ```
+# configuration.delete.history.data
+ Es wird hier eine Anzhal von Jahren verwendet z.B 5;
+ ```

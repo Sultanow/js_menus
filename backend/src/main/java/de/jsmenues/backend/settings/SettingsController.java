@@ -26,7 +26,8 @@ public class SettingsController {
     private static ArrayList<String> allConfigurationItems = new ArrayList<>(Arrays.asList("configuration.zabbix.User",
             "configuration.zabbix.Password", "configuration.zabbix.URL", "configuration.zabbix.filterGroup",
             "configuration.zabbix.items", "configuration.frontend.title", "configuration.frontend.logo",
-            "configuration.dummy.statuswarning", "configuration.servercompare.config", "configuration.activeitems"));
+            "configuration.dummy.statuswarning", "configuration.servercompare.config", "configuration.activeitems", 
+            "configuration.delete.history.data"));
 
     @RolesAllowed("ADMIN")
     @GET

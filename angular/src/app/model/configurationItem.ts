@@ -3,14 +3,14 @@ export class ConfigurationItem {
     env: string;
     key: string;
     value: string;
-    soll: string;
+    expected: string;
     identic: boolean;
 
-    constructor (env: string, key: string, value: string) {
+    constructor(env: string, key: string, value: string, expected: string) {
         this.env = env;
         this.key = key;
         this.value = value;
-        this.soll = value;
-        this.identic = true;
+        this.expected = expected;
+        this.identic = (this.value ===  this.expected);
     }
 }

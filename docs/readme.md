@@ -39,3 +39,35 @@
 1. Der Anleitung für [Build mit Docker](DockerBuilderUse.md) befolgen.
 2. Für den ersten Startup sollten das Startup Skript verwendet werden, da dies auch zusätzliche initialisierungen übernimmt.
 
+## Aufbau einer Elasticsearch-Datenbank 
+Bevor man Elasticsearch aufbaut, sollte man Docker neu eingestellt sein.
+Dazu geht man auf Docker-Settings und stellt die Recourcen wie folgt ein:
+
+   - Cpu auf 4 kern
+   - Memory zwischen 3 oder 4 Giga
+   - Swap zwichen 2 and 4 Giga
+
+1.  Diese Elasticsearch-Konfiguration ist nur für Testzwecke. Es gibt dafür 3 Varianten:
+
+  a. Single-Node-Konfiguration stellt einen Knoten zu Verfügung. 
+  b. Multipele-Nodes-Konfiguration stellt einen Master- und einen Data-Knoten zu Verfügung. 
+  c. Multipele-Nodes-Konfiguration stellt einen Master-, zwei Data- and einen Koordinating-Knoten zu Verfügung.
+
+Hinweis:
+  - Hard-disk muss zu mindestens 10% frei sein
+  - Für die dritte Variante sollte RAM mindestens 16GB betragen und dockr-memory mindesten 5GB
+
+2. Starten Elasticsearch-Service einer Variante: Dafür eine Powershell öffnen und in das Verzeichnis /docker/elasticsearch/"eine Variante" wechseln.
+  - Mit `docker-compose up -d` den Elasticsearch-Service starten.
+  - Damit man Daten in Kibanan finden kann, werden Daten in zabbix gebraucht
+  - Ausführen des Scripts: `python .\createDefaultConfig.py` (wenn man sich über Frontend anmelden kann)
+  - Ausführen des Scripts: `python .\updateItemValue.py`
+
+  3. Öffnen des Kibana-Dashboards im Browser mit http://localhost:5601
+  - Ausführen des folgenden GET-Requests in Kibana-Console
+  z.B:
+    - GET _cat/indices?v
+    - GET _cat/node?v
+    - GET host_information/_search
+    - GET history-dev1-*/_search
+    - GET history-dev1-config.silbentrennung/_search

@@ -1,0 +1,11 @@
+.dashboard-table td, .dashboard-table th {
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+    table-layout: fixed;
+    overflow: auto;
+    margin: auto;
+}
+
+.mat-dialog-actions {
+    float: right;
+}

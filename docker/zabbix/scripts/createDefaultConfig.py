@@ -76,6 +76,7 @@ answer = zapi.do_request(CREATEITEM, params=generate_item_params(
     "SW-Version", "version.software", applicationid))
 answer = zapi.do_request(CREATEITEM, params=generate_item_params(
     "Text-Version", "version.text", applicationid))
+ 
 
 # Last but not least create the hosts
 CREATEHOST = 'host.create'

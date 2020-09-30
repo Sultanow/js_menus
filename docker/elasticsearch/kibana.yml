@@ -1,0 +1,9 @@
+server.name: kibana
+server.host: "0"
+elasticsearch.hosts: [ "http://elasticsearch:9200" ]
+elasticsearch.requestTimeout: 180000
+elasticsearch.shardTimeout: 1800000
+elasticsearch.startupTimeout: 50000
+elasticsearch.healthCheck.delay: 360000
+server.maxPayloadBytes: 5048576
+server.socketTimeout: 300000

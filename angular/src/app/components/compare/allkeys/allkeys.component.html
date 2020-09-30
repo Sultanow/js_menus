@@ -1,0 +1,17 @@
+<mat-dialog-content>
+    <div class="dashboard-table">
+        <table>
+            <thead>
+                <th>All Keys</th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let key of allKey">
+                    <td>{{key}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button mat-dialog-close>Exit</button>
+</mat-dialog-actions>

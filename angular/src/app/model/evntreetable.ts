@@ -4,7 +4,7 @@ export type ENVCONFIG = {
 };
 
 export type ENVVAL = {
-    ist: string;
-    soll: string;
+    actual: string;
+    expected: string;
     identic: boolean;
 };
