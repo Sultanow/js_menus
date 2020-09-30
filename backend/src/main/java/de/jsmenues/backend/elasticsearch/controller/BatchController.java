@@ -27,17 +27,20 @@ public class BatchController {
     private static Logger LOGGER = LoggerFactory.getLogger(BatchController.class);
 
     /**
-     * insert all batches from zabbix to elasticsearch
+     * Add batch to elasticsearch
      *
      * @return list of batches
      */
     @PermitAll
-    @PUT
+    @POST
     @Path("/")
-    public Response InsertAllBatcs(batches) throws IOException {
-        BatchDao.insertAllBatches(batches);
-        return Response.ok(batches).build();
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response insertBatch(String batch) throws IOException {
+
+        List<Map<String, Object>> result = BatchDao.insertBatch(batch);
+        return Response.ok(result).build();
     }
+
 
     /**
      * Get all batches from elasticsearch
@@ -46,7 +49,7 @@ public class BatchController {
      */
     @PermitAll
     @GET
-    @Path("/all")
+    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllBatches() throws IOException {
 
@@ -54,18 +57,47 @@ public class BatchController {
         return Response.ok(result).build();
     }
 
+
+    /**
+     * Get batch by id from elasticsearch
+     *
+     * @param batchId
+     * @return response about GET request
+     */
+    @PermitAll
+    @GET
+    @Path("/{batchid}")
+    public Response getBatchByID(@PathParam("batchid") String batchId) throws IOException {
+        String result = BatchDao.getBatchByID(batchId);
+        return Response.ok(result).build();
+    }
+
+    /**
+     * Update batch by id from elasticsearch
+     *
+     * @param batchId
+     * @return response about PUT request
+     */
+    @PermitAll
+    @PUT
+    @Path("/{batchid}")
+    public Response updateBatchByID(@PathParam("batchid") String batchId, Object batch) throws IOException {
+        String result = BatchDao.updateBatchByID(batchId, batch);
+        return Response.ok(result).build();
+    }
+
     /**
      * Delete batch by id from elasticsearch
      *
      * @param batchId
-     * @return response about delete request
+     * @return response about DELETE request
      */
     @PermitAll
     @DELETE
     @Path("/{batchid}")
-    public Response deleteHostByID(@PathParam("batchid") String batchId) throws IOException {
-        String result1 = BatchDao.deleteHostById(batchId);
-        return Response.ok(result1).build();
+    public Response deleteBatchByID(@PathParam("batchid") String batchId) throws IOException {
+        String result = BatchDao.deleteBatchById(batchId);
+        return Response.ok(result).build();
     }
 
 }

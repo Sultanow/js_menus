@@ -2,6 +2,8 @@ package de.jsmenues.backend.elasticsearch.dao;
 
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.action.delete.UpdateRequest;
+import org.elasticsearch.action.delete.UpdateResponse;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
@@ -28,26 +30,23 @@ public class BatchDao {
     private static final String INDEX = "batch";
 
     /**
-     * Insert all batches to elasticsearch
+     * Insert batch to elasticsearch
      * 
      * @param batches
-     * @return status if new batches are inserted, updated or not
+     * @return status if new batch is inserted, updated or not
      */
-    public static void insertAllBatches(List<Map<String, Object>> batches) throws IOException {
+    public static void insertBatch(Map<String, Object> batch) throws IOException {
         IndexResponse indexResponse = null;
-        for (Map<String, Object> batches : batches) {
-            // String batchId = String.valueOf( batch.get("batchid"));
-            IndexRequest indexRequest = new IndexRequest(INDEX).source(batch).id(batch);
-            GetRequest getRequest = new GetRequest(INDEX, batchId);
-            boolean exists = ElasticsearchConnecter.restHighLevelClient.exists(getRequest, RequestOptions.DEFAULT);
-            if (!exists) {
-                indexResponse = ElasticsearchConnecter.restHighLevelClient.index(indexRequest,
-                        RequestOptions.DEFAULT);
-                LOGGER.info(indexResponse + "\n batches are inserted");
-            } 
-        }
-        if(indexResponse==null)
-        LOGGER.info("batches existed");
+        String batchId = String.valueOf(batch.get("batchid"));
+        IndexRequest indexRequest = new IndexRequest(INDEX).source(batch).id(batch);
+        GetRequest getRequest = new GetRequest(INDEX, batchId);
+        boolean exists = ElasticsearchConnecter.restHighLevelClient.exists(getRequest, RequestOptions.DEFAULT);
+        if (!exists) {
+            indexResponse = ElasticsearchConnecter.restHighLevelClient.index(indexRequest,
+                    RequestOptions.DEFAULT);
+            LOGGER.info(indexResponse + "\n batch is inserted");
+        } 
+        if(indexResponse==null) LOGGER.info("batch existed");
     }
 
     /**
@@ -55,7 +54,7 @@ public class BatchDao {
      *
      * @return list of batches
      */
-    public static List<Map<String, Object>> getAllbatches() throws IOException {
+    public static List<Map<String, Object>> getAllBatches() throws IOException {
 
         SearchRequest searchRequest = new SearchRequest(INDEX);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -76,26 +75,16 @@ public class BatchDao {
     }
     
     /**
-     * Get all batchNames from elasticsearch
-     *
-     * @return list of batchNames
+     * Update batch by id from elasticsearch
+     * @param batchId
      */
-    public static ArrayList<String> getAllBatchName() {
-        ArrayList<String> batchNames = new ArrayList<String>();
-     
-        try {
-            List<Map<String, Object>> allBatch = getAllBatches();
-            for(Map<String, Object> batch : allBatch ) {
-                // String batchName = String.valueOf(batch.get("batch"));
-                batchNames.add(batch);
-                }
-        }catch(IOException e) {
-          
-            e.printStackTrace();
-        }    
-        return batchNames;
-    }
+    public static String updateBatchById(String batchId, Object batch) throws IOException {
+        UpdateRequest updateRequest = new UpdateRequest(INDEX, batchId);
+        updateRequest.doc(batch);
+        UpdateResponse updateResponse = ElasticsearchConnecter.restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
 
+        return updateResponse.toString();
+    }
 
     /**
      * Delete batch by id from elasticsearch

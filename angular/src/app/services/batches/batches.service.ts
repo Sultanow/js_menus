@@ -9,7 +9,7 @@ import { Batch } from '../../model/batch';
 @Injectable({ providedIn: 'root' })
 export class BatchService {
 
-  private batchesUrl = 'backend/batches';  // TODO: das richtige Backend anbinden
+  private batchesUrl = 'backend/elasticsearch/batches';  
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
