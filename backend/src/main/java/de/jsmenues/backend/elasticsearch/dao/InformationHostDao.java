@@ -41,7 +41,6 @@ public class InformationHostDao {
     public static void insertAllHostInformation(List<Map<String, List<Object>>> hostsInfo)
             throws IOException, ParseException {
         IndexResponse indexResponse = null;
-        UpdateResponse updateResponse = null;
         int numberOfHosts = 0;
         try {
             insert: for (Map<String, List<Object>> hostInfo : hostsInfo) {
@@ -103,7 +102,7 @@ public class InformationHostDao {
 
                             if (!getLastValueByKey.equals(actualValue)) {
                                 UpdateRequest updateActualValue = new UpdateRequest(HostInformationService.INDEX, docId)
-                                        .doc("lastvalue", actualValue, "lastclock", lastClock);
+                                        .doc("lastvalue", actualValue, "lastclock", lastClock,"prevvalue",getLastValueByKey);
                                 UpdateResponse updateResponseActualValue = ElasticsearchConnecter.restHighLevelClient
                                         .update(updateActualValue, RequestOptions.DEFAULT);
                                 LOGGER.info(updateResponseActualValue.toString());
