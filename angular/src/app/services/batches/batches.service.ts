@@ -11,8 +11,8 @@ import { MOCKBATCHES } from '../../model/mockBatches';
 export class BatchService {
 
   mockBatches = MOCKBATCHES;
-
-  private batchesUrl = 'backend/batches';  // TODO: das richtige Backend anbinden
+  
+  private batchesUrl = 'backend/elasticsearch/batches';  
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
