@@ -1,25 +1,16 @@
 package de.jsmenues.backend.elasticsearch.controller;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.security.PermitAll;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
+import de.jsmenues.backend.elasticsearch.dao.BatchDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.jsmenues.backend.elasticsearch.dao.BatchDao;
-import de.jsmenues.backend.zabbixservice.ZabbixService;
+import javax.annotation.security.PermitAll;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 @Path("/elasticsearch/batches")
 public class BatchController {
@@ -35,10 +26,11 @@ public class BatchController {
     @POST
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response insertBatch(String batch) throws IOException {
+    public Response insertBatch(Map<String, Object> batch) throws IOException {
 
-        List<Map<String, Object>> result = BatchDao.insertBatch(batch);
-        return Response.ok(result).build();
+        //List<Map<String, Object>> result =
+        BatchDao.insertBatch(batch);
+        return Response.ok(/*result*/).build();
     }
 
 
@@ -82,7 +74,7 @@ public class BatchController {
     @PUT
     @Path("/{batchid}")
     public Response updateBatchByID(@PathParam("batchid") String batchId, Object batch) throws IOException {
-        String result = BatchDao.updateBatchByID(batchId, batch);
+        String result = BatchDao.updateBatchById(batchId, batch);
         return Response.ok(result).build();
     }
 
