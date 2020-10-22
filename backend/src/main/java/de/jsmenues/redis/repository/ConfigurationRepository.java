@@ -19,7 +19,7 @@ public class ConfigurationRepository implements IConfigurationRepository{
     private ConfigurationRepository() {
 
         configurationPool = new JedisPool(new JedisPoolConfig(), "redis-service", 6379, 60000, "password");
-        checkMinimalConfiguration();
+
 
     }
 

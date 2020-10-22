@@ -1,55 +1,127 @@
 <div id="batches-box" *ngIf="showBatches">
+  
+  <h2>Batches</h2>
+  <br/><br/>
   <div>
-    Batchzeiten des letzen Laufs am 01.07.2019 - 06:00
-  </div>
-  <div>
-    <label>Batch ID:
-      <input #batchId />
-    </label>
-    <button (click)="add(batchId.value); batchId.value=''">
-      add
-    </button>
+    <mat-form-field class="field-input-full-width">
+        <input matInput placeholder="Batch Name" #batchName />
+    </mat-form-field>
+    <button mat-raised-button (click)="add(batchName.value); batchName.value=''">+</button>
   </div>
   <table id="batch-table">
     <thead>
-      <th>Batchnummer</th>
+      <th>Batchname</th>
       <th>Laufzeit</th>
+      <th>FK Doku</th>
+      <th>aktuelle Periodizität</th>
+      <th>erster Lauf</th>
+      <th>letzter Lauf</th>
     </thead>
     <tbody>
       <tr *ngFor="let batch of batches">
-        <td>
-          <div *ngIf="editOn==true && selectedBatch.id==batch.id">
-            {{batch.id}}
+        <td (click)="toggleEditOn(batch, 'name')">
+          <div *ngIf="editName==true && selectedBatch.name==batch.name">
+              <input [(ngModel)]="selectedBatch.name" />
           </div>
-          <div *ngIf="editOn==false">
-            {{batch.id}}
+          <div *ngIf="editName==false">
+            {{batch.name}}
           </div>
         </td>
-        <td>
-          <div *ngIf="editOn==true && selectedBatch.id==batch.id">
+        <td (click)="toggleEditOn(batch, 'duration')">
+          <div *ngIf="editDuration==true && selectedBatch.name==batch.name">
             <input [(ngModel)]="selectedBatch.duration" />
           </div>
-          <div *ngIf="editOn==false">
+          <div *ngIf="editDuration==false">
             {{batch.duration}}
           </div>
         </td>
-        <td>
-          <div *ngIf="editOn==true && selectedBatch.id==batch.id">
-            <button class="fancy" title="delete batch" (click)="delete(batch)">delete</button>
+        <td (click)="toggleEditOn(batch, 'fk_doku')">
+          <div *ngIf="editFk_doku==true && selectedBatch.name==batch.name">
+            <input [(ngModel)]="selectedBatch.fk_doku" />
           </div>
-          <div *ngIf="editOn==false">
-            <button class="fancy" title="delete batch" (click)="delete(batch)">delete</button>
+          <div *ngIf="editFk_doku==false">
+            {{batch.fk_doku}}
+          </div>
+        </td>
+        <td (click)="toggleEditOn(batch, 'periodizitaet')">
+          <div *ngIf="editPeriodizitaet==true && selectedBatch.name==batch.name">
+            <input [(ngModel)]="selectedBatch.periodizitaet" />
+          </div>
+          <div *ngIf="editPeriodizitaet==false">
+            {{batch.periodizitaet}}
+          </div>
+        </td>
+        <td (click)="toggleEditOn(batch, 'ersterlauf')">
+          <div *ngIf="editErsterlauf==true && selectedBatch.name==batch.name">
+            <input [(ngModel)]="selectedBatch.ersterlauf" />
+          </div>
+          <div *ngIf="editErsterlauf==false">
+            {{batch.ersterlauf}}
+          </div>
+        </td>
+        <td (click)="toggleEditOn(batch, 'letzterlauf')">
+          <div *ngIf="editLetzterlauf==true && selectedBatch.name==batch.name">
+            <input [(ngModel)]="selectedBatch.letzterlauf" />
+          </div>
+          <div *ngIf="editLetzterlauf==false">
+            {{batch.letzterlauf}}
           </div>
         </td>
         <td>
-          <div *ngIf="editOn==true && selectedBatch.id==batch.id">
-            <button class="fancy" title="edit batch" (click)="save(selectedBatch)">save</button>
+          <div class="delete-button-container" *ngIf="editOn==true && selectedBatch.name==batch.name">
+              <button mat-mini-fab class="fancy" title="delete batch" (click)="delete(batch)">
+                <mat-icon>delete</mat-icon>
+              </button>
           </div>
-          <div *ngIf="editOn==false">
-            <button class="fancy" title="edit batch" (click)="toggleEditOn(batch)">edit</button>
+          <div class="delete-button-container" *ngIf="editOn==false">
+            <button mat-mini-fab class="fancy" title="delete batch" (click)="delete(batch)">
+              <mat-icon>delete</mat-icon></button>
+          </div>
+        </td>
+        <td>
+          <div *ngIf="editOn==true && selectedBatch.name==batch.name">
+            <button class="fancy" title="edit batch" (click)="save(selectedBatch)">save</button>
           </div>
         </td>
       </tr>
     </tbody>
   </table>
+
+  <br/><br/>
+  <!--h3>Batches</h3>
+  <div>
+    <form class="batchesForm" #form="ngForm">
+      <mat-form-field class="field-input-full-width">
+        <input matInput placeholder="Name" #batchName />
+     </mat-form-field>
+     <br/>
+     <mat-form-field class="field-input-full-width">
+       <input matInput placeholder="Beschreibung" #batchBeschreibung />
+     </mat-form-field>   
+      <br/>
+      <mat-form-field class="field-input-full-width">
+        <input matInput placeholder="Ausführungsinformationen" #batchAusfi />
+      </mat-form-field>
+      <br/>
+      <mat-form-field class="field-input-full-width">
+        <input matInput placeholder="Parameter" #batchParameter />
+      </mat-form-field>
+      <br/>
+      <mat-form-field class="field-input-full-width">
+        <input matInput placeholder="Startzeitpunkt" #batchStartzp />
+      </mat-form-field>
+      <br/>
+      <mat-form-field class="field-input-full-width">
+        <input matInput placeholder="Ausführung während des Onlinebetriebs" #batchAwOb />
+      </mat-form-field>
+      <br/>
+      <mat-form-field class="field-input-full-width">
+        <input matInput placeholder="Vorgänger/Nachfolger" #batchVorNach />
+      </mat-form-field>
+      <br/>
+      <button mat-flat-button color="primary" type="submit" class="submit-button-right">
+        Speichern
+    </button>
+    </form>
+  </div-->
 </div>

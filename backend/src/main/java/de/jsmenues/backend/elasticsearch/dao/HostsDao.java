@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.jsmenues.backend.elasticsearch.ElasticsearchConnecter;
-import de.jsmenues.backend.elasticsearch.controller.HostController;
 import de.jsmenues.backend.elasticsearch.service.HostInformationService;
 
 import java.io.IOException;
