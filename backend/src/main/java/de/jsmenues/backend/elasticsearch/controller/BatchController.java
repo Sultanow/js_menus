@@ -33,7 +33,6 @@ public class BatchController {
         return Response.ok(/*result*/).build();
     }
 
-
     /**
      * Get all batches from elasticsearch
      *
@@ -44,11 +43,10 @@ public class BatchController {
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllBatches() throws IOException {
-
         List<Map<String, Object>> result = BatchDao.getAllBatches();
+        
         return Response.ok(result).build();
     }
-
 
     /**
      * Get batch by id from elasticsearch

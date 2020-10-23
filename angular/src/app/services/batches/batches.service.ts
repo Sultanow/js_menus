@@ -25,19 +25,20 @@ export class BatchService {
   /** POST: add a new batch to the server */
   addBatch(batch: Batch): Observable<Batch> {
     //this.mockBatches.push(batch);
-    return of(batch);
-    
+    //return of(batch);
+    //let myObject = {"batchid" : batch.batchid};
+
     return this.http.post<Batch>(this.batchesUrl, batch, this.httpOptions).pipe(
-      tap((newBatch: Batch) => this.log(`added batch w/ id=${newBatch.id}`)),
+      tap((newBatch: Batch) => this.log(`added batch w/ id=${newBatch.batchid}`)),
       catchError(this.handleError<Batch>('addBatch'))
     );
   }
 
   /** GET batches from the server */
   getBatches(): Observable<Batch[]> {
-    return of(this.mockBatches);
+    //return of(this.mockBatches);
 
-    return this.http.get<Batch[]>(`${this.batchesUrl}/column`)
+    return this.http.get<Batch[]>(`${this.batchesUrl}/`)
       .pipe(
         tap((newBatches: Batch[]) => this.log(`fetched batches ${newBatches[0]}, ${newBatches[1]}`)),
         catchError(this.handleError<Batch[]>('getBatches', []))
@@ -55,18 +56,18 @@ export class BatchService {
 
   /** PUT: update the batch on the server */
   updateBatch(batch: Batch): Observable<any> {
-    return of(batch);
+    //return of(batch);
     return this.http.put(this.batchesUrl, batch, this.httpOptions).pipe(
-      tap(_ => this.log(`updated batch id=${batch.id}`)),
+      tap(_ => this.log(`updated batch id=${batch.batchid}`)),
       catchError(this.handleError<any>('updateBatch'))
     );
   }
 
   /** DELETE: delete the batch from the server */
   deleteBatch(batch: Batch): Observable<Batch> {
-    return of(batch);
+    //return of(batch);
     
-    const id = typeof batch === 'number' ? batch : batch.id;
+    const id = typeof batch === 'number' ? batch : batch.batchid;
     const url = `${this.batchesUrl}/${id}`;
 
     return this.http.delete<Batch>(url, this.httpOptions).pipe(

@@ -12,7 +12,7 @@ export class BatchesComponent implements OnInit {
   @Input() showBatches: boolean;
   @Input() editOn: boolean;
   selectedBatch: Batch;
-  @Input() editName: boolean;
+  @Input() editID: boolean;
   @Input() editDuration: boolean;
   @Input() editLetzterlauf: boolean;
   @Input() editErsterlauf: boolean;
@@ -24,7 +24,7 @@ export class BatchesComponent implements OnInit {
   ngOnInit() {
     this.getBatches();
     this.editOn = false;
-    this.editName = false;
+    this.editID = false;
     this.editDuration = false;
     this.editLetzterlauf= false;
     this.editErsterlauf=false;
@@ -42,7 +42,7 @@ export class BatchesComponent implements OnInit {
   toggleEditOff() {
     this.getBatches();
     this.editOn = false;
-    this.editName = false;
+    this.editID = false;
     this.editDuration = false;
     this.editLetzterlauf= false;
     this.editErsterlauf=false;
@@ -51,8 +51,8 @@ export class BatchesComponent implements OnInit {
   }
 
   isColumnEdit(editColumn:string){
-    if (editColumn=='name'){
-        this.editName = true;
+    if (editColumn=='batchid'){
+        this.editID = true;
     }
     if (editColumn=='duration'){
       this.editDuration = true;
@@ -74,8 +74,11 @@ export class BatchesComponent implements OnInit {
   getBatches(): void {
     this.batchService.getBatches()
       .subscribe(batches => {console.log("batches", batches); 
-      this.batches = batches
-      this.testFunction();
+      for (let value of batches.values()){
+        this.batches.push(value);
+      }
+      //this.batches = batches
+      //this.testFunction();
     });
   }
 
@@ -84,10 +87,10 @@ export class BatchesComponent implements OnInit {
     this.batches = [...this.batches];
     } 
  
-  add(name: string): void {
-    name = name.trim();
-    if (!name) { return; }
-    this.batchService.addBatch({ name } as Batch)
+  add(batchid: string): void {
+    batchid = batchid.trim();
+    if (!batchid) { return; }
+    this.batchService.addBatch({ batchid } as Batch)
       .subscribe(batch => {
         this.batches.push(batch);
       });
