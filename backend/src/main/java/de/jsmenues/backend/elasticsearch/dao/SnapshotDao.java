@@ -37,7 +37,7 @@ import org.elasticsearch.snapshots.SnapshotInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.jsmenues.backend.elasticsearch.ElasticsearchConnecter;
+import de.jsmenues.backend.elasticsearch.ElasticsearchConnector;
 
 public class SnapshotDao {
     private static Logger LOGGER = LoggerFactory.getLogger(SnapshotDao.class);
@@ -58,7 +58,7 @@ public class SnapshotDao {
         putRepositoryRequest.type(FsRepository.TYPE);
         putRepositoryRequest.verify(true);
         try {
-            acknowledgedResponse = ElasticsearchConnecter.restHighLevelClient.snapshot()
+            acknowledgedResponse = ElasticsearchConnector.restHighLevelClient.snapshot()
                     .createRepository(putRepositoryRequest, RequestOptions.DEFAULT);
             if (acknowledgedResponse.isAcknowledged())
                 LOGGER.info("backup repository is created");
@@ -82,7 +82,7 @@ public class SnapshotDao {
             GetRepositoriesRequest request = new GetRepositoriesRequest();
             String[] repositories = new String[] { "backup" };
             request.repositories(repositories);
-            response = ElasticsearchConnecter.restHighLevelClient.snapshot().getRepository(request,
+            response = ElasticsearchConnector.restHighLevelClient.snapshot().getRepository(request,
                     RequestOptions.DEFAULT);
             exist = response.repositories().get(0).name().equals("backup");
         } catch (Exception e) {
@@ -111,7 +111,7 @@ public class SnapshotDao {
             snapshotRequest.indices("history*", "host*", "expectedvalues");
             snapshotRequest.partial(true);
             snapshotRequest.waitForCompletion(true);
-            CreateSnapshotResponse snapshotResponse = ElasticsearchConnecter.restHighLevelClient.snapshot()
+            CreateSnapshotResponse snapshotResponse = ElasticsearchConnector.restHighLevelClient.snapshot()
                     .create(snapshotRequest, RequestOptions.DEFAULT);
             status = snapshotResponse.status();
 
@@ -142,7 +142,7 @@ public class SnapshotDao {
             SnapshotLifecyclePolicy policy = new SnapshotLifecyclePolicy("00", "snapshot", "0 0 1 * * ?", "backup",
                     config, retention);
             PutSnapshotLifecyclePolicyRequest request = new PutSnapshotLifecyclePolicyRequest(policy);
-            org.elasticsearch.client.core.AcknowledgedResponse resp = ElasticsearchConnecter.restHighLevelClient
+            org.elasticsearch.client.core.AcknowledgedResponse resp = ElasticsearchConnector.restHighLevelClient
                     .indexLifecycle().putSnapshotLifecyclePolicy(request, RequestOptions.DEFAULT);
             isCreated = resp.isAcknowledged();
         } catch(Exception e){
@@ -163,7 +163,7 @@ public class SnapshotDao {
                 "00");
         GetSnapshotLifecyclePolicyResponse getResponse = null;
         try {
-            getResponse = ElasticsearchConnecter.restHighLevelClient.indexLifecycle()
+            getResponse = ElasticsearchConnector.restHighLevelClient.indexLifecycle()
                     .getSnapshotLifecyclePolicy(getSnapshotLifecyclePolicyRequest, RequestOptions.DEFAULT);
         }catch(Exception e) {
             LOGGER.error(e.getMessage() + "somethings wrong with elasticsearch");
@@ -185,7 +185,7 @@ public class SnapshotDao {
         try {
             StartSLMRequest startSLMRequest = new StartSLMRequest();
 
-            org.elasticsearch.client.core.AcknowledgedResponse response = ElasticsearchConnecter.restHighLevelClient
+            org.elasticsearch.client.core.AcknowledgedResponse response = ElasticsearchConnector.restHighLevelClient
                     .indexLifecycle().startSLM(startSLMRequest, RequestOptions.DEFAULT);
 
             isStarted = response.isAcknowledged();
@@ -206,7 +206,7 @@ public class SnapshotDao {
         try {
             StopSLMRequest stopSLMRequest = new StopSLMRequest();
 
-            org.elasticsearch.client.core.AcknowledgedResponse response = ElasticsearchConnecter.restHighLevelClient
+            org.elasticsearch.client.core.AcknowledgedResponse response = ElasticsearchConnector.restHighLevelClient
                     .indexLifecycle().stopSLM(stopSLMRequest, RequestOptions.DEFAULT);
 
             isStoped = response.isAcknowledged();
@@ -227,7 +227,7 @@ public class SnapshotDao {
         try {
             DeleteSnapshotLifecyclePolicyRequest deleteRequest = new DeleteSnapshotLifecyclePolicyRequest(id);
 
-            org.elasticsearch.client.core.AcknowledgedResponse response = ElasticsearchConnecter.restHighLevelClient
+            org.elasticsearch.client.core.AcknowledgedResponse response = ElasticsearchConnector.restHighLevelClient
                     .indexLifecycle().deleteSnapshotLifecyclePolicy(deleteRequest, RequestOptions.DEFAULT);
 
             isDeleted = response.isAcknowledged();
@@ -252,7 +252,7 @@ public class SnapshotDao {
             getSnapshotsRequest.repository("backup");
             String[] snapshots = { snapshotName };
             getSnapshotsRequest.snapshots(snapshots);
-            GetSnapshotsResponse getSnapshotsResponse = ElasticsearchConnecter.restHighLevelClient.snapshot()
+            GetSnapshotsResponse getSnapshotsResponse = ElasticsearchConnector.restHighLevelClient.snapshot()
                     .get(getSnapshotsRequest, RequestOptions.DEFAULT);
             listOfSnapshotInfo = getSnapshotsResponse.getSnapshots();
         }catch(Exception e) {
@@ -280,7 +280,7 @@ public class SnapshotDao {
             restoreSnapshotRequest.renameReplacement(indexNewName + "$1");
             restoreSnapshotRequest.ignoreIndexSettings("index.refresh_interval", "index.search.idle.after");
             restoreSnapshotRequest.waitForCompletion(true);
-            RestoreSnapshotResponse restoreSnapshotResponse = ElasticsearchConnecter.restHighLevelClient.snapshot()
+            RestoreSnapshotResponse restoreSnapshotResponse = ElasticsearchConnector.restHighLevelClient.snapshot()
                     .restore(restoreSnapshotRequest, RequestOptions.DEFAULT);
             restoreInfo = restoreSnapshotResponse.getRestoreInfo();
         }catch(Exception e) {
@@ -303,7 +303,7 @@ public class SnapshotDao {
         try {
             DeleteSnapshotRequest deleteSnapshotRequest = new DeleteSnapshotRequest("backup");
             deleteSnapshotRequest.snapshots(snapshotName);
-            AcknowledgedResponse response = ElasticsearchConnecter.restHighLevelClient.snapshot()
+            AcknowledgedResponse response = ElasticsearchConnector.restHighLevelClient.snapshot()
                     .delete(deleteSnapshotRequest, RequestOptions.DEFAULT);
             isDeleted = response.isAcknowledged();
         }catch(Exception e) {

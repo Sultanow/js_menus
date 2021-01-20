@@ -135,7 +135,7 @@ class StatisticService {
     private String getDataForChart(String chartName, String part) {
         StringBuilder sb = new StringBuilder();
         sb.append("statistic.chart.").append(chartName).append(".").append(part);
-        return ConfigurationRepository.getRepo().get(sb.toString()).getValue();
+        return ConfigurationRepository.getRepo().getVal(sb.toString());
     }
 
     private void saveDataForChart(String chartName, String part, String savedTraceTimes) {
@@ -546,7 +546,7 @@ class StatisticService {
      * @return a list of all groups with charts
      */
     private List<StatisticGroup> getGroupsAndCharts() {
-        String groupNames = ConfigurationRepository.getRepo().get("statistic.allChartNames").getValue();
+        String groupNames = ConfigurationRepository.getRepo().getVal("statistic.allChartNames");
         if (groupNames.isEmpty())
             return new ArrayList<>();
         List<StatisticGroup> groups;
@@ -630,7 +630,7 @@ class StatisticService {
         if (!chartName.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             sb.append("statistic.chart.").append(chartName).append(".script");
-            return ConfigurationRepository.getRepo().get(sb.toString()).getValue();
+            return ConfigurationRepository.getRepo().getVal(sb.toString());
         }
         return "";
     }
@@ -653,7 +653,7 @@ class StatisticService {
             if (time != null && !time.isEmpty()) {
                 sb.append(".").append(time);
             }
-            return ConfigurationRepository.getRepo().get(sb.toString()).getValue();
+            return ConfigurationRepository.getRepo().getVal(sb.toString());
         }
         return "";
     }

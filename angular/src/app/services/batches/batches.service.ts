@@ -1,80 +1,79 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 
 import { Observable, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 import { Batch } from '../../model/batch';
-import { MOCKBATCHES } from '../../model/mockBatches';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SettingsService } from '../settings/settings.service';
 
 @Injectable({ providedIn: 'root' })
 export class BatchService {
 
-  mockBatches = MOCKBATCHES;
-  
   private batchesUrl = 'backend/elasticsearch/batches';  
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
-
-  constructor (private http: HttpClient) { }
+  constructor (
+    private http: HttpClient,
+    private snackBar: MatSnackBar,
+    private settingsService: SettingsService) { }
 
   //////// CRUD methods //////////
 
-  /** POST: add a new batch to the server */
-  addBatch(batch: Batch): Observable<Batch> {
-    //this.mockBatches.push(batch);
-    //return of(batch);
-    //let myObject = {"batchid" : batch.batchid};
 
-    return this.http.post<Batch>(this.batchesUrl, batch, this.httpOptions).pipe(
-      tap((newBatch: Batch) => this.log(`added batch w/ id=${newBatch.batchid}`)),
-      catchError(this.handleError<Batch>('addBatch'))
-    );
+  getTableStructure(): Observable<any> {
+    return this.settingsService.getTableStructure();
   }
 
-  /** GET batches from the server */
-  getBatches(): Observable<Batch[]> {
-    //return of(this.mockBatches);
+  /** POST: add a new batch to the server */
+  addBatch(batch: any): Observable<any> {
+    return this.http.post<any>(this.batchesUrl+"/", batch, this.httpOptions).pipe(
+      tap((newBatch: any) => {
+        console.log(`added batch w/ id ${newBatch.id}`)
+      }),
+      catchError(this.handleError<any>('addBatch'))
+    );
+  }
+  /** DELETE: delete the batch from the server */
+  deleteBatch(batch: any): Observable<Batch> {
+    const id = typeof batch === 'number' ? batch : batch.id;
+    const url = `${this.batchesUrl}/${id}`;
 
-    return this.http.get<Batch[]>(`${this.batchesUrl}/`)
+    return this.http.delete<any>(url, this.httpOptions).pipe(
+      tap(_ => console.log(`deleted batch id=${id}`)),
+      catchError(this.handleError<any>('deleteBatch'))
+    );
+  }
+  /** GET batches from the server */
+  getBatches(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.batchesUrl}/`)
       .pipe(
-        tap((newBatches: Batch[]) => this.log(`fetched batches ${newBatches[0]}, ${newBatches[1]}`)),
-        catchError(this.handleError<Batch[]>('getBatches', []))
+        tap((newBatches: any[]) => console.log(`fetched batches ${newBatches[0]}, ${newBatches[1]}`)),
+        catchError(this.handleError<any[]>('getBatches', []))
       );
   }
 
   /** GET batch by id. Will 404 if id not found */
-  getBatch(id: string): Observable<Batch> {
+  getBatch(id: string): Observable<any> {
     const url = `${this.batchesUrl}/${id}`;
-    return this.http.get<Batch>(url).pipe(
-      tap(_ => this.log(`fetched batch id=${id}`)),
-      catchError(this.handleError<Batch>(`getBatch id=${id}`))
+    return this.http.get<any>(url).pipe(
+      tap(_ => console.log(`fetched batch id=${id}`)),
+      catchError(this.handleError<any>(`getBatch id=${id}`))
     );
   }
 
   /** PUT: update the batch on the server */
-  updateBatch(batch: Batch): Observable<any> {
-    //return of(batch);
-    return this.http.put(this.batchesUrl, batch, this.httpOptions).pipe(
-      tap(_ => this.log(`updated batch id=${batch.batchid}`)),
+  updateBatch(batch: any): Observable<any> {  
+    return this.http.put(`${this.batchesUrl}/${batch.id}`, batch, this.httpOptions).pipe(
+      tap(result => console.log(`updated batch id=${batch.id}, result: ${result}`)),
       catchError(this.handleError<any>('updateBatch'))
     );
   }
 
-  /** DELETE: delete the batch from the server */
-  deleteBatch(batch: Batch): Observable<Batch> {
-    //return of(batch);
-    
-    const id = typeof batch === 'number' ? batch : batch.batchid;
-    const url = `${this.batchesUrl}/${id}`;
 
-    return this.http.delete<Batch>(url, this.httpOptions).pipe(
-      tap(_ => this.log(`deleted batch id=${id}`)),
-      catchError(this.handleError<Batch>('deleteBatch'))
-    );
-  }
 
   //////// handlers //////////
 
@@ -85,21 +84,16 @@ export class BatchService {
    * @param result - optional value to return as the observable result
    */
   private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-
+    return (error: HttpErrorResponse): Observable<T> => {
       // TODO: send the error to remote logging infrastructure
-      //console.error(error); // log to console instead
+      console.error(error); // log to console instead
 
       // TODO: better job of transforming error for user consumption
-      this.log(`${operation} failed: ${error.message}`);
-
+      console.log(`${operation} failed: ${error.message}`);
+      if(error.status == 401) this.snackBar.open("Unauthorized", "Ok", { duration: 3000 });
       // Let the app keep running by returning an empty result.
       return of(result);
     };
   }
 
-  /** Log a BatchService message with the MessageService */
-  private log(message: string) {
-    console.log(`BatchService: ${message}`);
-  }
 }

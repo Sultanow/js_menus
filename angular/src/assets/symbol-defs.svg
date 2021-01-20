@@ -104,6 +104,11 @@
             <path d="M10.004,30.998l13.996,6.998l13.996,-6.998" style="fill:none;stroke:currentColor;stroke-width:2.8px;" />
             <path d="M10.004,24l13.996,6.998l13.996,-6.998" style="fill:none;stroke:currentColor;stroke-width:2.8px;" />
         </symbol>
+        <symbol id="icon-batchChart">
+            <path d="M24,10.004l-13.996,6.998l13.996,6.998l13.996,-6.998l-13.996,-6.998Z" style="fill:none;stroke:currentColor;stroke-width:2.8px;" />
+            <path d="M10.004,30.998l13.996,6.998l13.996,-6.998" style="fill:none;stroke:currentColor;stroke-width:2.8px;" />
+            <path d="M10.004,24l13.996,6.998l13.996,-6.998" style="fill:none;stroke:currentColor;stroke-width:2.8px;" />
+        </symbol>
         <!-- Confluence-->
         <symbol id="icon-confluence">
             <g>
@@ -303,6 +308,19 @@
             <text x="100" y="48" alignment-baseline="middle" style="font-family:'OpenSans-Semibold', 'Open Sans', sans-serif;font-weight:400;font-size:17px;fill:currentColor;" text-anchor="middle">BATCHES</text>
         </symbol>
         <!-- /Batches -->
+
+        <!-- BatchChart -->
+        <symbol id="icon-batches-new" width="75px">
+            <g>
+                <path d="M10.5363394,0.553284006 L1.16459065,5.02616408 L10.5380031,9.46433283 L20.1227516,5.06244829 L10.5363394,0.553284006 Z" id="oben" fill="currentColor"></path>
+                <polyline id="Path-3" fill="none" points="0 7.00667447 10.6544934 11.9947332 21.3089868 7.00667447"></polyline>
+                <polyline id="Path-3" fill="none" points="0 9.22481258 10.6544934 14.2128713 21.3089868 9.22481258"></polyline>
+            </g>
+        </symbol>
+        <symbol id="icon-batchChart-text">
+            <text x="100" y="48" alignment-baseline="middle" style="font-family:'OpenSans-Semibold', 'Open Sans', sans-serif;font-weight:400;font-size:17px;fill:currentColor;" text-anchor="middle">BATCH-CHART</text>
+        </symbol>
+        <!-- /BatchChart -->
 
         <!-- Environment -->
         <symbol id="icon-environment-new">

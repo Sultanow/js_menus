@@ -10,9 +10,9 @@ public class ZabbixUser {
     private String zabbixUrl;
 
     public ZabbixUser() {
-        username = ConfigurationRepository.getRepo().get("configuration.zabbix.User").getValue();
-        password = ConfigurationRepository.getRepo().get("configuration.zabbix.Password").getValue();
-        zabbixUrl = ConfigurationRepository.getRepo().get("configuration.zabbix.URL").getValue();
+        username = ConfigurationRepository.getRepo().getVal("configuration.zabbix.User");
+        password = ConfigurationRepository.getRepo().getVal("configuration.zabbix.Password");
+        zabbixUrl = ConfigurationRepository.getRepo().getVal("configuration.zabbix.URL");
     }
 
     public ZabbixUser(String user, String pass, String url) {

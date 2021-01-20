@@ -21,7 +21,7 @@ public class TokenGenerator {
      */
     public String generateMapToken(String pass) {
         
-        String currentPassword = ConfigurationRepository.getRepo().get("password").getValue();
+        String currentPassword = ConfigurationRepository.getRepo().getVal("password");
         
         if (pass.equals(currentPassword)) {  
             UUID uuid = UUID.randomUUID();

@@ -36,10 +36,11 @@ public class ZabbixService {
         try {
             boolean loginsuccess = zabbixApi.login(user.getUsername(), user.getPassword());
             if (!loginsuccess) {
+            	LOGGER.info("Zabbix login was not successful");
                 zabbixApi = null;
             }
         } catch (Exception e) {
-            LOGGER.info(e.getMessage() + "\n Zabbix login was not successfully");
+            LOGGER.info(e.getMessage() + "\n Zabbix login was not successful");
             zabbixApi = null;
         }
 
@@ -88,7 +89,7 @@ public class ZabbixService {
         List<String> hostOutputParams = new LinkedList<>();
         hostOutputParams.add("hostid");
         hostOutputParams.add("host");
-        String filterGroup = ConfigurationRepository.getRepo().get("configuration.zabbix.filterGroup").getValue();
+        String filterGroup = ConfigurationRepository.getRepo().getVal("configuration.zabbix.filterGroup");
         if (filterGroup.isEmpty()) {
 
             Request hostRequest = RequestBuilder.newBuilder().method("host.get")

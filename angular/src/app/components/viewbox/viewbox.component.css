@@ -90,7 +90,7 @@ div#view-box {
 div#view-box-content {
   padding-left: 2%;
   padding-right: 2%;
-  height: 90%;
+  height: 80%;
   overflow: scroll;
   overflow-x: hidden;
 }

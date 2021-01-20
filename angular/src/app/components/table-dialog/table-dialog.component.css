@@ -1,0 +1,11 @@
+.mat-dialog-container {
+    background: white;
+    color: black; 
+}
+
+.mat-form-field-label{
+    color:black !important  ;
+  }
+.mat-form-field-underline{
+    background-color:black ;
+  }

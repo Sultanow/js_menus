@@ -23,6 +23,7 @@ export class SouthMenuComponent implements OnInit, OnChanges {
   serverconfigActive: boolean = true;
   compareActive: boolean = true;
   batchesActive: boolean = true;
+  batchChartActive: boolean = true;
 
   openConfig() {
     if (this.compareActive)
@@ -39,11 +40,17 @@ export class SouthMenuComponent implements OnInit, OnChanges {
       this.notifyEventOpen.emit("batches");
   }
 
+  openBatchChart() {
+    if (this.batchChartActive)
+      this.notifyEventOpen.emit("batchChart");
+  }
+
   reloadActiveItems() {
     if (this.activeItems.length !== 0) {
       this.serverconfigActive = false;
       this.compareActive = false;
       this.batchesActive = false;
+      this.batchChartActive = false;
       if (this.activeItems.includes("configoverview")) {
         this.serverconfigActive = true;
       }
@@ -52,11 +59,15 @@ export class SouthMenuComponent implements OnInit, OnChanges {
       }
       if (this.activeItems.includes("batches")) {
         this.batchesActive = true;
+      } 
+      if (this.activeItems.includes("batchChart")) {
+        this.batchChartActive = true;
       }
     } else {
       this.serverconfigActive = true;
       this.compareActive = true;
       this.batchesActive = true;
+      this.batchChartActive = true;
     }
   }
 

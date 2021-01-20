@@ -18,7 +18,7 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.jsmenues.backend.elasticsearch.ElasticsearchConnecter;
+import de.jsmenues.backend.elasticsearch.ElasticsearchConnector;
 import de.jsmenues.backend.elasticsearch.expectedvalue.ExpectedValues;
 import de.jsmenues.backend.elasticsearch.service.HostInformationService;
 
@@ -82,13 +82,13 @@ public class InformationHostDao {
                         String docId = hostid + itemid;
 
                         GetRequest getRequest = new GetRequest(HostInformationService.INDEX, docId);
-                        boolean exists = ElasticsearchConnecter.restHighLevelClient.exists(getRequest,
+                        boolean exists = ElasticsearchConnector.restHighLevelClient.exists(getRequest,
                                 RequestOptions.DEFAULT);
 
                         if (!exists) {
                             IndexRequest indexRequest = new IndexRequest(HostInformationService.INDEX).source(item)
                                     .id(docId);
-                            indexResponse = ElasticsearchConnecter.restHighLevelClient.index(indexRequest,
+                            indexResponse = ElasticsearchConnector.restHighLevelClient.index(indexRequest,
                                     RequestOptions.DEFAULT);
                             LOGGER.info(indexResponse + "\n host information are inserted");
                             numberOfHosts++;
@@ -103,7 +103,7 @@ public class InformationHostDao {
                             if (!getLastValueByKey.equals(actualValue)) {
                                 UpdateRequest updateActualValue = new UpdateRequest(HostInformationService.INDEX, docId)
                                         .doc("lastvalue", actualValue, "lastclock", lastClock,"prevvalue",getLastValueByKey);
-                                UpdateResponse updateResponseActualValue = ElasticsearchConnecter.restHighLevelClient
+                                UpdateResponse updateResponseActualValue = ElasticsearchConnector.restHighLevelClient
                                         .update(updateActualValue, RequestOptions.DEFAULT);
                                 LOGGER.info(updateResponseActualValue.toString());
                                 numberOfHosts++;
@@ -113,7 +113,7 @@ public class InformationHostDao {
                             if (!getExpectedValue.equals(expectedValue)) {
                                 UpdateRequest updateExpectdValue = new UpdateRequest(HostInformationService.INDEX,
                                         docId).doc("expectedvalue", expectedValue);
-                                UpdateResponse updateResponseExpectdValue = ElasticsearchConnecter.restHighLevelClient
+                                UpdateResponse updateResponseExpectdValue = ElasticsearchConnector.restHighLevelClient
                                         .update(updateExpectdValue, RequestOptions.DEFAULT);
                                 LOGGER.info(updateResponseExpectdValue.toString());
                                 numberOfHosts++;
@@ -145,7 +145,7 @@ public class InformationHostDao {
             searchSourceBuilder.size(10000);
             searchRequest.source(searchSourceBuilder);
             searchRequest.scroll(TimeValue.timeValueMinutes(1L));
-            SearchResponse searchResponse = ElasticsearchConnecter.restHighLevelClient.search(searchRequest,
+            SearchResponse searchResponse = ElasticsearchConnector.restHighLevelClient.search(searchRequest,
                     RequestOptions.DEFAULT);
             SearchHit[] searchHits = searchResponse.getHits().getHits();
 
@@ -171,7 +171,7 @@ public class InformationHostDao {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(QueryBuilders.termQuery("hostname", hostName));
         SearchRequest searchRequest = new SearchRequest(HostInformationService.INDEX).source(searchSourceBuilder);
-        SearchResponse response = ElasticsearchConnecter.restHighLevelClient.search(searchRequest,
+        SearchResponse response = ElasticsearchConnector.restHighLevelClient.search(searchRequest,
                 RequestOptions.DEFAULT);
         SearchHit[] searchHits = response.getHits().getHits();
         List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
@@ -274,7 +274,7 @@ public class InformationHostDao {
     public static String deleteHostInformationById(String docId) throws IOException {
         DeleteRequest deleteRequest = new DeleteRequest(HostInformationService.INDEX, docId);
 
-        DeleteResponse deleteResponse = ElasticsearchConnecter.restHighLevelClient.delete(deleteRequest,
+        DeleteResponse deleteResponse = ElasticsearchConnector.restHighLevelClient.delete(deleteRequest,
                 RequestOptions.DEFAULT);
         return deleteResponse.toString();
     }

@@ -77,8 +77,8 @@ class AuthenticationTokensTest extends JerseyTest {
     void isTokenExistInMap() {
         Map<String, Long> tokenMAp;
         TokenGenerator tokenGenerator = new TokenGenerator();
-        when(repo.get("password")).thenReturn(new Configuration("password", "1234"));
-        String pass = ConfigurationRepository.getRepo().get("password").getValue();
+        when(repo.getVal("password")).thenReturn("1234");
+        String pass = ConfigurationRepository.getRepo().getVal("password");
         token1 = tokenGenerator.generateMapToken(pass);
         tokenMAp = AuthenticationTokens.getInstance().getTokens();
         for (String key : tokenMAp.keySet()) {
@@ -96,10 +96,10 @@ class AuthenticationTokensTest extends JerseyTest {
 
         TokenGenerator tokenGenerator = new TokenGenerator();
 
-        when(repo.get("password")).thenReturn(new Configuration("password", "1234"));
+        when(repo.getVal("password")).thenReturn("1234");
         token1 = tokenGenerator.generateMapToken("1234");
         token2 = "YWRtaW46MTIzNDphZGZmZmUxMC00ZTg5LTQ1ZDAtOTkwZC01ZDg1Mjk5MjliYjI=";
-        when(repo.get("password")).thenReturn(new Configuration("password", "1235"));
+        when(repo.getVal("password")).thenReturn("1235");
         token3 = tokenGenerator.generateMapToken("1235");
         tokenMAp1 = AuthenticationTokens.getInstance().getTokens();
         long timestamp1 = tokenMAp1.get(token3);
@@ -114,7 +114,7 @@ class AuthenticationTokensTest extends JerseyTest {
         assertTrue(isValid1);
         assertFalse(isValid2);
         assertFalse(isValid3);
-        assertEquals(result, "is deleted");
+        assertEquals("is deleted", result);
         assertFalse(AuthenticationTokens.getInstance().isValid(token3));
     }
 
@@ -127,7 +127,7 @@ class AuthenticationTokensTest extends JerseyTest {
         String currentPassword = "1234";
         String oldPassword = "1234";
         String newPassword = "1111";
-        when(repo.get("password")).thenReturn(new Configuration("password", currentPassword));
+        when(repo.getVal("password")).thenReturn(currentPassword);
         boolean isChanged = password.changeRootPassword(oldPassword, newPassword);
         assertTrue(isChanged);
     }
@@ -138,7 +138,7 @@ class AuthenticationTokensTest extends JerseyTest {
     @Test
     void setRootPassword() {
         String rootPassword = "1234";
-        when(repo.get("password")).thenReturn(new Configuration("password", "1234"));
+        when(repo.getVal("password")).thenReturn("1234");
         boolean isSaved = Password.setRootPassword(rootPassword);
         assertTrue(isSaved);
     }

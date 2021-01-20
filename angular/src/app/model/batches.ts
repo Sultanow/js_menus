@@ -1,5 +1,5 @@
 export class Batches {
-  id: string;
+  name?: string;
   date: string | Date;
   values?: BatchItem[];
   durationBatch1: number;
@@ -9,4 +9,5 @@ export class Batches {
 export class BatchItem {
   date: string | Date;
   duration: number;
+
 }

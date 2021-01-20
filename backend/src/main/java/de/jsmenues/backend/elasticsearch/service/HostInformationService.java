@@ -15,7 +15,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 
-import de.jsmenues.backend.elasticsearch.ElasticsearchConnecter;
+import de.jsmenues.backend.elasticsearch.ElasticsearchConnector;
 
 public class HostInformationService {
     public static final String INDEX = "host_information";
@@ -32,7 +32,7 @@ public class HostInformationService {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(QueryBuilders.termQuery("hostid", hostId));
         SearchRequest searchRequest = new SearchRequest(INDEX).source(searchSourceBuilder);
-        SearchResponse response = ElasticsearchConnecter.restHighLevelClient.search(searchRequest,
+        SearchResponse response = ElasticsearchConnector.restHighLevelClient.search(searchRequest,
                 RequestOptions.DEFAULT);
         SearchHit[] searchHits = response.getHits().getHits();
 

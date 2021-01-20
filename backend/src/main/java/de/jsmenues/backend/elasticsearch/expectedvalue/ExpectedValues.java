@@ -26,13 +26,13 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.jsmenues.backend.elasticsearch.ElasticsearchConnecter;
+import de.jsmenues.backend.elasticsearch.ElasticsearchConnector;
 import de.jsmenues.backend.elasticsearch.dao.InformationHostDao;
 import de.jsmenues.backend.elasticsearch.service.HostInformationService;
 
 public class ExpectedValues {
     private static Logger LOGGER = LoggerFactory.getLogger(ExpectedValues.class);
-    public static final String INDEX = "expectedvalues";
+	public static final String INDEX = "expected_values";
 
     /**
      * insert expected values in Elasticseach from frontend
@@ -61,10 +61,10 @@ public class ExpectedValues {
         itemMap.put("timestamp", dateTime);
         itemMap.put("hostname", hostName);
         GetRequest getRequest = new GetRequest(INDEX, hostName + "-" + key);
-        boolean exists = ElasticsearchConnecter.restHighLevelClient.exists(getRequest, RequestOptions.DEFAULT);
+        boolean exists = ElasticsearchConnector.restHighLevelClient.exists(getRequest, RequestOptions.DEFAULT);
         if (!exists) {
             IndexRequest indexRequest = new IndexRequest(INDEX).source(itemMap).id(hostName + "-" + key);
-            IndexResponse indexResponse = ElasticsearchConnecter.restHighLevelClient.index(indexRequest,
+            IndexResponse indexResponse = ElasticsearchConnector.restHighLevelClient.index(indexRequest,
                     RequestOptions.DEFAULT);
             LOGGER.info(indexResponse + "\n item is  inserted");
 
@@ -72,7 +72,7 @@ public class ExpectedValues {
             String lastexpectedValue = getExpectedValueByHostnameAndKey(hostName, key);
             if (!lastexpectedValue.equals(expectedValue)) {
                 UpdateRequest updateRequest = new UpdateRequest(INDEX, hostName + "-" + key).doc(itemMap);
-                UpdateResponse updateResponse = ElasticsearchConnecter.restHighLevelClient.update(updateRequest,
+                UpdateResponse updateResponse = ElasticsearchConnector.restHighLevelClient.update(updateRequest,
                         RequestOptions.DEFAULT);
                 LOGGER.info(updateResponse + "\n item is updated");
             }
@@ -80,7 +80,7 @@ public class ExpectedValues {
         IndexRequest indexHistoryRequest = new IndexRequest("history-" + hostName + "-" + key).source(itemMap)
                 .id(unixTime);
 
-        IndexResponse indexResponse = ElasticsearchConnecter.restHighLevelClient.index(indexHistoryRequest,
+        IndexResponse indexResponse = ElasticsearchConnector.restHighLevelClient.index(indexHistoryRequest,
                 RequestOptions.DEFAULT);
         LOGGER.info(indexResponse.toString());
     }
@@ -98,7 +98,7 @@ public class ExpectedValues {
         searchSourceBuilder.size(10000);
         searchRequest.source(searchSourceBuilder);
         searchRequest.scroll(TimeValue.timeValueMinutes(1L));
-        SearchResponse searchResponse = ElasticsearchConnecter.restHighLevelClient.search(searchRequest,
+        SearchResponse searchResponse = ElasticsearchConnector.restHighLevelClient.search(searchRequest,
                 RequestOptions.DEFAULT);
         SearchHit[] searchHits = searchResponse.getHits().getHits();
         List<Map<String, Object>> tempMap = new ArrayList<Map<String, Object>>();

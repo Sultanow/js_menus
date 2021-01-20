@@ -1,12 +1,14 @@
 export class Batch {
-  batchid: string;
+  id: string;
+  name: string;
   duration?: number;
   fk_doku?: string;
   periodizitaet?: string;
   ersterlauf?: string;
   letzterlauf?: string;
   
-  constructor(id: string) {
-    this.batchid = id;
+  constructor(name: string) {
+    this.name = name;
+    this.id = name;
   }
 }

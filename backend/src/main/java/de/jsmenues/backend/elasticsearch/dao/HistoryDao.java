@@ -1,6 +1,6 @@
 package de.jsmenues.backend.elasticsearch.dao;
 
-import de.jsmenues.backend.elasticsearch.ElasticsearchConnecter;
+import de.jsmenues.backend.elasticsearch.ElasticsearchConnector;
 import de.jsmenues.backend.elasticsearch.expectedvalue.ExpectedValues;
 import de.jsmenues.redis.repository.ConfigurationRepository;
 
@@ -33,10 +33,10 @@ import org.slf4j.LoggerFactory;
 public class HistoryDao {
    private static Logger LOGGER = LoggerFactory.getLogger(HistoryDao.class);
    
-   public static String stringNumberOfyears= ConfigurationRepository.getRepo().get("configuration.delete.history.data").getValue();
+   public static String stringNumberOfyears = "2"; //ConfigurationRepository.getRepo().getVal("configuration.delete.history.data");
+   static int numberOfyears = Integer.parseInt(stringNumberOfyears.trim());
 
-   static int  numberOfyears = Integer.parseInt(stringNumberOfyears);
-    public static final long OLD_OF_HISTORY_RECORDS = 60 * 60 * 24 * 30 * 12 * numberOfyears; 
+   public static final long OLD_OF_HISTORY_RECORDS = (long) 60 * 60 * 24 * 30 * 12 * numberOfyears; 
 
     
     /**
@@ -47,6 +47,9 @@ public class HistoryDao {
      */
     public static void insertHistory(List<Map<String, Object>> histories) throws IOException, ParseException {
         int numberOfHistoryRecords = 0; 
+        LOGGER.info("Trying to insertHistory");
+        LOGGER.info("from repo:" + ConfigurationRepository.getRepo().getVal("configuration.delete.history.data" + "||"));
+        LOGGER.info("nryears" + numberOfyears);
         try {
             List<Map<String, Object>> hostsInfo = InformationHostDao.getAllHostInformation();
             insert: for (Map<String, Object> hostInfo : hostsInfo) {
@@ -58,7 +61,7 @@ public class HistoryDao {
                 for (Map<String, Object> history : histories) {
                     Object historyItemid = history.get("itemid");
                     String historyClock = String.valueOf(history.get("clock"));
-                    long longPostHistoryClock = Long.valueOf(historyClock);
+                    long longPostHistoryClock = Long.parseLong(historyClock);
                     Date date = new Date();
                     date.setTime(longPostHistoryClock * 1000);
                     SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -84,21 +87,21 @@ public class HistoryDao {
                         String IndexName = "history-" + hostName + "-" + key;
 
                         GetRequest getRequest = new GetRequest(IndexName, historyClock);
-                        boolean exists = ElasticsearchConnecter.restHighLevelClient.exists(getRequest,
+                        boolean exists = ElasticsearchConnector.restHighLevelClient.exists(getRequest,
                                 RequestOptions.DEFAULT);
                         String hostNameLowCase = hostName.toLowerCase();
                         // save years of OLD_OF_HISTORY_RECORDS
                         if (!exists && (unixTime - longPostHistoryClock < OLD_OF_HISTORY_RECORDS)) {
                             IndexRequest indexRequest = new IndexRequest("history-" + hostNameLowCase + "-" + key)
                                     .source(history).id(historyClock);
-                            IndexResponse indexResponse = ElasticsearchConnecter.restHighLevelClient.index(indexRequest,
+                            IndexResponse indexResponse = ElasticsearchConnector.restHighLevelClient.index(indexRequest,
                                     RequestOptions.DEFAULT);
 
                             ClusterHealthRequest clusterHealthRequest = new ClusterHealthRequest(
                                     "history-" + hostNameLowCase + "-" + key);
                             clusterHealthRequest.waitForGreenStatus();
 
-                            ElasticsearchConnecter.restHighLevelClient.cluster().health(clusterHealthRequest,
+                            ElasticsearchConnector.restHighLevelClient.cluster().health(clusterHealthRequest,
                                     RequestOptions.DEFAULT);
                             numberOfHistoryRecords++;
                             LOGGER.info(
@@ -132,7 +135,7 @@ public class HistoryDao {
         searchSourceBuilder.size(10000);
         searchRequest.source(searchSourceBuilder);
         searchRequest.scroll(TimeValue.timeValueSeconds(30L));
-        SearchResponse searchResponse = ElasticsearchConnecter.restHighLevelClient.search(searchRequest,
+        SearchResponse searchResponse = ElasticsearchConnector.restHighLevelClient.search(searchRequest,
                 RequestOptions.DEFAULT);
         SearchHit[] searchHits = searchResponse.getHits().getHits();
         List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
@@ -181,7 +184,7 @@ public class HistoryDao {
             stringNumberOfyears = "2";
         }
         try {
-            String[] historyIndexNames = ElasticsearchDao.getIdexName("history*");
+            String[] historyIndexNames = ElasticsearchDao.getIndexName("history");
             for (String index : historyIndexNames) {
                 List<Map<String, Object>> AllHistoryRecords = getHistoryRecordsByIndex(index);
                 long unixTime = System.currentTimeMillis() / 1000L;
@@ -191,7 +194,7 @@ public class HistoryDao {
                     if (unixTime - clock > OLD_OF_HISTORY_RECORDS) {
                         DeleteRequest deleteRequest = new DeleteRequest(index, stringClock);
 
-                        deleteResponse = ElasticsearchConnecter.restHighLevelClient.delete(deleteRequest,
+                        deleteResponse = ElasticsearchConnector.restHighLevelClient.delete(deleteRequest,
                                 RequestOptions.DEFAULT);
                     }
                 }

@@ -13,10 +13,19 @@ table#batch-table td, table#batch-table th {
   width: 100%;
 }
 
-.field-input-full-width {
-  width: 30%;
+.editButton {
+  width: 10px !important;
+  height: 10px;
+  min-width: 10px !important;
 }
-
+.mat-icon{
+  font-size: 30px !important;
+  width: 30px !important;
+  height: 30px !important;
+}
+.field-input-full-width {
+  width: 30%; 
+}
 .submit-button-right {
   float: right;
 }

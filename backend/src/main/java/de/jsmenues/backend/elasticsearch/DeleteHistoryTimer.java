@@ -10,7 +10,7 @@ import de.jsmenues.backend.elasticsearch.dao.HistoryDao;
  *
  */
 public class DeleteHistoryTimer {
-    long delay = 24 * 60 * 60 * 1000; // delay in milliseconds-24 hours
+    long delay = (long) 24 * 60 * 60 * 1000; // delay in milliseconds-24 hours
     LoopTask task = new LoopTask();
     Timer timer = new Timer("Synchronization");
 

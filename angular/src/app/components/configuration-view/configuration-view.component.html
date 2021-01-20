@@ -1,17 +1,4 @@
 <div *ngIf="showConfigView">
-    <table class="dashboard-table">
-        <thead>
-            <th>Umgebung</th>
-            <th>Artefakt</th>
-            <th>Wert</th>
-        </thead>
-        <tbody>
-            <tr *ngFor="let c of config">
-                <td>{{c.env}}</td>
-                <td>{{c.key}}</td>
-                <td>{{c.value}}</td>
-            </tr>
-        </tbody>
-    </table>
-
+    <iframe #iFrame src="http://allegro-web.sdst.sbaintern.de/webserverShare/monitoring/monitoringDashboard.html"
+    name="SPU-Monitoring" width="100%" height="300px"></iframe>
 </div>

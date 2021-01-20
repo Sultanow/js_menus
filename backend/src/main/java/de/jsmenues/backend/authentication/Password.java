@@ -15,7 +15,7 @@ public class Password {
     public static boolean setRootPassword(String rootPassword) {
 
         ConfigurationRepository.getRepo().save(new Configuration("password", rootPassword));
-        String currentPassword = ConfigurationRepository.getRepo().get("password").getValue();
+        String currentPassword = ConfigurationRepository.getRepo().getVal("password");
         return rootPassword.equals(currentPassword);
     }
 
@@ -27,7 +27,7 @@ public class Password {
      * @return password is changend true or false
      */
     public static boolean changeRootPassword(String oldPassword, String newPassword) {
-        String currentPassword = ConfigurationRepository.getRepo().get("password").getValue();
+        String currentPassword = ConfigurationRepository.getRepo().getVal("password");
 
         if (currentPassword.equals(oldPassword)) {
             ConfigurationRepository.getRepo().save(new Configuration("password", newPassword));

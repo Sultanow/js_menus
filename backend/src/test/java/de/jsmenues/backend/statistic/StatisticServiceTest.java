@@ -8,9 +8,7 @@ import de.jsmenues.redis.repository.IConfigurationRepository;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.Test;
 
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;

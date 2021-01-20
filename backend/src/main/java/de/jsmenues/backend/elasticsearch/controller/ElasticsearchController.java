@@ -35,7 +35,7 @@ public class ElasticsearchController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getIndexNames(@PathParam("patternindexname") String patternIndexName) throws IOException {
 
-        String[] result = ElasticsearchDao.getIdexName(patternIndexName);
+        String[] result = ElasticsearchDao.getIndexName(patternIndexName);
         return Response.ok(result).build();
     }
 
@@ -50,7 +50,7 @@ public class ElasticsearchController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getHistoryIndexNames() throws IOException {
 
-        String[] result = ElasticsearchDao.getIdexName("history-*");
+        String[] result = ElasticsearchDao.getIndexName("history-*");
         return Response.ok(result).build();
     }
 

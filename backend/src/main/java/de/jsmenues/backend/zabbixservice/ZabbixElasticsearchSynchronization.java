@@ -36,14 +36,13 @@ public class ZabbixElasticsearchSynchronization {
 
         public void run() {
             if (!stopSynchronization) {
-
                 LOGGER.info("Synchronization is starting");
                 ZabbixService zabbixService = new ZabbixService();
                 List<Map<String, List<Object>>> allHostsInfo = zabbixService.getHostInfos();
                 List<Map<String, Object>> histories = zabbixService.getHistory();
                 List<Map<String, Object>> allHosts = zabbixService.getAllHosts();
-                if (allHostsInfo == null && histories == null) {
-                    LOGGER.info("there is not right connection with zabbix");
+                if (allHostsInfo == null || histories == null) {
+                    LOGGER.info("there is not correct connection with zabbix, hosts or histories was null");
                     return;
                 }
 
@@ -55,6 +54,11 @@ public class ZabbixElasticsearchSynchronization {
                 }
 
                 try {
+                	LOGGER.debug("Begin insert from zabbix");
+                	LOGGER.debug("allHostInfo" + allHostsInfo.toString());
+                	LOGGER.debug("allHost" + allHosts.toString());
+                	LOGGER.debug("histories" + histories.toString());
+                	
                     InformationHostDao.insertAllHostInformation(allHostsInfo);
                     HostsDao.insertAllHosts(allHosts);
                     HistoryDao.insertHistory(histories);

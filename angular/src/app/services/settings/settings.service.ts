@@ -34,6 +34,10 @@ export class SettingsService {
     return this.http.get(`${this.backendUrl}/title`, { responseType: "text" });
   }
 
+  getTableStructure(): Observable<any> {
+    return this.http.get(`${this.backendUrl}/table/structure`, { responseType: "text" });
+  }
+
   getSVGLogo(): Observable<any> {
     return this.http.get(`${this.backendUrl}/logo`, { responseType: "text" });
   }

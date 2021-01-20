@@ -47,7 +47,6 @@ export class SettingsComponent implements OnInit {
       this.titleService.setTitle(this.globalTitle);
 
     });
-
   }
 
   reloadData() {
@@ -79,6 +78,9 @@ export class SettingsComponent implements OnInit {
     if (changedSettings.length === 0) {
       console.log("No changed settings");
       return;
+    }
+    else {
+      console.log("Changed settings: ", changedSettings)
     }
     this.settingsService.updateSettings(changedSettings).subscribe(data => {
       console.log(data);

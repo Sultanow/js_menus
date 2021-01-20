@@ -41,7 +41,13 @@ import { MaterialModule } from './material.module';
 import { StatisticModule } from './modules/statistic/statistic.module';
 import { IconHelperModule } from './modules/icon-helper/icon-helper.module';
 import { AllkeysComponent } from './components/compare/allkeys/allkeys.component';
-import { HistorybetweentowdatesComponent } from './components/compare/historybetweentowdates/historybetweentowdates.component'; 
+import { HistorybetweentowdatesComponent } from './components/compare/historybetweentowdates/historybetweentowdates.component';
+import { BatchChartsComponent } from './components/batch-charts/batch-charts.component';
+import { ChartDependenciesComponent } from './components/chart-dependencies/chart-dependencies.component';
+import { ChartNodepsComponent } from './components/chart-nodeps/chart-nodeps.component';
+import { SearchComponent } from './components/search/search.component';
+import { TableDialogComponent } from './components/table-dialog/table-dialog.component';
+import { BatchInfoDialogComponent } from './components/batch-info-dialog/batch-info-dialog.component'; 
 
 
 @NgModule({
@@ -73,6 +79,12 @@ import { HistorybetweentowdatesComponent } from './components/compare/historybet
     SpinnerComponent,
     AllkeysComponent,
     HistorybetweentowdatesComponent,
+    BatchChartsComponent,
+    ChartDependenciesComponent,
+    ChartNodepsComponent,
+    SearchComponent,
+    TableDialogComponent,
+    BatchInfoDialogComponent,
 
   ],
   imports: [
@@ -96,7 +108,7 @@ import { HistorybetweentowdatesComponent } from './components/compare/historybet
   ],
   bootstrap: [ AppComponent ],
 
-  entryComponents: [ EditDialog, DependencyChartsComponent, AuthenticationComponent]
+  entryComponents: [ EditDialog, DependencyChartsComponent, AuthenticationComponent, TableDialogComponent]
 
 })
 export class AppModule { }

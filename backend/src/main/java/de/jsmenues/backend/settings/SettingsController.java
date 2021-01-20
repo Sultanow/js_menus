@@ -27,7 +27,9 @@ public class SettingsController {
             "configuration.zabbix.Password", "configuration.zabbix.URL", "configuration.zabbix.filterGroup",
             "configuration.zabbix.items", "configuration.frontend.title", "configuration.frontend.logo",
             "configuration.dummy.statuswarning", "configuration.servercompare.config", "configuration.activeitems", 
-            "configuration.delete.history.data"));
+            "configuration.delete.history.data",
+            "configuration.tabelle.struktur"
+            ));
 
     @RolesAllowed("ADMIN")
     @GET
@@ -55,16 +57,27 @@ public class SettingsController {
     @Path("/title")
     @Produces(MediaType.TEXT_PLAIN)
     public Response getTitle() {
-        String siteTitle = ConfigurationRepository.getRepo().get("configuration.frontend.title").getValue();
+        String siteTitle = ConfigurationRepository.getRepo().getVal("configuration.frontend.title");
 
         return Response.ok(siteTitle).build();
     }
+    
+    @PermitAll
+    @GET
+    @Path("/table/structure")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response getTableStructure() {
+        String siteTitle = ConfigurationRepository.getRepo().getVal("configuration.tabelle.struktur");
+
+        return Response.ok(siteTitle).build();
+    }
+
 
     @RolesAllowed("ADMIN")
     @POST
     @Path("/title")
     public Response setTitle(String title) {
-        ConfigurationRepository.getRepo().save(new Configuration("configuration.frontend.title", title));
+        ConfigurationRepository.getRepo().save("configuration.frontend.title", title);
         return Response.ok().build();
     }
 
@@ -72,7 +85,7 @@ public class SettingsController {
     @GET
     @Path("/logo")
     public Response getLogoSVG() {
-        String siteLogo = ConfigurationRepository.getRepo().get("configuration.frontend.logo").getValue();
+        String siteLogo = ConfigurationRepository.getRepo().getVal("configuration.frontend.logo");
         return Response.ok(siteLogo).build();
     }
 
@@ -80,7 +93,7 @@ public class SettingsController {
     @POST
     @Path("/logo")
     public Response setLogo(String logo) {
-        ConfigurationRepository.getRepo().save(new Configuration("configuration.frontend.logo", logo));
+        ConfigurationRepository.getRepo().save("configuration.frontend.logo", logo);
         return Response.ok().build();
     }
 
@@ -88,6 +101,7 @@ public class SettingsController {
     @GET
     @Path("/getAllConfig")
     public Response getAllConfig() {
+    	LOGGER.info("called getAllConfig");
         List<Configuration> items = ConfigurationRepository.getRepo().getAll(allConfigurationItems);
         Gson jsonItems = new Gson();
         String returnItems = jsonItems.toJson(items);
@@ -103,7 +117,7 @@ public class SettingsController {
         IConfigurationRepository repo = ConfigurationRepository.getRepo();
         for (SettingItem settingItem : config) {
             LOGGER.error(settingItem.toString());
-            repo.save(new Configuration(settingItem.getKey(), settingItem.getValue()));
+            repo.save(settingItem.getKey(), settingItem.getValue());
         }
         return Response.ok().build();
     }
@@ -112,7 +126,7 @@ public class SettingsController {
     @GET
     @Path("/dummyStatusWarnings")
     public Response getDummyStatusWarnings() {
-        String value = ConfigurationRepository.getRepo().get("configuration.dummy.statuswarning").getValue();
+        String value = ConfigurationRepository.getRepo().getVal("configuration.dummy.statuswarning");
         return Response.ok(value).build();
     }
 
@@ -120,7 +134,7 @@ public class SettingsController {
     @GET
     @Path("/servercompareconfig")
     public Response getServerCompareConfig() {
-        String value = ConfigurationRepository.getRepo().get("configuration.servercompare.config").getValue();
+        String value = ConfigurationRepository.getRepo().getVal("configuration.servercompare.config");
         return Response.ok(value).build();
     }
 
@@ -143,7 +157,8 @@ public class SettingsController {
     @GET
     @Path("/activeItems")
     public Response getActiveItems() {
-        String value = ConfigurationRepository.getRepo().get("configuration.activeitems").getValue();
+        String value = ConfigurationRepository.getRepo().getVal("configuration.activeitems");
         return Response.ok(value).build();
     }
+
 }

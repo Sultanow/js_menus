@@ -1,0 +1,9 @@
+* {
+    background-color: white;
+    color: black;
+}
+
+::ng-deep.mat-dialog-container {
+    background: white;
+    color: black;
+}

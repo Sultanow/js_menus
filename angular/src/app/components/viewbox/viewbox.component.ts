@@ -20,6 +20,7 @@ export class ViewboxComponent implements OnInit {
   showCompare: boolean = false;
   showStatistic: boolean = false;
   showBatches: boolean = false;
+  showBatchChart: boolean = false;
   showDependency: boolean = false;
   showNews: boolean = false;
   showWarnings: boolean = false;
@@ -53,6 +54,8 @@ export class ViewboxComponent implements OnInit {
       this.showStatistic = true;
     } else if (view === "batches") {
       this.showBatches = true;
+    } else if (view === "batchChart") {
+      this.showBatchChart = true;
     } else if (view === "dependency") {
       this.showDependency = true;
     } else if (view === "news") {
@@ -76,6 +79,7 @@ export class ViewboxComponent implements OnInit {
     this.showCompare = false;
     this.showStatistic = false;
     this.showBatches = false;
+    this.showBatchChart = false;
     this.showDependency = false;
     this.showNews = false;
     this.showWarnings = false;

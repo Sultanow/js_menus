@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.StringTokenizer;
 import javax.annotation.Priority;
@@ -22,6 +23,10 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.jsmenues.backend.settings.SettingsController;
 import de.jsmenues.redis.repository.ConfigurationRepository;
 
 import javax.ws.rs.Priorities;
@@ -34,7 +39,7 @@ import javax.ws.rs.Priorities;
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationFilter implements ContainerRequestFilter {
     javax.inject.Provider<UriInfo> uriInfo;
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationFilter.class);
     @Context
     private ResourceInfo resourceInfo;
     private static final String AUTHORIZATION_PROPERTY = "Authorization";
@@ -75,19 +80,27 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             String usernameAndPassword = new String(Base64.getDecoder().decode(encodedUserPassword.getBytes()));
 
             final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
-            final String username = tokenizer.nextToken();
-            final String password = tokenizer.nextToken();
+            try {            	
+            	final String username = tokenizer.nextToken();
+            	final String password = tokenizer.nextToken();
+            	
+                // is user valid?
+                if (method.isAnnotationPresent(RolesAllowed.class)) {
+                    RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
+                    Set<String> rolesSet = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
 
-            // is user valid?
-            if (method.isAnnotationPresent(RolesAllowed.class)) {
-                RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
-                Set<String> rolesSet = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
-
-                if (!isUserAllowed(username, password, rolesSet)) {
-                    requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
-                            .entity("You cannot access this resource").build());
-                    return;
+                    if (!isUserAllowed(username, password, rolesSet)) {
+                        requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
+                                .entity("You cannot access this resource").build());
+                        return;
+                    }
                 }
+            }
+            catch (NoSuchElementException e){
+            	LOGGER.error("No Token in username/password, usernameAndPassword:" + usernameAndPassword);
+            	LOGGER.error(e.getMessage());
+                requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
+                        .entity("You cannot access this resource, username/password not found").build());
             }
         }
         User user = new User(USER_ADMIN, "ADMIN");
@@ -105,7 +118,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
      */
     public boolean isUserAllowed(final String username, final String password, final Set<String> rolesSet) {
         boolean isAllowed = false;
-        String pass = ConfigurationRepository.getRepo().get("password").getValue();
+        String pass = ConfigurationRepository.getRepo().getVal("password");
         if (username.equals(USER_ADMIN) && password.equals(pass)) {
 
             if (rolesSet.contains(USER_ROLE_ADMIN)) {

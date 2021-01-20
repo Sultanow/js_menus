@@ -72,14 +72,13 @@ public class AuthenticationControllerTest extends JerseyTest {
      */
     @Test
     void loginTest() {
-
-        when(repo.get("password")).thenReturn(new Configuration("password", "1234"));
-        String pass = ConfigurationRepository.getRepo().get("password").getValue();
+        when(repo.getVal("password")).thenReturn("1234");
+        String pass = ConfigurationRepository.getRepo().getVal("password");
 
         Response loginResponse = target("/authentication/login").request()
                 .post(Entity.entity(pass, MediaType.TEXT_PLAIN));
         String token = loginResponse.readEntity(String.class);
-
+        System.out.println(token);
         Response isValidResponse = target("/authentication/isvalid").request()
                 .post(Entity.entity(token, MediaType.TEXT_PLAIN));
         boolean isValid = Boolean.parseBoolean(isValidResponse.readEntity(String.class));
@@ -92,8 +91,8 @@ public class AuthenticationControllerTest extends JerseyTest {
      */
     @Test
     void changePasswordTest() {
-        when(repo.get("password")).thenReturn(new Configuration("password", "1234"));
-        String oldPass = ConfigurationRepository.getRepo().get("password").getValue();
+        when(repo.getVal("password")).thenReturn("1234");
+        String oldPass = ConfigurationRepository.getRepo().getVal("password");
         String newPass = "1111";
 
         ChangePassword changePassword = new ChangePassword(oldPass, newPass);

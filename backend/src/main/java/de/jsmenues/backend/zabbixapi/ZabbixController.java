@@ -55,7 +55,7 @@ public class ZabbixController {
         List<String> hostOutputParams = new LinkedList<>();
         hostOutputParams.add("hostid");
         hostOutputParams.add("host");
-        String filterGroup = ConfigurationRepository.getRepo().get("configuration.zabbix.filterGroup").getValue();
+        String filterGroup = ConfigurationRepository.getRepo().getVal("configuration.zabbix.filterGroup");
         if (filterGroup.isEmpty()) {
             Request hostRequest = RequestBuilder.newBuilder().method("host.get")
                     .paramEntry("output", hostOutputParams.toArray()).build();
@@ -108,7 +108,7 @@ public class ZabbixController {
     }
 
     private void removeNotNeededInformationFromResult(JsonNode information) {
-        String item = ConfigurationRepository.getRepo().get("configuration.zabbix.items").getValue();
+        String item = ConfigurationRepository.getRepo().getVal("configuration.zabbix.items");
         String[] items = item.split(",");
     }
 

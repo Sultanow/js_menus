@@ -15,7 +15,7 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.jsmenues.backend.elasticsearch.ElasticsearchConnecter;
+import de.jsmenues.backend.elasticsearch.ElasticsearchConnector;
 import de.jsmenues.backend.elasticsearch.service.HostInformationService;
 
 import java.io.IOException;
@@ -39,9 +39,9 @@ public class HostsDao {
             String hostId = String.valueOf( host.get("hostid"));
             IndexRequest indexRequest = new IndexRequest(INDEX).source(host).id(hostId);
             GetRequest getRequest = new GetRequest(INDEX, hostId);
-            boolean exists = ElasticsearchConnecter.restHighLevelClient.exists(getRequest, RequestOptions.DEFAULT);
+            boolean exists = ElasticsearchConnector.restHighLevelClient.exists(getRequest, RequestOptions.DEFAULT);
             if (!exists) {
-                indexResponse = ElasticsearchConnecter.restHighLevelClient.index(indexRequest,
+                indexResponse = ElasticsearchConnector.restHighLevelClient.index(indexRequest,
                         RequestOptions.DEFAULT);
                 LOGGER.info(indexResponse + "\n host are inserted");
             } 
@@ -64,7 +64,7 @@ public class HostsDao {
         searchRequest.source(searchSourceBuilder);
         searchRequest.scroll(TimeValue.timeValueSeconds(30L));
 
-        SearchResponse response = ElasticsearchConnecter.restHighLevelClient.search(searchRequest,
+        SearchResponse response = ElasticsearchConnector.restHighLevelClient.search(searchRequest,
                 RequestOptions.DEFAULT);
         SearchHit[] searchHits = response.getHits().getHits();
         List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
@@ -104,7 +104,7 @@ public class HostsDao {
     public static String deleteHostById(String hostId) throws IOException {
 
         DeleteRequest deleteRequest = new DeleteRequest(INDEX, hostId);
-        DeleteResponse deleteResponse = ElasticsearchConnecter.restHighLevelClient.delete(deleteRequest,
+        DeleteResponse deleteResponse = ElasticsearchConnector.restHighLevelClient.delete(deleteRequest,
                 RequestOptions.DEFAULT);
         return deleteResponse.toString();
     }
@@ -117,7 +117,7 @@ public class HostsDao {
      */
     public static String deleteHostInfoById(String hostId) throws IOException {
         DeleteRequest deleteRequestInfo = new DeleteRequest(HostInformationService.INDEX, hostId);
-        DeleteResponse deleteResponse = ElasticsearchConnecter.restHighLevelClient.delete(deleteRequestInfo,
+        DeleteResponse deleteResponse = ElasticsearchConnector.restHighLevelClient.delete(deleteRequestInfo,
                 RequestOptions.DEFAULT);
         return deleteResponse.toString();
     }

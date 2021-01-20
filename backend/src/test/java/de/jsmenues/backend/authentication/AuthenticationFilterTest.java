@@ -68,7 +68,7 @@ public class AuthenticationFilterTest extends JerseyTest {
     }
 
     /**
-     * Test if user is allwoed to access
+     * Test if user is allowed to access
      */
     @Test
     void isUserAllowedTest() {
@@ -76,8 +76,8 @@ public class AuthenticationFilterTest extends JerseyTest {
         AuthenticationFilter authenticationFilter = new AuthenticationFilter();
 
         String username = "admin";
-        when(repo.get("password")).thenReturn(new Configuration("password", "1234"));
-        String pass = ConfigurationRepository.getRepo().get("password").getValue();
+        when(repo.getVal("password")).thenReturn("1234");
+        String pass = ConfigurationRepository.getRepo().getVal("password");
 
         Set<String> rolesSet = new HashSet<String>();
         rolesSet.add("ADMIN");
