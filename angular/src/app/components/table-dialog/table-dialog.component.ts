@@ -12,20 +12,22 @@ export class TableDialogComponent implements OnInit {
 
 
   form: FormGroup;
-  description:string;
+  description: string;
+  batchName: string;
   fields: string[];
   colName: string;
   currentBatch: any;
 
   constructor(
-      private dialogRef: MatDialogRef<TableDialogComponent>,
-      private fb: FormBuilder,
-      @Inject(MAT_DIALOG_DATA) data) {
+    private dialogRef: MatDialogRef<TableDialogComponent>,
+    private fb: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) data) {
 
-      this.description = data.batchData.Batch.Name + ": " + data.tableElem.Spaltenname;
-      this.colName = data.tableElem.Spaltenname
-      this.fields = data.tableElem.Felder;
-      this.currentBatch = data.batchData;
+    //this.description = data.batchData.Batch.Name + ": " + data.tableElem.Spaltenname;
+    this.batchName = data.batchData.Batch.Name;
+    this.colName = data.tableElem.Spaltenname
+    this.fields = data.tableElem.Felder;
+    this.currentBatch = data.batchData;
   }
 
   ngOnInit() {
@@ -33,11 +35,11 @@ export class TableDialogComponent implements OnInit {
   }
 
   save() {
-      this.dialogRef.close(this.form.value);
+    this.dialogRef.close(this.form.value);
   }
 
   close() {
-      this.dialogRef.close();
+    this.dialogRef.close();
   }
 
   getGroup() {
