@@ -47,7 +47,30 @@ import { ChartDependenciesComponent } from './components/chart-dependencies/char
 import { ChartNodepsComponent } from './components/chart-nodeps/chart-nodeps.component';
 import { SearchComponent } from './components/search/search.component';
 import { TableDialogComponent } from './components/table-dialog/table-dialog.component';
-import { BatchInfoDialogComponent } from './components/batch-info-dialog/batch-info-dialog.component'; 
+import { BatchInfoDialogComponent } from './components/batch-info-dialog/batch-info-dialog.component';
+import { LayoutModule } from '@angular/cdk/layout';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { NavigationComponent } from './components/navigation/navigation.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule } from '@angular/material/menu'; 
+import { Routes, RouterModule } from '@angular/router';
+
+const appRoutes: Routes = [
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+  },
+  {
+    path: 'legacy',
+    component: AppComponent,
+  }
+]
 
 
 @NgModule({
@@ -85,10 +108,13 @@ import { BatchInfoDialogComponent } from './components/batch-info-dialog/batch-i
     SearchComponent,
     TableDialogComponent,
     BatchInfoDialogComponent,
+    NavigationComponent,
+    DashboardComponent,
 
   ],
   imports: [
     BrowserModule,
+    RouterModule.forRoot(appRoutes),
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
@@ -96,7 +122,16 @@ import { BatchInfoDialogComponent } from './components/batch-info-dialog/batch-i
     TreetableModule,
     MaterialModule,
     StatisticModule,
-    IconHelperModule
+    IconHelperModule,
+    LayoutModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatListModule,
+    MatGridListModule,
+    MatCardModule,
+    MatMenuModule
   ],
   providers: [
     DetailsComponent,
@@ -106,7 +141,7 @@ import { BatchInfoDialogComponent } from './components/batch-info-dialog/batch-i
       multi:true
     },
   ],
-  bootstrap: [ AppComponent ],
+  bootstrap: [ NavigationComponent ],
 
   entryComponents: [ EditDialog, DependencyChartsComponent, AuthenticationComponent, TableDialogComponent]
 

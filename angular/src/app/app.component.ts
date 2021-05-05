@@ -9,11 +9,11 @@ import { AuthenticationService } from './services/authentication/authentication.
 import { AuthenticationComponent } from './components/authentication/authentication.component';
 
 @Component({
-	selector: 'app-root',
+	// Mark this component as obsolete for now.
+	selector: 'app-root-legacy',
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.css']
 })
-
 export class AppComponent implements OnInit {
 	title = 'angular-radial-menu';
 	// Animations
