@@ -61,6 +61,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu'; 
 import { Routes, RouterModule } from '@angular/router';
 import { MatBadgeModule } from '@angular/material/badge';
+import { NewsDisplayComponent } from './components/news-display/news-display.component';
+import { MaterialPasswordFieldComponent } from './components/material-password-field/material-password-field.component';
 
 const appRoutes: Routes = [
   {
@@ -111,6 +113,8 @@ const appRoutes: Routes = [
     BatchInfoDialogComponent,
     NavigationComponent,
     DashboardComponent,
+    NewsDisplayComponent,
+    MaterialPasswordFieldComponent,
 
   ],
   imports: [

@@ -67,8 +67,11 @@ export class AppComponent implements OnInit {
 		private snackBar: MatSnackBar,
 		private settingsService: SettingsService,
 		private titleService: Title,
-		public dialog: MatDialog) {
-		if (/MSIE |Trident\//.test(window.navigator.userAgent)) { window.location.replace("unsupported.html"); }
+		public dialog: MatDialog
+	) {
+		if (/MSIE |Trident\//.test(window.navigator.userAgent)) { 
+			window.location.replace("unsupported.html"); 
+		}
 	}
 	updateTitle() {
 		this.settingsService.getTitel().subscribe(title => {
@@ -260,7 +263,7 @@ export class AppComponent implements OnInit {
 		}
 	}
 
-	checkPasswordDialog() {
+	openPasswordDialog() {
 		let isValid = false;
 		this.authenticationService.getIsValid().subscribe(data => {
 			isValid = data.toLowerCase() == "true";
@@ -275,11 +278,11 @@ export class AppComponent implements OnInit {
 					if (result == null) {
 						return;
 					}
-					if (result) {
+					if (result === true) {
 						this.openSettings();
 						this.snackBar.open("Anmeldung erfolgreich", "Done", { duration: 3000 });
 					} else {
-						this.snackBar.open("Password ist Falsch", "", { duration: 3000 });
+						this.snackBar.open("Password ist falsch", "", { duration: 3000 });
 					}
 				});
 			}

@@ -12,16 +12,17 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class ChangePasswordComponent implements OnInit {
 
   changePasswordForm: FormGroup;
-  //hide is only used in HTML. Additionally typing here.
-  hide = true;
+
+  hidePassword: boolean = true;
 
   constructor(
     private snackBar: MatSnackBar,
     public dialog: MatDialog,
-    private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<ChangePasswordComponent>,
-    private authenticationService: AuthenticationService) {
-    this.changePasswordForm = this.formBuilder.group({
+    private authenticationService: AuthenticationService,
+    formBuilder: FormBuilder,
+  ) {
+    this.changePasswordForm = formBuilder.group({
       oldPassword: ['', [Validators.required]],
       newPassword: ['', [Validators.required]],
       confirmPassword: ['', [Validators.required]]
@@ -30,6 +31,14 @@ export class ChangePasswordComponent implements OnInit {
 
   cancel() {
     this.dialogRef.close(null);
+  }
+
+  changePasswordWithFormData(): void {
+    let oldPassword: string = this.changePasswordForm.get("oldPassword").value;
+    let newPassword: string = this.changePasswordForm.get("newPassword").value;
+    let confirmPassword: string = this.changePasswordForm.get("confirmPassword").value;
+
+    return this.changePassword(oldPassword, newPassword, confirmPassword);
   }
 
   changePassword(oldPassword: string, newPassword: string, confirmPassword: string) {

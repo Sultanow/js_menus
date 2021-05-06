@@ -10,10 +10,9 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
   styleUrls: ['./authentication.component.css']
 })
 export class AuthenticationComponent implements OnInit {
-
   loginForm: FormGroup;
-  //hide is only used in HTML. Additionally typing here.
-  hide = true;
+  
+  hidePassword: boolean = true;
 
   constructor(
     private formBuilder: FormBuilder,

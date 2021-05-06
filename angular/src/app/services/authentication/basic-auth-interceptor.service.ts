@@ -5,20 +5,22 @@ import { AuthenticationService } from './authentication.service';
 
 @Injectable()
 export class BasicAuthInterceptorService implements HttpInterceptor {
-  constructor(private injector : Injector){}
-  intercept(req: HttpRequest<HttpInterceptor>, next: HttpHandler): Observable<HttpEvent<HttpInterceptor>> {
+  constructor(private injector : Injector) { }
+
+  intercept(req: HttpRequest<HttpInterceptor>, next: HttpHandler): 
+    Observable<HttpEvent<HttpInterceptor>> {
    
     const authenticationService = this.injector.get(AuthenticationService);
-    if(authenticationService) {
+    if(authenticationService && authenticationService.getToken() != null) {
       const cloned = req.clone({
          setHeaders:{
            Authorization: `Basic ${authenticationService.getToken()}`
          }
       });
      return next.handle(cloned);
-   }
-    else{
-      next.handle(req);
+    }
+    else {
+      return next.handle(req);
     }
  }  
 }
