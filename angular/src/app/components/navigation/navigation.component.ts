@@ -22,7 +22,7 @@ export class NavigationComponent {
     },
     {
       name: "Lieferungen",
-      route: "Deliveries",
+      route: "deliveries",
     },
     {
       name: "Batchmanagement",
