@@ -23,13 +23,13 @@ import static org.mockito.Mockito.*;
 
 public class StatisticServiceTest {
     private final HttpClient httpClient = mock(HttpClient.class, RETURNS_DEEP_STUBS);
-    private final IConfigurationRepository configurationRepository = mock(IConfigurationRepository.class);
+    private final IConfigurationRepository configurationRepository = spy(new ConfigurationRepositoryMock());
+    
     private final StatisticService service = new StatisticService(httpClient, configurationRepository);
-    IConfigurationRepository repoMock = spy(new ConfigurationRepositoryMock());
 
     @BeforeEach
     public void setUp() {
-        setRedisMock(repoMock);
+        setRedisMock(configurationRepository);
     }
 
     @AfterEach
@@ -152,14 +152,14 @@ public class StatisticServiceTest {
 //given
         initDeprecatedChartNames();
         initMockSuccessResponseFromPythonService();
-        repoMock.save("statistic.chart.OldChart1.script", "testScript.py");
+        configurationRepository.save("statistic.chart.OldChart1.script", "testScript.py");
         FormDataContentDisposition metaData = FormDataContentDisposition.name("testData").fileName("test.xlsx").build();
         //when
         service.updateData("OldChart1", new ByteArrayInputStream(new byte[0]), metaData);
         //then
         assertEquals(
                 "[{\"groupName\":\"Test\",\"charts\":{\"OldChart1\":{\"accuracy\":\"none\",\"timeseries\":false,\"multiple\":false,\"scriptName\":\"testScript.py\",\"description\":\"\",\"dbName\":\"\"}}}]",
-                repoMock.getVal("statistic.allChartNames")
+                configurationRepository.getVal("statistic.allChartNames")
         );
     }
 
@@ -221,14 +221,14 @@ public class StatisticServiceTest {
         boolean result = service.updateData("NoScriptTest", new ByteArrayInputStream(new byte[0]), metaData);
         //then
         assertTrue(result);
-        assertEquals("", repoMock.getVal("statistic.chart.NoScriptTest.script"));
+        assertEquals("", configurationRepository.getVal("statistic.chart.NoScriptTest.script"));
     }
 
     // Get all GroupNames
     @Test
     public void getAllGroupNamesWithEmptyDB() {
         //given
-        when(repoMock.getVal("statistic.allChartNames")).thenReturn("");
+        when(configurationRepository.getVal("statistic.allChartNames")).thenReturn("");
         //when
         String result = service.getAllGroupNames();
         //then
@@ -253,7 +253,7 @@ public class StatisticServiceTest {
         //when
         service.deleteChart("Chart1");
         //then
-        String groups = repoMock.getVal("statistic.allChartNames");
+        String groups = configurationRepository.getVal("statistic.allChartNames");
         assertFalse(groups.matches("Chart1"));
     }
 
@@ -351,7 +351,7 @@ public class StatisticServiceTest {
         //given
         initDefaultChartNames();
         String configValue = "{\"title\":\"Anwenderzahlen\",\"traces\":[{\"x\":[\"05:00:00\",\"23:00:00\"],\"y\":[1833.0,46.0],\"mode\":\"lines\",\"type\":\"scatter\",\"name\":\"2020-05-04\",\"line\":{\"width\":2},\"connectgaps\":true,\"hoverinfo\":\"x+y+text\"}],\"layout\":{\"xaxis\":{\"showline\":true,\"showgrid\":true,\"showticklabels\":true,\"linewidth\":2},\"yaxis\":{\"showgrid\":true,\"zeroline\":true,\"showline\":true,\"showticklabels\":true},\"autosize\":true,\"margin\":{\"autoexpand\":true,\"l\":100,\"r\":20,\"t\":110},\"showlegend\":true,\"title\":\"Anwenderzahlen\",\"separators\":\".,\"},\"updateTime\":\"27.06.2020(21:49)\"}";
-        repoMock.save("statistic.chart.Chart1.data", configValue);
+        configurationRepository.save("statistic.chart.Chart1.data", configValue);
         //when
         String responseMsg = service.getChartDataForName("Chart1", null, false);
         //then
@@ -472,31 +472,31 @@ public class StatisticServiceTest {
 
 
     private void initTimeseriesChartNoMultiple() {
-        repoMock.save("statistic.chart.Timenotmultiple.title", "Timenotmultiple");
-        repoMock.save("statistic.chart.Timenotmultiple.updateTime", "time");
-        repoMock.save("statistic.chart.Timenotmultiple.layout", "{}");
-        repoMock.save("statistic.chart.Timenotmultiple.savedTimes", "[\"2020-05-04\",\"2020-05-07\",\"2020-05-08\",\"2020-05-05\",\"2020-05-06\",\"2020-05-09\",\"2020-05-10\"]");
-        repoMock.save("statistic.chart.Timenotmultiple.data.2020-05-04", "[{\"Date\": \"04\"}]");
-        repoMock.save("statistic.chart.Timenotmultiple.data.2020-05-05", "[{\"Date\": \"05\"}]");
-        repoMock.save("statistic.chart.Timenotmultiple.data.2020-05-06", "[{\"Date\": \"06\"}]");
-        repoMock.save("statistic.chart.Timenotmultiple.data.2020-05-07", "[{\"Date\": \"07\"}]");
-        repoMock.save("statistic.chart.Timenotmultiple.data.2020-05-08", "[{\"Date\": \"08\"}]");
-        repoMock.save("statistic.chart.Timenotmultiple.data.2020-05-09", "[{\"Date\": \"09\"}]");
-        repoMock.save("statistic.chart.Timenotmultiple.data.2020-05-10", "[{\"Date\": \"10\"}]");
+        configurationRepository.save("statistic.chart.Timenotmultiple.title", "Timenotmultiple");
+        configurationRepository.save("statistic.chart.Timenotmultiple.updateTime", "time");
+        configurationRepository.save("statistic.chart.Timenotmultiple.layout", "{}");
+        configurationRepository.save("statistic.chart.Timenotmultiple.savedTimes", "[\"2020-05-04\",\"2020-05-07\",\"2020-05-08\",\"2020-05-05\",\"2020-05-06\",\"2020-05-09\",\"2020-05-10\"]");
+        configurationRepository.save("statistic.chart.Timenotmultiple.data.2020-05-04", "[{\"Date\": \"04\"}]");
+        configurationRepository.save("statistic.chart.Timenotmultiple.data.2020-05-05", "[{\"Date\": \"05\"}]");
+        configurationRepository.save("statistic.chart.Timenotmultiple.data.2020-05-06", "[{\"Date\": \"06\"}]");
+        configurationRepository.save("statistic.chart.Timenotmultiple.data.2020-05-07", "[{\"Date\": \"07\"}]");
+        configurationRepository.save("statistic.chart.Timenotmultiple.data.2020-05-08", "[{\"Date\": \"08\"}]");
+        configurationRepository.save("statistic.chart.Timenotmultiple.data.2020-05-09", "[{\"Date\": \"09\"}]");
+        configurationRepository.save("statistic.chart.Timenotmultiple.data.2020-05-10", "[{\"Date\": \"10\"}]");
     }
 
     private void initTimeseriesChartMultiple() {
-        repoMock.save("statistic.chart.TimeMultiple.title", "TimeMultiple");
-        repoMock.save("statistic.chart.TimeMultiple.updateTime", "time");
-        repoMock.save("statistic.chart.TimeMultiple.layout", "{}");
-        repoMock.save("statistic.chart.TimeMultiple.savedTimes", "[\"2020-05-04\",\"2020-05-07\",\"2020-05-08\",\"2020-05-05\",\"2020-05-06\",\"2020-05-09\",\"2020-05-10\"]");
-        repoMock.save("statistic.chart.TimeMultiple.data.2020-05-04", "[{\"Date\": \"04\"}]");
-        repoMock.save("statistic.chart.TimeMultiple.data.2020-05-05", "[{\"Date\": \"05\"}]");
-        repoMock.save("statistic.chart.TimeMultiple.data.2020-05-06", "[{\"Date\": \"06\"}]");
-        repoMock.save("statistic.chart.TimeMultiple.data.2020-05-07", "[{\"Date\": \"07\"}]");
-        repoMock.save("statistic.chart.TimeMultiple.data.2020-05-08", "[{\"Date\": \"08\"}]");
-        repoMock.save("statistic.chart.TimeMultiple.data.2020-05-09", "[{\"Date\": \"09\"}]");
-        repoMock.save("statistic.chart.TimeMultiple.data.2020-05-10", "[{\"Date\": \"10\"}]");
+        configurationRepository.save("statistic.chart.TimeMultiple.title", "TimeMultiple");
+        configurationRepository.save("statistic.chart.TimeMultiple.updateTime", "time");
+        configurationRepository.save("statistic.chart.TimeMultiple.layout", "{}");
+        configurationRepository.save("statistic.chart.TimeMultiple.savedTimes", "[\"2020-05-04\",\"2020-05-07\",\"2020-05-08\",\"2020-05-05\",\"2020-05-06\",\"2020-05-09\",\"2020-05-10\"]");
+        configurationRepository.save("statistic.chart.TimeMultiple.data.2020-05-04", "[{\"Date\": \"04\"}]");
+        configurationRepository.save("statistic.chart.TimeMultiple.data.2020-05-05", "[{\"Date\": \"05\"}]");
+        configurationRepository.save("statistic.chart.TimeMultiple.data.2020-05-06", "[{\"Date\": \"06\"}]");
+        configurationRepository.save("statistic.chart.TimeMultiple.data.2020-05-07", "[{\"Date\": \"07\"}]");
+        configurationRepository.save("statistic.chart.TimeMultiple.data.2020-05-08", "[{\"Date\": \"08\"}]");
+        configurationRepository.save("statistic.chart.TimeMultiple.data.2020-05-09", "[{\"Date\": \"09\"}]");
+        configurationRepository.save("statistic.chart.TimeMultiple.data.2020-05-10", "[{\"Date\": \"10\"}]");
     }
 
     private void setRedisMock(IConfigurationRepository mock) {
@@ -517,13 +517,13 @@ public class StatisticServiceTest {
 
     private void initDefaultChartNames() {
         String configValue = "[{\"groupName\":\"Group1\",\"charts\":{\"Chart1\":{\"accuracy\":\"none\",\"timeseries\":false,\"multiple\":false,\"scriptName\":\"/tmp/script1.py\",\"description\":\"Desc\",\"dbName\":\"Chart1\"},\"Chart2\":{\"accuracy\":\"none\",\"timeseries\":false,\"multiple\":false,\"scriptName\":\"/tmp/script2.py\",\"description\":\"Desc\",\"dbName\":\"Chart2\"}}},{\"groupName\":\"noGroup\",\"charts\":{\"TimeMultiple\":{\"accuracy\":\"day\",\"timeseries\":true,\"multiple\":true,\"scriptName\":\"timetrace1.py\",\"description\":\"null\",\"dbName\":\"null\"},\"Timenotmultiple\":{\"accuracy\":\"day\",\"timeseries\":true,\"multiple\":false,\"scriptName\":\"timetrace2.py\",\"description\":\"null\",\"dbName\":\"Timenotmultiple\"}}}]";
-        repoMock.save("statistic.allChartNames", configValue);
+        configurationRepository.save("statistic.allChartNames", configValue);
     }
 
     private void initChartNameWithoutScript() {
         String configValue = "[{\"groupName\":\"noGroup\",\"charts\":{\"NoScriptTest\":{\"accuracy\":\"none\",\"timeseries\":false,\"multiple\":false,\"scriptName\":null,\"description\":\"null\",\"dbName\":\"null\"}}}]";
-        repoMock.save("statistic.allChartNames", configValue);
-        repoMock.save("statistic.chart.NoScriptTest.script", "Test.py");
+        configurationRepository.save("statistic.allChartNames", configValue);
+        configurationRepository.save("statistic.chart.NoScriptTest.script", "Test.py");
     }
 
     private void initDeprecatedChartNames() {
@@ -533,7 +533,7 @@ public class StatisticServiceTest {
         group.charts.add("OldChart1");
         List<StatisticGroupOld> list = new ArrayList<>();
         list.add(group);
-        repoMock.save("statistic.allChartNames", gson.toJson(list));
+        configurationRepository.save("statistic.allChartNames", gson.toJson(list));
     }
 
     private String getChartDataForNonTimeseriesChart() {
@@ -580,6 +580,6 @@ public class StatisticServiceTest {
     }
 
     private void initRepoEmptyChartNames() {
-        repoMock.save("statistic.allChartNames", "");
+        configurationRepository.save("statistic.allChartNames", "");
     }
 }

@@ -26,12 +26,13 @@ import java.util.*;
 @Singleton
 class StatisticService {
     private static final Logger LOGGER = LoggerFactory.getLogger(StatisticService.class);
+    
     // Use the traefik container directly cause the DNS Server is still Docker.
     // TODO make the Server configurable
     private static final String UPDATE_URL = "http://traefik-service:81/update";
     private static final String CREATE_URL = "http://traefik-service:81/save";
 
-    private static final String LOCAL_UPLOAD_PATH = "/tmp/";
+    private static final String LOCAL_UPLOAD_PATH = System.getProperty("java.io.tmpdir");
 
     private final Gson gson = new Gson();
 
@@ -137,11 +138,11 @@ class StatisticService {
     }
 
     private String getDataForChart(String chartName, String part) {
-        return ConfigurationRepository.getRepo().getVal("statistic.chart." + chartName + "." + part);
+        return configurationRepository.getVal("statistic.chart." + chartName + "." + part);
     }
 
     private void saveDataForChart(String chartName, String part, String savedTraceTimes) {
-        ConfigurationRepository.getRepo().save(new Configuration("statistic.chart." + chartName + "." + part, savedTraceTimes));
+        configurationRepository.save(new Configuration("statistic.chart." + chartName + "." + part, savedTraceTimes));
     }
 
 
@@ -546,7 +547,7 @@ class StatisticService {
      * @return a list of all groups with charts
      */
     private List<StatisticGroup> getGroupsAndCharts() {
-        String groupNames = ConfigurationRepository.getRepo().getVal("statistic.allChartNames");
+        String groupNames = configurationRepository.getVal("statistic.allChartNames");
         if (groupNames.isEmpty())
             return new ArrayList<>();
         List<StatisticGroup> groups;
@@ -598,7 +599,7 @@ class StatisticService {
      * @param groupsAndCharts List of all Groups containing the charts.
      */
     private void saveGroupsAndCharts(List<StatisticGroup> groupsAndCharts) {
-        ConfigurationRepository.getRepo().save(new Configuration("statistic.allChartNames", gson.toJson(groupsAndCharts)));
+        configurationRepository.save(new Configuration("statistic.allChartNames", gson.toJson(groupsAndCharts)));
     }
 
     /**
@@ -611,7 +612,7 @@ class StatisticService {
     @Deprecated
     private void saveScriptName(String chartName, String value) {
         if (!chartName.isEmpty()) {
-            ConfigurationRepository.getRepo().save(new Configuration("statistic.chart." + chartName + ".script", value));
+            configurationRepository.save(new Configuration("statistic.chart." + chartName + ".script", value));
         }
     }
 
@@ -626,7 +627,7 @@ class StatisticService {
     @Deprecated
     private String getScriptName(String chartName) {
         if (!chartName.isEmpty()) {
-            return ConfigurationRepository.getRepo().getVal("statistic.chart." + chartName + ".script");
+            return configurationRepository.getVal("statistic.chart." + chartName + ".script");
         }
         return "";
     }
@@ -638,7 +639,7 @@ class StatisticService {
             if (time != null && !time.isEmpty()) {
                 sb.append(".").append(time);
             }
-            ConfigurationRepository.getRepo().save(new Configuration(sb.toString(), value));
+            configurationRepository.save(new Configuration(sb.toString(), value));
         }
     }
 
@@ -649,7 +650,7 @@ class StatisticService {
             if (time != null && !time.isEmpty()) {
                 sb.append(".").append(time);
             }
-            return ConfigurationRepository.getRepo().getVal(sb.toString());
+            return configurationRepository.getVal(sb.toString());
         }
         return "";
     }
