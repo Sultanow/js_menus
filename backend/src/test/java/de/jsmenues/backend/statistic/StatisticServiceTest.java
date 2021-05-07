@@ -21,10 +21,10 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
-class StatisticServiceTest {
-    HttpClient httpClient = mock(HttpClient.class, RETURNS_DEEP_STUBS);
-    StatisticService service = new StatisticService(httpClient);
+public class StatisticServiceTest {
+    private final HttpClient httpClient = mock(HttpClient.class, RETURNS_DEEP_STUBS);
+    private final IConfigurationRepository configurationRepository = mock(IConfigurationRepository.class);
+    private final StatisticService service = new StatisticService(httpClient, configurationRepository);
     IConfigurationRepository repoMock = spy(new ConfigurationRepositoryMock());
 
     @BeforeEach
@@ -41,7 +41,7 @@ class StatisticServiceTest {
 
     // All Chart Names
     @Test
-    void getAllChartNames() {
+    public void getAllChartNames() {
         //given
         initDefaultChartNames();
         //when
@@ -52,7 +52,7 @@ class StatisticServiceTest {
 
     // Update Data Tests
     @Test
-    void updateDataWithEmptyChartName() {
+    public void updateDataWithEmptyChartName() {
         //given
         //when
         boolean result = service.updateData("", null, null);
@@ -61,7 +61,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void updateDataWithNullChartName() {
+    public void updateDataWithNullChartName() {
         //given
         //when
         boolean result = service.updateData(null, null, null);
@@ -70,7 +70,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void updateDataWithChartNameWithNullInputStream() {
+    public void updateDataWithChartNameWithNullInputStream() {
         //given
         //when
         boolean result = service.updateData("Chart1", null, null);
@@ -79,7 +79,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void updateDataWithChartNameWithInputStreamWithMetaDataForNotTimeseriesChart() {
+    public void updateDataWithChartNameWithInputStreamWithMetaDataForNotTimeseriesChart() {
         //given
         initDefaultChartNames();
         initMockSuccessResponseFromPythonService();
@@ -91,7 +91,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void updateDataWithChartNameWithInputStreamWithNullMetaData() {
+    public void updateDataWithChartNameWithInputStreamWithNullMetaData() {
         //given
         //when
         boolean result = service.updateData("Chart1", new ByteArrayInputStream(new byte[0]), null);
@@ -100,7 +100,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void updateDataWithChartNameWithInputStreamWithMetaDataForTimeseriesChartWithNoGroup() {
+    public void updateDataWithChartNameWithInputStreamWithMetaDataForTimeseriesChartWithNoGroup() {
         //given
         initDefaultChartNames();
         initMockSuccessResponseFromPythonService();
@@ -112,7 +112,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void updateDataWithChartNameWithInputStreamWithMetaDataForTimeseriesChartWithNoGroupResultEmpty() {
+    public void updateDataWithChartNameWithInputStreamWithMetaDataForTimeseriesChartWithNoGroupResultEmpty() {
         //given
         initDefaultChartNames();
         initMockSuccessResponseFromPythonServiceEmptyResult();
@@ -124,7 +124,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void updateDataWithNotExistingChartName() {
+    public void updateDataWithNotExistingChartName() {
         //given
         initDefaultChartNames();
         initMockSuccessResponseFromPythonService();
@@ -136,7 +136,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void updateDataWithWithGroupWithFailingServiceAnswer() {
+    public void updateDataWithWithGroupWithFailingServiceAnswer() {
         //given
         initDefaultChartNames();
         initMockFailureResponseFromPythonService();
@@ -148,7 +148,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void updateDataWithDeprecatedStatisticChartInfo() {
+    public void updateDataWithDeprecatedStatisticChartInfo() {
 //given
         initDeprecatedChartNames();
         initMockSuccessResponseFromPythonService();
@@ -164,7 +164,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void updateDataWithTimeseriesResponseDay() {
+    public void updateDataWithTimeseriesResponseDay() {
         //given
         initDefaultChartNames();
         initMockSuccessResponseFromPythonServiceTimeseriesNoMultipleAccuracyDay();
@@ -176,7 +176,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void updateDataWithTimeseriesResponseMonth() {
+    public void updateDataWithTimeseriesResponseMonth() {
         //given
         initDefaultChartNames();
         initMockSuccessResponseFromPythonServiceTimeSeriesNoMultipleAccuracyMonth();
@@ -188,7 +188,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void updateDataWithTimeseriesResponseYear() {
+    public void updateDataWithTimeseriesResponseYear() {
         //given
         initDefaultChartNames();
         initMockSuccessResponseFromPythonServiceTimeSeriesNoMultipleAccuracyYear();
@@ -200,7 +200,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void updateDataWithTimeseriesResponseWeek() {
+    public void updateDataWithTimeseriesResponseWeek() {
         //given
         initDefaultChartNames();
         initMockSuccessResponseFromPythonServiceTimeSeriesNoMultipleAccuracyWeek();
@@ -212,7 +212,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void updateDataWithOldScriptName() {
+    public void updateDataWithOldScriptName() {
         //given
         initChartNameWithoutScript();
         initMockSuccessResponseFromPythonService();
@@ -226,7 +226,7 @@ class StatisticServiceTest {
 
     // Get all GroupNames
     @Test
-    void getAllGroupNamesWithEmptyDB() {
+    public void getAllGroupNamesWithEmptyDB() {
         //given
         when(repoMock.getVal("statistic.allChartNames")).thenReturn("");
         //when
@@ -236,7 +236,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void getAllGroupNames() {
+    public void getAllGroupNames() {
         //given
         initDefaultChartNames();
         //when
@@ -247,7 +247,7 @@ class StatisticServiceTest {
 
     // Delete Chart Tests
     @Test
-    void deleteChart() {
+    public void deleteChart() {
         //given
         initDefaultChartNames();
         //when
@@ -259,7 +259,7 @@ class StatisticServiceTest {
 
     // Create Chart Tests
     @Test
-    void createChartWithNull() {
+    public void createChartWithNull() {
         //given
         //when
         Response response = service.createChart(null, null, null, null, null);
@@ -268,7 +268,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void createChartWithEmptyChartName() {
+    public void createChartWithEmptyChartName() {
         //given
         //when
         Response response = service.createChart("", null, null, null, null);
@@ -277,7 +277,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void createChartWithAlreadyExistingChart() {
+    public void createChartWithAlreadyExistingChart() {
         //given
         initDefaultChartNames();
         //when
@@ -287,7 +287,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void createChartWithChartNameWithFailurePythonResponse() {
+    public void createChartWithChartNameWithFailurePythonResponse() {
         //given
         initDefaultChartNames();
         initMockFailureResponseFromPythonService();
@@ -300,7 +300,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void createChartWithChartNameWithoutGroup() {
+    public void createChartWithChartNameWithoutGroup() {
         //given
         initRepoEmptyChartNames();
         initMockSuccessResponseFromPythonService();
@@ -312,7 +312,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void createChartWithNewGroupName() {
+    public void createChartWithNewGroupName() {
         //given
         initRepoEmptyChartNames();
         initMockSuccessResponseFromPythonService();
@@ -324,7 +324,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void createChartWithExistingGroupName() {
+    public void createChartWithExistingGroupName() {
         //given
         initDefaultChartNames();
         initMockSuccessResponseFromPythonService();
@@ -337,7 +337,7 @@ class StatisticServiceTest {
 
     // Get Chart Data for Chart Name
     @Test
-    void getChartDataForName() {
+    public void getChartDataForName() {
         //given
         initDefaultChartNames();
         //when
@@ -347,7 +347,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void getChartDataForNameNoTimeseriesChart() {
+    public void getChartDataForNameNoTimeseriesChart() {
         //given
         initDefaultChartNames();
         String configValue = "{\"title\":\"Anwenderzahlen\",\"traces\":[{\"x\":[\"05:00:00\",\"23:00:00\"],\"y\":[1833.0,46.0],\"mode\":\"lines\",\"type\":\"scatter\",\"name\":\"2020-05-04\",\"line\":{\"width\":2},\"connectgaps\":true,\"hoverinfo\":\"x+y+text\"}],\"layout\":{\"xaxis\":{\"showline\":true,\"showgrid\":true,\"showticklabels\":true,\"linewidth\":2},\"yaxis\":{\"showgrid\":true,\"zeroline\":true,\"showline\":true,\"showticklabels\":true},\"autosize\":true,\"margin\":{\"autoexpand\":true,\"l\":100,\"r\":20,\"t\":110},\"showlegend\":true,\"title\":\"Anwenderzahlen\",\"separators\":\".,\"},\"updateTime\":\"27.06.2020(21:49)\"}";
@@ -361,7 +361,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void getChartDataForNameTimeseriesNoMultipleNoUpdate() {
+    public void getChartDataForNameTimeseriesNoMultipleNoUpdate() {
         //given
         initDefaultChartNames();
         initTimeseriesChartNoMultiple();
@@ -374,7 +374,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void getChartDataForNameTimeseriesNoMultipleNoUpdateWithStart() {
+    public void getChartDataForNameTimeseriesNoMultipleNoUpdateWithStart() {
         //given
         initDefaultChartNames();
         initTimeseriesChartNoMultiple();
@@ -389,7 +389,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void getChartDataForNameTimeseriesNoMultipleUpdateWithStartAtTimerangeBeginn() {
+    public void getChartDataForNameTimeseriesNoMultipleUpdateWithStartAtTimerangeBeginn() {
         //given
         initDefaultChartNames();
         initTimeseriesChartNoMultiple();
@@ -408,7 +408,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void getChartDataForNameTimeseriesMultiple() {
+    public void getChartDataForNameTimeseriesMultiple() {
         //given
         initDefaultChartNames();
         initTimeseriesChartMultiple();
@@ -420,7 +420,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void getChartDataForNameTimeseriesMultipleStartEndChanged() {
+    public void getChartDataForNameTimeseriesMultipleStartEndChanged() {
         //given
         initDefaultChartNames();
         initTimeseriesChartMultiple();
@@ -435,7 +435,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void getChartDataForNameTimeseriesMultipleWithEndBeforeStart() {
+    public void getChartDataForNameTimeseriesMultipleWithEndBeforeStart() {
         //given
         initDefaultChartNames();
         initTimeseriesChartMultiple();
@@ -448,7 +448,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void getChartDataForNameTimeseriesMultipleWithNotExistStartAndEnd() {
+    public void getChartDataForNameTimeseriesMultipleWithNotExistStartAndEnd() {
         //given
         initDefaultChartNames();
         initTimeseriesChartMultiple();
@@ -461,7 +461,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void getTimeseriesDatesWithoutChart() {
+    public void getTimeseriesDatesWithoutChart() {
         //given
         initTimeseriesChartNoMultiple();
         //when

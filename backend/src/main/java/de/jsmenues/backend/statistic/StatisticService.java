@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import de.jsmenues.redis.data.Configuration;
 import de.jsmenues.redis.repository.ConfigurationRepository;
+import de.jsmenues.redis.repository.IConfigurationRepository;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,13 +33,16 @@ class StatisticService {
 
     private static final String LOCAL_UPLOAD_PATH = "/tmp/";
 
-    Gson gson = new Gson();
+    private final Gson gson = new Gson();
 
-    private HttpClient httpClient;
+    private final HttpClient httpClient;
+
+    private final IConfigurationRepository configurationRepository;
 
     @Inject
-    StatisticService(HttpClient httpClient) {
+    StatisticService(HttpClient httpClient, IConfigurationRepository configurationRepository) {
         this.httpClient = httpClient;
+        this.configurationRepository = configurationRepository;
     }
 
     /**
@@ -127,21 +131,17 @@ class StatisticService {
             this.updateChartMeta(chartName, statisticInterface.timeseries, statisticInterface.multiple, statisticInterface.accuracy);
             return true;
         } else {
-            LOGGER.warn("Status is not 200: " + response.toString());
+            LOGGER.warn("Status is not 200: " + response);
             return false;
         }
     }
 
     private String getDataForChart(String chartName, String part) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("statistic.chart.").append(chartName).append(".").append(part);
-        return ConfigurationRepository.getRepo().getVal(sb.toString());
+        return ConfigurationRepository.getRepo().getVal("statistic.chart." + chartName + "." + part);
     }
 
     private void saveDataForChart(String chartName, String part, String savedTraceTimes) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("statistic.chart.").append(chartName).append(".").append(part);
-        ConfigurationRepository.getRepo().save(new Configuration(sb.toString(), savedTraceTimes));
+        ConfigurationRepository.getRepo().save(new Configuration("statistic.chart." + chartName + "." + part, savedTraceTimes));
     }
 
 
@@ -244,7 +244,7 @@ class StatisticService {
     public String getChartDataForName(String chartName, Map<String, String> date, boolean update) {
         List<StatisticGroup> groups = getGroupsAndCharts();
         StatisticChart chart = null;
-        String chartData = "";
+        String chartData;
         for (StatisticGroup group : groups) {
             if (group.charts.containsKey(chartName)) {
                 chart = group.charts.get(chartName);
@@ -526,8 +526,8 @@ class StatisticService {
      */
     private String saveFileToTmpFolder(InputStream fileInputStream, FormDataContentDisposition fileMetaData) {
         String filename = LOCAL_UPLOAD_PATH + fileMetaData.getFileName();
-        try (OutputStream out = new FileOutputStream(new File(filename))) {
-            int read = 0;
+        try (OutputStream out = new FileOutputStream(filename)) {
+            int read;
             byte[] bytes = new byte[1024];
             while ((read = fileInputStream.read(bytes)) != -1) {
                 out.write(bytes, 0, read);
@@ -611,9 +611,7 @@ class StatisticService {
     @Deprecated
     private void saveScriptName(String chartName, String value) {
         if (!chartName.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("statistic.chart.").append(chartName).append(".script");
-            ConfigurationRepository.getRepo().save(new Configuration(sb.toString(), value));
+            ConfigurationRepository.getRepo().save(new Configuration("statistic.chart." + chartName + ".script", value));
         }
     }
 
@@ -628,9 +626,7 @@ class StatisticService {
     @Deprecated
     private String getScriptName(String chartName) {
         if (!chartName.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("statistic.chart.").append(chartName).append(".script");
-            return ConfigurationRepository.getRepo().getVal(sb.toString());
+            return ConfigurationRepository.getRepo().getVal("statistic.chart." + chartName + ".script");
         }
         return "";
     }
