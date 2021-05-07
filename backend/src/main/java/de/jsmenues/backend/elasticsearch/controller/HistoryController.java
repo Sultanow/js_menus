@@ -34,7 +34,6 @@ public class HistoryController {
      */
     @PermitAll
     @GET
-    @Path("/")
     @Produces(MediaType.TEXT_PLAIN)
     public Response insertHistory() throws IOException, ParseException {
 
@@ -65,9 +64,9 @@ public class HistoryController {
     /**
      * Get history records of an index between tow dates from elasticsearch
      *
-     * @param unixDate1 the first date
-     * @param unixDate2 the second date
-     * @param indexname
+     * @param unixTime1 the first date
+     * @param unixTime2 the second date
+     * @param indexName
      *
      * @return list of history records between tow selected Dates
      */

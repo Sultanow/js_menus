@@ -17,7 +17,7 @@
     </init-param>
     <init-param>
       <param-name>javax.ws.rs.Application</param-name>
-      <param-value>de.jsmenues.backend.authentication.AuthenticationResource</param-value>
+      <param-value>de.jsmenues.backend.BackendApplication</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>

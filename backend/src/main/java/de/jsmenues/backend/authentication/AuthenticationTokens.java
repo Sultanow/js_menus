@@ -1,94 +1,78 @@
 package de.jsmenues.backend.authentication;
 
-import java.util.LinkedHashMap;
+import javax.inject.Singleton;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+@Singleton
 public class AuthenticationTokens {
+    public static final long VALIDITY_PERIOD = TimeUnit.HOURS.toSeconds(12);
 
-    private static AuthenticationTokens single_instance = null;
-    public static long VALID_PERIOD = 60 * 60 * 12;
-    private Map<String, Long> tokens;
+    private static AuthenticationTokens instance = null;
+
+    /**
+     * Maps each token to their expiry time in UNIX time.
+     */
+    private final Map<String, Long> tokens = new HashMap<>();
+
+    /**
+     * static method to create instance of AuthenticationTokens class
+     *
+     * @return The singleton instance.
+     */
+    @Deprecated
+    public static AuthenticationTokens getInstance() {
+        if (instance == null) {
+            instance = new AuthenticationTokens();
+        }
+        return instance;
+    }
 
     public Map<String, Long> getTokens() {
         return tokens;
     }
 
     /**
-     * create tokens map to save all tokens
+     * Adds a new token and sets it to expire in {@link #VALIDITY_PERIOD} hours.
+     * 
+     * @param token The token to add.
      */
-    private AuthenticationTokens() {
-        tokens = new LinkedHashMap<String, Long>();
+    public void addToken(String token) {
+        long currentUnixTime = System.currentTimeMillis() / 1000L;
+        tokens.put(token, currentUnixTime + VALIDITY_PERIOD);
     }
 
     /**
-     * static method to create instance of AuthenticationTokens class
+     * Checks validity of a given token.
      * 
-     * @return single_instance create singleton instance of AuthenticationTokens
-     *         class
+     * @param token The token to check.
      * 
-     */
-    public static AuthenticationTokens getInstance() {
-        if (single_instance == null)
-            single_instance = new AuthenticationTokens();
-
-        return single_instance;
-    }
-
-    /**
-     * Add new token to tokens map
-     * 
-     * @param token
-     * 
-     * @return mpa of tokens key:token , value:timestamp
-     */
-    public Map<String, Long> addToken(String token) {
-        long timestamp = System.currentTimeMillis() / 1000L;
-        tokens.put(token, timestamp);
-        return tokens;
-    }
-
-    /**
-     * verify if a token has been valid yet
-     * 
-     * @param token
-     * 
-     * @return token is valid true or false
+     * @return True if the token has not yet expired, false otherwise.
      */
     public boolean isValid(String token) {
-
-        if (tokens.isEmpty()) {
-            return false;
-        }
         if (tokens.containsKey(token)) {
-            long timestamp = tokens.get(token);
-            long unixTime = System.currentTimeMillis() / 1000L;
-            // tokens are 12 hour valid
-            if (unixTime < timestamp + VALID_PERIOD) {
-                return true;
-
-            } else {
-                return false;
-            }
-        } else {
-            return false;
+            long expirationUnixTime = tokens.get(token);
+            long currentUnixTime = System.currentTimeMillis() / 1000L;
+            return currentUnixTime <= expirationUnixTime;
         }
-
+        return false;
     }
 
     /**
-     * Delete old tokens after VALID_PERIOD
+     * Deletes all tokens that have expired.
      * 
-     * @return staus if tokens is deleted
+     * @return True if any tokens have been deleted, false otherwise.
      */
-    public String deleteOldTokens() {
-        String status = "";
-        long unixTime = System.currentTimeMillis() / 1000L;
-        for (Map.Entry<String, Long> token : tokens.entrySet()) {
-            if (unixTime > token.getValue() + VALID_PERIOD) {
-                tokens.remove(token.getKey());
-                status += "is deleted";
+    public boolean deleteOldTokens() {
+        boolean anyDeleted = false;
+        long currentUnixTime = System.currentTimeMillis() / 1000L;
+        for (Map.Entry<String, Long> entry : tokens.entrySet()) {
+            if (currentUnixTime > entry.getValue()) {
+                tokens.remove(entry.getKey());
+                anyDeleted = true;
             }
         }
-        return status;
+        return anyDeleted;
     }
 }

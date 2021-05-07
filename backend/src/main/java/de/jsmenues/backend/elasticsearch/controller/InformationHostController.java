@@ -35,7 +35,6 @@ public class InformationHostController {
      */
     @PermitAll
     @PUT
-    @Path("/")
     public Response insertAllHostInformation() throws IOException, ParseException {
 
         ZabbixService zabbixService = new ZabbixService();
@@ -101,7 +100,7 @@ public class InformationHostController {
      * Get last value's an item by key and hostname
      *
      * @param hostName
-     * @param key
+     * @param itemKey
      * @return last value
      */
     @PermitAll

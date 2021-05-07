@@ -3,6 +3,11 @@ package de.jsmenues.backend.authentication;
 import de.jsmenues.redis.data.Configuration;
 import de.jsmenues.redis.repository.ConfigurationRepository;
 
+/**
+ * Helper class to change the admin password. Not to be used anymore as this being
+ * a static class is not testable.
+ */
+@Deprecated
 public class Password {
     /**
      * save rootPassword in redis
@@ -13,7 +18,6 @@ public class Password {
      * @return password is saved in redis true or false
      */
     public static boolean setRootPassword(String rootPassword) {
-
         ConfigurationRepository.getRepo().save(new Configuration("password", rootPassword));
         String currentPassword = ConfigurationRepository.getRepo().getVal("password");
         return rootPassword.equals(currentPassword);
@@ -22,7 +26,7 @@ public class Password {
     /**
      * check old and new Password before change
      * 
-     * @param oldPssword  passing from frontend
+     * @param oldPassword  passing from frontend
      * @param newPassword passing from frontend
      * @return password is changend true or false
      */

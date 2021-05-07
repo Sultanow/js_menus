@@ -33,7 +33,6 @@ public class HostController {
      */
     @PermitAll
     @PUT
-    @Path("/")
     public Response InsertAllHosts() throws IOException {
 
         ZabbixService zabbixService = new ZabbixService();
@@ -49,10 +48,8 @@ public class HostController {
      */
     @PermitAll
     @GET
-    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllHosts() throws IOException {
-
         List<Map<String, Object>> result = HostsDao.getAllHosts();
         return Response.ok(result).build();
     }

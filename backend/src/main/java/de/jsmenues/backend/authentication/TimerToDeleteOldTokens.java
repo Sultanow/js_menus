@@ -1,36 +1,30 @@
 package de.jsmenues.backend.authentication;
 
-import java.util.Date;
-
-/**
- *this timer is used to delete old token 
- * 
- */
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Recurring task that deletes any expired tokens from an {@link AuthenticationTokens} object.
+ */
 public class TimerToDeleteOldTokens {
-    long timestamp = System.currentTimeMillis() / 1000L;
-    // delay in seconds
-    long delay = AuthenticationTokens.VALID_PERIOD;
+    public static final String TIMER_TASK_NAME = "DeleteOldTokens";
 
-    LoopTask task = new LoopTask();
-    Timer timer = new Timer("DeletOldTokens");
+    private final Timer timer = new Timer(TIMER_TASK_NAME);
 
     /**
-     * start function to start this timer
-     * 
+     * Starts running the task regularly.
      */
     public void start() {
-        timer.cancel();
-        timer = new Timer("DeletOldTokens");
-        Date executionDate = new Date();
-        timer.scheduleAtFixedRate(task, executionDate, delay);
-    }
-
-    private class LoopTask extends TimerTask {
-        public void run() {
-            AuthenticationTokens.getInstance().deleteOldTokens();
-        }
+        timer.scheduleAtFixedRate(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        // TODO: do not use singleton here.
+                        AuthenticationTokens.getInstance().deleteOldTokens();
+                    }
+                },
+                0L,
+                AuthenticationTokens.VALIDITY_PERIOD
+        );
     }
 }

@@ -5,6 +5,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,18 +13,27 @@ import java.util.List;
 /**
  * Configuration Access to Redis
  */
-public class ConfigurationRepository implements IConfigurationRepository{
+@Singleton
+public class ConfigurationRepository implements IConfigurationRepository {
+    private static final String REDIS_HOST = "redis-service";
+    private static final int REDIS_PORT = 6379;
+    private static final int TIMEOUT = 60000;
+    private static final String REDIS_PASSWORD = "password";
+
     private static IConfigurationRepository instance;
     private final JedisPool configurationPool;
 
-    private ConfigurationRepository() {
-
-        configurationPool = new JedisPool(new JedisPoolConfig(), "redis-service", 6379, 60000, "password");
-
-
+    public ConfigurationRepository() {
+        configurationPool = new JedisPool(
+                new JedisPoolConfig(),
+                REDIS_HOST,
+                REDIS_PORT,
+                TIMEOUT,
+                REDIS_PASSWORD
+        );
     }
 
-
+    @Deprecated
     public static IConfigurationRepository getRepo() {
         if (instance == null) {
             instance = new ConfigurationRepository();
@@ -35,7 +45,7 @@ public class ConfigurationRepository implements IConfigurationRepository{
      * Save a config in redis
      *
      * @param config - The config
-     * @Deprecated: The class Configuration will removed in future. Use save(String key, String val).
+     * @deprecated The class Configuration will removed in future. Use save(String key, String val).
      */
     @Override
     @Deprecated
@@ -55,7 +65,7 @@ public class ConfigurationRepository implements IConfigurationRepository{
      *
      * @param key Key for the saving point in Redis.
      * @return Configuration, if a value was found
-     * @Deprecated: The class Configuration will removed in future. Use getVal(String key).
+     * @deprecated The class Configuration will removed in future. Use getVal(String key).
      */
     @Override
     @Deprecated

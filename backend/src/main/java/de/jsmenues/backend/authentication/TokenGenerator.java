@@ -1,35 +1,28 @@
 package de.jsmenues.backend.authentication;
 
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-
 import java.util.Base64;
 import java.util.UUID;
 
-import de.jsmenues.redis.repository.ConfigurationRepository;
+/**
+ * Helper class to generate login tokens.
+ */
 public class TokenGenerator {
-    private final String admin = "admin";
-    private final Charset charset = StandardCharsets.UTF_8;
-    String token = "";
+    private static final String ADMIN_USER = "admin";
     
     /**
-     * Generate an individual token 
+     * Generates a token for the admin user. This does not check whether the admin
+     * user is logged in correctly!
      * 
-     * @param pass passing from fronted
+     * @param pass The password used for the login attempt.
      * 
      * @return a valid token
      */
-    public String generateMapToken(String pass) {
-        
-        String currentPassword = ConfigurationRepository.getRepo().getVal("password");
-        
-        if (pass.equals(currentPassword)) {  
-            UUID uuid = UUID.randomUUID();
-            token = admin + ":" + pass + ":" + uuid;
-            byte[] byteArrray = token.getBytes(charset);
-            token = new String(Base64.getEncoder().encode(byteArrray));
-            AuthenticationTokens.getInstance().addToken(token);        
-        }
+    public String generateToken(String pass) {
+        UUID uuid = UUID.randomUUID();
+        String token = ADMIN_USER + ":" + pass + ":" + uuid;
+        byte[] byteArray = token.getBytes(StandardCharsets.UTF_8);
+        token = new String(Base64.getEncoder().encode(byteArray));
         return token;
     }
 }

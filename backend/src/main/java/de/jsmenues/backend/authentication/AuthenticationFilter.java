@@ -1,6 +1,6 @@
 package de.jsmenues.backend.authentication;
 
-import de.jsmenues.redis.repository.ConfigurationRepository;
+import de.jsmenues.redis.repository.IConfigurationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,6 +8,7 @@ import javax.annotation.Priority;
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.inject.Inject;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
@@ -28,18 +29,29 @@ import java.util.*;
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationFilter implements ContainerRequestFilter {
-    private static final String AUTHORIZATION_PROPERTY = "Authorization";
-    private static final String AUTHENTICATION_SCHEME = "Basic";
+    private static final String AUTHORIZATION_HEADER_NAME = "Authorization";
+    private static final String AUTHENTICATION_SCHEME_BASIC = "Basic";
     public static final String USER_ADMIN = "admin";
     public static final String USER_ROLE_ADMIN = "ADMIN";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationFilter.class);
 
+    private final IConfigurationRepository configurationRepository;
+    private final AuthenticationTokens authenticationTokens;
+
     @Context
     private ResourceInfo resourceInfo;
 
+    @Inject
+    public AuthenticationFilter(IConfigurationRepository configurationRepository,
+                                AuthenticationTokens authenticationTokens) {
+        this.configurationRepository = configurationRepository;
+        this.authenticationTokens = authenticationTokens;
+    }
+
     /**
-     * Filter for the annotation over the Methods
+     * Filter that checks whether a request is authorized.
+     * Apparently taken from https://howtodoinjava.com/jersey/jersey-rest-security/#build-auth-filter
      */
     @Override
     public void filter(ContainerRequestContext requestContext) {
@@ -57,7 +69,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             }
 
             final MultivaluedMap<String, String> headers = requestContext.getHeaders();
-            final List<String> authorization = headers.get(AUTHORIZATION_PROPERTY);
+            final List<String> authorization = headers.get(AUTHORIZATION_HEADER_NAME);
             if (authorization == null || authorization.isEmpty()) {
                 requestContext.abortWith(Response
                         .status(Response.Status.UNAUTHORIZED)
@@ -66,9 +78,9 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                 return;
             }
             final String encodedUserPassword = authorization.get(0)
-                    .replaceFirst(AUTHENTICATION_SCHEME + " ", "");
+                    .replaceFirst(AUTHENTICATION_SCHEME_BASIC + " ", "");
 
-            if (!AuthenticationTokens.getInstance().isValid(encodedUserPassword)) {
+            if (!authenticationTokens.isValid(encodedUserPassword)) {
                 requestContext
                         .abortWith(Response.status(Response.Status.UNAUTHORIZED)
                                 .entity("user is not valid")
@@ -113,7 +125,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
      * @return is user allowed true or false
      */
     public boolean isUserAllowed(final String username, final String password, final Set<String> rolesSet) {
-        String pass = ConfigurationRepository.getRepo().getVal("password");
+        String pass = configurationRepository.getVal("password");
         return username.equals(USER_ADMIN)
                 && password.equals(pass)
                 && rolesSet.contains(USER_ROLE_ADMIN);
