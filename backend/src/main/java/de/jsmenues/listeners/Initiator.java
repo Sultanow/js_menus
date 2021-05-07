@@ -8,10 +8,8 @@ import javax.servlet.ServletContextListener;
 
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
-import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.indices.GetIndexRequest;
-import org.elasticsearch.search.fetch.subphase.FetchSourceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,20 +25,18 @@ import de.jsmenues.redis.repository.ConfigurationRepository;
  * Initiator is notified when the application is deployed on the server
  */
 public class Initiator implements ServletContextListener {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Initiator.class);
+    private static final String DEFAULT_ROOT_PASSWORD = "1234";
+
     public static boolean firstCall = true;
-    public static int callCounter = 0;
-    private static Logger LOGGER = LoggerFactory.getLogger(Initiator.class);
-    private final static String rootPassword = "1234";
-    private ServletContext context = null;
 
     /**
      * This method is invoked when the Web Application has been removed and is no
      * longer able to accept requests
      */
     public void contextDestroyed(ServletContextEvent event) {
-        this.context = null;
         try {
-        	LOGGER.info("Trying to close Elasticsearch connection.");
+            LOGGER.info("Trying to close Elasticsearch connection.");
             ElasticsearchConnector.closeConnection();
         } catch (IOException e) {
             LOGGER.error("contextDestroyed error: " + e.getMessage());
@@ -49,7 +45,6 @@ public class Initiator implements ServletContextListener {
 
     /**
      * This method is invoked when the Web Application is ready to service requests
-     * 
      */
     public void contextInitialized(ServletContextEvent event) {
         LOGGER.info("Application start");
@@ -57,10 +52,9 @@ public class Initiator implements ServletContextListener {
         ElasticsearchConnector.makeConnection();
         LOGGER.info("Connection opend with elasticsearch");
 
-
         final String expectedValuesIndex = "expected_values";
         createIndexIfNotExists(expectedValuesIndex);
-        
+
         try {
             if (!SnapshotDao.ifRepositoryExist()) {
                 SnapshotDao.creatRepository();
@@ -73,7 +67,7 @@ public class Initiator implements ServletContextListener {
         }
 
         try {
-            if (SnapshotDao.createLifecycle()) {         
+            if (SnapshotDao.createLifecycle()) {
                 LOGGER.info("snapshot lifecycle is created");
             } else {
                 LOGGER.info("snapshot lifecycle is not created");
@@ -81,9 +75,9 @@ public class Initiator implements ServletContextListener {
         } catch (Exception e) {
             LOGGER.error(e.getMessage() + "snapshot lifecycle ist not created");
         }
-        
+
         try {
-            if (SnapshotDao.startLifeCycle()) {         
+            if (SnapshotDao.startLifeCycle()) {
                 LOGGER.info("lifecycle is started");
             } else {
                 LOGGER.info("lifecycle is not started");
@@ -95,8 +89,9 @@ public class Initiator implements ServletContextListener {
         // set once the rootPassword as "1234" when Web Application begins and there is
         // not a password
         String currentPassword = ConfigurationRepository.getRepo().getVal("password");
-        if (currentPassword == "") {
-            Password.setRootPassword(rootPassword);
+        if (currentPassword.equals("")) {
+            Password.setRootPassword(DEFAULT_ROOT_PASSWORD);
+            LOGGER.info("Set root password to default as it was not yet initialized.");
         }
 
         TimerToDeleteOldTokens timer = new TimerToDeleteOldTokens();
@@ -104,30 +99,27 @@ public class Initiator implements ServletContextListener {
 
         ZabbixElasticsearchSynchronization zabbixElasticsearchSynchronization = new ZabbixElasticsearchSynchronization();
         zabbixElasticsearchSynchronization.start();
-        
+
         DeleteHistoryTimer deleteHistoryTimer = new DeleteHistoryTimer();
         deleteHistoryTimer.start();
 
-        this.context = event.getServletContext();
     }
 
-	private void createIndexIfNotExists(final String indexName) {
-		GetIndexRequest checkIfIndexExistRequest = new GetIndexRequest(indexName); 
+    private void createIndexIfNotExists(final String indexName) {
+        GetIndexRequest checkIfIndexExistRequest = new GetIndexRequest(indexName);
 
         try {
-        	LOGGER.info("Checking if exists for: " + indexName);
-			boolean exists = ElasticsearchConnector.restHighLevelClient.indices().exists(checkIfIndexExistRequest, RequestOptions.DEFAULT);
-			if (!exists) {
-				CreateIndexRequest createIndexRequest = new CreateIndexRequest(indexName);
-				CreateIndexResponse createIndexResponse = ElasticsearchConnector.restHighLevelClient.indices().create(createIndexRequest, RequestOptions.DEFAULT);
-				boolean acknowledged = createIndexResponse.isAcknowledged(); 
-				LOGGER.info(indexName + " did not exist, createResponse: " + createIndexResponse.toString());
-				LOGGER.info(" was it acknowledged?: " + acknowledged);
-			}
-			else LOGGER.info(indexName + " did already exist");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			LOGGER.error(e.getMessage());
-		}
-	}
+            LOGGER.info("Checking if exists for: " + indexName);
+            boolean exists = ElasticsearchConnector.restHighLevelClient.indices().exists(checkIfIndexExistRequest, RequestOptions.DEFAULT);
+            if (!exists) {
+                CreateIndexRequest createIndexRequest = new CreateIndexRequest(indexName);
+                CreateIndexResponse createIndexResponse = ElasticsearchConnector.restHighLevelClient.indices().create(createIndexRequest, RequestOptions.DEFAULT);
+                boolean acknowledged = createIndexResponse.isAcknowledged();
+                LOGGER.info(indexName + " did not exist, createResponse: " + createIndexResponse);
+                LOGGER.info(" was it acknowledged?: " + acknowledged);
+            } else LOGGER.info(indexName + " did already exist");
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
 }
