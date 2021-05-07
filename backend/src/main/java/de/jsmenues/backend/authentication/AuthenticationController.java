@@ -1,7 +1,5 @@
 package de.jsmenues.backend.authentication;
 
-import java.io.IOException;
-
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.POST;
@@ -24,14 +22,14 @@ public class AuthenticationController {
     @POST
     @Path("/login")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response login(String password) throws IOException {
+    public Response login(String password) {
         TokenGenerator tokenGenerator = new TokenGenerator();
         String token = tokenGenerator.generateMapToken(password);
         return Response.ok(token).build();
     }
 
     /**
-     * verfiy if token is valid
+     * verify if token is valid
      * 
      * @param token passing from frontend
      * 
@@ -41,7 +39,7 @@ public class AuthenticationController {
     @POST
     @Path("/isvalid")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response isValid(String token) throws IOException {
+    public Response isValid(String token) {
         boolean isValid = AuthenticationTokens.getInstance().isValid(token);
         String stringIsValid = String.valueOf(isValid);
         return Response.ok(stringIsValid).build();

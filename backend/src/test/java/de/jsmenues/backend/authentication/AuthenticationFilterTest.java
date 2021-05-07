@@ -79,7 +79,7 @@ public class AuthenticationFilterTest extends JerseyTest {
         when(repo.getVal("password")).thenReturn("1234");
         String pass = ConfigurationRepository.getRepo().getVal("password");
 
-        Set<String> rolesSet = new HashSet<String>();
+        Set<String> rolesSet = new HashSet<>();
         rolesSet.add("ADMIN");
         assertTrue(authenticationFilter.isUserAllowed(username, pass, rolesSet));
     }
@@ -94,8 +94,8 @@ public class AuthenticationFilterTest extends JerseyTest {
         authenticationResource.getInstances();
         String username = "admin";
         String role = "RolesAllowed";
-        User user = authenticationFilter.new User(username, role);
-        Authorizer authorizer = authenticationFilter.new Authorizer(user);
+        User user = new User(username, role);
+        Authorizer authorizer = new Authorizer(user);
         assertEquals("admin", authorizer.getUserPrincipal().getName());
         assertEquals("BASIC", authorizer.getAuthenticationScheme());
         assertTrue(authorizer.isSecure());
