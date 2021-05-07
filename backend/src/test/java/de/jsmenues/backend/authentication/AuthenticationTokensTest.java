@@ -15,10 +15,8 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-import static org.mockito.Mockito.when;
 
 class AuthenticationTokensTest extends JerseyTest {
-
     private final ConfigurationRepository repo =
             Mockito.mock(ConfigurationRepository.class, RETURNS_DEEP_STUBS);
 
@@ -113,31 +111,6 @@ class AuthenticationTokensTest extends JerseyTest {
         assertTrue(tokens.deleteOldTokens());
         assertTrue(tokenMap.containsKey(validToken));
         assertFalse(tokenMap.containsKey(expiredToken));
-    }
-
-    /**
-     * Test to verify if a password is changed.
-     */
-    @Test
-    void changePasswordTest() {
-        Password password = new Password();
-        String currentPassword = "1234";
-        String oldPassword = "1234";
-        String newPassword = "1111";
-        when(repo.getVal("password")).thenReturn(currentPassword);
-        boolean isChanged = password.changeRootPassword(oldPassword, newPassword);
-        assertTrue(isChanged);
-    }
-
-    /**
-     * Test set password to Redis
-     */
-    @Test
-    void setRootPassword() {
-        String rootPassword = "1234";
-        when(repo.getVal("password")).thenReturn("1234");
-        boolean isSaved = Password.setRootPassword(rootPassword);
-        assertTrue(isSaved);
     }
 
     /**
