@@ -1,5 +1,8 @@
 package de.jsmenues.backend.elasticsearch.dao;
 
+import de.jsmenues.backend.elasticsearch.ElasticsearchConnector;
+import de.jsmenues.backend.elasticsearch.expectedvalue.ExpectedValues;
+import de.jsmenues.backend.elasticsearch.service.HostInformationService;
 import org.codehaus.jackson.type.TypeReference;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -18,28 +21,26 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.jsmenues.backend.elasticsearch.ElasticsearchConnector;
-import de.jsmenues.backend.elasticsearch.expectedvalue.ExpectedValues;
-import de.jsmenues.backend.elasticsearch.service.HostInformationService;
-
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+// TODO: this class and ExpectedValues form a circular dependency and cannot use injection.
+//  This dependency is a sign that these classes are somewhat connected which should not be that way.
+//  The part for getting the last values from a host should probably be extracted to another class
+//  and both InformationHostDao and ExpectedValues should inject an instance of that class instead.
+@Singleton
 public class InformationHostDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(InformationHostDao.class);
 
     private final ElasticsearchConnector connector;
 
-    private final ExpectedValues expectedValues;
-
     @Inject
-    public InformationHostDao(ElasticsearchConnector connector,
-                              ExpectedValues expectedValues) {
+    public InformationHostDao(ElasticsearchConnector connector) {
         this.connector = connector;
-        this.expectedValues = expectedValues;
     }
 
     /**
@@ -77,7 +78,9 @@ public class InformationHostDao {
                         String itemid = String.valueOf(item.get("itemid"));
                         String lastClock = String.valueOf(item.get("lastclock"));
 
-                        String expectedValue = expectedValues.getExpectedValueByHostnameAndKey(hostname, key);
+                        // Ugly hack to break a circular dependency between these classes.
+                        String expectedValue = new ExpectedValues(connector, this)
+                                .getExpectedValueByHostnameAndKey(hostname, key);
 
                         if (expectedValue.equals("")) {
                             expectedValue = actualValue;

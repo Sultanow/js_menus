@@ -21,6 +21,7 @@ import java.util.Arrays;
 /**
  * DAO that wraps access to Elasticsearch.
  */
+@Singleton
 public class ElasticsearchDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ElasticsearchDao.class);
 

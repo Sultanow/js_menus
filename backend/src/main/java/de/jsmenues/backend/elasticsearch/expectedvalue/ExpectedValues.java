@@ -31,7 +31,9 @@ import de.jsmenues.backend.elasticsearch.dao.InformationHostDao;
 import de.jsmenues.backend.elasticsearch.service.HostInformationService;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class ExpectedValues {
 	public static final String INDEX = "expected_values";
 	

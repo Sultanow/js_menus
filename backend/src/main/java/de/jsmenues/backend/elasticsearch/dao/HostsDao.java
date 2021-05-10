@@ -19,11 +19,13 @@ import de.jsmenues.backend.elasticsearch.ElasticsearchConnector;
 import de.jsmenues.backend.elasticsearch.service.HostInformationService;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Singleton
 public class HostsDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(HostsDao.class);
 

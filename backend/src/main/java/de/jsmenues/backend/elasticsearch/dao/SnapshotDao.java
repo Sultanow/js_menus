@@ -42,6 +42,7 @@ import de.jsmenues.backend.elasticsearch.ElasticsearchConnector;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+@Singleton
 public class SnapshotDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(SnapshotDao.class);
 
