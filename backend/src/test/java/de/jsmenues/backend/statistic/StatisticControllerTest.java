@@ -1,6 +1,6 @@
 package de.jsmenues.backend.statistic;
 
-import de.jsmenues.redis.repository.ConfigurationRepository;
+import de.jsmenues.backend.BackendApplication;
 import de.jsmenues.redis.repository.ConfigurationRepositoryMock;
 import de.jsmenues.redis.repository.IConfigurationRepository;
 import org.glassfish.jersey.client.ClientConfig;
@@ -12,11 +12,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.Test;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
@@ -24,42 +20,26 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-
-class StatisticControllerTest extends JerseyTest {
-    StatisticService service = mock(StatisticService.class, RETURNS_DEEP_STUBS);
-    IConfigurationRepository repoMock = spy(new ConfigurationRepositoryMock());
-
-    @BeforeEach
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        setRedisMock(repoMock);
-    }
-
-    @AfterEach
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
-        Field instance = ConfigurationRepository.class.getDeclaredField("instance");
-        instance.setAccessible(true);
-        instance.set(null, null);
-    }
+public class StatisticControllerTest extends JerseyTest {
+    private final StatisticService service = mock(StatisticService.class);
+    private final IConfigurationRepository repoMock = spy(new ConfigurationRepositoryMock());
 
     @Override
     public Application configure() {
         enable(TestProperties.LOG_TRAFFIC);
         enable(TestProperties.DUMP_ENTITY);
 
-        ResourceConfig rc = new ResourceConfig(StatisticController.class)
+        ResourceConfig rc = new BackendApplication()
                 .register(new AbstractBinder() {
                     @Override
                     public void configure() {
+                        bind(StatisticController.class).to(StatisticController.class);
                         bind(service).to(StatisticService.class);
+                        bind(repoMock).to(IConfigurationRepository.class);
                     }
                 });
         rc.register(MultiPartFeature.class);
@@ -72,7 +52,7 @@ class StatisticControllerTest extends JerseyTest {
     }
 
     @Test
-    void getAllChartNames() {
+    public void getAllChartNames() {
         //given
         repoMock.save("statistic.allChartNames", "[]");
         //when
@@ -82,7 +62,7 @@ class StatisticControllerTest extends JerseyTest {
     }
 
     @Test
-    void getChartDataForNameBlank() {
+    public void getChartDataForNameBlank() {
         //given
         initDefaultChartNames();
         ///when
@@ -92,16 +72,19 @@ class StatisticControllerTest extends JerseyTest {
     }
 
     @Test
-    void getChartDataForName() {
+    public void getChartDataForName() {
         //given
         //when
-        String responseMsg = target("/statistic/chartData").queryParam("chart", "Chart1").request().get(String.class);
+        String responseMsg = target("/statistic/chartData")
+                .queryParam("chart", "Chart1")
+                .request()
+                .get(String.class);
         //then
         verify(service, times(1)).getChartDataForName(anyString(), anyMap(), anyBoolean());
     }
 
     @Test
-    void getChartDataForNameWithStartDate() {
+    public void getChartDataForNameWithStartDate() {
         //given
         //when
         String responseMsg = target("/statistic/chartData")
@@ -114,7 +97,7 @@ class StatisticControllerTest extends JerseyTest {
     }
 
     @Test
-    void getChartDataForNameWithStartAndEndDate() {
+    public void getChartDataForNameWithStartAndEndDate() {
         //given
         //when
         String responseMsg = target("/statistic/chartData")
@@ -128,7 +111,7 @@ class StatisticControllerTest extends JerseyTest {
     }
 
     @Test
-    void getChartDataForNameWithoutStartDateWithEndDate() {
+    public void getChartDataForNameWithoutStartDateWithEndDate() {
         //given
         //wehn
         Response response = target("/statistic/chartData")
@@ -142,7 +125,7 @@ class StatisticControllerTest extends JerseyTest {
     }
 
     @Test
-    void getChartDataForNameWithNotVaildDates() {
+    public void getChartDataForNameWithNotVaildDates() {
         //given
         when(service.getChartDataForName(anyString(), anyMapOf(String.class, String.class), anyBoolean())).thenThrow(IllegalArgumentException.class);
         //when
@@ -156,7 +139,7 @@ class StatisticControllerTest extends JerseyTest {
     }
 
     @Test
-    void uploadNewDataWithResultFalse() {
+    public void uploadNewDataWithResultFalse() {
         //given
         FormDataMultiPart multiPart = new FormDataMultiPart();
         multiPart.bodyPart(new FormDataBodyPart("chartName", ""));
@@ -169,7 +152,7 @@ class StatisticControllerTest extends JerseyTest {
     }
 
     @Test
-    void uploadNewDataWithResultTrue() {
+    public void uploadNewDataWithResultTrue() {
         //given
         FormDataMultiPart multiPart = new FormDataMultiPart();
         multiPart.bodyPart(new FormDataBodyPart("chartName", ""));
@@ -182,7 +165,7 @@ class StatisticControllerTest extends JerseyTest {
     }
 
     @Test
-    void createChartWithEmptyName() {
+    public void createChartWithEmptyName() {
         //given
         FormDataMultiPart multiPart = new FormDataMultiPart();
         multiPart.bodyPart(new FormDataBodyPart("chartName", ""));
@@ -194,7 +177,7 @@ class StatisticControllerTest extends JerseyTest {
     }
 
     @Test
-    void createChartWithNullChartName() {
+    public void createChartWithNullChartName() {
         //given
         FormDataMultiPart multiPart = new FormDataMultiPart();
         multiPart.setMediaType(MediaType.MULTIPART_FORM_DATA_TYPE);
@@ -206,19 +189,20 @@ class StatisticControllerTest extends JerseyTest {
     }
 
     @Test
-    void createChartWithNullInputStream() {
+    public void createChartWithNullInputStream() {
         //given
         FormDataMultiPart multiPart = new FormDataMultiPart();
         multiPart.bodyPart(new FormDataBodyPart("chartName", "TestChart"));
         multiPart.setMediaType(MediaType.MULTIPART_FORM_DATA_TYPE);
         //when
-        Response response = target("/statistic/createChart").request().post(Entity.entity(multiPart, multiPart.getMediaType()), Response.class);
+        Response response = target("/statistic/createChart").request()
+                .post(Entity.entity(multiPart, multiPart.getMediaType()), Response.class);
         //then
         assertEquals(400, response.getStatus());
     }
 
     @Test
-    void createChartWithInputStreamAndChartName() {
+    public void createChartWithInputStreamAndChartName() {
         //given
         FormDataMultiPart multiPart = new FormDataMultiPart();
         multiPart.bodyPart(new FormDataBodyPart("chartName", "TestChart"));
@@ -234,7 +218,7 @@ class StatisticControllerTest extends JerseyTest {
     }
 
     @Test
-    void deleteChartWithoutChartName() {
+    public void deleteChartWithoutChartName() {
         //given
         //when
         target("/statistic/deleteChart").request().delete(String.class);
@@ -243,7 +227,7 @@ class StatisticControllerTest extends JerseyTest {
     }
 
     @Test
-    void deleteChartWithChartName() {
+    public void deleteChartWithChartName() {
         //given
         initDefaultChartNames();
         //when
@@ -253,7 +237,7 @@ class StatisticControllerTest extends JerseyTest {
     }
 
     @Test
-    void getAllGroups() {
+    public void getAllGroups() {
         //given
         when(service.getAllGroupNames()).thenReturn("[\"Group1\"]");
         //when
@@ -263,7 +247,7 @@ class StatisticControllerTest extends JerseyTest {
     }
 
     @Test
-    void getTimeseriesDatesWithoutChart() {
+    public void getTimeseriesDatesWithoutChart() {
         //given
         when(service.getTimeseriesDates("TestChart")).thenReturn("");
         //when
@@ -276,7 +260,7 @@ class StatisticControllerTest extends JerseyTest {
     }
 
     @Test
-    void getTimeseriesDatesWithChart() {
+    public void getTimeseriesDatesWithChart() {
         //given
         //when
         String responseMsg = target("/statistic/timeseriesDates")
@@ -286,20 +270,8 @@ class StatisticControllerTest extends JerseyTest {
         assertEquals("", responseMsg);
     }
 
-
-    private void setRedisMock(IConfigurationRepository mock) {
-        try {
-            Field instance = ConfigurationRepository.class.getDeclaredField("instance");
-            instance.setAccessible(true);
-            instance.set(instance, mock);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private void initDefaultChartNames() {
         String configValue = "[{\"groupName\":\"Group1\",\"charts\":{\"Chart1\":{\"accuracy\":\"none\",\"timeseries\":false,\"multiple\":false,\"scriptName\":\"/tmp/script1.py\",\"description\":\"Desc\",\"dbName\":\"Chart1\"},\"Chart2\":{\"accuracy\":\"none\",\"timeseries\":false,\"multiple\":false,\"scriptName\":\"/tmp/script2.py\",\"description\":\"Desc\",\"dbName\":\"Chart2\"}}},{\"groupName\":\"noGroup\",\"charts\":{\"Timemultiple\":{\"accuracy\":\"day\",\"timeseries\":true,\"multiple\":true,\"scriptName\":\"timetrace1.py\",\"description\":\"null\",\"dbName\":\"Timemultiple\"},\"Timenotmultiple\":{\"accuracy\":\"day\",\"timeseries\":true,\"multiple\":false,\"scriptName\":\"timetrace2.py\",\"description\":\"null\",\"dbName\":\"Timenotmultiple\"}}}]";
         repoMock.save("statistic.allChartNames", configValue);
     }
-
 }

@@ -1,32 +1,29 @@
 package de.jsmenues.backend.elasticsearch.controller;
 
+import de.jsmenues.backend.elasticsearch.dao.InformationHostDao;
+import de.jsmenues.backend.zabbixservice.ZabbixService;
+
+import javax.annotation.security.PermitAll;
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.security.PermitAll;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import org.codehaus.jackson.map.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import de.jsmenues.backend.elasticsearch.dao.InformationHostDao;
-import de.jsmenues.backend.zabbixservice.ZabbixService;
-
 @Path("/elasticsearch/hostInformation")
 public class InformationHostController {
-    static ObjectMapper objectMapper = new ObjectMapper();
-    private static Logger LOGGER = LoggerFactory.getLogger(InformationHostController.class);
+    private final ZabbixService zabbixService;
+
+    private final InformationHostDao dao;
+
+    @Inject
+    public InformationHostController(ZabbixService zabbixService, InformationHostDao dao) {
+        this.zabbixService = zabbixService;
+        this.dao = dao;
+    }
 
     /**
      * insert all host information from zabbix to elasticsearch
@@ -35,11 +32,9 @@ public class InformationHostController {
      */
     @PermitAll
     @PUT
-    public Response insertAllHostInformation() throws IOException, ParseException {
-
-        ZabbixService zabbixService = new ZabbixService();
+    public Response insertAllHostInformation() {
         List<Map<String, List<Object>>> result = zabbixService.getHostInfos();
-        InformationHostDao.insertAllHostInformation(result);
+        dao.insertAllHostInformation(result);
         return Response.ok(result).build();
     }
 
@@ -52,10 +47,8 @@ public class InformationHostController {
     @GET
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllHostInformation() throws IOException {
-
-        List<Map<String, Object>> result = InformationHostDao.getAllHostInformation();
-
+    public Response getAllHostInformation() {
+        List<Map<String, Object>> result = dao.getAllHostInformation();
         return Response.ok(result).build();
     }
 
@@ -69,15 +62,15 @@ public class InformationHostController {
     @GET
     @Path("/{hostname}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response gethostinformationByListOfNames(@PathParam("hostname") List<String> hostNames) {
-        List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+    public Response getHostInformationByListOfNames(@PathParam("hostname") List<String> hostNames) {
+        List<Map<String, Object>> result = new ArrayList<>();
         try {
             for (String hostName : hostNames) {
-                result = InformationHostDao.getHostInformationByHostName(hostName);
-
+                result = dao.getHostInformationByHostName(hostName);
             }
             return Response.ok(result).build();
         } catch (Exception e) {
+            // TODO: an exception should not be 200 OK.
             return Response.ok(e.getMessage()).build();
         }
     }
@@ -91,8 +84,8 @@ public class InformationHostController {
     @GET
     @Path("/all/keys")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllKeys() throws IOException {
-        List<String> result = InformationHostDao.getAllKeys();
+    public Response getAllKeys() {
+        List<String> result = dao.getAllKeys();
         return Response.ok(result).build();
     }
 
@@ -107,9 +100,10 @@ public class InformationHostController {
     @GET
     @Path("/lastValue/{hostname}/{itemkey}")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response getLastValue(@PathParam("hostname") String hostName, @PathParam("itemkey") String itemKey)
+    public Response getLastValue(@PathParam("hostname") String hostName,
+                                 @PathParam("itemkey") String itemKey)
             throws IOException {
-        String result = InformationHostDao.getLastValuByKey(hostName, itemKey);
+        String result = dao.getLastValueByKey(hostName, itemKey);
         return Response.ok(result).build();
     }
 
@@ -124,8 +118,7 @@ public class InformationHostController {
     @Path("/{hostid}")
     @Produces(MediaType.TEXT_PLAIN)
     public Response deleteHostById(@PathParam("hostid") String hostId) throws IOException {
-
-        String result = InformationHostDao.deleteHostInformationById(hostId);
+        String result = dao.deleteHostInformationById(hostId);
         return Response.ok(result).build();
     }
 

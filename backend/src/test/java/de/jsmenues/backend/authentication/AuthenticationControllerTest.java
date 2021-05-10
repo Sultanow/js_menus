@@ -4,30 +4,25 @@ import de.jsmenues.backend.BackendApplication;
 import de.jsmenues.redis.repository.ConfigurationRepository;
 import de.jsmenues.redis.repository.IConfigurationRepository;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class AuthenticationControllerTest extends JerseyTest {
-    ConfigurationRepository repo = mock(ConfigurationRepository.class);
-    AuthenticationTokens tokens = mock(AuthenticationTokens.class);
+    private final ConfigurationRepository repo = mock(ConfigurationRepository.class);
+    private final AuthenticationTokens tokens = mock(AuthenticationTokens.class);
 
     @Override
     public Application configure() {
@@ -35,11 +30,10 @@ public class AuthenticationControllerTest extends JerseyTest {
         enable(TestProperties.DUMP_ENTITY);
 
         ResourceConfig rc = new BackendApplication();
-        rc.register(MultiPartFeature.class);
         rc.register(new AbstractBinder() {
             @Override
             protected void configure() {
-                // ranked is needed to make these override the original definitions.
+                // Use a higher rank to override the definitions in BackendApplication with our mocks.
                 bind(repo).to(IConfigurationRepository.class).ranked(2);
                 bind(tokens).to(AuthenticationTokens.class).ranked(2);
             }
@@ -48,45 +42,17 @@ public class AuthenticationControllerTest extends JerseyTest {
     }
 
     /**
-     * Redis mock
-     */
-    void setRedisMock(ConfigurationRepository mock) {
-        try {
-            Field instance = ConfigurationRepository.class.getDeclaredField("instance");
-            instance.setAccessible(true);
-            instance.set(instance, mock);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @BeforeEach
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        setRedisMock(repo);
-    }
-
-    @AfterEach
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
-        Field instance = ConfigurationRepository.class.getDeclaredField("instance");
-        instance.setAccessible(true);
-        instance.set(null, null);
-    }
-
-    /**
      * Test "login" and "isvalid" endpoint
      */
     @Test
-    void loginTest() {
+    public void loginTest() {
         when(tokens.isValid(any())).thenReturn(true);
 
         Response loginResponse = target("/authentication/login")
                 .request()
                 .post(Entity.entity("somepassword", MediaType.TEXT_PLAIN));
         String token = loginResponse.readEntity(String.class);
+        assertFalse(token.isEmpty());
 
         Response response = target("/authentication/isvalid")
                 .request()
@@ -101,7 +67,7 @@ public class AuthenticationControllerTest extends JerseyTest {
      * Test "changePassword" endpoint
      */
     @Test
-    void changePasswordTest() {
+    public void changePasswordTest() {
         when(repo.getVal("password")).thenReturn("somepass");
         when(tokens.isValid(any())).then(invocationOnMock -> {
             System.out.println("isValid() called!");

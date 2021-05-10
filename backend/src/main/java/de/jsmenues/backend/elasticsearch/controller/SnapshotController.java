@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.security.PermitAll;
+import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -17,19 +18,22 @@ import javax.ws.rs.core.Response;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.snapshots.RestoreInfo;
 import org.elasticsearch.snapshots.SnapshotInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import de.jsmenues.backend.elasticsearch.dao.SnapshotDao;
 import de.jsmenues.backend.zabbixservice.ZabbixElasticsearchSynchronization;
 
 @Path("/elasticsearch/snapshot")
 public class SnapshotController {
-    private static Logger LOGGER = LoggerFactory.getLogger(SnapshotController.class);
+    private final SnapshotDao dao;
+
+    @Inject
+    public SnapshotController(SnapshotDao dao) {
+        this.dao = dao;
+    }
 
     /**
      * Create snapshot
-     * 
+     *
      * @param snapshotName
      * @return snapshot is created true or false
      */
@@ -37,15 +41,14 @@ public class SnapshotController {
     @PUT
     @Path("/{snapshotname}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createSnapshot(@PathParam("snapshotname") String snapshotName) throws IOException {
-
-        RestStatus result = SnapshotDao.creatSnapshot(snapshotName);
+    public Response createSnapshot(@PathParam("snapshotname") String snapshotName) {
+        RestStatus result = dao.createSnapshot(snapshotName);
         return Response.ok(result.toString()).build();
     }
 
     /**
      * Get snapshot
-     * 
+     *
      * @param snapshotName
      * @return list of snapshot info
      */
@@ -53,16 +56,14 @@ public class SnapshotController {
     @GET
     @Path("/{snapshotname}")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response getSnapshotByName(@PathParam("snapshotname") String snapshotName) throws IOException {
-
-        List<SnapshotInfo> result = SnapshotDao.getSnapshot(snapshotName);
-
+    public Response getSnapshotByName(@PathParam("snapshotname") String snapshotName) {
+        List<SnapshotInfo> result = dao.getSnapshot(snapshotName);
         return Response.ok(result.toString()).build();
     }
 
     /**
      * Delete snapshot by name
-     * 
+     *
      * @param snapshotName
      * @return snapshot is deleted true or false
      */
@@ -70,16 +71,14 @@ public class SnapshotController {
     @DELETE
     @Path("/{snapshotname}")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response deleteSnapshot(@PathParam("snapshotname") String snapshotName) throws IOException {
-
-        boolean result = SnapshotDao.deleteSnapshot(snapshotName);
-        String stringResult = String.valueOf(result);
-        return Response.ok(stringResult).build();
+    public Response deleteSnapshot(@PathParam("snapshotname") String snapshotName) {
+        boolean result = dao.deleteSnapshot(snapshotName);
+        return Response.ok(result).build();
     }
 
     /**
      * Restore index by index pattern
-     * 
+     *
      * @param snapshotName
      * @return restore info
      */
@@ -88,110 +87,94 @@ public class SnapshotController {
     @Path("/restore/{snapshotname}/{indexpattern}/{rename}")
     @Produces(MediaType.TEXT_PLAIN)
     public Response restoreAllIndex(@PathParam("snapshotname") String snapshotName,
-            @PathParam("indexpattern") String indexPattern, @PathParam("rename") String rename) throws IOException {
-
-        RestoreInfo result = SnapshotDao.restoreIndexfromSnapshot(snapshotName, indexPattern, rename);
-        String stringResult = String.valueOf(result);
-        return Response.ok(stringResult).build();
+                                    @PathParam("indexpattern") String indexPattern,
+                                    @PathParam("rename") String rename) {
+        RestoreInfo result = dao.restoreIndexFromSnapshot(snapshotName, indexPattern, rename);
+        return Response.ok(result).build();
     }
 
     /**
      * Create lifecycle to create snapshot in regular period
-     * 
+     *
      * @return lifecycle is created true or false
      */
     @PermitAll
     @PUT
     @Path("/lifeCycle")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response createLifecycle() throws IOException {
-
-        boolean result = SnapshotDao.createLifecycle();
-        String stringResult = String.valueOf(result);
-        return Response.ok(stringResult).build();
+    public Response createLifecycle() {
+        boolean result = dao.createLifecycle();
+        return Response.ok(result).build();
     }
 
     /**
      * Used to start life ycle
-     * 
+     *
      * @return lifecycle ist started true or false
      */
     @PermitAll
     @POST
     @Path("/lifeCycle/start")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response startLifecycle() throws IOException {
-
-        boolean result = SnapshotDao.startLifeCycle();
-        String stringResult = String.valueOf(result);
-        return Response.ok(stringResult).build();
+    public Response startLifecycle() {
+        boolean result = dao.startLifeCycle();
+        return Response.ok(result).build();
     }
 
     /**
      * Used to stop lifecycle
-     * 
+     *
      * @return lifecycle ist stoped true or false
      */
     @PermitAll
     @POST
     @Path("/lifeCycle/stop")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response stopLifecycle() throws IOException {
-
-        boolean result = SnapshotDao.stopLifeCycle();
-        String stringResult = String.valueOf(result);
-        return Response.ok(stringResult).build();
+    public Response stopLifecycle() {
+        boolean result = dao.stopLifeCycle();
+        return Response.ok(result).build();
     }
 
     /**
      * Get last success snapshot name
-     * 
+     *
      * @return snopshot name
      */
     @PermitAll
     @GET
     @Path("/lastSuccessSnapshotName")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response getLifecycle() throws IOException {
-
-        String result = SnapshotDao.getLastSuccessSnapshotName();
-
+    public Response getLifecycle() {
+        String result = dao.getLastSuccessSnapshotName();
         return Response.ok(result).build();
-
     }
 
     /**
      * Used to know if repository "backup" exist
-     * 
+     *
      * @return true or false
      */
     @PermitAll
     @GET
     @Path("/ifRepositoryExist")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response getRepo() throws IOException {
-
-        boolean result = SnapshotDao.ifRepositoryExist();
-        String stringResult = String.valueOf(result);
-        return Response.ok(stringResult).build();
-
+    public Response getRepo() {
+        boolean result = dao.doesBackupRepositoryExist();
+        return Response.ok(result).build();
     }
 
     /**
      * Used to stop the synchronizatio betwenn zabbix and elasticseach
-     * 
+     *
      * @return true or false
      */
     @PermitAll
     @POST
     @Path("/stopSynchronization")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response stopSynchronization() throws IOException {
-        if (ZabbixElasticsearchSynchronization.stopSynchronization) {
-            ZabbixElasticsearchSynchronization.stopSynchronization = false;
-        } else {
-            ZabbixElasticsearchSynchronization.stopSynchronization = true;
-        }
+    // TODO: this actually just toggles and does not stop, is this the wanted behaviour?
+    public Response stopSynchronization() {
+        ZabbixElasticsearchSynchronization.stopSynchronization = !ZabbixElasticsearchSynchronization.stopSynchronization;
         return Response.ok(ZabbixElasticsearchSynchronization.stopSynchronization).build();
 
     }

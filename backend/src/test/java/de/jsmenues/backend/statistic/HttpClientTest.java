@@ -10,11 +10,10 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.Application;
 import java.io.IOException;
@@ -23,11 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-class HttpClientTest extends JerseyTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(HttpClientTest.class);
+public class HttpClientTest extends JerseyTest {
     private HttpServer server;
     private static final String BASE_URI = "http://localhost:8081/test";
     private final HttpClient client = new HttpClient();
@@ -41,10 +36,9 @@ class HttpClientTest extends JerseyTest {
         super.setUp();
         server = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI));
         server.getServerConfiguration().addHttpHandler(new HttpHandler() {
-
             @Override
-            public void service(Request rqst, Response rspns) {
-                rspns.setStatus(200);
+            public void service(Request request, Response response) {
+                response.setStatus(200);
             }
         });
     }
@@ -73,7 +67,7 @@ class HttpClientTest extends JerseyTest {
         //when
         response = client.sendFileDataToPythonService(BASE_URI,filePath.toFile().getAbsolutePath(), "", "");
         //then
-        assertEquals(200, response.getStatus());
+        Assertions.assertEquals(200, response.getStatus());
     }
 
     @Test
@@ -83,6 +77,6 @@ class HttpClientTest extends JerseyTest {
         //when
         response =  client.sendFileDataToPythonService(BASE_URI, "notExisitingFile.txt", "", "");
         //then
-        assertEquals(500, response.getStatus());
+        Assertions.assertEquals(500, response.getStatus());
     }
 }

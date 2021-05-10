@@ -5,14 +5,17 @@ import de.jsmenues.redis.repository.ConfigurationRepository;
 import de.jsmenues.redis.repository.IConfigurationRepository;
 
 public class ZabbixUser {
+    private static final String KEY_USER = "configuration.zabbix.User";
+    private static final String KEY_PASSWORD = "configuration.zabbix.Password";
+    private  static final String KEY_URL = "configuration.zabbix.URL";
+
     private String username;
     private String password;
     private String zabbixUrl;
 
+    @Deprecated
     public ZabbixUser() {
-        username = ConfigurationRepository.getRepo().getVal("configuration.zabbix.User");
-        password = ConfigurationRepository.getRepo().getVal("configuration.zabbix.Password");
-        zabbixUrl = ConfigurationRepository.getRepo().getVal("configuration.zabbix.URL");
+
     }
 
     public ZabbixUser(String user, String pass, String url) {
@@ -21,6 +24,13 @@ public class ZabbixUser {
         this.zabbixUrl = url;
     }
 
+    public static ZabbixUser loadFromRepository(IConfigurationRepository configurationRepository) {
+        String username = configurationRepository.getVal(KEY_USER);
+        String password = configurationRepository.getVal(KEY_PASSWORD);
+        String zabbixUrl = configurationRepository.getVal(KEY_URL);
+
+        return new ZabbixUser(username, password, zabbixUrl);
+    }
 
     public String getUsername() {
         return username;
@@ -39,15 +49,12 @@ public class ZabbixUser {
         return "configuration.zabbix.User: " + username + "; configuration.zabbix.Password: " + password + "; configuration.zabbix.URL: " + zabbixUrl;
     }
 
-    public void saveUser() {
-        IConfigurationRepository repo = ConfigurationRepository.getRepo();
-        Configuration userConfiguration = new Configuration("configuration.zabbix.User", this.username);
-        repo.save(userConfiguration);
-        Configuration passConfiguration = new Configuration("configuration.zabbix.Password", this.password);
-        repo.save(passConfiguration);
-        Configuration urlConfig = new Configuration("configuration.zabbix.URL", this.zabbixUrl);
-        repo.save(urlConfig);
+    public void saveUser(IConfigurationRepository configurationRepository) {
+        Configuration userConfiguration = new Configuration(KEY_USER, this.username);
+        configurationRepository.save(userConfiguration);
+        Configuration passConfiguration = new Configuration(KEY_PASSWORD, this.password);
+        configurationRepository.save(passConfiguration);
+        Configuration urlConfig = new Configuration(KEY_URL, this.zabbixUrl);
+        configurationRepository.save(urlConfig);
     }
-
-
 }

@@ -19,23 +19,32 @@ import io.github.cgi.zabbix.api.ZabbixApi;
 import de.jsmenues.backend.zabbixapi.ZabbixUser;
 import de.jsmenues.redis.repository.ConfigurationRepository;
 
-public class ZabbixService {
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ZabbixService.class);
+@Singleton
+public class ZabbixService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ZabbixService.class);
 
     public static ObjectMapper mapper = new ObjectMapper();
 
+    private final ConfigurationRepository configurationRepository;
+
+    @Inject
+    public ZabbixService(ConfigurationRepository configurationRepository) {
+        this.configurationRepository = configurationRepository;
+    }
+
     /**
      * Is used to login in Zabbix
-     * 
      */
     private ZabbixApi zabbixLogin() {
-        ZabbixUser user = new ZabbixUser();
+        ZabbixUser user = ZabbixUser.loadFromRepository(configurationRepository);
         ZabbixApi zabbixApi = new DefaultZabbixApi(user.getZabbixUrl());
         zabbixApi.init();
         try {
-            boolean loginsuccess = zabbixApi.login(user.getUsername(), user.getPassword());
-            if (!loginsuccess) {
+            boolean loginSuccessful = zabbixApi.login(user.getUsername(), user.getPassword());
+            if (!loginSuccessful) {
             	LOGGER.info("Zabbix login was not successful");
                 zabbixApi = null;
             }
@@ -52,12 +61,11 @@ public class ZabbixService {
      * 
      * @param api     http call
      * @param request login request
-     * @param auth    authentication response
      * @param retry   times of calling if request failed
      * 
      * @return response about the request
      */
-    public JsonNode call(ZabbixApi api, Request request, boolean auth, int retry) {
+    public JsonNode call(ZabbixApi api, Request request, int retry) {
         JsonNode getResponse = null;
         boolean recall = true;
         for (int i = 0; (i < retry) && recall; i++) {
@@ -89,17 +97,16 @@ public class ZabbixService {
         List<String> hostOutputParams = new LinkedList<>();
         hostOutputParams.add("hostid");
         hostOutputParams.add("host");
-        String filterGroup = ConfigurationRepository.getRepo().getVal("configuration.zabbix.filterGroup");
+        String filterGroup = configurationRepository.getVal("configuration.zabbix.filterGroup");
         if (filterGroup.isEmpty()) {
 
             Request hostRequest = RequestBuilder.newBuilder().method("host.get")
                     .paramEntry("output", hostOutputParams.toArray()).build();
-            JsonNode getResponse = call(api, hostRequest, true, 3);
+            JsonNode getResponse = call(api, hostRequest, 3);
             JsonNode result = getResponse.path("result");
-            List<Map<String, Object>> mapResult = mapper.convertValue(result,
+            return mapper.convertValue(result,
                     new TypeReference<List<Map<String, Object>>>() {
                     });
-            return mapResult;
         } else {
             Map<String, String[]> filter = new HashMap<>();
             filter.put("name", new String[] { filterGroup });
@@ -109,19 +116,17 @@ public class ZabbixService {
             Request hostgroupRequest = RequestBuilder.newBuilder().method("hostgroup.get")
                     .paramEntry("selectHosts", hostOutputParams.toArray()).paramEntry("filter", filter)
                     .paramEntry("output", outputParams).build();
-            JsonNode getResponse = call(api, hostgroupRequest, true, 3);
+            JsonNode getResponse = call(api, hostgroupRequest, 3);
             JsonNode result = getResponse.path("result");
 
             if (result.isArray()) {
                 for (final JsonNode objNode : result) {
-                    JsonNode node = objNode.get("hosts");
-                    result = node;
+                    result = objNode.get("hosts");
                 }
             }
-            List<Map<String, Object>> mapResult = mapper.convertValue(result,
+            return mapper.convertValue(result,
                     new TypeReference<List<Map<String, Object>>>() {
                     });
-            return mapResult;
         }
     }
 
@@ -141,7 +146,7 @@ public class ZabbixService {
         List<Map<String, Object>> mapAllHosts = mapper.convertValue(AllHosts,
                 new TypeReference<List<Map<String, Object>>>() {
                 });
-        ArrayList<String> hosts = new ArrayList<String>();
+        ArrayList<String> hosts = new ArrayList<>();
 
         for (Map<String, Object> host : mapAllHosts) {
             Object hostName = host.get("host");
@@ -156,12 +161,11 @@ public class ZabbixService {
         Request informationRequest = RequestBuilder.newBuilder().method("host.get").paramEntry("filter", filter)
                 .paramEntry("output", output).paramEntry("selectItems", selectItems).paramEntry("selectHosts", "extend")
                 .paramEntry("selectGroups", "extend").build();
-        JsonNode getResponse = call(api, informationRequest, true, 3);
+        JsonNode getResponse = call(api, informationRequest, 3);
         JsonNode result = getResponse.path("result");
-        List<Map<String, List<Object>>> mapAllHostInfo = mapper.convertValue(result,
+        return mapper.convertValue(result,
                 new TypeReference<List<Map<String, Object>>>() {
                 });
-        return mapAllHostInfo;
     }
 
     /**
@@ -201,11 +205,10 @@ public class ZabbixService {
         Request historyRequest = RequestBuilder.newBuilder().method("history.get").paramEntry("itemids", historyItemids)
                 .paramEntry("history", 4).paramEntry("sortfield", "clock").paramEntry("sortorder", "DESC")
                 .paramEntry("limit", 10000).paramEntry("output", historyOutputParams).build();
-        JsonNode getResponse = call(api, historyRequest, true, 4);
+        JsonNode getResponse = call(api, historyRequest, 4);
         JsonNode result = getResponse.path("result");
-        List<Map<String, Object>> mapHistory = mapper.convertValue(result,
+        return mapper.convertValue(result,
                 new TypeReference<List<Map<String, Object>>>() {
                 });
-        return mapHistory;
     }
 }

@@ -1,59 +1,21 @@
 package de.jsmenues.backend.authentication;
 
-import de.jsmenues.redis.repository.ConfigurationRepository;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import javax.ws.rs.core.Application;
-import java.lang.reflect.Field;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 
-class AuthenticationTokensTest extends JerseyTest {
-    private final ConfigurationRepository repo =
-            Mockito.mock(ConfigurationRepository.class, RETURNS_DEEP_STUBS);
-
+public class AuthenticationTokensTest extends JerseyTest {
     @Override
     public Application configure() {
         enable(TestProperties.LOG_TRAFFIC);
         enable(TestProperties.DUMP_ENTITY);
         return new ResourceConfig(AuthenticationTokens.class);
-    }
-
-    /**
-     * Redis mock
-     */
-    void setRedisMock(ConfigurationRepository mock) {
-        try {
-            Field instance = ConfigurationRepository.class.getDeclaredField("instance");
-            instance.setAccessible(true);
-            instance.set(instance, mock);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @BeforeEach
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        setRedisMock(repo);
-    }
-
-    @AfterEach
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
-        Field instance = ConfigurationRepository.class.getDeclaredField("instance");
-        instance.setAccessible(true);
-        instance.set(null, null);
     }
 
     /**

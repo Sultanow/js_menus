@@ -1,48 +1,39 @@
 package de.jsmenues.backend.elasticsearch.expectedvalue;
 
-import java.io.IOException;
+import javax.annotation.security.PermitAll;
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.security.PermitAll;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @Path("/elasticsearch/expectedValues")
 public class ExpectedValuesController {
+    private final ExpectedValues expectedValues;
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ExpectedValuesController.class);
+    @Inject
+    public ExpectedValuesController(ExpectedValues expectedValues) {
+        this.expectedValues = expectedValues;
+    }
 
     /**
      * insert expected values from frontend
-     * 
+     *
      * @param hostName
      * @param key
      * @param expectedValue
-     * 
      * @return response about stored data
      */
     @PermitAll
     @PUT
     @Path("/{hostname}/{key}/{expectedvalue}")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response insertExpectedValues(@PathParam("hostname") String hostName, @PathParam("key") String key,
-            @PathParam("expectedvalue") String expectedValue) throws IOException {
-
-        try {
-            ExpectedValues.insertExpectedValues(hostName, key, expectedValue);
-            return Response.ok().build();
-        } catch (Exception e) {
-            return Response.ok(e.getMessage()).build();
-        }
+    public Response insertExpectedValues(@PathParam("hostname") String hostName,
+                                         @PathParam("key") String key,
+                                         @PathParam("expectedvalue") String expectedValue) throws Exception {
+        expectedValues.insertExpectedValues(hostName, key, expectedValue);
+        return Response.ok().build();
     }
 
     /**
@@ -54,21 +45,16 @@ public class ExpectedValuesController {
     @GET
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getExpectedValues() {
-        try {
-            List<Map<String, Object>> result = ExpectedValues.getExpectedValues();
-            return Response.ok(result).build();
-        } catch (Exception e) {
-            return Response.ok("Expected value  are not exist").build();
-        }
+    public Response getExpectedValues() throws Exception {
+        List<Map<String, Object>> result = expectedValues.getExpectedValues();
+        return Response.ok(result).build();
     }
 
     /**
      * Get a expected value from elasticsearch by host name and key
-     * 
+     *
      * @param hostName
      * @param key
-     * 
      * @return expected value
      */
     @PermitAll
@@ -76,18 +62,9 @@ public class ExpectedValuesController {
     @Path("/{hostname}/{key}")
     @Produces(MediaType.TEXT_PLAIN)
     public Response getExpectedValueByHostnameAndKey(@PathParam("hostname") String hostName,
-            @PathParam("key") String key) {
-
-        try {
-            String result = ExpectedValues.getExpectedValueByHostnameAndKey(hostName, key);
-            if (result != "") {
-                return Response.ok(result).build();
-            } else {
-                return Response.ok("").build();
-            }
-        } catch (Exception e) {
-            return Response.ok("").build();
-        }
+                                                     @PathParam("key") String key) {
+        String result = expectedValues.getExpectedValueByHostnameAndKey(hostName, key);
+        return Response.ok(result).build();
     }
 
 }

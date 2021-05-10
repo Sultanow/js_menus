@@ -5,11 +5,15 @@ import com.google.gson.reflect.TypeToken;
 import de.jsmenues.redis.repository.ConfigurationRepository;
 import de.jsmenues.redis.repository.ConfigurationRepositoryMock;
 import de.jsmenues.redis.repository.IConfigurationRepository;
+import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.test.JerseyTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
+import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.Field;
@@ -26,18 +30,6 @@ public class StatisticServiceTest {
     private final IConfigurationRepository configurationRepository = spy(new ConfigurationRepositoryMock());
     
     private final StatisticService service = new StatisticService(httpClient, configurationRepository);
-
-    @BeforeEach
-    public void setUp() {
-        setRedisMock(configurationRepository);
-    }
-
-    @AfterEach
-    public void tearDown() throws Exception {
-        Field instance = ConfigurationRepository.class.getDeclaredField("instance");
-        instance.setAccessible(true);
-        instance.set(null, null);
-    }
 
     // All Chart Names
     @Test
@@ -497,16 +489,6 @@ public class StatisticServiceTest {
         configurationRepository.save("statistic.chart.TimeMultiple.data.2020-05-08", "[{\"Date\": \"08\"}]");
         configurationRepository.save("statistic.chart.TimeMultiple.data.2020-05-09", "[{\"Date\": \"09\"}]");
         configurationRepository.save("statistic.chart.TimeMultiple.data.2020-05-10", "[{\"Date\": \"10\"}]");
-    }
-
-    private void setRedisMock(IConfigurationRepository mock) {
-        try {
-            Field instance = ConfigurationRepository.class.getDeclaredField("instance");
-            instance.setAccessible(true);
-            instance.set(instance, mock);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private StatisticPlotly getStatisticPlotlyFromString(String item) {

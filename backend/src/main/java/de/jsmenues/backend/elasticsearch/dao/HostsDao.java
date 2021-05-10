@@ -18,36 +18,44 @@ import org.slf4j.LoggerFactory;
 import de.jsmenues.backend.elasticsearch.ElasticsearchConnector;
 import de.jsmenues.backend.elasticsearch.service.HostInformationService;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class HostsDao {
-    private static Logger LOGGER = LoggerFactory.getLogger(HostsDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HostsDao.class);
+
     private static final String INDEX = "hosts";
+
+    private final ElasticsearchConnector connector;
+
+    @Inject
+    public HostsDao(ElasticsearchConnector connector) {
+        this.connector = connector;
+    }
 
     /**
      * Insert all hosts from zabbix to elasticsearch
-     * 
+     *
      * @param hosts
-     * @return status if new hosts are inserted, updated or not
      */
-    public static void insertAllHosts(List<Map<String, Object>> hosts) throws IOException {
+    public void insertAllHosts(List<Map<String, Object>> hosts) throws IOException {
         IndexResponse indexResponse = null;
         for (Map<String, Object> host : hosts) {
-            String hostId = String.valueOf( host.get("hostid"));
+            String hostId = String.valueOf(host.get("hostid"));
             IndexRequest indexRequest = new IndexRequest(INDEX).source(host).id(hostId);
             GetRequest getRequest = new GetRequest(INDEX, hostId);
-            boolean exists = ElasticsearchConnector.restHighLevelClient.exists(getRequest, RequestOptions.DEFAULT);
+            boolean exists = connector.getClient().exists(getRequest, RequestOptions.DEFAULT);
             if (!exists) {
-                indexResponse = ElasticsearchConnector.restHighLevelClient.index(indexRequest,
+                indexResponse = connector.getClient().index(indexRequest,
                         RequestOptions.DEFAULT);
                 LOGGER.info(indexResponse + "\n host are inserted");
-            } 
+            }
         }
-        if(indexResponse==null)
-        LOGGER.info("hosts existed");
+        if (indexResponse == null)
+            LOGGER.info("hosts existed");
     }
 
     /**
@@ -55,7 +63,7 @@ public class HostsDao {
      *
      * @return list of hosts
      */
-    public static List<Map<String, Object>> getAllHosts() throws IOException {
+    public List<Map<String, Object>> getAllHosts() throws IOException {
 
         SearchRequest searchRequest = new SearchRequest(INDEX);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -64,60 +72,60 @@ public class HostsDao {
         searchRequest.source(searchSourceBuilder);
         searchRequest.scroll(TimeValue.timeValueSeconds(30L));
 
-        SearchResponse response = ElasticsearchConnector.restHighLevelClient.search(searchRequest,
+        SearchResponse response = connector.getClient().search(searchRequest,
                 RequestOptions.DEFAULT);
         SearchHit[] searchHits = response.getHits().getHits();
-        List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> results = new ArrayList<>();
         for (SearchHit hit : searchHits) {
             Map<String, Object> result = hit.getSourceAsMap();
             results.add(result);
         }
         return results;
     }
-    
+
     /**
      * Get all hostNames from elasticsearch
      *
      * @return list of hostNames
      */
-    public static ArrayList<String> getAllHostName() {
-        ArrayList<String> hostNames = new ArrayList<String>();
-     
+    public ArrayList<String> getAllHostName() {
+        ArrayList<String> hostNames = new ArrayList<>();
+
         try {
             List<Map<String, Object>> allHost = getAllHosts();
-            for(Map<String, Object> host :allHost ) {
+            for (Map<String, Object> host : allHost) {
                 String hostName = String.valueOf(host.get("host"));
                 hostNames.add(hostName);
-                }
-        }catch(IOException e) {
-          
+            }
+        } catch (IOException e) {
             e.printStackTrace();
-        }    
+        }
         return hostNames;
     }
 
 
     /**
      * Delete host by id from elasticsearch
+     *
      * @param hostId
      */
-    public static String deleteHostById(String hostId) throws IOException {
+    public String deleteHostById(String hostId) throws IOException {
 
         DeleteRequest deleteRequest = new DeleteRequest(INDEX, hostId);
-        DeleteResponse deleteResponse = ElasticsearchConnector.restHighLevelClient.delete(deleteRequest,
+        DeleteResponse deleteResponse = connector.getClient().delete(deleteRequest,
                 RequestOptions.DEFAULT);
         return deleteResponse.toString();
     }
 
     /**
      * Delete host info by id from elasticsearch
-     * 
+     *
      * @param hostId
      * @return reponse aboout host delete
      */
-    public static String deleteHostInfoById(String hostId) throws IOException {
+    public String deleteHostInfoById(String hostId) throws IOException {
         DeleteRequest deleteRequestInfo = new DeleteRequest(HostInformationService.INDEX, hostId);
-        DeleteResponse deleteResponse = ElasticsearchConnector.restHighLevelClient.delete(deleteRequestInfo,
+        DeleteResponse deleteResponse = connector.getClient().delete(deleteRequestInfo,
                 RequestOptions.DEFAULT);
         return deleteResponse.toString();
     }

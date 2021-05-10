@@ -3,10 +3,9 @@ package de.jsmenues.backend.zabbixapi;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Application;
-import static org.junit.Assert.assertEquals;
 
 public class ZabbixControllerTest extends JerseyTest {
 

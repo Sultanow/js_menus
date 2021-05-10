@@ -1,6 +1,5 @@
 package de.jsmenues.backend.statistic;
 
-import org.glassfish.jersey.internal.util.ExceptionUtils;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
@@ -17,9 +16,9 @@ import java.io.File;
 
 @Singleton
 public class HttpClient {
-    Logger LOGGER = LoggerFactory.getLogger(HttpClient.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HttpClient.class);
 
-    Client client = ClientBuilder.newBuilder().register(MultiPartFeature.class).build();
+    private final Client client = ClientBuilder.newBuilder().register(MultiPartFeature.class).build();
 
     /**
      * Send a file to the python web service and wait for the answer.
@@ -46,5 +45,4 @@ public class HttpClient {
             return Response.status(500).build();
         }
     }
-
 }

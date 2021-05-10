@@ -1,15 +1,14 @@
 package de.jsmenues.backend.zabbixapi;
 
-import de.jsmenues.redis.repository.ConfigurationRepository;
+import de.jsmenues.redis.repository.IConfigurationRepository;
 import io.github.cgi.zabbix.api.DefaultZabbixApi;
 import io.github.cgi.zabbix.api.Request;
 import io.github.cgi.zabbix.api.RequestBuilder;
 import io.github.cgi.zabbix.api.ZabbixApi;
 import org.codehaus.jackson.JsonNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.PermitAll;
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -23,7 +22,12 @@ import java.util.Map;
 
 @Path("zabbixapi")
 public class ZabbixController {
-    private static Logger LOGGER = LoggerFactory.getLogger(ZabbixController.class);
+    private final IConfigurationRepository configurationRepository;
+
+    @Inject
+    public ZabbixController(IConfigurationRepository configurationRepository) {
+        this.configurationRepository = configurationRepository;
+    }
 
     /**
      * Method handling HTTP GET requests. The returned object will be sent to the
@@ -35,10 +39,10 @@ public class ZabbixController {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String getTestConnection() {
-        ZabbixUser user = new ZabbixUser();
+        ZabbixUser user = ZabbixUser.loadFromRepository(configurationRepository);
         ZabbixApi zabbixApi = new DefaultZabbixApi(user.getZabbixUrl());
         zabbixApi.init();
-        boolean login = zabbixApi.login(user.getUsername(), user.getPassword());
+        zabbixApi.login(user.getUsername(), user.getPassword());
         return zabbixApi.apiVersion();
     }
 
@@ -55,7 +59,7 @@ public class ZabbixController {
         List<String> hostOutputParams = new LinkedList<>();
         hostOutputParams.add("hostid");
         hostOutputParams.add("host");
-        String filterGroup = ConfigurationRepository.getRepo().getVal("configuration.zabbix.filterGroup");
+        String filterGroup = configurationRepository.getVal("configuration.zabbix.filterGroup");
         if (filterGroup.isEmpty()) {
             Request hostRequest = RequestBuilder.newBuilder().method("host.get")
                     .paramEntry("output", hostOutputParams.toArray()).build();
@@ -68,7 +72,6 @@ public class ZabbixController {
             List<String> outputParams = new LinkedList<>();
             outputParams.add("name");
             outputParams.add("hosts");
-            Map<String, String[]> query = new HashMap<>();
             // query.put("output", hostOutputParams.toArray());
             Request hostgroupRequest = RequestBuilder.newBuilder().method("hostgroup.get")
                     .paramEntry("selectHosts", hostOutputParams.toArray()).paramEntry("filter", filter)
@@ -77,8 +80,7 @@ public class ZabbixController {
             JsonNode result = getResponse.path("result");
             if (result.isArray()) {
                 for (final JsonNode objNode : result) {
-                    JsonNode node = objNode.get("hosts");
-                    result = node;
+                    result = objNode.get("hosts");
                 }
             }
             return Response.ok(responseText + result.toString()).build();
@@ -108,17 +110,18 @@ public class ZabbixController {
     }
 
     private void removeNotNeededInformationFromResult(JsonNode information) {
-        String item = ConfigurationRepository.getRepo().getVal("configuration.zabbix.items");
+        String item = configurationRepository.getVal("configuration.zabbix.items");
         String[] items = item.split(",");
+        // TODO: this is unfinished.
     }
 
     private ZabbixApi zabbixLogin() {
-        ZabbixUser user = new ZabbixUser();
+        ZabbixUser user = ZabbixUser.loadFromRepository(configurationRepository);
         ZabbixApi zabbixApi = new DefaultZabbixApi(user.getZabbixUrl());
         zabbixApi.init();
-        boolean loginsuccess = zabbixApi.login(user.getUsername(), user.getPassword());
+        boolean loginSuccessful = zabbixApi.login(user.getUsername(), user.getPassword());
 
-        if (!loginsuccess) {
+        if (!loginSuccessful) {
             zabbixApi = null;
         }
         return zabbixApi;

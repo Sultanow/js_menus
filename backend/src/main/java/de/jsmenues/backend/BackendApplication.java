@@ -1,5 +1,6 @@
 package de.jsmenues.backend;
 
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 /**
@@ -9,6 +10,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 public class BackendApplication extends ResourceConfig {
     public BackendApplication() {
         register(new BackendApplicationBinder());
+        register(MultiPartFeature.class);
         packages(true, "de.jsmenues");
     }
 }

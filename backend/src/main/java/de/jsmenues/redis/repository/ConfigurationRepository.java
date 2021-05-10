@@ -20,7 +20,6 @@ public class ConfigurationRepository implements IConfigurationRepository {
     private static final int TIMEOUT = 60000;
     private static final String REDIS_PASSWORD = "password";
 
-    private static IConfigurationRepository instance;
     private final JedisPool configurationPool;
 
     public ConfigurationRepository() {
@@ -31,14 +30,6 @@ public class ConfigurationRepository implements IConfigurationRepository {
                 TIMEOUT,
                 REDIS_PASSWORD
         );
-    }
-
-    @Deprecated
-    public static IConfigurationRepository getRepo() {
-        if (instance == null) {
-            instance = new ConfigurationRepository();
-        }
-        return instance;
     }
 
     /**

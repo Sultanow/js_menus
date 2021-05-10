@@ -1,31 +1,29 @@
 package de.jsmenues.backend.elasticsearch.controller;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.security.PermitAll;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.jsmenues.backend.elasticsearch.dao.HistoryDao;
 import de.jsmenues.backend.zabbixservice.ZabbixService;
+
+import javax.annotation.security.PermitAll;
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 @Path("/elasticsearch/history")
 public class HistoryController {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(HistoryController.class);
+    private final ZabbixService zabbixService;
+
+    private final HistoryDao historyDao;
+
+    @Inject
+    public HistoryController(ZabbixService zabbixService, HistoryDao historyDao) {
+        this.zabbixService = zabbixService;
+        this.historyDao = historyDao;
+    }
 
     /**
      * Insert all history records from zabbix to elasticsearch
@@ -35,11 +33,9 @@ public class HistoryController {
     @PermitAll
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public Response insertHistory() throws IOException, ParseException {
-
-        ZabbixService zabbixService = new ZabbixService();
+    public Response insertHistory() {
         List<Map<String, Object>> result = zabbixService.getHistory();
-        HistoryDao.insertHistory(result);
+        historyDao.insertHistory(result);
         return Response.ok(result).build();
     }
 
@@ -56,17 +52,16 @@ public class HistoryController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getHistoryRecordsByIndex(@PathParam("patternindexname") String patternIndexName)
             throws IOException {
-
-        List<Map<String, Object>> result = HistoryDao.getHistoryRecordsByIndex(patternIndexName);
+        List<Map<String, Object>> result = historyDao.getHistoryRecordsByIndex(patternIndexName);
         return Response.ok(result).build();
     }
 
     /**
      * Get history records of an index between tow dates from elasticsearch
      *
-     * @param unixTime1 the first date
-     * @param unixTime2 the second date
-     * @param indexName
+     * @param startTime the first date
+     * @param endTime the second date
+     * @param indexName The index to search in
      *
      * @return list of history records between tow selected Dates
      */
@@ -74,10 +69,11 @@ public class HistoryController {
     @GET
     @Path("/{unixtime1}/{unixtime2}/{indexname}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getHistorytowdatum1(@PathParam("unixtime1") String unixTime1,
-            @PathParam("unixtime2") String unixTime2, @PathParam("indexname") String indexName)  {
+    public Response getHistoryBetweenDates(@PathParam("unixtime1") long startTime,
+                                           @PathParam("unixtime2") long endTime,
+                                           @PathParam("indexname") String indexName)  {
         try {
-            List<Map<String, Object>> result = HistoryDao.getHistoryRecordBetweenTowDatesByIndexName(unixTime1, unixTime2,
+            List<Map<String, Object>> result = historyDao.getHistoryRecordsBetweenDates(startTime, endTime,
                     indexName);
             return Response.ok(result).build();
         } catch (Exception e) {

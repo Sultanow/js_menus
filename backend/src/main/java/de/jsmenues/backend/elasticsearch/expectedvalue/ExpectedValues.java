@@ -30,9 +30,23 @@ import de.jsmenues.backend.elasticsearch.ElasticsearchConnector;
 import de.jsmenues.backend.elasticsearch.dao.InformationHostDao;
 import de.jsmenues.backend.elasticsearch.service.HostInformationService;
 
+import javax.inject.Inject;
+
 public class ExpectedValues {
-    private static Logger LOGGER = LoggerFactory.getLogger(ExpectedValues.class);
 	public static final String INDEX = "expected_values";
+	
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExpectedValues.class);
+    
+    private final ElasticsearchConnector connector;
+    
+    private final InformationHostDao informationHostDao;
+
+    @Inject
+    public ExpectedValues(ElasticsearchConnector connector, 
+                          InformationHostDao informationHostDao) {
+        this.connector = connector;
+        this.informationHostDao = informationHostDao;
+    }
 
     /**
      * insert expected values in Elasticseach from frontend
@@ -42,7 +56,7 @@ public class ExpectedValues {
      * @param expectedValue
      * @return respons about history data
      */
-    public static final void insertExpectedValues(String hostName, String key, String expectedValue) throws Exception {
+    public void insertExpectedValues(String hostName, String key, String expectedValue) throws Exception {
         Date date = new Date();
         SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         isoFormat.setTimeZone(TimeZone.getTimeZone("Europe/Berlin"));
@@ -51,8 +65,8 @@ public class ExpectedValues {
         LocalDateTime dateTime = LocalDateTime.parse(timestamp, formatter);
         String unixTime = String.valueOf(System.currentTimeMillis() / 1000L);
         Map<String, Object> itemMap = new HashMap<>();
-        String lastValue = InformationHostDao.getLastValuByKey(hostName, key);
-        String itemId = InformationHostDao.getItemId(hostName, key);
+        String lastValue = informationHostDao.getLastValueByKey(hostName, key);
+        String itemId = informationHostDao.getItemId(hostName, key);
         itemMap.put("clock", unixTime);
         itemMap.put("itemid", itemId);
         itemMap.put("value", lastValue);
@@ -61,10 +75,10 @@ public class ExpectedValues {
         itemMap.put("timestamp", dateTime);
         itemMap.put("hostname", hostName);
         GetRequest getRequest = new GetRequest(INDEX, hostName + "-" + key);
-        boolean exists = ElasticsearchConnector.restHighLevelClient.exists(getRequest, RequestOptions.DEFAULT);
+        boolean exists = connector.getClient().exists(getRequest, RequestOptions.DEFAULT);
         if (!exists) {
             IndexRequest indexRequest = new IndexRequest(INDEX).source(itemMap).id(hostName + "-" + key);
-            IndexResponse indexResponse = ElasticsearchConnector.restHighLevelClient.index(indexRequest,
+            IndexResponse indexResponse = connector.getClient().index(indexRequest,
                     RequestOptions.DEFAULT);
             LOGGER.info(indexResponse + "\n item is  inserted");
 
@@ -72,7 +86,7 @@ public class ExpectedValues {
             String lastexpectedValue = getExpectedValueByHostnameAndKey(hostName, key);
             if (!lastexpectedValue.equals(expectedValue)) {
                 UpdateRequest updateRequest = new UpdateRequest(INDEX, hostName + "-" + key).doc(itemMap);
-                UpdateResponse updateResponse = ElasticsearchConnector.restHighLevelClient.update(updateRequest,
+                UpdateResponse updateResponse = connector.getClient().update(updateRequest,
                         RequestOptions.DEFAULT);
                 LOGGER.info(updateResponse + "\n item is updated");
             }
@@ -80,7 +94,7 @@ public class ExpectedValues {
         IndexRequest indexHistoryRequest = new IndexRequest("history-" + hostName + "-" + key).source(itemMap)
                 .id(unixTime);
 
-        IndexResponse indexResponse = ElasticsearchConnector.restHighLevelClient.index(indexHistoryRequest,
+        IndexResponse indexResponse = connector.getClient().index(indexHistoryRequest,
                 RequestOptions.DEFAULT);
         LOGGER.info(indexResponse.toString());
     }
@@ -90,7 +104,7 @@ public class ExpectedValues {
      * 
      * @return expectedValue
      */
-    public static final List<Map<String, Object>> getExpectedValues() throws Exception {
+    public List<Map<String, Object>> getExpectedValues() throws Exception {
 
         SearchRequest searchRequest = new SearchRequest(INDEX);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -98,20 +112,19 @@ public class ExpectedValues {
         searchSourceBuilder.size(10000);
         searchRequest.source(searchSourceBuilder);
         searchRequest.scroll(TimeValue.timeValueMinutes(1L));
-        SearchResponse searchResponse = ElasticsearchConnector.restHighLevelClient.search(searchRequest,
+        SearchResponse searchResponse = connector.getClient().search(searchRequest,
                 RequestOptions.DEFAULT);
         SearchHit[] searchHits = searchResponse.getHits().getHits();
-        List<Map<String, Object>> tempMap = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> tempMap = new ArrayList<>();
 
         for (SearchHit hit : searchHits) {
             Map<String, Object> result = hit.getSourceAsMap();
             tempMap.add(result);
         }
-        List<Map<String, Object>> results = HostInformationService.MAPPER.convertValue(tempMap,
+
+        return HostInformationService.MAPPER.convertValue(tempMap,
                 new TypeReference<List<Map<String, Object>>>() {
                 });
-
-        return results;
     }
 
     /**
@@ -120,10 +133,8 @@ public class ExpectedValues {
      * @param hostName
      * @param key
      * @return expected value
-     * @throws Exception
      */
-    public static final String getExpectedValueByHostnameAndKey(String hostName, String key) {
-
+    public String getExpectedValueByHostnameAndKey(String hostName, String key) {
         String expectedValue = "";
         try {
             List<Map<String, Object>> expectedValues = getExpectedValues();
@@ -136,7 +147,7 @@ public class ExpectedValues {
                 }
             }
             return expectedValue;
-        }catch(Exception e) {
+        } catch(Exception e) {
             LOGGER.error(e.getMessage());
             return expectedValue;
         }

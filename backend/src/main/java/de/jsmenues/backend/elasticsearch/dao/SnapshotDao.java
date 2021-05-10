@@ -39,15 +39,25 @@ import org.slf4j.LoggerFactory;
 
 import de.jsmenues.backend.elasticsearch.ElasticsearchConnector;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 public class SnapshotDao {
-    private static Logger LOGGER = LoggerFactory.getLogger(SnapshotDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SnapshotDao.class);
+
+    private final ElasticsearchConnector connector;
+
+    @Inject
+    public SnapshotDao(ElasticsearchConnector connector) {
+        this.connector = connector;
+    }
 
     /**
      * Create repository
-     * 
+     *
      * @return repository is created true or false
      */
-    public static boolean creatRepository() {
+    public boolean createRepository() {
         AcknowledgedResponse acknowledgedResponse = null;
         PutRepositoryRequest putRepositoryRequest = new PutRepositoryRequest();
         String locationKey = FsRepository.LOCATION_SETTING.getKey();
@@ -58,79 +68,71 @@ public class SnapshotDao {
         putRepositoryRequest.type(FsRepository.TYPE);
         putRepositoryRequest.verify(true);
         try {
-            acknowledgedResponse = ElasticsearchConnector.restHighLevelClient.snapshot()
+            acknowledgedResponse = connector.getClient()
+                    .snapshot()
                     .createRepository(putRepositoryRequest, RequestOptions.DEFAULT);
-            if (acknowledgedResponse.isAcknowledged())
+            if (acknowledgedResponse.isAcknowledged()) {
                 LOGGER.info("backup repository is created");
+            }
         } catch (Exception e) {
             LOGGER.error(e.getMessage() + " repository isn't created");
         }
-        return acknowledgedResponse.isAcknowledged();
+        return acknowledgedResponse != null && acknowledgedResponse.isAcknowledged();
     }
 
     /**
      * Used to know if repository "backup" exist
-     * 
-     * @returnn ture or false
-     * 
+     *
+     * @return ture or false
      */
 
-    public static boolean ifRepositoryExist() {
-        boolean exist = false;
-        GetRepositoriesResponse response = null;
+    public boolean doesBackupRepositoryExist() {
         try {
+            GetRepositoriesResponse response;
             GetRepositoriesRequest request = new GetRepositoriesRequest();
-            String[] repositories = new String[] { "backup" };
+            String[] repositories = new String[]{"backup"};
             request.repositories(repositories);
-            response = ElasticsearchConnector.restHighLevelClient.snapshot().getRepository(request,
-                    RequestOptions.DEFAULT);
-            exist = response.repositories().get(0).name().equals("backup");
+            response = connector.getClient()
+                    .snapshot()
+                    .getRepository(request, RequestOptions.DEFAULT);
+            return response.repositories().get(0).name().equals("backup");
         } catch (Exception e) {
             LOGGER.error(e.getMessage() + "somethings wrong with elasticsearch");
         }
-
-        return exist;
-
+        return false;
     }
 
     /**
      * Create snapshot for history and host indices
-     * 
-     * @param snapshotName
+     *
+     * @param snapshotName The name of the snapshot to create
      * @return snapshot status
-     * 
      */
-    public static RestStatus creatSnapshot(String snapshotName) {
-
-        RestStatus status = null;
+    public RestStatus createSnapshot(String snapshotName) {
         try {
-
             CreateSnapshotRequest snapshotRequest = new CreateSnapshotRequest();
             snapshotRequest.repository("backup");
             snapshotRequest.snapshot(snapshotName);
             snapshotRequest.indices("history*", "host*", "expectedvalues");
             snapshotRequest.partial(true);
             snapshotRequest.waitForCompletion(true);
-            CreateSnapshotResponse snapshotResponse = ElasticsearchConnector.restHighLevelClient.snapshot()
+            CreateSnapshotResponse snapshotResponse = connector.getClient()
+                    .snapshot()
                     .create(snapshotRequest, RequestOptions.DEFAULT);
-            status = snapshotResponse.status();
-
+            return snapshotResponse.status();
         } catch (Exception e) {
             LOGGER.error(e.getMessage() + snapshotName + " isn't created");
         }
-        return status;
+        return null;
     }
 
     /**
      * Create lifecycle policy
-     * 
+     *
      * @return lifecycle is created true or false
-     * 
      */
-    public static boolean createLifecycle() {
-        boolean isCreated = false;
+    public boolean createLifecycle() {
         try {
-
             Map<String, Object> config = new HashMap<>();
             config.put("history*", Collections.singletonList("idx1"));
             config.put("host*", Collections.singletonList("idx2"));
@@ -142,30 +144,28 @@ public class SnapshotDao {
             SnapshotLifecyclePolicy policy = new SnapshotLifecyclePolicy("00", "snapshot", "0 0 1 * * ?", "backup",
                     config, retention);
             PutSnapshotLifecyclePolicyRequest request = new PutSnapshotLifecyclePolicyRequest(policy);
-            org.elasticsearch.client.core.AcknowledgedResponse resp = ElasticsearchConnector.restHighLevelClient
+            org.elasticsearch.client.core.AcknowledgedResponse resp = connector.getClient()
                     .indexLifecycle().putSnapshotLifecyclePolicy(request, RequestOptions.DEFAULT);
-            isCreated = resp.isAcknowledged();
-        } catch(Exception e){
+            return resp.isAcknowledged();
+        } catch (Exception e) {
             LOGGER.error(e.getMessage() + "somethings wrong with elasticsearch");
         }
-        return isCreated;
+        return false;
     }
 
     /**
      * Used to get name lastSuccess snapshot
-     * 
-     * @returnn lastSuccess snapshot
-     * 
+     *
+     * @return lastSuccess snapshot
      */
-    public static String getLastSuccessSnapshotName() {
-
+    public String getLastSuccessSnapshotName() {
         GetSnapshotLifecyclePolicyRequest getSnapshotLifecyclePolicyRequest = new GetSnapshotLifecyclePolicyRequest(
                 "00");
         GetSnapshotLifecyclePolicyResponse getResponse = null;
         try {
-            getResponse = ElasticsearchConnector.restHighLevelClient.indexLifecycle()
+            getResponse = connector.getClient().indexLifecycle()
                     .getSnapshotLifecyclePolicy(getSnapshotLifecyclePolicyRequest, RequestOptions.DEFAULT);
-        }catch(Exception e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage() + "somethings wrong with elasticsearch");
         }
         SnapshotLifecyclePolicyMetadata policyMeta = getResponse.getPolicies().get("00");
@@ -176,20 +176,19 @@ public class SnapshotDao {
 
     /**
      * Used to start snapshot lifecycle
-     * 
-     * @returnn lifecycle is started true or false
-     * 
+     *
+     * @return lifecycle is started true or false
      */
-    public static boolean startLifeCycle() {
+    public boolean startLifeCycle() {
         boolean isStarted = false;
         try {
             StartSLMRequest startSLMRequest = new StartSLMRequest();
 
-            org.elasticsearch.client.core.AcknowledgedResponse response = ElasticsearchConnector.restHighLevelClient
+            org.elasticsearch.client.core.AcknowledgedResponse response = connector.getClient()
                     .indexLifecycle().startSLM(startSLMRequest, RequestOptions.DEFAULT);
 
             isStarted = response.isAcknowledged();
-        }catch(Exception e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage() + " somethings wrong with elasticsearch");
         }
         return isStarted;
@@ -197,82 +196,72 @@ public class SnapshotDao {
 
     /**
      * Used to stop snapshot lifecycle
-     * 
-     * @returnn lifecycle is stopped true or false
-     * 
+     *
+     * @return lifecycle is stopped true or false
      */
-    public static boolean stopLifeCycle() {
-        boolean isStoped = false;
+    public boolean stopLifeCycle() {
         try {
             StopSLMRequest stopSLMRequest = new StopSLMRequest();
 
-            org.elasticsearch.client.core.AcknowledgedResponse response = ElasticsearchConnector.restHighLevelClient
+            org.elasticsearch.client.core.AcknowledgedResponse response = connector.getClient()
                     .indexLifecycle().stopSLM(stopSLMRequest, RequestOptions.DEFAULT);
 
-            isStoped = response.isAcknowledged();
-        }catch(Exception e) {
+            return response.isAcknowledged();
+        } catch (Exception e) {
             LOGGER.error(e.getMessage() + " somethings wrong with elasticsearch");
         }
-        return isStoped;
+        return false;
     }
 
     /**
      * Used to delete lifecycle
-     * 
-     * @returnn lifecycle is deleted true or false
-     * 
+     *
+     * @return lifecycle is deleted true or false
      */
-    public static boolean deleteLifeCycle(String id) {
-        boolean isDeleted = false;
+    public boolean deleteLifeCycle(String id) {
         try {
             DeleteSnapshotLifecyclePolicyRequest deleteRequest = new DeleteSnapshotLifecyclePolicyRequest(id);
 
-            org.elasticsearch.client.core.AcknowledgedResponse response = ElasticsearchConnector.restHighLevelClient
+            org.elasticsearch.client.core.AcknowledgedResponse response = connector.getClient()
                     .indexLifecycle().deleteSnapshotLifecyclePolicy(deleteRequest, RequestOptions.DEFAULT);
 
-            isDeleted = response.isAcknowledged();
-        }catch(Exception e) {
+           return response.isAcknowledged();
+        } catch (Exception e) {
             LOGGER.error(e.getMessage() + " somethings wrong with elasticsearch");
         }
-        return isDeleted;
+        return false;
     }
 
     /**
      * Used to get snapshot info
-     * 
-     * @param sapshotName
+     *
+     * @param snapshotName The name of the snapshot
      * @return snapshot information
-     * 
      */
-    public static List<SnapshotInfo> getSnapshot(String snapshotName) {
-
-        List<SnapshotInfo> listOfSnapshotInfo = null;
+    public List<SnapshotInfo> getSnapshot(String snapshotName) {
         try {
             GetSnapshotsRequest getSnapshotsRequest = new GetSnapshotsRequest();
             getSnapshotsRequest.repository("backup");
-            String[] snapshots = { snapshotName };
+            String[] snapshots = {snapshotName};
             getSnapshotsRequest.snapshots(snapshots);
-            GetSnapshotsResponse getSnapshotsResponse = ElasticsearchConnector.restHighLevelClient.snapshot()
+            GetSnapshotsResponse getSnapshotsResponse = connector.getClient().snapshot()
                     .get(getSnapshotsRequest, RequestOptions.DEFAULT);
-            listOfSnapshotInfo = getSnapshotsResponse.getSnapshots();
-        }catch(Exception e) {
+            return getSnapshotsResponse.getSnapshots();
+        } catch (Exception e) {
             LOGGER.error(e.getMessage() + snapshotName + " isn't exist or somethings wrong with elasticsearch");
         }
-        return listOfSnapshotInfo;
+        return null;
     }
 
     /**
      * Restore index from snapshot
-     * 
+     *
      * @param snapshotName
      * @param indexPattern
      * @param indexNewName
      * @return restore information
-     * 
      */
-    public static RestoreInfo restoreIndexfromSnapshot(String snapshotName, String indexPattern, String indexNewName) {
-        RestoreInfo restoreInfo = null;
-
+    public RestoreInfo restoreIndexFromSnapshot(String snapshotName, String indexPattern, String indexNewName) {
         try {
             RestoreSnapshotRequest restoreSnapshotRequest = new RestoreSnapshotRequest("backup", snapshotName);
             restoreSnapshotRequest.indices(indexPattern);
@@ -280,35 +269,33 @@ public class SnapshotDao {
             restoreSnapshotRequest.renameReplacement(indexNewName + "$1");
             restoreSnapshotRequest.ignoreIndexSettings("index.refresh_interval", "index.search.idle.after");
             restoreSnapshotRequest.waitForCompletion(true);
-            RestoreSnapshotResponse restoreSnapshotResponse = ElasticsearchConnector.restHighLevelClient.snapshot()
+            RestoreSnapshotResponse restoreSnapshotResponse = connector.getClient().snapshot()
                     .restore(restoreSnapshotRequest, RequestOptions.DEFAULT);
-            restoreInfo = restoreSnapshotResponse.getRestoreInfo();
-        }catch(Exception e) {
+            return restoreSnapshotResponse.getRestoreInfo();
+        } catch (Exception e) {
             LOGGER.error(e.getMessage() + snapshotName
                     + "isn't exist, somethings wrong with elasticsearch or rename the index");
 
         }
-        return restoreInfo;
+        return null;
     }
 
     /**
      * Delete snapshot by name
-     * 
+     *
      * @param snapshotName
-     * @return snopshot is deleted?
-     * 
+     * @return snapshot is deleted?
      */
-    public static boolean deleteSnapshot(String snapshotName) {
-        boolean isDeleted = false;
+    public boolean deleteSnapshot(String snapshotName) {
         try {
             DeleteSnapshotRequest deleteSnapshotRequest = new DeleteSnapshotRequest("backup");
             deleteSnapshotRequest.snapshots(snapshotName);
-            AcknowledgedResponse response = ElasticsearchConnector.restHighLevelClient.snapshot()
+            AcknowledgedResponse response = connector.getClient().snapshot()
                     .delete(deleteSnapshotRequest, RequestOptions.DEFAULT);
-            isDeleted = response.isAcknowledged();
-        }catch(Exception e) {
+            return response.isAcknowledged();
+        } catch (Exception e) {
             LOGGER.error(e.getMessage() + snapshotName + " isn't exist or somethings wrong with elasticsearch");
         }
-        return isDeleted;
+        return false;
     }
 }

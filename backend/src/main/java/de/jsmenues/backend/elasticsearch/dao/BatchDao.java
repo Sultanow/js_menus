@@ -13,7 +13,6 @@ import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.common.unit.TimeValue;
-import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.get.GetResult;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -21,34 +20,40 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Singleton
 public class BatchDao {
     private static final String INDEX = "batch";
-    private static Logger LOGGER = LoggerFactory.getLogger(BatchDao.class);
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BatchDao.class);
+
+    private final ElasticsearchConnector connector;
+
+    @Inject
+    public BatchDao(ElasticsearchConnector connector) {
+        this.connector = connector;
+    }
 
     /**
      * Insert batch to elasticsearch
      *
-     * @param batch
+     * @param batch The batch to insert
      * @return status if new batch is inserted, updated or not
      */
-    public static IndexResponse insertBatch(Map<String, Object> batch) throws IOException {
+    public IndexResponse insertBatch(Map<String, Object> batch) throws IOException {
         IndexResponse indexResponse = null;
         String batchId = String.valueOf(batch.get("id"));
         IndexRequest indexRequest = new IndexRequest(INDEX).source(batch).id(String.valueOf(batchId));
         GetRequest getRequest = new GetRequest(INDEX, batchId);
-        boolean exists = ElasticsearchConnector.restHighLevelClient.exists(getRequest, RequestOptions.DEFAULT);
+        boolean exists = connector.getClient().exists(getRequest, RequestOptions.DEFAULT);
         if (!exists) {
-            indexResponse = ElasticsearchConnector.restHighLevelClient.index(indexRequest,
+            indexResponse = connector.getClient().index(indexRequest,
                     RequestOptions.DEFAULT);
             LOGGER.info(indexResponse + "\n batch is inserted");
         }
@@ -62,8 +67,7 @@ public class BatchDao {
      *
      * @return list of batches
      */
-    public static List<Map<String, Object>> getAllBatches() throws IOException {
-
+    public List<Map<String, Object>> getAllBatches() throws IOException {
         SearchRequest searchRequest = new SearchRequest(INDEX);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(QueryBuilders.matchAllQuery());
@@ -71,10 +75,10 @@ public class BatchDao {
         searchRequest.source(searchSourceBuilder);
         searchRequest.scroll(TimeValue.timeValueSeconds(30L));
 
-        SearchResponse response = ElasticsearchConnector.restHighLevelClient.search(searchRequest,
+        SearchResponse response = connector.getClient().search(searchRequest,
                 RequestOptions.DEFAULT);
         SearchHit[] searchHits = response.getHits().getHits();
-        List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> results = new ArrayList<>();
         for (SearchHit hit : searchHits) {
             Map<String, Object> result = hit.getSourceAsMap();
             results.add(result);
@@ -85,13 +89,14 @@ public class BatchDao {
     /**
      * Update batch by id from elasticsearch
      *
-     * @param batchId
+     * @param batchId The ID of the batch to update.
+     * @param batchMap The data to insert.
      */
-    public static String updateBatchById(String batchId, Map<String, Object> batchMap) throws IOException {
+    public String updateBatchById(String batchId, Map<String, Object> batchMap) throws IOException {
         UpdateRequest updateRequest = new UpdateRequest(INDEX, batchId);
         updateRequest.doc(batchMap);
         updateRequest.fetchSource(true); // enable source retrieval so we can fetch the source of updated doc
-        UpdateResponse updateResponse = ElasticsearchConnector.restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
+        UpdateResponse updateResponse = connector.getClient().update(updateRequest, RequestOptions.DEFAULT);
         GetResult result = updateResponse.getGetResult(); 
         if (result.isExists()) {
             return result.sourceAsString();
@@ -105,19 +110,18 @@ public class BatchDao {
     /**
      * Delete batch by id from elasticsearch
      *
-     * @param batchId
+     * @param batchId The ID of the batch to delete
      */
-    public static String deleteBatchById(String batchId) throws IOException {
-
+    public String deleteBatchById(String batchId) throws IOException {
         DeleteRequest deleteRequest = new DeleteRequest(INDEX, batchId);
-        DeleteResponse deleteResponse = ElasticsearchConnector.restHighLevelClient.delete(deleteRequest,
+        DeleteResponse deleteResponse = connector.getClient().delete(deleteRequest,
                 RequestOptions.DEFAULT);
         return deleteResponse.getResult().toString();
     }
 
-    public static String getBatchByID(String batchId) throws IOException {
+    public String getBatchByID(String batchId) throws IOException {
     	GetRequest getRequest = new GetRequest(INDEX, batchId);
-    	GetResponse getResponse = ElasticsearchConnector.restHighLevelClient.get(getRequest, RequestOptions.DEFAULT);
+    	GetResponse getResponse = connector.getClient().get(getRequest, RequestOptions.DEFAULT);
     
     	if (getResponse.isExists()) {
     	    return getResponse.getSourceAsString(); 

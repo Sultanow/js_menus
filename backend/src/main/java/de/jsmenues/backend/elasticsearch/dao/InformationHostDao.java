@@ -22,32 +22,41 @@ import de.jsmenues.backend.elasticsearch.ElasticsearchConnector;
 import de.jsmenues.backend.elasticsearch.expectedvalue.ExpectedValues;
 import de.jsmenues.backend.elasticsearch.service.HostInformationService;
 
+import javax.inject.Inject;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class InformationHostDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(InformationHostDao.class);
 
-    private static Logger LOGGER = LoggerFactory.getLogger(InformationHostDao.class);
+    private final ElasticsearchConnector connector;
+
+    private final ExpectedValues expectedValues;
+
+    @Inject
+    public InformationHostDao(ElasticsearchConnector connector,
+                              ExpectedValues expectedValues) {
+        this.connector = connector;
+        this.expectedValues = expectedValues;
+    }
 
     /**
      * Insert all hosts information from zabbix to elasticsearch
-     * 
-     * @param hostInfo host info from zabbix
-     * @return if host information are inserted ,updated or not
+     *
+     * @param hostsInfo host info from zabbix
      */
-    public static void insertAllHostInformation(List<Map<String, List<Object>>> hostsInfo)
-            throws IOException, ParseException {
-        IndexResponse indexResponse = null;
+    public void insertAllHostInformation(List<Map<String, List<Object>>> hostsInfo) {
+        IndexResponse indexResponse;
         int numberOfHosts = 0;
         try {
-            insert: for (Map<String, List<Object>> hostInfo : hostsInfo) {
+            insert:
+            for (Map<String, List<Object>> hostInfo : hostsInfo) {
                 List<Object> items = hostInfo.get("items");
                 List<Object> groups = hostInfo.get("groups");
 
-                String hostid = String.valueOf(hostInfo.get("hostid"));
+                String hostId = String.valueOf(hostInfo.get("hostid"));
                 String hostname = String.valueOf(hostInfo.get("name"));
 
                 List<Map<String, Object>> mapGroup = HostInformationService.MAPPER.convertValue(groups,
@@ -63,47 +72,46 @@ public class InformationHostDao {
                             });
 
                     for (Map<String, Object> item : mapItems) {
-
                         String actualValue = String.valueOf(item.get("lastvalue"));
                         String key = String.valueOf(item.get("key_"));
                         String itemid = String.valueOf(item.get("itemid"));
                         String lastClock = String.valueOf(item.get("lastclock"));
 
-                        String expectedValue = "";
-                        expectedValue = ExpectedValues.getExpectedValueByHostnameAndKey(hostname, key);
+                        String expectedValue = expectedValues.getExpectedValueByHostnameAndKey(hostname, key);
 
-                        if (expectedValue == "") {
+                        if (expectedValue.equals("")) {
                             expectedValue = actualValue;
                         }
                         item.put("hostname", hostname);
                         item.put("expectedvalue", expectedValue);
                         item.put("groupid", groupId);
                         item.put("groupname", groupName);
-                        String docId = hostid + itemid;
+                        String docId = hostId + itemid;
 
                         GetRequest getRequest = new GetRequest(HostInformationService.INDEX, docId);
-                        boolean exists = ElasticsearchConnector.restHighLevelClient.exists(getRequest,
+                        boolean exists = connector.getClient().exists(getRequest,
                                 RequestOptions.DEFAULT);
 
                         if (!exists) {
                             IndexRequest indexRequest = new IndexRequest(HostInformationService.INDEX).source(item)
                                     .id(docId);
-                            indexResponse = ElasticsearchConnector.restHighLevelClient.index(indexRequest,
+                            indexResponse = connector.getClient().index(indexRequest,
                                     RequestOptions.DEFAULT);
                             LOGGER.info(indexResponse + "\n host information are inserted");
                             numberOfHosts++;
-                            if (numberOfHosts == 100)
+                            if (numberOfHosts == 100) {
                                 break insert;
+                            }
                         } else {
 
-                            String getLastValueByKey = getLastValuByKey(hostname, key);
+                            String getLastValueByKey = getLastValueByKey(hostname, key);
 
-                            String getExpectedValue = getExpectedValuByKey(hostname, key);
+                            String getExpectedValue = getExpectedValueByKey(hostname, key);
 
                             if (!getLastValueByKey.equals(actualValue)) {
                                 UpdateRequest updateActualValue = new UpdateRequest(HostInformationService.INDEX, docId)
-                                        .doc("lastvalue", actualValue, "lastclock", lastClock,"prevvalue",getLastValueByKey);
-                                UpdateResponse updateResponseActualValue = ElasticsearchConnector.restHighLevelClient
+                                        .doc("lastvalue", actualValue, "lastclock", lastClock, "prevvalue", getLastValueByKey);
+                                UpdateResponse updateResponseActualValue = connector.getClient()
                                         .update(updateActualValue, RequestOptions.DEFAULT);
                                 LOGGER.info(updateResponseActualValue.toString());
                                 numberOfHosts++;
@@ -113,7 +121,7 @@ public class InformationHostDao {
                             if (!getExpectedValue.equals(expectedValue)) {
                                 UpdateRequest updateExpectdValue = new UpdateRequest(HostInformationService.INDEX,
                                         docId).doc("expectedvalue", expectedValue);
-                                UpdateResponse updateResponseExpectdValue = ElasticsearchConnector.restHighLevelClient
+                                UpdateResponse updateResponseExpectdValue = connector.getClient()
                                         .update(updateExpectdValue, RequestOptions.DEFAULT);
                                 LOGGER.info(updateResponseExpectdValue.toString());
                                 numberOfHosts++;
@@ -136,8 +144,8 @@ public class InformationHostDao {
      *
      * @return list of all host information
      */
-    public static List<Map<String, Object>> getAllHostInformation() throws IOException {
-        List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
+    public List<Map<String, Object>> getAllHostInformation() {
+        List<Map<String, Object>> results = new ArrayList<>();
         try {
             SearchRequest searchRequest = new SearchRequest(HostInformationService.INDEX);
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -145,8 +153,8 @@ public class InformationHostDao {
             searchSourceBuilder.size(10000);
             searchRequest.source(searchSourceBuilder);
             searchRequest.scroll(TimeValue.timeValueMinutes(1L));
-            SearchResponse searchResponse = ElasticsearchConnector.restHighLevelClient.search(searchRequest,
-                    RequestOptions.DEFAULT);
+            SearchResponse searchResponse = connector.getClient()
+                    .search(searchRequest, RequestOptions.DEFAULT);
             SearchHit[] searchHits = searchResponse.getHits().getHits();
 
             for (SearchHit hit : searchHits) {
@@ -154,7 +162,7 @@ public class InformationHostDao {
                 results.add(result);
             }
 
-        }catch(IOException e) {
+        } catch (IOException e) {
             LOGGER.error(e.getMessage() + "something wrong with elasticsearch");
         }
         return results;
@@ -162,19 +170,19 @@ public class InformationHostDao {
 
     /**
      * Get all host information by host name from elasticsearch
-     * 
-     * @param hostName
+     *
+     * @param hostName The name of the host to inspect
      * @return list of host information
      */
-    public static List<Map<String, Object>> getHostInformationByHostName(String hostName) throws IOException {
+    public List<Map<String, Object>> getHostInformationByHostName(String hostName) throws IOException {
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(QueryBuilders.termQuery("hostname", hostName));
         SearchRequest searchRequest = new SearchRequest(HostInformationService.INDEX).source(searchSourceBuilder);
-        SearchResponse response = ElasticsearchConnector.restHighLevelClient.search(searchRequest,
+        SearchResponse response = connector.getClient().search(searchRequest,
                 RequestOptions.DEFAULT);
         SearchHit[] searchHits = response.getHits().getHits();
-        List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> results = new ArrayList<>();
 
         for (SearchHit hit : searchHits) {
             Map<String, Object> result = hit.getSourceAsMap();
@@ -185,19 +193,20 @@ public class InformationHostDao {
 
     /**
      * Get all keys
-     * 
+     *
      * @return list of keys
      */
-    public static List<String> getAllKeys() throws IOException {
-        List<String> keys = new ArrayList<String>();
+    public List<String> getAllKeys() {
+        List<String> keys = new ArrayList<>();
         try {
             List<Map<String, Object>> hostInfos = getAllHostInformation();
             for (Map<String, Object> hostInfo : hostInfos) {
                 String key = String.valueOf(hostInfo.get("key_"));
-                if (!keys.contains(key))
+                if (!keys.contains(key)) {
                     keys.add(key);
+                }
             }
-        }catch(Exception e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage() + "elasticsearch is not avalible");
         }
         return keys;
@@ -205,39 +214,37 @@ public class InformationHostDao {
 
     /**
      * Get last value an item from a host by key and hostname
-     * 
-     * @param hostName
-     * @param itemKey
+     *
+     * @param hostName The name of the host to get information about
+     * @param itemKey The key of the value to retrieve
      * @return last value form an item
      */
-    public static String getLastValuByKey(String hostName, String itemKey) throws IOException {
-
-        String lastVlaue = "";
+    public String getLastValueByKey(String hostName, String itemKey) throws IOException {
+        String lastValue = "";
         List<Map<String, Object>> hostInfoByName = getHostInformationByHostName(hostName);
         for (Map<String, Object> item : hostInfoByName) {
-            String itmeId = String.valueOf(item.get("key_"));
-            if (itmeId.equals(itemKey)) {
-                lastVlaue = String.valueOf(item.get("lastvalue"));
+            String itemId = String.valueOf(item.get("key_"));
+            if (itemId.equals(itemKey)) {
+                lastValue = String.valueOf(item.get("lastvalue"));
             }
         }
-        return lastVlaue;
+        return lastValue;
     }
 
     /**
      * Get expected value an item from host_information index by key and hostname
      * fro
-     * 
-     * @param hostName
-     * @param itemKey
+     *
+     * @param hostName The name of the host to get information about
+     * @param itemKey The key of the value to retrieve
      * @return expected value
      */
-    public static String getExpectedValuByKey(String hostName, String itemKey) throws IOException {
-
+    public String getExpectedValueByKey(String hostName, String itemKey) throws IOException {
         String expectedvalue = "";
         List<Map<String, Object>> hostInfoByName = getHostInformationByHostName(hostName);
         for (Map<String, Object> item : hostInfoByName) {
-            String itmeId = String.valueOf(item.get("key_"));
-            if (itmeId.equals(itemKey)) {
+            String itemId = String.valueOf(item.get("key_"));
+            if (itemId.equals(itemKey)) {
                 expectedvalue = String.valueOf(item.get("expectedvalue"));
             }
         }
@@ -246,22 +253,20 @@ public class InformationHostDao {
 
     /**
      * Get item id an item from a host by key and hostname
-     * 
-     * @param hostName
-     * @param itemKey
+     *
+     * @param hostName The host name to get information about
+     * @param itemKey The key to retrieve a value for
      * @return item id
      */
-    public static String getItemId(String hostName, String itemKey) throws IOException {
-
-        String itemId = "";
+    public String getItemId(String hostName, String itemKey) throws IOException {
         List<Map<String, Object>> hostInfoByName = getHostInformationByHostName(hostName);
         for (Map<String, Object> item : hostInfoByName) {
-            String itmeId = String.valueOf(item.get("key_"));
-            if (itmeId.equals(itemKey)) {
-                itemId = String.valueOf(item.get("itemid"));
+            String itemId = String.valueOf(item.get("key_"));
+            if (itemId.equals(itemKey)) {
+                return String.valueOf(item.get("itemid"));
             }
         }
-        return itemId;
+        return "";
 
     }
 
@@ -271,11 +276,11 @@ public class InformationHostDao {
      * @param docId : docId = "hostid"+"itemid"
      * @return response about delete
      */
-    public static String deleteHostInformationById(String docId) throws IOException {
+    public String deleteHostInformationById(String docId) throws IOException {
         DeleteRequest deleteRequest = new DeleteRequest(HostInformationService.INDEX, docId);
 
-        DeleteResponse deleteResponse = ElasticsearchConnector.restHighLevelClient.delete(deleteRequest,
-                RequestOptions.DEFAULT);
+        DeleteResponse deleteResponse = connector.getClient()
+                .delete(deleteRequest, RequestOptions.DEFAULT);
         return deleteResponse.toString();
     }
 }

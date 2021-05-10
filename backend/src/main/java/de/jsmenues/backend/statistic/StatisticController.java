@@ -18,7 +18,7 @@ import java.util.Map;
 public class StatisticController {
     private static final Logger LOGGER = LoggerFactory.getLogger(StatisticController.class);
 
-    private StatisticService statisticService;
+    private final StatisticService statisticService;
 
     @Inject
     public StatisticController(StatisticService service) {
