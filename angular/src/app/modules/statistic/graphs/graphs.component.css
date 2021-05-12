@@ -19,7 +19,7 @@
     display: flex;
 }
 
-::ng-deep .mat-icon {
+:host ::ng-deep .mat-icon {
     height: 32px !important;
     width: 32px !important;
     font-size: 32px !important;

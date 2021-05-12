@@ -1,13 +1,14 @@
-import { Component, OnInit, ViewEncapsulation, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { StatisticGroup } from './model/statisticGroup';
 import { StatisticService } from './services/statistic.service';
 import { StatisticChart } from './model/statisticChart';
 
 @Component({
   selector: 'app-statistic',
-  encapsulation: ViewEncapsulation.None,
   templateUrl: './statistic.component.html',
-  styleUrls: [ './statistic.component.css' ]
+  styleUrls: [ 
+    '../../../custom.css',
+    './statistic.component.css' ]
 })
 export class StatisticComponent implements OnInit, OnChanges {
   // In-/Outputs

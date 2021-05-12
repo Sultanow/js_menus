@@ -42,5 +42,9 @@
   </app-viewbox>
   <app-status-warnings [showStatusWarnings]="showStatusWarnings"></app-status-warnings>
   <app-spinner></app-spinner>
-
+  <app-news-overlay [isOpen]="newsOverlayOpen"></app-news-overlay>
+  <a [ngClass]="{'overlay-open': newsOverlayOpen, 'overlay-closed': !newsOverlayOpen}" (click)="openNewsOverlay()"
+    class="overlay-icon">
+      <mat-icon class="overlay-icon-mat">new_releases</mat-icon>
+  </a>
 </div>

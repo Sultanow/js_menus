@@ -1,0 +1,6 @@
+<div *ngIf="isOpen" class="news-overlay">
+    <div class="title-box">
+        <h2>Neuigkeiten</h2>
+    </div>
+    <news-card *ngFor="let item of newsItems" [newsItem]="item"></news-card>
+</div>

@@ -47,6 +47,8 @@ export class AppComponent implements OnInit {
 
 	activeItems: string[] = [];
 
+	newsOverlayOpen: boolean = false;
+
 	ngOnInit() {
 		this.clearLocalStorge();
 		this.timerToClearStorge();
@@ -294,5 +296,9 @@ export class AppComponent implements OnInit {
 	}
 	timerToClearStorge() {
 		setInterval(() => { this.clearLocalStorge() }, 1000 * 60 * 60 * 12);
+	}
+
+	openNewsOverlay() {
+		this.newsOverlayOpen = !this.newsOverlayOpen;
 	}
 }

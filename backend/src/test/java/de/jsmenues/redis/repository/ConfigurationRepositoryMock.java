@@ -5,13 +5,14 @@ import de.jsmenues.redis.data.Configuration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Mock of the ConfigurationRepository to allow simple Junit testing and testing if
  * the values in the DB are correct.
  */
 public class ConfigurationRepositoryMock implements IConfigurationRepository {
-    private Map<String, String> repoMap;
+    private final Map<String, String> repoMap;
 
     public ConfigurationRepositoryMock() {
         repoMap = new HashMap<>();
@@ -47,5 +48,19 @@ public class ConfigurationRepositoryMock implements IConfigurationRepository {
             return repoMap.get(key);
         }
         return "";
+    }
+
+    @Override
+    public Map<String, String> getAllByPattern(String pattern) {
+        return repoMap
+                .entrySet()
+                .stream()
+                .filter(e -> e.getKey().contains(pattern))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    @Override
+    public void delete(String key) {
+        repoMap.remove(key);
     }
 }
