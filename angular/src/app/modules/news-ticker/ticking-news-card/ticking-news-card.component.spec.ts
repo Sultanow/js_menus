@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NewsDisplayComponent } from './news-display.component';
+import { TickingNewsCardComponent } from './ticking-news-card.component';
 
-describe('NewsDisplayComponent', () => {
-  let component: NewsDisplayComponent;
-  let fixture: ComponentFixture<NewsDisplayComponent>;
+describe('TickingNewsCardComponent', () => {
+  let component: TickingNewsCardComponent;
+  let fixture: ComponentFixture<TickingNewsCardComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NewsDisplayComponent ]
+      declarations: [ TickingNewsCardComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NewsDisplayComponent);
+    fixture = TestBed.createComponent(TickingNewsCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

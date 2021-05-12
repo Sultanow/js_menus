@@ -1,0 +1,10 @@
+<mat-card class="ticking-news-card">
+  <mat-card-header>
+    <mat-card-title>
+      {{ newsItems?.length > 0 ? newsItems[0].title : 'Keine Neuigkeiten.'}}
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="ticking-news-card-content">
+    <div>{{ newsItems?.length > 0 ? newsItems[0].text : ''}}</div>
+  </mat-card-content>
+</mat-card>

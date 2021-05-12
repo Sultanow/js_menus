@@ -21,7 +21,6 @@ import { DetailsComponent } from './components/details/details.component';
 import { BatchesComponent } from './components/batches/batches.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-
 import { DependencyChartsComponent, EditDialog } from './components/dependencycharts/dependencycharts.component';
 import { CompareComponent } from './components/compare/compare.component';
 import { ViewboxComponent } from './components/viewbox/viewbox.component';
@@ -40,7 +39,6 @@ import { MaterialModule } from './material.module';
 import { StatisticModule } from './modules/statistic/statistic.module';
 import { IconHelperModule } from './modules/icon-helper/icon-helper.module';
 import { NewsTickerModule } from './modules/news-ticker/news-ticker.module';
-import { IconHelperModule } from './modules/icon-helper/icon-helper.module';
 import { AllkeysComponent } from './components/compare/allkeys/allkeys.component';
 import { HistorybetweentowdatesComponent } from './components/compare/historybetweentowdates/historybetweentowdates.component';
 import { BatchChartsComponent } from './components/batch-charts/batch-charts.component';
@@ -62,7 +60,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { Routes, RouterModule } from '@angular/router';
 import { MatBadgeModule } from '@angular/material/badge';
-import { NewsDisplayComponent } from './components/news-display/news-display.component';
 import { MaterialPasswordFieldComponent } from './components/material-password-field/material-password-field.component';
 
 const appRoutes: Routes = [
@@ -73,7 +70,8 @@ const appRoutes: Routes = [
   {
     path: 'legacy',
     component: AppComponent,
-  }
+  },
+  // TODO: add paths for other routes described on the sidebar here.
 ]
 
 
@@ -113,9 +111,7 @@ const appRoutes: Routes = [
     BatchInfoDialogComponent,
     NavigationComponent,
     DashboardComponent,
-    NewsDisplayComponent,
     MaterialPasswordFieldComponent,
-
   ],
   imports: [
     BrowserModule,
@@ -128,7 +124,7 @@ const appRoutes: Routes = [
     MaterialModule,
     StatisticModule,
     IconHelperModule,
-    NewsTickerModule
+    NewsTickerModule,
     IconHelperModule,
     LayoutModule,
     MatToolbarModule,
@@ -146,7 +142,7 @@ const appRoutes: Routes = [
     {
       provide : HTTP_INTERCEPTORS,
       useClass: BasicAuthInterceptorService,
-      multi:true
+      multi: true
     },
   ],
   bootstrap: [ NavigationComponent ],
