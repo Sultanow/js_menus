@@ -4,36 +4,21 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.util.Collections;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-class NewsControllerTest extends JerseyTest {
+public class NewsControllerTest extends JerseyTest {
     private final NewsService service = mock(NewsService.class, RETURNS_DEEP_STUBS);
-
-    @BeforeEach
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @AfterEach
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
-    }
 
     @Override
     public Application configure() {
@@ -50,72 +35,76 @@ class NewsControllerTest extends JerseyTest {
     }
 
     @Test
-    void getAllNewsWithEmptyList() {
+    public void getAllNewsWithEmptyList() {
         //given
         when(service.getAllVisibleNews()).thenReturn(Collections.emptySet());
         //when
         Response response = target("/news").request().get();
         //then
-        assertEquals(200, response.getStatus());
+        Assertions.assertEquals(200, response.getStatus());
     }
 
     @Test
-    void getAllNews() {
+    public void getAllNews() {
         //given
         when(service.getAllNews()).thenReturn(Collections.emptySet());
         //when
         Response response = target("/news/all").request().get();
         //then
-        assertEquals(200, response.getStatus());
+        Assertions.assertEquals(200, response.getStatus());
     }
 
     @Test
-    void getNewsByChannelWithEmptyList() {
+    public void getNewsByChannelWithEmptyList() {
         //given
         when(service.getAllNewsByTag(anyString())).thenReturn(Collections.emptySet());
         //when
         Response response = target("/news/tag/test").request().get();
         //then
-        assertEquals(200, response.getStatus());
-        assertEquals(Collections.emptySet(), response.readEntity(new GenericType<Set<NewsItem>>(){}));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(Collections.emptySet(), response.readEntity(new GenericType<Set<NewsItem>>() {
+        }));
     }
 
     @Test
-    void createNewsWithEmptyTitle() {
+    public void createNewsWithEmptyTitle() {
         //given
         NewsItem item = new NewsItem();
         item.setTitle(null);
         //when
         Response response = target("/news").request().put(Entity.entity(item, MediaType.APPLICATION_JSON));
         //then
-        assertEquals(400, response.getStatus());
+        Assertions.assertEquals(400, response.getStatus());
         verify(service, times(0)).saveNews(any(NewsItem.class));
     }
 
     @Test
-    void createNewsWithTitle() {
+    public void createNewsWithTitle() {
         //given
         NewsItem item = new NewsItem();
         item.setTitle("Test");
         when(service.saveNews(any(NewsItem.class))).thenReturn(1);
         //when
-        Response response = target("/news").request().put(Entity.entity(item, MediaType.APPLICATION_JSON));
+        Response response = target("/news")
+                .request()
+                .put(Entity.entity(item, MediaType.APPLICATION_JSON)
+                );
         //then
-        assertEquals(200, response.getStatus());
-        verify(service,times(1)).saveNews(any(NewsItem.class));
+        Assertions.assertEquals(200, response.getStatus());
+        verify(service, times(1)).saveNews(any(NewsItem.class));
     }
 
     @Test
-    void changeNewsItemWithoutSendingItem() {
+    public void changeNewsItemWithoutSendingItem() {
         //given
         //when
         Response response = target("/news/4711").request().post(Entity.entity(null, MediaType.APPLICATION_JSON));
         //then
-        assertEquals(400, response.getStatus());
+        Assertions.assertEquals(400, response.getStatus());
     }
 
     @Test
-    void changeNewsItemWithNotExistingId() {
+    public void changeNewsItemWithNotExistingId() {
         //given
         NewsItem item = new NewsItem();
         item.setTitle("Test");
@@ -124,11 +113,11 @@ class NewsControllerTest extends JerseyTest {
         //when
         Response response = target("/news/4711").request().post(Entity.entity(item, MediaType.APPLICATION_JSON));
         //then
-        assertEquals(400, response.getStatus());
+        Assertions.assertEquals(400, response.getStatus());
     }
 
     @Test
-    void changeNewsItemWithDifferentId() {
+    public void changeNewsItemWithDifferentId() {
         //given
         NewsItem item = new NewsItem();
         item.setId(1234);
@@ -136,11 +125,11 @@ class NewsControllerTest extends JerseyTest {
         //when
         Response response = target("/news/4711").request().post(Entity.entity(item, MediaType.APPLICATION_JSON));
         //then
-        assertEquals(400, response.getStatus());
+        Assertions.assertEquals(400, response.getStatus());
     }
 
     @Test
-    void changeNewsItemWithEmptyTitle() {
+    public void changeNewsItemWithEmptyTitle() {
         //given
         NewsItem item = new NewsItem();
         item.setId(4711);
@@ -148,11 +137,11 @@ class NewsControllerTest extends JerseyTest {
         //when
         Response response = target("/news/4711").request().post(Entity.entity(item, MediaType.APPLICATION_JSON));
         //then
-        assertEquals(400, response.getStatus());
+        Assertions.assertEquals(400, response.getStatus());
     }
 
     @Test
-    void changeNewsItemWithCorrectValues() {
+    public void changeNewsItemWithCorrectValues() {
         //given
         NewsItem item = new NewsItem();
         item.setId(4711);
@@ -161,39 +150,36 @@ class NewsControllerTest extends JerseyTest {
         //when
         Response response = target("/news/4711").request().post(Entity.entity(item, MediaType.APPLICATION_JSON));
         //then
-        assertEquals(200, response.getStatus());
+        Assertions.assertEquals(200, response.getStatus());
     }
 
     @Test
-    void changeNewsItemWithStringAsId() {
+    public void changeNewsItemWithStringAsId() {
         //given
         NewsItem item = new NewsItem();
         //when
         Response response = target("/news/test").request().post(Entity.entity(item, MediaType.APPLICATION_JSON));
         //then
-        assertEquals(404, response.getStatus());
+        Assertions.assertEquals(404, response.getStatus());
     }
 
     @Test
-    void deleteNewsItemExisting() {
+    public void deleteNewsItemExisting() {
         //given
-        when(service.deleteNewsItem(4711)).thenReturn(200);
+        when(service.deleteNewsItem(4711)).thenReturn(true);
         //when
         Response response = target("/news/4711").request().delete();
         //then
-        assertEquals(200, response.getStatus());
+        Assertions.assertEquals(200, response.getStatus());
     }
 
     @Test
-    void deleteNewsItemNotExisting() {
+    public void deleteNewsItemNotExisting() {
         //given
-        when(service.deleteNewsItem(4711)).thenReturn(400);
+        when(service.deleteNewsItem(4711)).thenReturn(false);
         //when
         Response response = target("/news/4711").request().delete();
         //then
-        assertEquals(400, response.getStatus());
+        Assertions.assertEquals(400, response.getStatus());
     }
-
-
-
 }

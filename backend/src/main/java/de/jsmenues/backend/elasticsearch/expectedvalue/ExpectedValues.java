@@ -35,7 +35,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ExpectedValues {
-	public static final String INDEX = "expected_values";
+	public static final String INDEX_NAME = "expected_values";
 	
     private static final Logger LOGGER = LoggerFactory.getLogger(ExpectedValues.class);
     
@@ -56,7 +56,6 @@ public class ExpectedValues {
      * @param hostName
      * @param key
      * @param expectedValue
-     * @return respons about history data
      */
     public void insertExpectedValues(String hostName, String key, String expectedValue) throws Exception {
         Date date = new Date();
@@ -76,10 +75,10 @@ public class ExpectedValues {
         itemMap.put("key", key);
         itemMap.put("timestamp", dateTime);
         itemMap.put("hostname", hostName);
-        GetRequest getRequest = new GetRequest(INDEX, hostName + "-" + key);
+        GetRequest getRequest = new GetRequest(INDEX_NAME, hostName + "-" + key);
         boolean exists = connector.getClient().exists(getRequest, RequestOptions.DEFAULT);
         if (!exists) {
-            IndexRequest indexRequest = new IndexRequest(INDEX).source(itemMap).id(hostName + "-" + key);
+            IndexRequest indexRequest = new IndexRequest(INDEX_NAME).source(itemMap).id(hostName + "-" + key);
             IndexResponse indexResponse = connector.getClient().index(indexRequest,
                     RequestOptions.DEFAULT);
             LOGGER.info(indexResponse + "\n item is  inserted");
@@ -87,7 +86,7 @@ public class ExpectedValues {
         } else {
             String lastexpectedValue = getExpectedValueByHostnameAndKey(hostName, key);
             if (!lastexpectedValue.equals(expectedValue)) {
-                UpdateRequest updateRequest = new UpdateRequest(INDEX, hostName + "-" + key).doc(itemMap);
+                UpdateRequest updateRequest = new UpdateRequest(INDEX_NAME, hostName + "-" + key).doc(itemMap);
                 UpdateResponse updateResponse = connector.getClient().update(updateRequest,
                         RequestOptions.DEFAULT);
                 LOGGER.info(updateResponse + "\n item is updated");
@@ -108,7 +107,7 @@ public class ExpectedValues {
      */
     public List<Map<String, Object>> getExpectedValues() throws Exception {
 
-        SearchRequest searchRequest = new SearchRequest(INDEX);
+        SearchRequest searchRequest = new SearchRequest(INDEX_NAME);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(QueryBuilders.matchAllQuery());
         searchSourceBuilder.size(10000);

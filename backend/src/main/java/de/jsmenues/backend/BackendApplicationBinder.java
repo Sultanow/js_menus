@@ -15,11 +15,9 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
 public class BackendApplicationBinder extends AbstractBinder {
     @Override
     protected void configure() {
-        bind(AuthenticationTokens.class)
-                .to(AuthenticationTokens.class);
+        bind(AuthenticationTokens.class).to(AuthenticationTokens.class);
         // Provide the implementation when searching for the interface.
-        bind(ConfigurationRepository.class)
-                .to(IConfigurationRepository.class);
+        bind(ConfigurationRepository.class).to(IConfigurationRepository.class);
         bind(ZabbixService.class).to(ZabbixService.class);
         bind(ElasticsearchConnector.class).to(ElasticsearchConnector.class);
         bind(ElasticsearchDao.class).to(ElasticsearchDao.class);

@@ -75,8 +75,8 @@ public class NewsController {
     @DELETE
     @Path("{id}")
     public Response deleteNewsItem(@PathParam("id") int id) {
-        int result = newsService.deleteNewsItem(id);
-        return Response.status(result).build();
+        boolean success = newsService.deleteNewsItem(id);
+        return Response.status(success ? 200 : 400).build();
     }
 }
 

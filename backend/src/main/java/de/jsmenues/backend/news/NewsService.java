@@ -2,9 +2,9 @@ package de.jsmenues.backend.news;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import de.jsmenues.redis.repository.ConfigurationRepository;
 import de.jsmenues.redis.repository.IConfigurationRepository;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -15,6 +15,13 @@ import java.util.stream.Collectors;
 @Singleton
 class NewsService {
     private final Gson gson = new Gson();
+    
+    private final IConfigurationRepository configurationRepository;
+
+    @Inject
+    NewsService(IConfigurationRepository configurationRepository) {
+        this.configurationRepository = configurationRepository;
+    }
 
     public Set<NewsItem> getAllVisibleNews() {
         Map<String, String> allNews = getAllNewsFromDb();
@@ -44,11 +51,11 @@ class NewsService {
     }
 
     private Map<String, String> getAllNewsFromDb() {
-        return ConfigurationRepository.getRepo().getAllByPattern("news.item");
+        return configurationRepository.getAllByPattern("news.item");
     }
 
     public Set<NewsItem> getAllNewsByTag(String tag) {
-        IConfigurationRepository repo = ConfigurationRepository.getRepo();
+        IConfigurationRepository repo = configurationRepository;
         String channelVal = repo.getVal("news.channel." + tag.toLowerCase());
         Set<NewsItem> news = new HashSet<>();
         if (channelVal == null || !channelVal.isEmpty()) {
@@ -74,7 +81,7 @@ class NewsService {
         item.validateDate();
         int newId = getLastNewsId() + 1;
         item.setId(newId);
-        IConfigurationRepository repo = ConfigurationRepository.getRepo();
+        IConfigurationRepository repo = configurationRepository;
         repo.save("news.lastId", Integer.toString(newId));
         repo.save("news.item." + newId, gson.toJson(item, NewsItem.class));
         Set<String> tags = findAllTagsInText(item.getText());
@@ -103,8 +110,7 @@ class NewsService {
     }
 
     private int getLastNewsId() {
-        IConfigurationRepository repo = ConfigurationRepository.getRepo();
-        String id = repo.getVal("news.lastId");
+        String id = configurationRepository.getVal("news.lastId");
         if (id == null || id.isEmpty()) {
             return 0;
         } else {
@@ -115,7 +121,7 @@ class NewsService {
     public int changeNewsItem(NewsItem item) {
         if (null == item || null == item.getTitle() || item.getTitle().isEmpty())
             return 400;
-        IConfigurationRepository repo = ConfigurationRepository.getRepo();
+        IConfigurationRepository repo = configurationRepository;
         String json = repo.getVal("news.item." + item.getId());
         if (null == json || json.isEmpty())
             return 400;
@@ -148,22 +154,22 @@ class NewsService {
         return 200;
     }
 
-    public int deleteNewsItem(int id) {
-        IConfigurationRepository repo = ConfigurationRepository.getRepo();
+    public boolean deleteNewsItem(int id) {
+        IConfigurationRepository repo = configurationRepository;
         String item = repo.getVal("news.item." + id);
         if (null == item || item.isEmpty()) {
-            return 400;
+            return false;
         }
         NewsItem news = gson.fromJson(item, new TypeToken<NewsItem>() {
         }.getType());
         Set<String> tags = findAllTagsInText(news.getText());
         repo.delete("news.item." + id);
         deleteNewsFromTagList(id, tags);
-        return 200;
+        return true;
     }
 
     private void deleteNewsFromTagList(int id, Set<String> tags) {
-        IConfigurationRepository repo = ConfigurationRepository.getRepo();
+        IConfigurationRepository repo = configurationRepository;
         tags.forEach(tag -> {
             Set<String> keys = gson.fromJson(repo.getVal("news.channel." + tag), new TypeToken<Set<String>>() {
             }.getType());
@@ -173,7 +179,7 @@ class NewsService {
     }
 
     private void addNewsToTagList(int id, Set<String> tags) {
-        IConfigurationRepository repo = ConfigurationRepository.getRepo();
+        IConfigurationRepository repo = configurationRepository;
         tags.forEach(tag -> {
             String channel = repo.getVal("news.channel." + tag);
             Set<String> channelVal;

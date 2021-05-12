@@ -3,14 +3,12 @@ package de.jsmenues.listeners;
 import de.jsmenues.backend.authentication.TimerToDeleteOldTokens;
 import de.jsmenues.backend.elasticsearch.DeleteHistoryTimer;
 import de.jsmenues.backend.elasticsearch.ElasticsearchConnector;
+import de.jsmenues.backend.elasticsearch.ElasticsearchHelper;
 import de.jsmenues.backend.elasticsearch.dao.*;
+import de.jsmenues.backend.elasticsearch.expectedvalue.ExpectedValues;
 import de.jsmenues.backend.zabbixservice.ZabbixElasticsearchSynchronization;
 import de.jsmenues.backend.zabbixservice.ZabbixService;
 import de.jsmenues.redis.repository.IConfigurationRepository;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.indices.CreateIndexRequest;
-import org.elasticsearch.client.indices.CreateIndexResponse;
-import org.elasticsearch.client.indices.GetIndexRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,8 +58,13 @@ public class Initiator implements ServletContextListener {
     public void contextInitialized(ServletContextEvent event) {
         LOGGER.info("Application start");
 
-        final String expectedValuesIndex = "expected_values";
-        createIndexIfNotExists(expectedValuesIndex);
+        try {
+            ElasticsearchHelper.createIndexIfNotExists(elasticsearchConnector.getClient(),
+                    ExpectedValues.INDEX_NAME);
+            LOGGER.info("Created index for ExpectedValues.");
+        } catch (IOException e) {
+            LOGGER.error("Error creating indices in Elasticsearch: {0}", e);
+        }
 
         try {
             if (!snapshotDao.doesBackupRepositoryExist()) {
@@ -115,29 +118,5 @@ public class Initiator implements ServletContextListener {
 
         DeleteHistoryTimer deleteHistoryTimer = new DeleteHistoryTimer();
         deleteHistoryTimer.start(historyDao);
-    }
-
-    private void createIndexIfNotExists(final String indexName) {
-        GetIndexRequest checkIfIndexExistRequest = new GetIndexRequest(indexName);
-
-        try {
-            LOGGER.info("Checking if exists for: " + indexName);
-            boolean exists = elasticsearchConnector.getClient()
-                    .indices()
-                    .exists(checkIfIndexExistRequest, RequestOptions.DEFAULT);
-            if (!exists) {
-                CreateIndexRequest createIndexRequest = new CreateIndexRequest(indexName);
-                CreateIndexResponse createIndexResponse = elasticsearchConnector.getClient()
-                        .indices()
-                        .create(createIndexRequest, RequestOptions.DEFAULT);
-                boolean acknowledged = createIndexResponse.isAcknowledged();
-                LOGGER.info(indexName + " did not exist, createResponse: " + createIndexResponse);
-                LOGGER.info(" was it acknowledged?: " + acknowledged);
-            } else {
-                LOGGER.info(indexName + " did already exist");
-            }
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage());
-        }
     }
 }

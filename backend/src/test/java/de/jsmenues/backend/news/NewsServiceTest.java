@@ -2,37 +2,20 @@ package de.jsmenues.backend.news;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import de.jsmenues.redis.repository.ConfigurationRepository;
 import de.jsmenues.redis.repository.ConfigurationRepositoryMock;
 import de.jsmenues.redis.repository.IConfigurationRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class NewsServiceTest {
-
-    private final NewsService service = new NewsService();
+public class NewsServiceTest {
     private final IConfigurationRepository repoMock = new ConfigurationRepositoryMock();
+    private final NewsService service = new NewsService(repoMock);
     private final Gson gson = new Gson();
-
-    @BeforeEach
-    public void setUp() {
-        setRedisMock(repoMock);
-    }
-
-    @AfterEach
-    public void tearDown() throws NoSuchFieldException, IllegalAccessException {
-        Field instance = ConfigurationRepository.class.getDeclaredField("instance");
-        instance.setAccessible(true);
-        instance.set(null, null);
-    }
 
     @Test
     void getAllVisibleNews() {
@@ -295,9 +278,9 @@ class NewsServiceTest {
         //given
         initDefaultNews();
         //when
-        int result = service.deleteNewsItem(1);
+        boolean result = service.deleteNewsItem(1);
         //then
-        assertEquals(200, result);
+        assertTrue(result);
         assertEquals(1, service.getAllNews().size());
         assertTrue(service.getAllNewsByTag("tag1").isEmpty());
     }
@@ -307,9 +290,9 @@ class NewsServiceTest {
         //given
         initDefaultNews();
         //when
-        int result = service.deleteNewsItem(4711);
+        boolean result = service.deleteNewsItem(4711);
         //then
-        assertEquals(400, result);
+        assertFalse(result);
     }
 
     @Test
@@ -420,15 +403,5 @@ class NewsServiceTest {
             return null;
         return gson.fromJson(val, new TypeToken<NewsItem>() {
         }.getType());
-    }
-
-    private void setRedisMock(IConfigurationRepository mock) {
-        try {
-            Field instance = ConfigurationRepository.class.getDeclaredField("instance");
-            instance.setAccessible(true);
-            instance.set(instance, mock);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

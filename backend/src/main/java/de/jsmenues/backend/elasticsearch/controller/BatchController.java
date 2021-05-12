@@ -35,8 +35,8 @@ public class BatchController {
     @POST
     // no empty paths to avoid useless warning @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response insertBatch(Map<String, Object> batch) throws IOException { 
-        IndexResponse result  = dao.insertBatch(batch);
+    public Response insertBatch(Map<String, Object> batch) throws IOException {
+        IndexResponse result = dao.insertBatch(batch);
         return Response.ok(result).build();
     }
 
@@ -78,8 +78,8 @@ public class BatchController {
     @PUT
     @Path("/{batchid}")
     public Response updateBatchByID(@PathParam("batchid") String batchId, Object batch) throws IOException {
-    	ObjectMapper oMapper = new ObjectMapper();
-    	Map<String, Object> batchMap = oMapper.convertValue(batch, Map.class);
+        ObjectMapper oMapper = new ObjectMapper();
+        Map<String, Object> batchMap = oMapper.convertValue(batch, Map.class);
         String result = dao.updateBatchById(batchId, batchMap);
         return Response.ok(result).build();
     }
