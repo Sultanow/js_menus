@@ -68,6 +68,14 @@ const appRoutes: Routes = [
     component: DashboardComponent,
   },
   {
+    path: 'batches',
+    component: BatchesComponent,
+  },
+  {
+    path: 'configurations',
+    component: ConfigurationViewComponent,
+  },
+  {
     path: 'legacy',
     component: AppComponent,
   },
