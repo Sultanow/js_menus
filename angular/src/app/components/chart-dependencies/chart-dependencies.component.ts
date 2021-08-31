@@ -55,7 +55,9 @@ export class ChartDependenciesComponent implements OnInit, OnChanges {
       if (graphData != null || graphData != undefined) {
         console.log("Graph received for visualization!");
         this.graphData = graphData;
+        //Checking for direct dependencies in graph for Warning Message
         this.checkIfThereAreDirectCircularDependenciesInGraph();
+        //Setting up all types of graphs for visualisation: Normal Graph, Difference Graph, Graph with Cycles, Only cycles out of the graph
         this.setUpDifferentGraphs();
         this.drawGraph(this.graphData, "normal");
         this.graphDataNodeps = ChartDependenciesComponent.getGraphDataNodeps(graphData);
@@ -326,6 +328,7 @@ export class ChartDependenciesComponent implements OnInit, OnChanges {
   }
 
   private drawGraph(graphData: any, paintArgument: string) {
+    // Diffferent graphs have to be drawn in a different way -> the "paintArgument" decides, which style will be painted (example difference graph with deleted edges and nodes as red and added nodes and edges as green)
     let simulation = d3.forceSimulation<any, any>();
     simulation.force("link", d3.forceLink().id(function (d, i) { return d['id']; }).distance(100).strength(1))
       .force("charge", d3.forceManyBody())

@@ -26,8 +26,6 @@ export class LoadChartDataService {
     linksDifference:[]
   };
 
-  //private graphDataMap: Map<string, any> = new Map<string, any>();
-
   public async getGraphData() {
     console.log("starting to get graph data")
     if (!this.graphData.inited) {
@@ -89,7 +87,6 @@ export class LoadChartDataService {
     return edges;
   }
 
-    // private constructGraphObject(nodes: Map<String, any>, edges: any[]): any {
       private constructGraph(currentNodes: any[], currentEdges: any[],nodesToCompare: any[], edgesToCompare: any[]): any {
         console.log("Constructing a graph!")
         let outputGraph = {
@@ -99,10 +96,13 @@ export class LoadChartDataService {
           nodesDiffeence:[],
           linksDifference:[]
         };
+        // Strucuture of node objects -> id, name, label (shortName of Batch Job), inCycle (is node a part of cycle), updatedStatus (has node been updated, deleted or not changed at all)
+        // inCycle and updateStatus will be set respectively later in batch-charts.component before being handed over for visualisation
         currentNodes.forEach(node => {
           outputGraph.nodes.push({ id: node.id, name: node.name, label: node.shortName, inCycle: false, updateStatus: "same" });
         });
-    
+        // Strucuture of edge objects -> surce (predecessor), target(successor), type, inCycle (is edge a part of cycle), updatedStatus (has edge been updated, deleted or not changed at all)
+        // inCycle and updateStatus will be set respectively later in batch-charts.component before being handed over for visualisation
         currentEdges.forEach((e) => {
           outputGraph.links.push({ source: e.predecessor, target: e.successor, inCycle: false, updateStatus: "same", type: 'Next -->>' });
         });
@@ -118,17 +118,4 @@ export class LoadChartDataService {
         return outputGraph;
       }
 
-      
-      public printCurrentGraphData(){
-        this.graphData.nodes.forEach(node => {
-          console.log("ID: " + node.id + " NAME: " + node.name + " UPDATE: " + node.updateStatus + " INCYCLE " + node.inCycle);
-    
-        });
-    
-        this.graphData.links.forEach(link => {
-          console.log("Source: " + link.source + " Target: " + link.target + " UPDATE: " + link.updateStatus + " INCYCLE " + link.inCycle)
-    
-        });
-    
-      }
 }

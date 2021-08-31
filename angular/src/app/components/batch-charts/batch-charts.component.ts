@@ -23,9 +23,11 @@ export class BatchChartsComponent implements OnInit {
 
 
   async ngOnInit() {
+    // getting graph data from load-chart-data.service
     let graphData = await this.loadChartDataService.getGraphData();
     console.log("Next message wit hgraph data is here!")
     let graphProcessor = new GraphProcessor(graphData);
+    //processing returned data -> putting cycle and difference graph markers into nodes and edges
     this.processedGraphData = graphProcessor.processAndReturnGraphData();
     this.loadChartDataService.nextMessage(this.processedGraphData);
   }
