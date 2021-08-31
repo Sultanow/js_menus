@@ -5,6 +5,8 @@ import * as d3 from 'd3';
 import { BatchInfoDialogComponent } from '../batch-info-dialog/batch-info-dialog.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { BatchService } from 'src/app/services/batches/batches.service';
+import {BatchGraphMaker} from "src/app/components/batch-charts/graph-processor/batch-graph-maker";
+import Swal from "sweetalert2";
 
 @Component({
   selector: 'app-chart-dependencies',
@@ -33,6 +35,10 @@ export class ChartDependenciesComponent implements OnInit, OnChanges {
   private graphData: any;
   private graphDataNodeps: any;
 
+  private onlyCycleGraphData: any;
+
+  private differenceGraphData: any;
+
   private margin = { top: 20, right: 120, bottom: 20, left: 120 };
   private width = 960 - this.margin.right - this.margin.left;
   private height = 600 - this.margin.top - this.margin.bottom;
@@ -46,9 +52,12 @@ export class ChartDependenciesComponent implements OnInit, OnChanges {
       .attr("height", this.height + this.margin.top + this.margin.bottom);
 
     this.loadChartDataService.chartMessage.subscribe(graphData => {
-      if (graphData != null) {
+      if (graphData != null || graphData != undefined) {
+        console.log("Graph received for visualization!");
         this.graphData = graphData;
-        this.drawGraph(graphData);
+        this.checkIfThereAreDirectCircularDependenciesInGraph();
+        this.setUpDifferentGraphs();
+        this.drawGraph(this.graphData, "normal");
         this.graphDataNodeps = ChartDependenciesComponent.getGraphDataNodeps(graphData);
         console.log(this.graphData);
         console.log("done graph data")
@@ -60,21 +69,42 @@ export class ChartDependenciesComponent implements OnInit, OnChanges {
     })
   }
 
+  private setUpDifferentGraphs(){
+    let batchGraphMaker = new BatchGraphMaker(this.graphData);
+    this.graphData = batchGraphMaker.getNormalGraph();
+    this.differenceGraphData = batchGraphMaker.getDifferenceGraph();
+    this.onlyCycleGraphData = batchGraphMaker.getGraphCycles();
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes.searchTerm.isFirstChange()) return;
     this.clear();
     if (this.searchTerm === SearchComponent.SEARCH_RESET) {
-      this.drawGraph(this.graphData);
+      console.log("ngOnChanges SEARCH_RESET")
+      this.drawGraph(this.graphData, "normal");
     } else if (this.searchTerm === SearchComponent.SEARCH_FILTER_NODEPS) {
-      this.drawGraph(this.graphDataNodeps);
-    } else if (this.searchTerm != null && this.searchTerm.length > 2) {
+      console.log("ngOnChanges SEARCH_FILTER_NODEPS")
+     this.drawGraph(this.graphDataNodeps, "normal");
+    }else if(this.searchTerm === SearchComponent.SEARCH_GRAPH_CYCLES){
+      console.log("ngOnChanges SEARCH_GRAPH_CYCLES")
+      console.log("Drawing grapph with cyccles!")
+      this.drawGraph(this.graphData, "cycle");
+    }else if (this.searchTerm === SearchComponent.SEARCH_GRAPH_CYCLES_ONLY){
+      console.log("ngOnChanges SEARCH_GRAPH_CYCLES_ONLY")
+      console.log("Drawing cyclces ONLY !")
+      this.drawGraph(this.onlyCycleGraphData, "cycle"); 
+    }  else if (this.searchTerm === SearchComponent.SEARCH_DIFFERENCE_GRAPH){
+      console.log("ngOnChanges SEARCH_DIFFERENCE_GRAPH")
+      console.log("Drawing difference graph!")
+      this.drawGraph(this.differenceGraphData, "difference");
+    }else if (this.searchTerm != null && this.searchTerm.length > 2) {
       let treeData = {};
       let root = this.searchNode(this.searchTerm);
       this.constructTree(root, treeData);
       this.drawTree(treeData);
     } else {
       if (this.svg_d3 != null) {
-        this.drawGraph(this.graphData);
+       this.drawGraph(this.graphData, "normal");
       }
     }
   }
@@ -114,86 +144,6 @@ export class ChartDependenciesComponent implements OnInit, OnChanges {
     dialogRef.afterClosed().subscribe(r => this.dialog.closeAll())    
   }
 
-  
-  private drawGraph(graphData: any) {
-    let simulation = d3.forceSimulation<any, any>();
-    simulation.force("link", d3.forceLink().id(function (d, i) { return d['id']; }).distance(100).strength(1))
-      .force("charge", d3.forceManyBody())
-      .force("center", d3.forceCenter(this.width / 2, this.height / 2));
-
-    // build the arrow.
-    this.svg_d3.append("svg:defs").selectAll("marker")
-      .data(["end"])
-      .enter().append("svg:marker")
-      .attr("id", String)
-      .attr("viewBox", "0 -5 10 10")
-      .attr("refX", 20)
-      .attr("refY", 0)
-      .attr("markerWidth", 6)
-      .attr("markerHeight", 6)
-      .attr("orient", "auto")
-      .append("svg:path")
-      .attr("d", "M0,-5L10,0L0,5");
-
-    let link = this.svg_d3.append("g").selectAll(".link")
-      .attr("class", "link")
-      .data(graphData.links)
-      .enter()
-      .append("line")
-      .attr("stroke", "black")
-      .style("stroke-width", 2)
-      .attr("marker-end", "url(#end)");
-
-    let node = this.svg_d3.selectAll(".node")
-      .data(graphData.nodes)
-      .enter()
-      .append("g")
-      .on("click", (event, d: d3.SimulationLinkDatum<d3.SimulationNodeDatum>) => {
-        this.showBatch(d['id']);
-      })
-      // .on("mouseout", () => {this.currentNode="";this._cdr.detectChanges();})
-      .call(d3.drag()
-        .on("start", function (event, d: d3.SimulationLinkDatum<d3.SimulationNodeDatum>) {
-          if (!event.active) simulation.alphaTarget(0.3).restart()
-          d['fx'] = d['x'];
-          d['fy'] = d['y'];
-        })
-        .on("drag", function (event, d) {
-          d['fx'] = event.x;
-          d['fy'] = event.y;
-        }));
-
-
-    node.append("rect")
-      .attr("width", 40)
-      .attr("height", 20)
-      .attr("transform", function (d) { return "translate(-20,-10)" })
-      .classed("textbox", true)
-
-    node.append("text")
-      .attr("x", -18)
-      .attr("dy", ".3em")
-      .classed("text", true)
-      .text(function (d) { return d.label });
-
-    // set the width of the rect to the text width + padding
-    node.selectAll('rect')
-      .attr("width", function (d) { return this.parentNode.getBBox().width + 5; })
-    let ticked = function () {
-      link
-        .attr("x1", function (d) { return d.source.x; })
-        .attr("y1", function (d) { return d.source.y; })
-        .attr("x2", function (d) { return d.target.x; })
-        .attr("y2", function (d) { return d.target.y; });
-
-      node
-        .attr("transform", function (d) { return "translate(" + d.x + ", " + d.y + ")"; });
-    }
-    simulation.nodes(graphData.nodes).on("tick", ticked);
-    simulation.nodes(graphData.nodes);
-    simulation.force<d3.ForceLink<any, any>>("link").links(graphData.links);
-  }
-
   /*
    * Bubble Chart
    */
@@ -208,6 +158,29 @@ export class ChartDependenciesComponent implements OnInit, OnChanges {
       }
     }
     return result;
+  }
+
+  private checkIfThereAreDirectCircularDependenciesInGraph(){
+    if(this.graphData.directDependantNodes.length != 0){
+      let warningMessage = "Following jobs dependet on each other: "
+      for(let i = 0; i<this.graphData.directDependantNodes.length; i++){
+        let node1 = this.graphData.directDependantNodes[i][0];
+        let node2 = this.graphData.directDependantNodes[i][1];
+        warningMessage += "\n " + node1.label + " ==> " + node2.label;
+      }
+      this.openSweetAlert(warningMessage);
+    }
+  }
+
+  public openSweetAlert(errorMessage:string){
+    Swal.fire({
+      title: 'Batch jobs with direct circular dependencies have been found!',
+      text: errorMessage,
+      icon: 'warning',
+      showCancelButton: false,
+      confirmButtonText: 'Continue',
+      cancelButtonText: 'No, keep it'
+    })
   }
 
   private static getGraphDataNodeps(graphData: any): any {
@@ -351,4 +324,122 @@ export class ChartDependenciesComponent implements OnInit, OnChanges {
       .text(d => this.abbrev(d.data.label))
       .classed("text", true)
   }
+
+  private drawGraph(graphData: any, paintArgument: string) {
+    let simulation = d3.forceSimulation<any, any>();
+    simulation.force("link", d3.forceLink().id(function (d, i) { return d['id']; }).distance(100).strength(1))
+      .force("charge", d3.forceManyBody())
+      .force("center", d3.forceCenter(this.width / 2, this.height / 2));
+
+    // build the arrow.
+    this.svg_d3.append("svg:defs").selectAll("marker")
+      .data(["end"])
+      .enter().append("svg:marker")
+      .attr("id", String)
+      .attr("viewBox", "0 -5 10 10")
+      .attr("refX", 20)
+      .attr("refY", 0)
+      .attr("markerWidth", 6)
+      .attr("markerHeight", 6)
+      .attr("orient", "auto")
+      .append("svg:path")
+      .attr("d", "M0,-5L10,0L0,5");
+
+    let link = this.svg_d3.append("g").selectAll(".link")
+      .attr("class", "link")
+      .data(graphData.links)
+      .enter()
+      .append("line")
+      .attr("stroke", function(d){ 
+        if(paintArgument === "normal"){
+          return "black";
+        } else if (paintArgument === "cycle"){
+          if(d.inCycle === true){
+            return "red"
+          } else {
+            return "black"
+          }} else if (paintArgument === "difference"){
+            if(d.updateStatus === "same"){
+              return "black";
+            } else if(d.updateStatus === "deleted"){
+              return "red";
+            } else if(d.updateStatus === "inserted"){
+              return "green";
+            }
+          }
+        })
+      .style("stroke-width", 2)
+      .attr("marker-end", "url(#end)");
+
+    let node = this.svg_d3.selectAll(".node")
+      .data(graphData.nodes)
+      .enter()
+      .append("g")
+      .on("click", (event, d: d3.SimulationLinkDatum<d3.SimulationNodeDatum>) => {
+        this.showBatch(d['id']);
+      })
+      // .on("mouseout", () => {this.currentNode="";this._cdr.detectChanges();})
+      .call(d3.drag()
+        .on("start", function (event, d: d3.SimulationLinkDatum<d3.SimulationNodeDatum>) {
+          if (!event.active) simulation.alphaTarget(0.3).restart()
+          d['fx'] = d['x'];
+          d['fy'] = d['y'];
+        })
+        .on("drag", function (event, d) {
+          d['fx'] = event.x;
+          d['fy'] = event.y;
+        }));
+
+
+    node.append("rect")
+      .attr("width", 40)
+      .attr("height", 20)
+      .attr("transform", function (d) { return "translate(-20,-10)" })
+      .classed("textbox", true)
+      .style("stroke", function(d){ 
+        if(paintArgument === "normal"){
+          return "black";
+        } else if (paintArgument === "cycle"){
+          if(d.inCycle === true){
+            return "red"
+          } else {
+            return "black"
+          }} else if (paintArgument === "difference"){
+            if(d.updateStatus === "same"){
+              return "black";
+            } else if(d.updateStatus === "deleted"){
+              return "red";
+            } else if(d.updateStatus === "inserted"){
+              return "green";
+            }
+          }
+        })
+
+    node.append("text")
+      .attr("x", -18)
+      .attr("dy", ".3em")
+      .classed("text", true)
+      .style("color", "black")
+      .text(function (d) { return d.label });
+
+    // set the width of the rect to the text width + padding
+    node.selectAll('rect')
+      .attr("width", function (d) { return this.parentNode.getBBox().width + 5; })
+    let ticked = function () {
+      link
+        .attr("x1", function (d) { return d.source.x; })
+        .attr("y1", function (d) { return d.source.y; })
+        .attr("x2", function (d) { return d.target.x; })
+        .attr("y2", function (d) { return d.target.y; });
+
+      node
+        .attr("transform", function (d) { return "translate(" + d.x + ", " + d.y + ")"; });
+    }
+    simulation.nodes(graphData.nodes).on("tick", ticked);
+    simulation.nodes(graphData.nodes);
+    simulation.force<d3.ForceLink<any, any>>("link").links(graphData.links);
+  }
+
+
+ 
 }

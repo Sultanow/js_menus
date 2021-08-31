@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { LoadChartDataService } from 'src/app/services/load-chart-data/load-chart-data.service';
+import {GraphProcessor} from "src/app/components/batch-charts/graph-processor/graph-processor";
 
 @Component({
   selector: 'app-batch-charts',
@@ -13,9 +14,20 @@ export class BatchChartsComponent implements OnInit {
 
   public searchTerm: string;
 
+  private processedGraphData: any= {
+    inited: false,
+    nodes: [],
+    links: [],
+    directDependantNodes:[]
+  };
+
+
   async ngOnInit() {
     let graphData = await this.loadChartDataService.getGraphData();
-    this.loadChartDataService.nextMessage(graphData);
+    console.log("Next message wit hgraph data is here!")
+    let graphProcessor = new GraphProcessor(graphData);
+    this.processedGraphData = graphProcessor.processAndReturnGraphData();
+    this.loadChartDataService.nextMessage(this.processedGraphData);
   }
 
   receiveSearchTerm($event): void {

@@ -1,10 +1,9 @@
 <div *ngIf="showBatchChart">
     
 <app-search (searchEvent)="receiveSearchTerm($event)"></app-search>
-
 <div class="chart-splitpane">
     <app-chart-dependencies [searchTerm]="searchTerm"></app-chart-dependencies>
     <app-chart-nodeps [searchTerm]="searchTerm"></app-chart-nodeps>
+ <!--   <app-chart-difference [searchTerm]="searchTerm"></app-chart-difference> -->
 </div>
-
 </div>

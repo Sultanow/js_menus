@@ -2,6 +2,7 @@ import { Component, OnInit, Input, OnChanges} from '@angular/core';
 import { LoadChartDataService } from '../../services/load-chart-data/load-chart-data.service';
 import { ChartDependenciesComponent } from '../../components/chart-dependencies/chart-dependencies.component';
 import { SearchComponent } from '../search/search.component';
+import {BatchGraphMaker} from "src/app/components/batch-charts/graph-processor/batch-graph-maker";
 import * as d3 from 'd3';
 
 @Component({
@@ -18,10 +19,29 @@ export class ChartNodepsComponent implements OnInit,OnChanges {
 
   private graphDataNodeps: any;
 
+  private onlyCyclesGraphTemp: any;
+
+  private onlyCycleGraph: any;
+
+  private graphDataDiffGraph: any;
+
+  private graphDataDiffGraphTemp:any;
+
+  private normalGraphTemp: any;
+
+  private normalGraph: any;
+
   private margin = { top: 20, right: 120, bottom: 20, left: 120 };
   private width = 540 - this.margin.right - this.margin.left;
   private height = 600 - this.margin.top - this.margin.bottom;
   private svg_d3;
+
+  private setUpDifferentGraphs(graphData:any){
+    let batchGraphMaker = new BatchGraphMaker(graphData);
+    this.normalGraphTemp = batchGraphMaker.getNormalGraph();
+    this.graphDataDiffGraphTemp = batchGraphMaker.getDifferenceGraph();
+    this.onlyCyclesGraphTemp = batchGraphMaker.getGraphCycles();
+  }
 
   ngOnInit(): void {
     this.svg_d3 = d3.select("svg#d3-chart-nodeps")
@@ -29,23 +49,53 @@ export class ChartNodepsComponent implements OnInit,OnChanges {
       .attr("height", this.height + this.margin.top + this.margin.bottom);
     
     this.loadChartDataService.chartMessage.subscribe(graphData => {
-      if (graphData != null) {
-        this.graphDataNodeps = {children:[]};
-        let batchesNodeps = ChartDependenciesComponent.getBatchesNodeps(graphData);
-        for (let node of graphData.nodes) {
-          if (batchesNodeps.includes(node.id)) {
-            this.graphDataNodeps.children.push({Name: node.label, Count: 2000});
+      if (graphData != null || graphData != undefined) {
+        this.setUpDifferentGraphs(graphData);
+        this.graphDataDiffGraph = {children:[]};
+        for (let node of this.graphDataDiffGraphTemp.nodes) {
+            this.graphDataDiffGraph.children.push({Id: node.id, Name: node.label, updateStatus: node.updateStatus, InCycle: node.inCycle, Count: 2000});
+          }
+
+          this.onlyCycleGraph = {children:[]};
+          for (let node of this.onlyCyclesGraphTemp.nodes) {
+              this.onlyCycleGraph.children.push({Id: node.id, Name: node.label, updateStatus: node.updateStatus, InCycle: node.inCycle, Count: 2000});
+            }
+
+            this.normalGraph = {children:[]};
+            for (let node of this.normalGraphTemp.nodes) {
+                this.normalGraph.children.push({Name: node.label, updateStatus: node.updateStatus, inCycle: node.inCycle, Count: 2000});
+            }
+
+          this.graphDataNodeps = {children:[]};
+          let batchesNodeps = ChartDependenciesComponent.getBatchesNodeps(graphData);
+          for (let node of this.normalGraphTemp.nodes) {
+            if (batchesNodeps.includes(node.id)) {
+              this.graphDataNodeps.children.push({Name: node.label, updateStatus: node.updateStatus, inCycle: node.inCycle, Count: 2000});
+            }
           }
         }
-      }});
+        });
   }
+
 
   ngOnChanges() {
     this.clear();
     if (this.searchTerm === SearchComponent.SEARCH_RESET) {
       this.clear();
     } else if (this.searchTerm === SearchComponent.SEARCH_FILTER_NODEPS) {
-      this.drawGraph(this.graphDataNodeps);
+      console.log("DRAW GRAPH FOR SEARCH_FILTER_NODEPS")
+      this.drawGraph(this.graphDataNodeps, "normal");
+    } else if (this.searchTerm === SearchComponent.SEARCH_GRAPH_CYCLES){
+      console.log("GRAPH WITH CYCLES!!")
+      this.drawGraph(this.normalGraph, "cycle");
+      
+    } else if (this.searchTerm === SearchComponent.SEARCH_GRAPH_CYCLES_ONLY){
+      console.log("GRAPH CYCLES ONLY!!")
+      this.drawGraph(this.onlyCycleGraph, "cycle");
+      
+    } else if (this.searchTerm === SearchComponent.SEARCH_DIFFERENCE_GRAPH){
+      console.log("GRAPH Difference!!")
+      this.drawGraph(this.graphDataDiffGraph, "difference");
     }
   }
 
@@ -55,8 +105,8 @@ export class ChartNodepsComponent implements OnInit,OnChanges {
     }
   }
 
-  private drawGraph(graphData: any) {
-
+  private drawGraph(graphData: any, paintArgument: string) {
+    console.log("Drawing normal graph!")
   let diameter = 500;
 
   let bubble = d3.pack()
@@ -64,7 +114,7 @@ export class ChartNodepsComponent implements OnInit,OnChanges {
       .padding(1.5);
 
   let nodes = d3.hierarchy(graphData)
-      .sum(function(d) { return d['Count']; });
+      .sum(function(d) { console.log("CHECKING D!"); console.log(d);return d['Count']; });
 
   let node = this.svg_d3.selectAll(".node")
       .data(bubble(nodes).descendants())
@@ -82,7 +132,25 @@ export class ChartNodepsComponent implements OnInit,OnChanges {
       .attr("r", function(d) {
           return d.r;
       })
-      .style("fill", "lightgray");
+      //.style("fill", "lightgray");
+      .style("fill", function(d){ 
+        if(paintArgument === "normal"){
+          return "lightgray";
+        } else if (paintArgument === "cycle"){
+          if(d.data['inCycle']){
+            return "red"
+          } else {
+            return "lightgray"
+          }} else if (paintArgument === "difference"){
+            if(d.data["updateStatus"] === "same"){
+              return "lightgray";
+            } else if(d.data["updateStatus"] === "deleted"){
+              return "red";
+            } else if(d.data["updateStatus"] === "inserted"){
+              return "green";
+            }
+          }
+        })
 
   node.append("text")
       .attr("dy", ".2em")
@@ -99,5 +167,9 @@ export class ChartNodepsComponent implements OnInit,OnChanges {
   d3.select(self.frameElement)
       .style("height", diameter + "px");
   }
+
+  
+
+
 
 }

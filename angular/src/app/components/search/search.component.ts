@@ -10,9 +10,15 @@ export class SearchComponent implements OnInit {
 
   public static readonly SEARCH_RESET = "[RESET]";
   public static readonly SEARCH_FILTER_NODEPS = "[FILTER_NODEPS]";
+  public static readonly SEARCH_DIFFERENCE_GRAPH = "[DIFFERENCE_GRAPH]";
+  public static readonly SEARCH_GRAPH_CYCLES = "[GRAPH_CYCLES]";
+  public static readonly SEARCH_GRAPH_CYCLES_ONLY = "[GRAPH_CYCLES_ONLY]";
 
   @Input() searchTerm : string;
   @Input() dependantBatchesOnly : boolean;
+  @Input() batchCycles: boolean;
+  @Input() batchCyclesOnly: boolean;
+  @Input() differenceGraph: boolean;
   @Output() searchEvent = new EventEmitter<string>();
 
   constructor(private loadChartDataService: LoadChartDataService) { }
@@ -36,7 +42,33 @@ export class SearchComponent implements OnInit {
 
   toggleDependantBatches() {
     if (this.dependantBatchesOnly) {
+      console.log("Toggled dependant batches!")
       this.searchEvent.emit(SearchComponent.SEARCH_FILTER_NODEPS);
+    } else {
+      this.searchEvent.emit(SearchComponent.SEARCH_RESET);
+    }
+  }
+  showDifferenceGraph() {
+    if (this.differenceGraph) {
+      console.log("Toggled  difference graph!")
+      this.searchEvent.emit(SearchComponent.SEARCH_DIFFERENCE_GRAPH);
+    } else {
+      this.searchEvent.emit(SearchComponent.SEARCH_RESET);
+    }
+  }
+  showGraphCycleDependency() {
+    if (this.batchCycles) {
+      console.log("Toggled graph cycles!!")
+      this.searchEvent.emit(SearchComponent.SEARCH_GRAPH_CYCLES);
+    } else {
+      this.searchEvent.emit(SearchComponent.SEARCH_RESET);
+    }
+  }
+
+  showGraphCyclesOnly(){
+    if (this.batchCyclesOnly) {
+      console.log("Toggled isolated graph cycles!!")
+      this.searchEvent.emit(SearchComponent.SEARCH_GRAPH_CYCLES_ONLY);
     } else {
       this.searchEvent.emit(SearchComponent.SEARCH_RESET);
     }
