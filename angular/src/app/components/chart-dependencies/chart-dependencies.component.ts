@@ -163,6 +163,7 @@ export class ChartDependenciesComponent implements OnInit, OnChanges {
   }
 
   private checkIfThereAreDirectCircularDependenciesInGraph(){
+	 // Checking is there jobs that dependet diretly (A->B and B->A) so a warning can be thrown
     if(this.graphData.directDependantNodes.length != 0){
       let warningMessage = "Following jobs dependet on each other: "
       for(let i = 0; i<this.graphData.directDependantNodes.length; i++){
