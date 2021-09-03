@@ -25,19 +25,14 @@ export class GraphProcessor{
       };
     
     
-      constructor(graphData: any){
+      constructor(graphData: any, graphDataToCompare: any){
         this.currentGraphData.inited  = graphData.inited;
         this.currentGraphData.nodes  = graphData.nodes;
         this.currentGraphData.links  = graphData.links;
         
-        this.comparisonGraphData.inited  = graphData.inited;
-        this.comparisonGraphData.nodes  = graphData.nodesDiffeence;
-        this.comparisonGraphData.links  = graphData.linksDifference;
-
-        // this.differenceIdentifier = new DifferenceGraphIdentifier(this.graphData, this.comnparisonGraph);
-        // this.graphDataOverall = graphData;
-        // this.currentGraph = new Graph(this.graphDataOverall.nodes, this.graphDataOverall.links);
-        // this.graphToCompare = new Graph(this.graphDataOverall.nodesDiffeence, this.graphDataOverall.linksDifference);
+        this.comparisonGraphData.inited  = graphDataToCompare.inited;
+        this.comparisonGraphData.nodes  = graphDataToCompare.nodes;
+        this.comparisonGraphData.links  = graphDataToCompare.links;
       }
 
       public processAndReturnGraphData(){

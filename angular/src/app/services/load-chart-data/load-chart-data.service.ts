@@ -18,34 +18,28 @@ export class LoadChartDataService {
     console.log(obs);
   }
 
-  private graphData = {
-    inited: false,
-    nodes: [],
-    links: [],
-    nodesDiffeence:[],
-    linksDifference:[]
-  };
 
-  public async getGraphData() {
+  public async getGraphData(batchPath: string, pathGraphPath: string) {
+    let graph = {
+      inited: false,
+      nodes: [],
+      links: []
+    };
     console.log("starting to get graph data")
-    if (!this.graphData.inited) {
+    if (!graph.inited) {
       console.log("fetching data");
-      // Getting data from current graph
-      let dataBatches = await this.getNodes("batch");
-      let dataBatchGraph = await this.getEdges("batchgraph");
-      // Getting data from new graph
-      let dataBatchesToCompare = [];
-      let dataBatchGraphToCompare = [];
+      let dataBatches = [];
+      let dataBatchGraph = [];
       try{
-       dataBatchesToCompare = await this.getNodes("batch1");
-       dataBatchGraphToCompare = await this.getEdges("batchgraph1");
+        dataBatches = await this.getNodes(batchPath);
+        dataBatchGraph = await this.getEdges(pathGraphPath);
       } catch(error){
         console.log("No data retrieved for graph to compare!")
       }
-      this.graphData = this.constructGraph(dataBatches,dataBatchGraph,dataBatchesToCompare,dataBatchGraphToCompare)
+      graph = this.constructGraph(dataBatches,dataBatchGraph)
     }
     console.log("Sending graph data over for visualisation!")
-    return this.graphData;
+    return graph;
   }
 
   private async getNodes(fileName: string) {
@@ -87,14 +81,12 @@ export class LoadChartDataService {
     return edges;
   }
 
-      private constructGraph(currentNodes: any[], currentEdges: any[],nodesToCompare: any[], edgesToCompare: any[]): any {
+      private constructGraph(currentNodes: any[], currentEdges: any[]): any {
         console.log("Constructing a graph!")
         let outputGraph = {
           inited: false,
           nodes: [],
-          links: [],
-          nodesDiffeence:[],
-          linksDifference:[]
+          links: []
         };
         // Strucuture of node objects -> id, name, label (shortName of Batch Job), inCycle (is node a part of cycle), updatedStatus (has node been updated, deleted or not changed at all)
         // inCycle and updateStatus will be set respectively later in batch-charts.component before being handed over for visualisation
@@ -105,13 +97,6 @@ export class LoadChartDataService {
         // inCycle and updateStatus will be set respectively later in batch-charts.component before being handed over for visualisation
         currentEdges.forEach((e) => {
           outputGraph.links.push({ source: e.predecessor, target: e.successor, inCycle: false, updateStatus: "same", type: 'Next -->>' });
-        });
-        nodesToCompare.forEach(node => {
-          outputGraph.nodesDiffeence.push({ id: node.id, name: node.name, label: node.shortName, inCycle: false, updateStatus: "same" });
-        });
-    
-        edgesToCompare.forEach((e) => {
-          outputGraph.linksDifference.push({ source: e.predecessor, target: e.successor, inCycle: false, updateStatus: "same", type: 'Next -->>' });
         });
     
         outputGraph.inited=true;
