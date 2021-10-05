@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="23px" height="28px" viewBox="0 0 23 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->
+    <title>icon/warning</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Start" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1_2-menu_open" transform="translate(-1110.000000, -466.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <g id="Hierachie-1" transform="translate(732.000000, 257.000000)">
+                <g id="icon/warning/state1" transform="translate(378.500000, 209.837838)">
+                    <path d="M19.25,18.5625 L19.25,11.6875 C19.25,7.46625 16.995,3.9325 13.0625,2.9975 L13.0625,2.0625 C13.0625,0.92125 12.14125,0 11,0 C9.85875,0 8.9375,0.92125 8.9375,2.0625 L8.9375,2.9975 C4.99125,3.9325 2.75,7.4525 2.75,11.6875 L2.75,18.5625 L0,21.3125 L0,22.6875 L22,22.6875 L22,21.3125 L19.25,18.5625 Z M12.375,18.5625 L9.625,18.5625 L9.625,15.8125 L12.375,15.8125 L12.375,18.5625 Z M12.375,13.0625 L9.625,13.0625 L9.625,7.5625 L12.375,7.5625 L12.375,13.0625 Z M11,26.8125 C12.5125,26.8125 13.75,25.575 13.75,24.0625 L8.25,24.0625 C8.25,25.575 9.47375,26.8125 11,26.8125 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

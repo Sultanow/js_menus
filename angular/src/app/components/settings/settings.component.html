@@ -1,0 +1,21 @@
+
+<div *ngIf="showSettings">
+    <table>
+        <caption>Einstellungen</caption>
+        <tr>
+            <th scope="col">Einstellung</th>
+            <th scope="col">Wert</th>
+        </tr>
+        <tr *ngFor="let setting of settings">
+            <td class= "settingKey">{{setting.key}}</td>
+            <td><textarea class="textarea_items" (change)="onChangeItem($event)"
+                    name="{{setting.key}}">{{setting.value}}</textarea></td>
+        </tr>
+    </table>
+    <button (click)="onSaveSettings($event)" class="saveSettingsButton">Einstellungen Speichern</button>
+    <div class="logoutPosition">
+        <button  (click)="logout()">Logout</button>
+        <button  (click)="changePasswordDialog()">Passwort ändern</button>
+    </div>
+    <div class="versionPosition">Version :{{version}} </div>
+</div>

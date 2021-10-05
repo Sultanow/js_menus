@@ -1,0 +1,50 @@
+.mat-dialog-container {
+    background: white;
+    color: black; 
+}
+
+.mat-form-field-label{
+    color:black !important  ;
+  }
+.mat-form-field-underline{
+    background-color:black !important;
+  }
+
+  .mat-form-field-ripple {
+    background-color:black !important;
+}
+
+.mat-form-field {
+  padding: 0 5px;
+}
+
+.mat-form-field-label {
+  color: grey !important;
+}
+
+.mat-input-element {
+  caret-color: black;
+  text-overflow: ellipsis;
+}
+
+.cdk-overlay-dark-backdrop {
+  background: rgb(0 0 0 / 86%);
+}
+
+.dialog-table{
+  table-layout: fixed;
+}
+
+.dialog-title{
+  display: flex;
+}
+
+.batch-name{
+  max-width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.column-name{
+  max-width: 50%;
+}

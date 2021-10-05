@@ -1,0 +1,10 @@
+<div *ngIf="showRightManagement">
+    <p>{{headline}}</p>
+    <table class="dashboard-table">
+        <tr *ngFor="let i of infos">
+            <td>{{i.env}}</td>
+            <td>{{i.key}}</td>
+            <td>{{i.value}}</td>
+        </tr>
+    </table>
+</div>

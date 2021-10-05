@@ -1,0 +1,15 @@
+<mat-toolbar>
+    <mat-form-field floatLabel="never">
+        <input matInput [(ngModel)]="searchTerm" type="search" placeholder="Batchsuche" class="search-input">
+    </mat-form-field>
+    <button class="search-btn" mat-stroked-button (click)="search()">
+        <mat-icon>search</mat-icon>
+    </button>
+    <button class="search-btn" mat-stroked-button (click)="searchTerm='';reset()">
+        <mat-icon>undo</mat-icon>
+    </button>
+    <mat-slide-toggle class="search-toggle" [(ngModel)]="dependantBatchesOnly" (change)="toggleDependantBatches()">Nur Batchketten</mat-slide-toggle>
+    <mat-slide-toggle class="search-toggle" [(ngModel)]="differenceGraph" (change)="showDifferenceGraph()">Differenzgraph</mat-slide-toggle>
+    <mat-slide-toggle class="search-toggle" [(ngModel)]="batchCycles" (change)="showGraphCycleDependency()">Batchzyklen</mat-slide-toggle>
+    <mat-slide-toggle class="search-toggle" [(ngModel)]="batchCyclesOnly" (change)="showGraphCyclesOnly()">Nur Batchzyklen</mat-slide-toggle>
+</mat-toolbar>

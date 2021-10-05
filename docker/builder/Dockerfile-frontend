@@ -1,0 +1,8 @@
+FROM node:12.18.0-alpine3.11 as frontend-build
+
+WORKDIR /usr/src/app
+
+COPY ./angular/package.json ./angular/angular.json ./angular/setupJest.ts ./angular/tsconfig.json ./angular/tslint.json /usr/src/app/
+RUN npm install
+
+ENTRYPOINT ["npm"] 

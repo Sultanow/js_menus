@@ -1,0 +1,82 @@
+.menu {
+  width: 100%;
+  height: auto;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  max-width: 792px;
+  max-height: 100%;
+  z-index: 10;
+}
+
+@media screen and (min-width: 512px) {
+  .menu {
+    max-width: 65vw;
+    max-height: 65vh;
+  }
+}
+
+.main-menu {
+  cursor: pointer;
+}
+
+.main-menu circle {
+  -webkit-transition: opacity 250ms;
+  transition: opacity 250ms;
+}
+
+.main-menu circle:hover {
+  opacity: 1;
+}
+
+.main-menu .is-active>circle {
+  opacity: 1;
+}
+
+.settingsIconSvg {
+  filter: invert(1);
+}
+
+.settingsIcon {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  z-index: 100;
+}
+
+.disabled {
+  pointer-events: none;
+}
+
+.disabledCircle {
+  fill: transparent;
+}
+
+.overlay-open {
+  right: 20vw;
+}
+
+.overlay-closed {
+  right: 0px;
+}
+
+.overlay-icon {
+  color: white;
+  background: rgba(0, 0, 0, 0.60);
+  font-size: large;
+  height: 40px;
+  width: 40px;
+  text-align: center;
+  position: absolute;
+  top: 30vh;
+  cursor: pointer;
+  z-index: 100;
+}
+
+.overlay-icon-mat {
+  vertical-align: middle;
+  font-size: 30px;
+  height: 30px;
+  width: 30px;
+  margin-top: 5px;
+  cursor: pointer;
+}

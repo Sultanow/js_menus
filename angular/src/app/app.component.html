@@ -1,0 +1,50 @@
+<div class="container">
+  <svg class="menu" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 792 792">
+    <g class="All-on" fill="none" fill-rule="evenodd" transform="translate(-571 -143)">
+      <g class="menu" transform="translate(571 143)">
+        <g class="outside-layer">
+          <circle class="outer-cirlce-background" cx="396" cy="396" r="330" fill="none" stroke="#19A6AC"
+            stroke-width="132" stroke-opacity="0.6"></circle>
+          <g o-north-menu (notifyEventOpen)="onNotifyEventOpen($event)" [isOpen]="northOpen"
+            [activeItems]="activeItems"></g>
+          <g o-east-menu (notifyEventOpen)="onNotifyEventOpen($event)" [isOpen]="eastOpen" [activeItems]="activeItems">
+          </g>
+          <g o-south-menu (notifyEventOpen)="onNotifyEventOpen($event)" [isOpen]="southOpen"
+            [activeItems]="activeItems"></g>
+          <g o-west-menu (notifyEventOpen)="onNotifyEventOpen($event)" [isOpen]="westOpen" [activeItems]="activeItems">
+          </g>
+        </g> <!-- ./outside layer -->
+        <g class="middle-layer" transform="translate(132 132)">
+          <circle class="middle-circle-backgroud" cx="264" cy="264" r="264" fill="#000" fill-opacity=".55" />
+          <g class="button-group">
+            <g (click)="openNorthMenu()" m-north-menu [isOpen]="northOpen"></g>
+            <g (click)="openEastMenu()" m-east-menu [isOpen]="eastOpen"></g>
+            <g (click)="openSouthMenu()" m-south-menu [isOpen]="southOpen"></g>
+            <g (click)="openWestMenu()" m-west-menu [isOpen]="westOpen"></g>
+          </g>
+        </g>
+        <g class="main-menu" [ngClass]="{'is-active': menuOpen}" (click)="openMainMenu()"
+          transform="translate(276 276)">
+          <title>Main Menu</title>
+          <circle class="inner-circle-background" cx="120" cy="120" r="120" fill="#a00" opacity=".4" />
+          <g menu-icon [iconMainPositionX]="73" [iconMainPositionY]="68" [title]="'Main Menu'" [icon]="'icon-start'"
+            [iconText]="'icon-start-text'" [iconTextPositionX]="-53" [iconTextPositionY]="65" [iconPositionX]="10"
+            [iconPositionY]="10">
+          </g>
+        </g>
+      </g>
+    </g>
+  </svg>
+  <div class="settingsIcon">
+    <img src="/assets/icons/settings.svg" (click)="openPasswordDialog()" alt="Settings" class="settingsIconSvg" />
+  </div>
+  <app-viewbox (notifyViewBoxClose)="onNotifyViewBoxClose()" [showView]="showView" [showViewBox]="showViewBox">
+  </app-viewbox>
+  <app-status-warnings [showStatusWarnings]="showStatusWarnings"></app-status-warnings>
+  <app-spinner></app-spinner>
+  <app-news-overlay [isOpen]="newsOverlayOpen"></app-news-overlay>
+  <a [ngClass]="{'overlay-open': newsOverlayOpen, 'overlay-closed': !newsOverlayOpen}" (click)="openNewsOverlay()"
+    class="overlay-icon">
+      <mat-icon class="overlay-icon-mat">new_releases</mat-icon>
+  </a>
+</div>

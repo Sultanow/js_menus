@@ -1,0 +1,5 @@
+FROM mavenbuilder
+
+# install maven dependency packages (keep in image) 
+COPY ./backend/pom.xml /usr/src/app 
+RUN mvn dependency:go-offline && mvn -T 1C install && rm -rf target

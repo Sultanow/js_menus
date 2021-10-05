@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700|Material+Icons');
+@import "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
+/* You can add global styles to this file, and also import other style files */
+
+* {
+    padding: 0;
+    margin: 0;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local("Open Sans Regular"), local("OpenSans-Regular"), url("/assets/fonts/open-sans-v16-latin-regular.woff2") format("woff2"), url("/assets/fonts/open-sans-v16-latin-regular.woff") format("woff");
+    /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.container {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-width: 100%;
+    min-height: 100%;
+    background-image: url("/assets/img/585929349-datacenter-wallpaper.jpg");
+    background-size: cover;
+    background-position: center center;
+    font : Arial, sans-serif
+}
+
+[class$="-button"] {
+    cursor: pointer;
+}
+
+[class$="-button"]>circle {
+    opacity: 0;
+    -webkit-transition: opacity 250ms;
+    transition: opacity 250ms;
+}
+
+[class$="-button"]:hover>circle {
+    opacity: 0.6;
+}
+
+[class$="-button"] path {
+    pointer-events: none;
+}

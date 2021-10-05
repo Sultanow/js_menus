@@ -1,0 +1,65 @@
+@import "../../../../../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
+
+table {
+  width: 100%;
+}
+
+.value-cell {
+  display: flex;
+  align-items: center;
+}
+
+mat-icon {
+  cursor: pointer;
+}
+
+.highlight-on-hover:hover {
+  background-color: #f0f0f5;
+}
+
+td[class*=' mat-column'] {
+  width: 10vw;
+  min-width: 10vw;
+  max-width: 10vw;
+}
+
+.mat-header-cell {
+  padding: 10px;
+  text-align: center;
+}
+
+.vertical-separator {
+  border-left: 1px solid #f0f0f5;
+  background-color: white;
+}
+
+td div {
+  word-break: break-all;
+}
+
+.tableDataStyle {
+  position: relative;
+}
+
+.mat-input-element {
+  caret-color: #fff;
+}
+
+:host ::ng-deep.mat-focused .mat-form-field-label {
+  /*change color of label*/
+  color: white !important;
+}
+
+:host ::ng-deep.mat-form-field-underline {
+  /*change color of underline*/
+  background-color: white !important;
+}
+
+:host ::ng-deep.mat-form-field-ripple {
+  /*change color of underline when focused*/
+  background-color: white !important;
+}
+
+:host ::ng-deep.mat-form-field-label {
+  color: white !important;
+}

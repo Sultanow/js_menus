@@ -1,0 +1,146 @@
+/* CompareComponent's private CSS styles */
+
+.status {
+  margin: 0 0 2em 0;
+  list-style-type: none;
+  padding: 0;
+  width: 15em;
+}
+
+.status li {
+  position: relative;
+  /*cursor: pointer;*/
+  margin: .5em;
+  padding: .3em 0;
+  border-radius: 4px;
+  list-style-type: none;
+}
+
+.status .badge {
+  display: inline-block;
+  font-size: small;
+  color: white;
+  padding: 0.8em 0.7em 0 0.7em;
+  background-color: #405061;
+  line-height: 1em;
+  position: relative;
+  left: -1px;
+  top: -4px;
+  height: 1.8em;
+  min-width: 50px;
+  text-align: right;
+  margin-right: .8em;
+  border-radius: 4px 0 0 4px;
+}
+
+button {
+  background-color: #eee;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  cursor: hand;
+  font-family: Arial;
+}
+
+button:hover {
+  background-color: #cfd8dc;
+}
+
+button.fancy {
+  position: relative;
+  left: 10px;
+  top: 0px;
+  background-color: gray !important;
+  color: white;
+}
+
+div#status-box {
+  position: absolute;
+  width: 100%;
+  height: 2.4em;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.85);
+  border: 2px solid #fff;
+  left: 0%;
+  top: 0%;
+}
+
+div#status-box-content {
+  padding-left: 2%;
+}
+
+div>header {
+  top: 0px;
+  position: relative;
+  height: 1.5em;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  text-align: center;
+  vertical-align: center;
+  margin-bottom: 10px;
+}
+
+div>header .close {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+table#dashboard-table {
+  margin: fixed;
+  width: 100%;
+}
+
+table#dashboard-table td, table#dashboard-table th {
+  padding: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+  table-layout: fixed;
+  width: 100%;
+}
+
+input {
+  width: 100px;
+}
+
+.marquee {
+  margin: 0 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  position: absolute;
+}
+
+.marquee span {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marquee 15s linear infinite;
+}
+
+.marquee2 span {
+  animation-delay: 2.5s;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-100%, 0);
+  }
+}
+
+.menuButton {
+  cursor: initial;
+}
+
+#globalLogo {
+  height: 20px;
+  max-height: 20px;
+  width: 30px;
+  fill: white;
+}
+
+.logoTitle {
+  width: 100px;
+  display: contents;
+}

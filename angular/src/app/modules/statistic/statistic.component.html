@@ -1,0 +1,31 @@
+<div [hidden]="!showStatistic">
+    <div id="chartContainer">
+        <div class="chartSideNav">
+            <div *ngFor="let group of allCharts">
+                <div *ngFor="let chart of group.charts | keyvalue">
+                    <mat-card mat-card-content class="chartSideNavButton" (click)="showChartView($event, chart.key)"
+                        [ngClass]="{'chartSideNavActive': chart.key === chartName }">
+                        {{chart.key}}
+                    </mat-card>
+                </div>
+            </div>
+            <div>
+                <mat-card mat-card-content class="chartSideNavButton" (click)="createChartView($event)"
+                    [ngClass]="{'chartSideNavActive': showCreateChartContainer }">
+                    Neuen Chart anlegen
+                </mat-card>
+            </div>
+        </div>
+        <div class="chartContent">
+            <!-- Browse Files, -->
+            <app-graphs 
+                [chartName]="chartName" 
+                [showGraphChart]="showGraphChart" 
+                [chart]="activeChart"
+                (notifyDeleteChart)="onDeleteChart()">
+            </app-graphs>
+            <app-create-chart [showCreateChartContainer]="showCreateChartContainer"
+                (notifyNewChartSubmitted)="onNewChartSubmitted()"></app-create-chart>
+        </div>
+    </div>
+</div>

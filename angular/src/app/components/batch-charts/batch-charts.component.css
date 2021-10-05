@@ -1,0 +1,28 @@
+/* * {
+  box-sizing: border-box;
+} */
+
+.node circle {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 3px;
+}
+.node text {
+  font: 16px sans-serif;
+}
+.link {  
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 2px;
+}
+
+.chart-splitpane{
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  padding: 1em;
+  border-radius: 8px;
+  background-color: #fff;
+  overflow: scroll;
+  width: 100%;
+}

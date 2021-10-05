@@ -1,0 +1,9 @@
+<mat-card class="card">
+    <mat-card-title class="card-title">{{newsItem.title}}</mat-card-title>
+    <mat-card-subtitle class="card-subtitle">
+        <mat-icon *ngIf="newsItem.priority==='high'" class="prio-icon">arrow_upward</mat-icon>
+        <mat-icon *ngIf="newsItem.priority==='low'" class="prio-icon">arrow_downward</mat-icon>
+        {{newsItem.date}}
+    </mat-card-subtitle>
+    <mat-card-content *ngIf="newsItem.text" class="card-content">{{newsItem.text}}</mat-card-content>
+</mat-card>

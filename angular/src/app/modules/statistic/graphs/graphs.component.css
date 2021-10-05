@@ -1,0 +1,50 @@
+.graphsContainer {
+    width: 100%;
+}
+
+#Graph {
+    margin-top: 0.8rem;
+    float: both;
+    margin-left: 0rem;
+}
+
+.chartConfiguration {
+    float: both;
+    margin-left: 0rem;
+    margin-top: 0rem;
+}
+
+.controls {
+    float: right;
+    display: flex;
+}
+
+:host ::ng-deep .mat-icon {
+    height: 32px !important;
+    width: 32px !important;
+    font-size: 32px !important;
+    margin-left: 0.5rem;
+    cursor: pointer;
+}
+
+.updateTime {
+    padding-top: 0.4rem;
+}
+
+.btnDisabled {
+    pointer-events: none;
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10+ and Edge */
+    user-select: none;
+    /* Standard syntax */
+}
+
+.btnDisabled>.iconNav {
+    color: grey;
+}
+
+.iconNav {
+    color: white;
+}
