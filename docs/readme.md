@@ -14,16 +14,23 @@
 
 2. Bauen der *.war Files: (mvn sollte im Path liegen)
   1. Frontend:
-    - In das Verzeichnis /fronend mit der git bash wechseln
+    - In das Verzeichnis /frontend mit der git bash wechseln
     - Mit `mvn clean install` das Frontend bauen
   2. Backend:
     - In das Verzeichnis /backend mit der git bash wechseln
     - Mit `mvn clean install` das Backend bauen
+  3. Dateien backend.war und frontend.war von dem Verzeichnis js_menus\target\autodeploy in das Verzeichnis js_menus\target verschieben. Der Ordner autodeploy sollte nun leer sein.
 
 3. Starten von Payara und Redis als Container
   - Mit der Powershell in das Verzeichnis /docker wechseln
   - Mit `docker-compose up -d` den Payara und Redis Service starten
+  - Auf der Payara Konsole unter https://localhost:4848/ mit Benutzername "admin" und Password "admin" einloggen
+  - Auf "List Deployed Applications" klicken
+  - Die Liste sollte leer sein, ansonsten alle Einträge auswählen und auf "Undeploy" klicken
+  - Auf "Deploy..." klicken und darauhin die backend.war Datei auswählen die im Verzeichnis js_menus\target liegt
+  - Auf "OK" klicken und analog für frontend.war ausführen
 
+Der Folgende Schritt ist derzeit nicht möglich:
 4. Setzen der Einstellungen für Zabbix in der Weboberfläche
   - Öffnen des Dashboards im Browser mit http://localhost:8080
   - Klick auf das Zahnrad oben rechts
@@ -76,3 +83,12 @@ Hinweis:
     - GET host_information/_search
     - GET history-dev1-*/_search
     - GET history-dev1-config.silbentrennung/_search
+
+
+# Fehlerbehebungen
+
+Falls beim Starten des Zabbix Containers folgende Meldung wiederholt erscheint:
+
+**** MySQL server is not available. Waiting 5 seconds...
+
+Dann die Container herunterfahren, den Inhalt dieses Ordners löschen: "js_menus\docker\zabbix\zbx_env\var\lib\mysql" und die Container wieder hochfahren.
