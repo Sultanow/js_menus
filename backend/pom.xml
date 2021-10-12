@@ -8,6 +8,7 @@
   <version>1.0-SNAPSHOT</version>
   <name>backend</name>
 
+
   <build>
     <finalName>backend</finalName>
     <resources>
@@ -227,10 +228,22 @@
       <version>2.31</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+         <groupId>javax.xml.bind</groupId>
+         <artifactId>jaxb-api</artifactId>
+         <version>2.3.1</version>
+     </dependency>
+     <dependency>
+         <groupId>org.glassfish.jaxb</groupId>
+         <artifactId>jaxb-runtime</artifactId>
+         <version>2.3.1</version>
+         <scope>runtime</scope>
+      </dependency>
   </dependencies>
   <properties>
     <jersey.version>2.31</jersey.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <buildDirectory>${project.basedir}/../target</buildDirectory>
+    <jvm.options>--add-modules java.xml.bind --add-opens java.base/java.lang ALL-UNNAMED</jvm.options>
   </properties>
 </project>
