@@ -30,7 +30,7 @@ public class ZabbixUser {
         String zabbixUrl = configurationRepository.getVal(KEY_URL);
 
         // use standard values if none exist in redis
-        if (username == "" && password == "" && zabbixUrl == ""){
+        if (username.isEmpty() && password.isEmpty() && zabbixUrl.isEmpty()){
             username = "Admin";
             password = "zabbix";
             zabbixUrl = "http://zabbix-frontend:80/api_jsonrpc.php";

@@ -19,7 +19,6 @@
   2. Backend:
     - In das Verzeichnis /backend mit der git bash wechseln
     - Mit `mvn clean install` das Backend bauen
-  3. Dateien backend.war und frontend.war von dem Verzeichnis js_menus\target\autodeploy in das Verzeichnis js_menus\target verschieben. Der Ordner autodeploy sollte nun leer sein.
 
 3. Starten von Payara und Redis als Container
   - Mit der Powershell in das Verzeichnis /docker wechseln
