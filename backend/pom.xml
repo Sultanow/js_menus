@@ -243,7 +243,7 @@
   <properties>
     <jersey.version>2.31</jersey.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <buildDirectory>${project.basedir}/../target/autodeploy</buildDirectory>
+    <buildDirectory>${project.basedir}/../target</buildDirectory>
     <jvm.options>--add-modules java.xml.bind --add-opens java.base/java.lang ALL-UNNAMED</jvm.options>
   </properties>
 </project>
