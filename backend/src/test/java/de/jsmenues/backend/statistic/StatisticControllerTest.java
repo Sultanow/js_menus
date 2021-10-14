@@ -155,12 +155,18 @@ public class StatisticControllerTest extends JerseyTest {
     public void uploadNewDataWithResultTrue() {
         //given
         FormDataMultiPart multiPart = new FormDataMultiPart();
+        /*
+         * TODO either this parameter has to be called "chart" or its name has to be changed in 
+         * in the StatisticController.uploadNewData implementation (this might break other calls though)
+         * The test works either way, because the checking method (statisticService.updateData)
+         * is mocked to return true
+         */
         multiPart.bodyPart(new FormDataBodyPart("chartName", ""));
         multiPart.setMediaType(MediaType.MULTIPART_FORM_DATA_TYPE);
-        when(service.updateData(anyString(), any(InputStream.class), any(FormDataContentDisposition.class))).thenReturn(true);
+        when(service.updateData(nullable(String.class), nullable(InputStream.class), nullable(FormDataContentDisposition.class))).thenReturn(true);
         //when
         Response response = target("/statistic/updateData").request().post(Entity.entity(multiPart, multiPart.getMediaType()), Response.class);
-        //then
+        //then 
         assertEquals(200, response.getStatus());
     }
 
@@ -209,10 +215,14 @@ public class StatisticControllerTest extends JerseyTest {
         multiPart.bodyPart(new FormDataBodyPart("file", String.valueOf(new ByteArrayInputStream(new byte[0]))));
         multiPart.setMediaType(MediaType.MULTIPART_FORM_DATA_TYPE);
         Response mockResonse = Response.ok().build();
-        when(service.createChart(anyString(), anyString(), anyString(), any(InputStream.class), any(FormDataContentDisposition.class))).thenReturn(mockResonse);
+        /*
+         * the expected "groupName" and "description" parameters in the API call "/createChart" are not defined in the FormData of this test,
+         * thus they will be received as null values. Since Mockito 2.1.0 anyString() can no longer be a null value. Thus nullable(String.class) has to be used.
+         */
+        when(service.createChart(anyString(), nullable(String.class), nullable(String.class), any(InputStream.class), any(FormDataContentDisposition.class))).thenReturn(mockResonse);
         Response response = target("/statistic/createChart").request().post(Entity.entity(multiPart, multiPart.getMediaType()), Response.class);
         //when
-        verify(service, times(1)).createChart(anyString(), anyString(), anyString(), any(InputStream.class), any(FormDataContentDisposition.class));
+        verify(service, times(1)).createChart(anyString(), nullable(String.class), nullable(String.class), any(InputStream.class), any(FormDataContentDisposition.class));
         //then
         assertEquals(200, response.getStatus());
     }
