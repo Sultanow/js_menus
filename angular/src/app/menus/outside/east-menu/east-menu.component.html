@@ -1,0 +1,20 @@
+<svg:g class="east-menu" *ngIf="isOpen" transform="translate(654 229)">
+    <!-- Warnings-->
+    <g menu-icon [iconMainPositionX]="24" [iconMainPositionY]="120" [title]="'Warnungen'" [icon]="'icon-warning-new'"
+    [iconText]="'icon-warning-text'" [iconTextPositionX]="-51" [iconTextPositionY]="15" [iconPositionX]="38"
+    [iconPositionY]="24" (click)="openWarning()" [buttonActive]="warningActive">
+  </g>
+
+  <!-- News -->
+  <g menu-icon [iconMainPositionX]="0" [iconMainPositionY]="0" [title]="'Neuigkeiten'"
+    [icon]="'icon-news-new'" [iconText]="'icon-news-text'" [iconTextPositionX]="-51" [iconTextPositionY]="15"
+    [iconPositionX]="38" [iconPositionY]="24" (click)="openNews()" [buttonActive]="newsActive">
+  </g>
+
+  <!-- Statistics -->
+  <g menu-icon [iconMainPositionX]="0" [iconMainPositionY]="240" [title]="'Statistiken'" [icon]="'icon-statistic-new'"
+    [iconText]="'icon-statistic-text'" [iconTextPositionX]="-51" [iconTextPositionY]="15" [iconPositionX]="39"
+    [iconPositionY]="24" (click)="openStatistic()" [buttonActive]="statisticActive">
+  </g>
+
+</svg:g>

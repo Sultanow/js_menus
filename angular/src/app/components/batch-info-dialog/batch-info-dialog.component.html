@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Batchinfo {{batch.id}}</h2>
+<mat-dialog-content>
+    <div *ngFor="let info of batchInfo">
+        <h4 style="text-decoration: underline;">{{info.colName}}</h4>
+        <div *ngFor="let field of info.fields">
+            <div *ngIf="field.value">
+                <div><strong>{{field.name}}</strong>: </div>
+                <div>{{field.value}}</div>
+            </div>
+        </div>
+        <mat-divider></mat-divider>
+      </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button class="mat-raised-button" matDialogClose>Schließen</button>
+</mat-dialog-actions>

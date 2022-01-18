@@ -1,0 +1,35 @@
+[class$="-button"] {
+    cursor: pointer;
+}
+
+[class$="-button"] path {
+    pointer-events: none;
+}
+
+:host {
+    display: inline-block;
+}
+
+:host svg {
+    display: inline-block;
+    all: inherit;
+}
+
+.disabledButton {
+    pointer-events: none;
+    color: #aaaaaa !important;
+}
+
+.disabled {
+    pointer-events: none;
+
+}
+
+.icon-color {
+    color: #ffffff;
+}
+
+.highlight {
+    color: #20cfd6;
+}
+

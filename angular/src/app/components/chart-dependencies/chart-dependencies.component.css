@@ -1,0 +1,18 @@
+div.d3-chart-panel {
+    flex: 1;
+    width: 760px;
+    overflow: auto;
+  }
+  
+  #d3-chart-dependencies {
+      height: 600px;
+  }
+
+::ng-deep.textbox {
+    fill: lightblue;
+    cursor: pointer;
+}
+
+::ng-deep.text {
+    cursor: pointer;
+}

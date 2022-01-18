@@ -1,0 +1,67 @@
+/* BatchesComponent's private CSS styles */
+
+table#batch-table td, table#batch-table th {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+  table-layout: fixed;
+  color: rgb(221, 228, 235);
+}
+
+.batchesForm {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.editButton {
+  width: 20%;
+  transform: scale(0.75);
+  float: right;
+}
+
+.mat-icon{
+  font-size: 30px !important;
+  width: 30px !important;
+  height: 30px !important;
+}
+.field-input-full-width {
+  width: 30%; 
+}
+.submit-button-right {
+  float: right;
+}
+
+.delete-button-container {
+  display: flex;
+  justify-content: center;
+}
+
+#batch-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+#delete-btn  {
+  width: 50%;
+}
+
+#delete-header {
+  width: 5%;
+}
+
+#batch-cell {
+  width: 100%;
+  display: inline-flex;
+}
+
+#batch-cell-span {
+  width: 80%;
+  max-width: 80%;
+  float: left;
+  margin-left: 4%;
+  margin-top: auto;
+  margin-bottom: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+

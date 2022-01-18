@@ -1,0 +1,20 @@
+<svg:g class="west-menu" *ngIf="isOpen" transform="translate(18 229)">
+  <!-- Confluence-->
+  <g menu-icon [iconMainPositionX]="0" [iconMainPositionY]="120" [title]="'Confluence'" [icon]="'icon-confluence'"
+    [iconText]="'icon-confluence-text'" [iconTextPositionX]="-51" [iconTextPositionY]="15" [iconPositionX]="38"
+    [iconPositionY]="20" (click)="openConfluence()" [buttonActive]="confluenceActive">
+  </g>
+
+  <!-- Jira -->
+  <g menu-icon [iconMainPositionX]="24" [iconMainPositionY]="0" [title]="'Jira'" [icon]="'icon-jira'"
+    [iconText]="'icon-jira-text'" [iconTextPositionX]="-51" [iconTextPositionY]="15" [iconPositionX]="38"
+    [iconPositionY]="20" (click)="openJira()" [buttonActive]="jiraActive">
+  </g>
+
+  <!-- Bitbucket -->
+  <g menu-icon [iconMainPositionX]="24" [iconMainPositionY]="240" [title]="'Jira'" [icon]="'icon-bitbucket'"
+    [iconText]="'icon-bitbucket-text'" [iconTextPositionX]="-51" [iconTextPositionY]="15" [iconPositionX]="38"
+    [iconPositionY]="20" (click)="openBitbucket()" [buttonActive]="bitbucketActive">
+  </g>
+
+</svg:g>

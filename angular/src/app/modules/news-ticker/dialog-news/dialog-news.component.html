@@ -1,0 +1,26 @@
+<h1 mat-dialog-title *ngIf="data.id">Neuigkeit anpassen</h1>
+<div mat-dialog-content class="content">
+    <mat-form-field>
+        <mat-label>Titel</mat-label>
+        <input matInput [(ngModel)]="data.title" required>
+    </mat-form-field><br>
+    <mat-form-field>
+        <mat-label>Text</mat-label>
+        <input matInput [(ngModel)]="data.text">
+    </mat-form-field><br>
+    <mat-form-field>
+        <mat-label>Priorität</mat-label>
+        <mat-select [(value)]="data.priority">
+            <mat-option *ngFor="let prio of priorities" [value]="prio.value">
+                {{prio.viewValue}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <br>
+    <mat-slide-toggle [(ngModel)]="data.visible">Sichtbarkeit</mat-slide-toggle>
+
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Abbrechen</button>
+    <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Speichern</button>
+</div>

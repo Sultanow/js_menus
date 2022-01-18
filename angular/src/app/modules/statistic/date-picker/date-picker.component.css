@@ -1,0 +1,44 @@
+.inactiveDate>.mat-calendar-body-cell-content {
+    color: lightgray;
+}
+
+:host ::ng-deep tr>td:first-of-type>.tooltip .tooltiptext {
+    left: 0;
+    margin-left: 0;
+}
+
+:host ::ng-deep tr>td:nth-of-type(7)>.tooltip .tooltiptext, :host ::ng-deep tr:first-of-type>td:last-of-type>.tooltip .tooltiptext {
+    right: 0;
+    margin-left: 0;
+    left: auto;
+}
+
+.tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 120%;
+    margin-left: -60px;
+    left: 50%;
+}
+
+.tooltip:hover::after {
+    content: "";
+    position: absolute;
+    top: -25%;
+    left: 50%;
+    margin-left: -8px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}

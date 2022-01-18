@@ -1,0 +1,23 @@
+<div id="dependencycharts-box" *ngIf="showDependency">
+  <div class="grid-container">
+    <div class="basic-container">
+      <h2>Fremdgesteuert</h2>
+      <mat-card class="chart-card" *ngFor="let dependencyChart of dependencyCharts" (click)=select(dependencyChart)>
+        <mat-card-header>
+          <mat-card-title>{{dependencyChart.title}}</mat-card-title>
+          <mat-card-subtitle>{{dependencyChart.description}}</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+      <button class="add" mat-raised-button (click)="openCreateDialog()">
+        <img src="../../assets/icons/add_circle-24px.svg" alt="image">
+      </button>
+    </div>
+    <div class="basic-container" *ngIf="selectedDependencyChart">
+      <h2>{{selectedDependencyChart.title}}</h2>
+      <p>{{selectedDependencyChart.chartContent}}</p>
+      <button mat-raised-button (click)="openEditDialog()" class="fancy">edit</button>
+      <button mat-raised-button (click)="delete(selectedDependencyChart)" class="fancy">delete</button>
+    </div>
+  </div>
+
+</div>

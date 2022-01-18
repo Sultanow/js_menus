@@ -1,0 +1,23 @@
+.card-title {
+    font-size: large;
+}
+
+.card-content {
+    font-size: small;
+}
+
+.card {
+    margin: 0rem 0.2rem 0.2rem 0.2rem;
+    padding: 0.4rem;
+}
+
+.prio-icon {
+    font-size: smaller;
+    height: 14px;
+    width: 14px;
+}
+
+.card-subtitle {
+    margin-bottom: 0.3rem;
+    font-size: smaller;
+}

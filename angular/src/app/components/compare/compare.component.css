@@ -1,0 +1,67 @@
+@import "../../../../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
+/* CompareComponent's private CSS styles */
+
+table#compare-table td, table#compare-table th {
+  padding: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+  table-layout: fixed;
+}
+
+.checkItem {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.textarea_1 {
+  padding: 7px 0 0 25px;
+}
+
+.textarea_items {
+  resize: none;
+  margin: -3px 0 0 0;
+  width: 17rem;
+  height: 1.5rem;
+  font: 0.8rem Arial, sans-serif;
+}
+
+.selectedEnvs {
+  display: inline;
+  border: solid 1px white;
+  margin-right: 0.3rem;
+}
+
+.selectedEnvs .feather {
+  position: relative;
+  top: 0.4rem;
+}
+
+:host ::ng-deep.mat-select-value {
+  color: #fff;
+}
+
+.selectionChange {
+  width: 12rem;
+}
+
+.saveChange {
+  padding: 0.1rem;
+  cursor: pointer;
+  margin: 0.2rem;
+  float: right;
+}
+
+.allkeys {
+  float: left;
+  cursor: pointer;
+}
+
+.history {
+  float: right;
+  padding-left: 1rem;
+  width: 25%;
+}
+
+mat-form-field.historyForm {
+  width: 100%;
+}

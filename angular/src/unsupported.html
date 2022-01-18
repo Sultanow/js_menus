@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>AngularRadialMenu</title>
+    <base href="/unsupported.html">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        .container {
+            position: relative;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            width: 100vw;
+            height: 100vh;
+            min-width: 100vw;
+            min-height: 100vh;
+            background-image: url("/assets/img/585929349-datacenter-wallpaper.jpg");
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            font: Arial, sans-serif
+        }
+
+        .box {
+            background: rgba(0, 0, 0, 0.85);
+            color: red;
+            text-align: center;
+            padding: 5rem;
+            border: 0.2rem solid white;
+        }
+    </style>
+</head>
+<body class="container">
+    <div class="box">
+        <h1> Bitte verwenden Sie Chrome, Firefox oder Edge.</h1>
+        <h3>Der Internet Explorer wird nicht unterstützt!</h3>
+        <p id="test" style="display: none;"></p>
+        <p><button onclick="ReadMoreLess()" id="TextBtn">></button></p>
+
+        <script>
+            function ReadMoreLess() {
+                document.getElementById("test").innerHTML = (window.navigator.userAgent)
+                var btnText = document.getElementById("TextBtn")
+            if (test.style.display === "none") {
+                test.style.display = "inline";
+                btnText.innerHTML = "v"; 
+            } else {
+                test.style.display = "none";
+                btnText.innerHTML = ">"; 
+            }
+            }
+        </script>
+     </div>
+</body>
+</html>

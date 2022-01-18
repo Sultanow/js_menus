@@ -1,0 +1,86 @@
+<div id="compare-box" *ngIf="showCompare">
+  <p>Last Update: {{lastUpdate}}</p>
+  <div id="shownEnv">Liste mit ausgewählten Environments
+    <div *ngFor="let env of selectedEnvs" class="selectedEnvs" (click)="onDeleteEnv($event, env)">
+      <span>{{env}}</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class="feather feather-x-square">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="9" y1="9" x2="15" y2="15"></line>
+        <line x1="15" y1="9" x2="9" y2="15"></line>
+      </svg>
+    </div>
+  </div>
+  <form [formGroup]='historyForm'></form>
+  <div class="history">
+    <mat-form-field class="historyForm">
+      <mat-label>History Index auswählen</mat-label>
+      <mat-select [(ngModel)]="selected" id="selected" (click)="getIndexNames()">
+        <mat-option formControlField="historyIndex" *ngFor="let index of indexNames" [value]="index" >
+          {{index}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <mat-label for="firstDate">Anfangsdatum </mat-label>
+      <input matInput type="date" formControlField="firstDate"  #input1 ngModle />
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <mat-label for="secondDate">Enddatum</mat-label>
+      <input matInput id= "today" type="date" formControlField="secondDate"   #input2 ngModle />
+    </mat-form-field>
+    <button mat-button (click)="sendDates(input1.value,input2.value)">senden</button>
+  </div>
+  <div id="dropdownListEnv">Liste mit auswählbaren Environments
+    <mat-form-field>
+      <mat-label>Environment auswählen</mat-label>
+      <mat-select (selectionChange)="setSelectedValue($event)" (click)="generateCompareTable()" class="selectionChange">
+        <mat-option *ngFor="let env of otherEnvs" [value]="env">
+          {{env}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-button (click)="onAddEnv($event)">
+      Add
+    </button>
+    <br>
+    <u (click)="displayAllkeys()" class="allkeys">Mögliche Konfigurationsparameters</u>
+    <br>
+  </div>
+  <treetable [(tree)]="nodesTree" (nodeClicked)="logNode($event)" [body]="treetableDesign"> </treetable>
+</div>
+
+<ng-template #treetableDesign let-el>
+  <!-- 
+    el : {
+           element : any ,
+           column : any 
+         }
+  -->
+  <div class="treeTableElement">
+    <div *ngIf="el.element.value[el.column]">
+      <div class="textarea_1">
+        <textarea class="textarea_items" #input ngModle>{{el.element.value[el.column].expected}}</textarea>
+        <textarea disabled="true" class="textarea_items">{{el.element.value[el.column].actual}}</textarea>
+      </div>
+      <button class="saveChange"
+        (click)="saveExpectedValue(el.column, el.element.value.Konfigurationsparameter, el.element.value[el.column].actual, input.value)">
+        speichern</button>
+      <div *ngIf="!el.element.value[el.column].identic" class="checkItem">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="red"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </div>
+      <div *ngIf="el.element.value[el.column].identic" class="checkItem">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="green"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,49 @@
+<mat-form-field>
+  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter" class="placeholder">
+</mat-form-field>
+<table mat-table [dataSource]="dataSource" [ngClass]="formatElevation()">
+
+  <div *ngFor="let column of displayedColumns; first as isFirst;">
+    <ng-container matColumnDef="{{column}}">
+      <th mat-header-cell *matHeaderCellDef [ngClass]="{'vertical-separator': options.verticalSeparator}">
+        {{options.capitalisedHeader ? (column | titlecase) : column}}
+      </th>
+      <td mat-cell *matCellDef="let element" [ngClass]="{'vertical-separator': options.verticalSeparator}"
+        class="tableDataStyle">
+        <div *ngIf="isFirst">
+          <div class="value-cell">
+            <div [innerHTML]="formatIndentation(element)"></div>
+            <mat-icon [ngStyle]="{'visibility': element.children.length ? 'visible' : 'hidden'}"
+              (click)="onNodeClick(element)">
+              {{element.isExpanded ? 'keyboard_arrow_down' : 'keyboard_arrow_right'}}
+            </mat-icon>
+            <ng-container
+              *ngTemplateOutlet="customElementKey ? customElementKey : defaultBodyElement; context:{$implicit : {element:element,column : column} }">
+            </ng-container>
+
+          </div>
+        </div>
+        <div *ngIf="!isFirst">
+          <ng-container
+            *ngTemplateOutlet="customElement ? customElement : defaultBodyElement; context:{$implicit : {element:element,column : column} }">
+          </ng-container>
+        </div>
+      </td>
+    </ng-container>
+  </div>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row [ngClass]="{'highlight-on-hover': options.highlightRowOnHover}"
+    *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+
+
+<!-- Default Body Element -->
+<ng-template #defaultBodyElement let-el>
+  <!-- el : { element : any ,
+                column : any
+              } 
+    -->
+  <div>{{el.element.value[el.column]}}</div>
+</ng-template>

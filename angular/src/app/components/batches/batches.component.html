@@ -1,0 +1,39 @@
+<div id="batches-box">
+  <h2>Batches</h2>
+  <br /><br />
+  <div>
+    <mat-form-field class="field-input-full-width" appearance="outline" #outlineRef>
+      <mat-label style="color: rgb(145, 143, 143);">Batch-Name</mat-label>
+      <input matInput style="color: white;" #batchName (keyup.enter)="add(batchName.value); batchName.value=''"
+        (focus)="outlineRef.updateOutlineGap()" />
+    </mat-form-field>
+    <button mat-raised-button style="margin-left: 5%;" (click)="add(batchName.value); batchName.value=''">+</button>
+  </div>
+  <table id="batch-table">
+    <thead>
+      <th *ngFor="let tableElem of tableStructure"> {{tableElem.Spaltenname}}</th>
+      <th id="delete-header"></th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let batch of batches">
+        <td *ngFor="let tableElem of tableStructure; index as i">
+          <div id="batch-cell">
+            <span id="batch-cell-span">{{getBatchInfoPreview(batch, i)}}</span>
+            <button mat-icon-button class="editButton" (click)="openDialog(batch, tableElem)">
+              <mat-icon class="material-icons">edit</mat-icon>
+            </button>
+          </div>
+        </td>
+        <td id="delete-btn">
+          <div class="delete-button-container">
+            <button mat-mini-fab class="fancy" title="delete batch" (click)="delete(batch)">
+              <i class="material-icons">delete</i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <br /><br />
+</div>

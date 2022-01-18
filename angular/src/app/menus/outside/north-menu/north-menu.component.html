@@ -1,0 +1,16 @@
+<svg:g class="north-menu" *ngIf="isOpen" transform="translate(229 18)">
+  <!-- Test-->
+  <g menu-icon [iconMainPositionX]="120" [iconMainPositionY]="0" [title]="'Test'" [icon]="'icon-test'"
+    [iconPositionX]="0" [iconPositionY]="0" (click)="openTest()" [buttonActive]="testActive">
+  </g>
+
+  <!-- Production -->
+  <g menu-icon [iconMainPositionX]="0" [iconMainPositionY]="24" [title]="'Produktion'" [icon]="'icon-prod'"
+    [iconPositionX]="0" [iconPositionY]="0" (click)="openProd()" [buttonActive]="prodActive">
+  </g>
+
+  <!-- Entwicklung -->
+  <g menu-icon [iconMainPositionX]="240" [iconMainPositionY]="24" [title]="'Entwicklung'" [icon]="'icon-dev'"
+    [iconPositionX]="0" [iconPositionY]="0" (click)="openDev()" [buttonActive]="devActive">
+  </g>
+</svg:g>

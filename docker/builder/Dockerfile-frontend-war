@@ -1,0 +1,12 @@
+FROM mavenbuilder
+
+COPY ./frontend/pom_docker.xml /usr/src/app/pom.xml
+COPY ./frontend/src/ /usr/src/app/src/ 
+
+RUN mvn dependency:resolve && mvn dependency:go-offline
+
+
+
+
+
+
