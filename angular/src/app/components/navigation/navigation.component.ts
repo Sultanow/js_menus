@@ -32,6 +32,10 @@ export class NavigationComponent {
       name: "Legacy",
       route: "legacy",
     },
+    {
+      name: "External",
+      route: "external",
+    },
   ];
   
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)

@@ -63,6 +63,8 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MaterialPasswordFieldComponent } from './components/material-password-field/material-password-field.component';
 import { CardComponent } from './card/card.component';
 
+import { ExternalView, ExternalWebsite, SafePipe } from './components/external-website.component';
+
 const appRoutes: Routes = [
   {
     path: 'dashboard',
@@ -79,6 +81,10 @@ const appRoutes: Routes = [
   {
     path: 'legacy',
     component: AppComponent,
+  },
+  {
+    path: "external",
+    component: ExternalView,
   },
   // TODO: add paths for other routes described on the sidebar here.
 ]
@@ -122,6 +128,9 @@ const appRoutes: Routes = [
     DashboardComponent,
     MaterialPasswordFieldComponent,
     CardComponent,
+    ExternalView,
+    ExternalWebsite,
+    SafePipe,
   ],
   imports: [
     BrowserModule,
