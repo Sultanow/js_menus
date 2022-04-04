@@ -8,6 +8,8 @@
     <div class="collapse navbar-collapse" id="navbarCollapse" [ngbCollapse]="isCollapsed">
       <div class="navbar-nav">
         <!-- TODO: class "active" programmatically -->
+        <a class="nav-item nav-link active" [routerLink]="['/external']" routerLinkActive="active">Externes Dashboard</a>
+        <a class="nav-item nav-link" [routerLink]="['/dashboard']" routerLinkActive="active">Dashboard</a>
       </div>
     </div>
   </div>
