@@ -5,15 +5,21 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './navmenu/navmenu.component';
+import { ExternalDashboard, ExternalWebsite, SafePipe } from './external-dashboard.component';
 
 // TODO: move to routes.ts
 export const routes = [
+  { path: "external", component: ExternalDashboard },
+  { path: '', redirectTo: '/external', pathMatch: 'full' },
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
+    ExternalDashboard,
+    ExternalWebsite,
+    SafePipe,
   ],
   imports: [
     BrowserModule,
