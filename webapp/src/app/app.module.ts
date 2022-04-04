@@ -5,14 +5,20 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './navmenu/navmenu.component';
-import { ExternalDashboard, ExternalWebsite, SafePipe } from './external-dashboard.component';
+import {
+  ExternalDashboard,
+  ExternalWebsite,
+  SafePipe,
+} from './external-dashboard.component';
 
 // TODO: move to routes.ts
 export const routes: Routes = [
-  { path: "external", component: ExternalDashboard },
+  { path: 'external', component: ExternalDashboard },
   { path: '', redirectTo: '/external', pathMatch: 'full' },
-  { path: 'dashboard',
-    loadChildren: () => import ('./dashboard/dashboard.module').then(m => m.DashboardModule)
+  {
+    path: 'dashboard',
+    loadChildren: () =>
+      import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
   },
 ];
 
@@ -24,12 +30,8 @@ export const routes: Routes = [
     ExternalWebsite,
     SafePipe,
   ],
-  imports: [
-    BrowserModule,
-    RouterModule.forRoot(routes),
-    NgbModule,
-  ],
+  imports: [BrowserModule, RouterModule.forRoot(routes), NgbModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

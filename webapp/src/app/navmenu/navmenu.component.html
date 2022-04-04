@@ -2,14 +2,36 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">Cockpit</a>
-    <button class="navbar-toggler" type="button" (click)="isCollapsed = !isCollapsed" data-bs-target="#navbarCollapse" aria-controls="navbarNavAltMarkup" [attr.aria-expanded]="isCollapsed" aria-label="Toggle navigation">
+    <button
+      class="navbar-toggler"
+      type="button"
+      (click)="isCollapsed = !isCollapsed"
+      data-bs-target="#navbarCollapse"
+      aria-controls="navbarNavAltMarkup"
+      [attr.aria-expanded]="isCollapsed"
+      aria-label="Toggle navigation"
+    >
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarCollapse" [ngbCollapse]="isCollapsed">
+    <div
+      class="collapse navbar-collapse"
+      id="navbarCollapse"
+      [ngbCollapse]="isCollapsed"
+    >
       <div class="navbar-nav">
         <!-- TODO: class "active" programmatically -->
-        <a class="nav-item nav-link active" [routerLink]="['/external']" routerLinkActive="active">Externes Dashboard</a>
-        <a class="nav-item nav-link" [routerLink]="['/dashboard']" routerLinkActive="active">Dashboard</a>
+        <a
+          class="nav-item nav-link active"
+          [routerLink]="['/external']"
+          routerLinkActive="active"
+          >Externes Dashboard</a
+        >
+        <a
+          class="nav-item nav-link"
+          [routerLink]="['/dashboard']"
+          routerLinkActive="active"
+          >Dashboard</a
+        >
       </div>
     </div>
   </div>

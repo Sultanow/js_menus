@@ -3,9 +3,7 @@ import { RouterModule } from '@angular/router';
 
 import { DashboardComponent } from './dashboard.component';
 
-export const routes = [
-  { path: "", component: DashboardComponent },
-];
+export const routes = [{ path: '', component: DashboardComponent }];
 
 @NgModule({
   declarations: [],
