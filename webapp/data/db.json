@@ -1,0 +1,24 @@
+{
+  "minicards": [
+    {
+      "id": 0,
+      "title": "Title α",
+      "value": 100
+    },
+    {
+      "id": 1,
+      "title": "Title β",
+      "value": true
+    },
+    {
+      "id": 2,
+      "title": "Title γ",
+      "value": "abc"
+    },
+    {
+      "id": 3,
+      "title": "Title δ",
+      "value": 66.6
+    }
+  ]
+}
