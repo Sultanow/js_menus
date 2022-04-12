@@ -6,4 +6,5 @@ import { Component, Input } from '@angular/core';
 })
 export class MinicardComponent {
   @Input() title!: string;
+  @Input() value!: string;
 }
