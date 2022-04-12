@@ -14,7 +14,7 @@ import {
 // TODO: move to routes.ts
 export const routes: Routes = [
   { path: 'external', component: ExternalDashboard },
-  { path: '', redirectTo: '/external', pathMatch: 'full' },
+  { path: '', redirectTo: 'external', pathMatch: 'full' },
   {
     path: 'dashboard',
     loadChildren: () =>

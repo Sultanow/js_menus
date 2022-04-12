@@ -7,10 +7,13 @@ import { Component } from '@angular/core';
    */
   template: `
     <div class="d-flex flex-column h-100">
-      <nav-menu></nav-menu>
+      <header class="mb-2">
+        <nav-menu></nav-menu>
+      </header>
       <div class="h-100 flex-grow">
         <router-outlet></router-outlet>
       </div>
+      <footer>Footer</footer>
     </div>
   `,
 })
