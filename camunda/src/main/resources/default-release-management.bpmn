@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_0fr9mxs" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.12.0">
+  <bpmn:collaboration id="Default_Release_Management">
+    <bpmn:participant id="Participant_1fh3zro" name="Release Management v0.1" processRef="default-release-management" />
+  </bpmn:collaboration>
+  <bpmn:process id="default-release-management" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_10crimc">
+      <bpmn:lane id="team_entwicklung" name="Entwicklung">
+        <bpmn:flowNodeRef>process_start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>lieferung_an_bau</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>entwicklung_lieferung_anlegen</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="team_bau" name="Bau">
+        <bpmn:flowNodeRef>bau_lieferung_validieren</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>bau_lieferung_packen</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="team_test" name="Test">
+        <bpmn:flowNodeRef>test_lieferung_validieren</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1dcqcs9</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_1m78egv</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>test_lieferung_testen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>test_lieferung_inaktiv_setzen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>test_lieferung_an_freigabe_leiten</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="team_freigabe" name="Freigabe">
+        <bpmn:flowNodeRef>Gateway_15asdxo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>freigabe_pruefen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>freigabe_lieferung_inaktiv_setzen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>freigabe_lieferung_produktiv_setzen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0b16dqs</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="team_produktion" name="Produktion">
+        <bpmn:flowNodeRef>prod_lieferung_veroeffentlichen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1ok3fvp</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>prod_lieferung_abschliessen</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="process_start" name="Erfassen einer Lieferung">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="lieferung_name" label="Name der Lieferung" type="string" />
+          <camunda:formField id="lieferung_url" label="URL der Lieferung" type="string" />
+          <camunda:formField id="lieferung_datum" label="Datum der Lieferung" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_0lkosim</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0lkosim" sourceRef="process_start" targetRef="entwicklung_lieferung_anlegen" />
+    <bpmn:sequenceFlow id="Flow_1b4dssv" sourceRef="bau_lieferung_validieren" targetRef="bau_lieferung_packen" />
+    <bpmn:userTask id="bau_lieferung_validieren" name="Lieferung validieren" camunda:candidateGroups="bau">
+      <bpmn:incoming>Flow_1puv309</bpmn:incoming>
+      <bpmn:outgoing>Flow_1b4dssv</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="bau_lieferung_packen" name="Lieferung packen">
+      <bpmn:extensionElements>
+        <camunda:in variables="all" />
+        <camunda:out variables="all" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1b4dssv</bpmn:incoming>
+      <bpmn:outgoing>Flow_0pi669s</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="test_lieferung_validieren" name="Lieferung validieren" camunda:candidateGroups="test">
+      <bpmn:incoming>Flow_0pi669s</bpmn:incoming>
+      <bpmn:outgoing>Flow_1teludu</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0pi669s" sourceRef="bau_lieferung_packen" targetRef="test_lieferung_validieren" />
+    <bpmn:sequenceFlow id="Flow_1teludu" sourceRef="test_lieferung_validieren" targetRef="test_lieferung_testen" />
+    <bpmn:sequenceFlow id="Flow_09tqgju" sourceRef="test_lieferung_testen" targetRef="Gateway_1m78egv" />
+    <bpmn:endEvent id="Event_1dcqcs9" name="Lieferung eingestellt">
+      <bpmn:incoming>Flow_134o5sj</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1gecgha" name="Nein" sourceRef="Gateway_1m78egv" targetRef="test_lieferung_inaktiv_setzen">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!tests_erfolgreich}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_134o5sj" sourceRef="test_lieferung_inaktiv_setzen" targetRef="Event_1dcqcs9" />
+    <bpmn:exclusiveGateway id="Gateway_1m78egv" name="Tests erfolgreich?">
+      <bpmn:incoming>Flow_09tqgju</bpmn:incoming>
+      <bpmn:outgoing>Flow_1gecgha</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1q0ka1d</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1q0ka1d" name="Ja" sourceRef="Gateway_1m78egv" targetRef="test_lieferung_an_freigabe_leiten">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${tests_erfolgreich}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1udp2vr" sourceRef="test_lieferung_an_freigabe_leiten" targetRef="freigabe_pruefen" />
+    <bpmn:exclusiveGateway id="Gateway_15asdxo" name="Freigabe erteilt?">
+      <bpmn:incoming>Flow_060yfc9</bpmn:incoming>
+      <bpmn:outgoing>Flow_0dpufcd</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1bdcbb8</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_060yfc9" sourceRef="freigabe_pruefen" targetRef="Gateway_15asdxo" />
+    <bpmn:sequenceFlow id="Flow_0dpufcd" name="Ja" sourceRef="Gateway_15asdxo" targetRef="freigabe_lieferung_produktiv_setzen">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${freigabe_erteilt}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="test_lieferung_testen" name="Lieferung testen" camunda:candidateGroups="test">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="tests_erfolgreich" label="Tests erfolgreich?" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1teludu</bpmn:incoming>
+      <bpmn:outgoing>Flow_09tqgju</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="test_lieferung_inaktiv_setzen" name="Lieferungen inaktiv setzen" camunda:candidateGroups="test">
+      <bpmn:incoming>Flow_1gecgha</bpmn:incoming>
+      <bpmn:outgoing>Flow_134o5sj</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1bdcbb8" name="Nein" sourceRef="Gateway_15asdxo" targetRef="freigabe_lieferung_inaktiv_setzen">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!freigabe_erteilt}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="freigabe_pruefen" name="Freigabe prüfen" camunda:candidateGroups="freigabe">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="freigabe_erteilt" type="boolean" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1udp2vr</bpmn:incoming>
+      <bpmn:outgoing>Flow_060yfc9</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="test_lieferung_an_freigabe_leiten" name="Lieferung an Freigabe leiten" camunda:candidateGroups="test">
+      <bpmn:incoming>Flow_1q0ka1d</bpmn:incoming>
+      <bpmn:outgoing>Flow_1udp2vr</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_185bffs" sourceRef="entwicklung_lieferung_anlegen" targetRef="lieferung_an_bau" />
+    <bpmn:userTask id="lieferung_an_bau" name="Lieferung an Bau" camunda:candidateGroups="entwicklung">
+      <bpmn:incoming>Flow_185bffs</bpmn:incoming>
+      <bpmn:outgoing>Flow_1puv309</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1puv309" sourceRef="lieferung_an_bau" targetRef="bau_lieferung_validieren" />
+    <bpmn:sequenceFlow id="Flow_153f8l2" sourceRef="freigabe_lieferung_produktiv_setzen" targetRef="prod_lieferung_veroeffentlichen" />
+    <bpmn:userTask id="prod_lieferung_veroeffentlichen" name="Lieferung veröffentlichen" camunda:candidateGroups="produktion">
+      <bpmn:incoming>Flow_153f8l2</bpmn:incoming>
+      <bpmn:outgoing>Flow_03phqw6</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_03phqw6" sourceRef="prod_lieferung_veroeffentlichen" targetRef="prod_lieferung_abschliessen" />
+    <bpmn:sequenceFlow id="Flow_17djp5v" sourceRef="prod_lieferung_abschliessen" targetRef="Event_1ok3fvp" />
+    <bpmn:endEvent id="Event_1ok3fvp" name="Lieferung nicht mehr aktiv">
+      <bpmn:incoming>Flow_17djp5v</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="freigabe_lieferung_inaktiv_setzen" name="Lieferung inaktiv setzen" camunda:candidateGroups="freigabe">
+      <bpmn:incoming>Flow_1bdcbb8</bpmn:incoming>
+      <bpmn:outgoing>Flow_0vh4kbt</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="freigabe_lieferung_produktiv_setzen" name="Lieferung produktiv setzen" camunda:candidateGroups="freigabe">
+      <bpmn:incoming>Flow_0dpufcd</bpmn:incoming>
+      <bpmn:outgoing>Flow_153f8l2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0vh4kbt" sourceRef="freigabe_lieferung_inaktiv_setzen" targetRef="Event_0b16dqs" />
+    <bpmn:endEvent id="Event_0b16dqs" name="Lieferung eingestellt">
+      <bpmn:incoming>Flow_0vh4kbt</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="prod_lieferung_abschliessen" name="Lieferung abschließen">
+      <bpmn:incoming>Flow_03phqw6</bpmn:incoming>
+      <bpmn:outgoing>Flow_17djp5v</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="entwicklung_lieferung_anlegen" name="Neue Lieferung anlegen" camunda:candidateGroups="entwicklung">
+      <bpmn:extensionElements>
+        <camunda:out variables="all" />
+        <camunda:formData>
+          <camunda:formField id="entwicklung_abgeschlossen" label="Entwicklung abgeschlossen?" type="boolean" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0lkosim</bpmn:incoming>
+      <bpmn:outgoing>Flow_185bffs</bpmn:outgoing>
+    </bpmn:userTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Default_Release_Management">
+      <bpmndi:BPMNShape id="Participant_1fh3zro_di" bpmnElement="Participant_1fh3zro" isHorizontal="true">
+        <dc:Bounds x="129" y="70" width="921" height="1170" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0j4o2xq_di" bpmnElement="team_produktion" isHorizontal="true">
+        <dc:Bounds x="159" y="1020" width="891" height="220" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0ees1p6_di" bpmnElement="team_freigabe" isHorizontal="true">
+        <dc:Bounds x="159" y="780" width="891" height="240" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_09jj94k_di" bpmnElement="team_test" isHorizontal="true">
+        <dc:Bounds x="159" y="480" width="891" height="300" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1g4udx2_di" bpmnElement="team_bau" isHorizontal="true">
+        <dc:Bounds x="159" y="280" width="891" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1a9owv1_di" bpmnElement="team_entwicklung" isHorizontal="true">
+        <dc:Bounds x="159" y="70" width="891" height="210" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0vh4kbt_di" bpmnElement="Flow_0vh4kbt">
+        <di:waypoint x="710" y="830" />
+        <di:waypoint x="962" y="830" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_17djp5v_di" bpmnElement="Flow_17djp5v">
+        <di:waypoint x="710" y="1130" />
+        <di:waypoint x="962" y="1130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03phqw6_di" bpmnElement="Flow_03phqw6">
+        <di:waypoint x="340" y="1130" />
+        <di:waypoint x="610" y="1130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_153f8l2_di" bpmnElement="Flow_153f8l2">
+        <di:waypoint x="610" y="970" />
+        <di:waypoint x="290" y="970" />
+        <di:waypoint x="290" y="1090" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1puv309_di" bpmnElement="Flow_1puv309">
+        <di:waypoint x="510" y="210" />
+        <di:waypoint x="510" y="240" />
+        <di:waypoint x="360" y="240" />
+        <di:waypoint x="360" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_185bffs_di" bpmnElement="Flow_185bffs">
+        <di:waypoint x="410" y="170" />
+        <di:waypoint x="460" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1bdcbb8_di" bpmnElement="Flow_1bdcbb8">
+        <di:waypoint x="445" y="880" />
+        <di:waypoint x="480" y="880" />
+        <di:waypoint x="480" y="830" />
+        <di:waypoint x="610" y="830" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="526" y="813" width="23" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dpufcd_di" bpmnElement="Flow_0dpufcd">
+        <di:waypoint x="445" y="880" />
+        <di:waypoint x="480" y="880" />
+        <di:waypoint x="480" y="940" />
+        <di:waypoint x="610" y="940" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="540" y="922" width="12" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_060yfc9_di" bpmnElement="Flow_060yfc9">
+        <di:waypoint x="340" y="880" />
+        <di:waypoint x="395" y="880" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1udp2vr_di" bpmnElement="Flow_1udp2vr">
+        <di:waypoint x="610" y="710" />
+        <di:waypoint x="290" y="710" />
+        <di:waypoint x="290" y="840" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1q0ka1d_di" bpmnElement="Flow_1q0ka1d">
+        <di:waypoint x="660" y="585" />
+        <di:waypoint x="660" y="670" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="669" y="625" width="12" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_134o5sj_di" bpmnElement="Flow_134o5sj">
+        <di:waypoint x="900" y="560" />
+        <di:waypoint x="962" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gecgha_di" bpmnElement="Flow_1gecgha">
+        <di:waypoint x="685" y="560" />
+        <di:waypoint x="800" y="560" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="731" y="542" width="23" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09tqgju_di" bpmnElement="Flow_09tqgju">
+        <di:waypoint x="550" y="560" />
+        <di:waypoint x="635" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1teludu_di" bpmnElement="Flow_1teludu">
+        <di:waypoint x="400" y="560" />
+        <di:waypoint x="450" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0pi669s_di" bpmnElement="Flow_0pi669s">
+        <di:waypoint x="500" y="420" />
+        <di:waypoint x="500" y="440" />
+        <di:waypoint x="350" y="440" />
+        <di:waypoint x="350" y="520" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1b4dssv_di" bpmnElement="Flow_1b4dssv">
+        <di:waypoint x="400" y="380" />
+        <di:waypoint x="450" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0lkosim_di" bpmnElement="Flow_0lkosim">
+        <di:waypoint x="248" y="170" />
+        <di:waypoint x="310" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="process_start">
+        <dc:Bounds x="212" y="152" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="194" y="195" width="73" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0pn5i05_di" bpmnElement="bau_lieferung_validieren">
+        <dc:Bounds x="300" y="340" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1l34cuh_di" bpmnElement="bau_lieferung_packen">
+        <dc:Bounds x="450" y="340" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1qemsxu_di" bpmnElement="test_lieferung_validieren">
+        <dc:Bounds x="300" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1dcqcs9_di" bpmnElement="Event_1dcqcs9">
+        <dc:Bounds x="962" y="542" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="955" y="585" width="51" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1m78egv_di" bpmnElement="Gateway_1m78egv" isMarkerVisible="true">
+        <dc:Bounds x="635" y="535" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="617" y="511" width="86" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_15asdxo_di" bpmnElement="Gateway_15asdxo" isMarkerVisible="true">
+        <dc:Bounds x="395" y="855" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="380" y="915" width="80" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_04bxszc_di" bpmnElement="test_lieferung_testen">
+        <dc:Bounds x="450" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0y0zm3o_di" bpmnElement="test_lieferung_inaktiv_setzen">
+        <dc:Bounds x="800" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_08yno9s_di" bpmnElement="freigabe_pruefen">
+        <dc:Bounds x="240" y="840" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0gsbzsf_di" bpmnElement="test_lieferung_an_freigabe_leiten">
+        <dc:Bounds x="610" y="670" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1bdrhh9_di" bpmnElement="lieferung_an_bau">
+        <dc:Bounds x="460" y="130" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1xktnkf_di" bpmnElement="prod_lieferung_veroeffentlichen">
+        <dc:Bounds x="240" y="1090" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1ok3fvp_di" bpmnElement="Event_1ok3fvp">
+        <dc:Bounds x="962" y="1112" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="943" y="1155" width="74" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_01ypl2q_di" bpmnElement="freigabe_lieferung_inaktiv_setzen">
+        <dc:Bounds x="610" y="790" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_00m8zbr_di" bpmnElement="freigabe_lieferung_produktiv_setzen">
+        <dc:Bounds x="610" y="910" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0b16dqs_di" bpmnElement="Event_0b16dqs">
+        <dc:Bounds x="962" y="812" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="955" y="855" width="51" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1whde5i_di" bpmnElement="prod_lieferung_abschliessen">
+        <dc:Bounds x="610" y="1090" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0q5nugb_di" bpmnElement="entwicklung_lieferung_anlegen">
+        <dc:Bounds x="310" y="130" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

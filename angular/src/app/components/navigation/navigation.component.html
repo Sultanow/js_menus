@@ -5,7 +5,7 @@
       [opened]="(isHandset$ | async) === false">
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
-      <a *ngFor="let item of menuItems" 
+      <a *ngFor="let item of menuItems"
           mat-list-item [routerLink]="'/' + item.route">{{item.name | titlecase}}</a>
     </mat-nav-list>
   </mat-sidenav>
@@ -24,9 +24,9 @@
         aria-label="Benachrichtigungen öffnen"
         mat-icon-button
         (click)="1+1">
-        <mat-icon aria-hidden="false" 
-          matBadge="2" 
-          matBadgePosition="after" 
+        <mat-icon aria-hidden="false"
+          matBadge="2"
+          matBadgePosition="after"
           matBadgeColor="accent"
           aria-label="Benachrichtigungssysmbol">notifications</mat-icon>
       </button>
@@ -35,13 +35,13 @@
         aria-label="Nachrichten öffnen"
         mat-icon-button
         (click)="1+1">
-        <mat-icon aria-hidden="false" 
-          matBadge="3" 
-          matBadgePosition="after" 
+        <mat-icon aria-hidden="false"
+          matBadge="3"
+          matBadgePosition="after"
           matBadgeColor="accent"
           aria-label="Nachrichtensymbol">mail</mat-icon>
       </button>
-      <img mat-card-avatar src="user-avatar.png" alt="Nutzeravatar" />
+      <img mat-card-avatar src="/assets/img/user-avatar.png" alt="Nutzeravatar" />
     </mat-toolbar>
     <router-outlet>
       <!-- Site content is rendered here. -->

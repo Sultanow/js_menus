@@ -1,0 +1,63 @@
+<div class="grid-container">
+
+  <h2>Release-Detailsicht:
+      <span>
+          {{
+            "PRV" +
+            release.variables["prv_release"].value + "." +
+            release.variables["entwicklungsbranch"].value + " " +
+            release.variables["branch_bezeichnung"].value
+          }}
+      </span>
+  </h2>
+  <mat-divider></mat-divider><br>
+
+
+  <h3>Aktuelle Aufgaben</h3><br>
+  <div *ngIf="release.tasks== null || release.tasks.length == 0">Keine Aufgaben vorhanden.</div>
+  <div class="task-container" style="display: flex;">
+    <mat-card *ngFor="let task of release.tasks">
+      <mat-card-title>{{ task.name }}</mat-card-title>
+      <mat-card-subtitle>Erstellt am: {{ task.created | date}}</mat-card-subtitle>
+      <mat-footer>
+        <button mat-raised-button color="accent">Aufgabe bearbeiten</button>
+      </mat-footer>
+    </mat-card>
+  </div><br>
+
+  <mat-tab-group mat-stretch-tabs>
+
+    <mat-tab label="Basisinformationen">
+      <br>
+      <table>
+        <tbody>
+          <tr *ngFor="let variable of release.variables | keyvalue">
+            <td><b>{{ variable.key }}</b></td>
+            <td>{{ variable.value.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </mat-tab>
+
+    <mat-tab label="Externe Links">
+      <br>
+      [Not yet implemented.]
+    </mat-tab>
+
+    <mat-tab label="Sonstiges">
+      <br>
+      [Not yet implemented.]
+    </mat-tab>
+
+    <mat-tab label="Workflow">
+      <div class="md-padding" fxLayout="row" style="display:block; height: 200vh;" #bpmncontainer flex></div>
+    </mat-tab>
+
+  </mat-tab-group>
+
+
+  <br><mat-divider></mat-divider><br>
+  <button mat-raised-button color="primary" (click)="clearRelease()">Schließen</button>
+
+
+</div>

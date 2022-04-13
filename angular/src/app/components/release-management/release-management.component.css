@@ -1,0 +1,16 @@
+.grid-container{
+  margin: 20px;
+}
+
+.version-container{
+  display: flex;
+}
+
+.version-container > mat-card{
+  margin-right: 20px;
+  margin-top: 20px;
+}
+
+.mat-card-content > mat-card{
+  margin-bottom: 15px;
+}

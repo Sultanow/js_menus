@@ -9,8 +9,8 @@ import { map, shareReplay } from 'rxjs/operators';
   styleUrls: ['./navigation.component.css']
 })
 export class NavigationComponent {
-  title: String = "ALLEGRO-Cockpit";
-  
+  title: String = "***REMOVED***-Cockpit";
+
   menuItems: Array<object> = [
     {
       name: "Dashboards",
@@ -29,11 +29,16 @@ export class NavigationComponent {
       route: "batches",
     },
     {
+      name: "Releasemanagement",
+      route: "releases",
+    },
+    {
       name: "Legacy",
       route: "legacy",
     },
+
   ];
-  
+
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches),

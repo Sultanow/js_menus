@@ -71,8 +71,8 @@ export class AppComponent implements OnInit {
 		private titleService: Title,
 		public dialog: MatDialog
 	) {
-		if (/MSIE |Trident\//.test(window.navigator.userAgent)) { 
-			window.location.replace("unsupported.html"); 
+		if (/MSIE |Trident\//.test(window.navigator.userAgent)) {
+			window.location.replace("unsupported.html");
 		}
 	}
 	updateTitle() {
@@ -123,7 +123,7 @@ export class AppComponent implements OnInit {
 			transformOrigin: "50% 50%",
 			opacity: "0",
 			scale: "0"
-		}, 0.125, 0.25);
+		}, 0.125);
 	}
 
 	openMainMenu() {

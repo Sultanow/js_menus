@@ -1,0 +1,1 @@
+Use this folder to insert your custom bpmn diagrams
