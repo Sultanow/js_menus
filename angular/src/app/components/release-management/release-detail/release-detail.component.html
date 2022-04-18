@@ -13,14 +13,17 @@
   <mat-divider></mat-divider><br>
 
 
-  <h3>Aktuelle Aufgaben</h3><br>
-  <div *ngIf="release.tasks== null || release.tasks.length == 0">Keine Aufgaben vorhanden.</div>
+  <h3>Aktuelle Prozessschritte</h3><br>
+  <div *ngIf="release.tasks== null || release.tasks.length == 0">Keine Prozessschritte vorhanden.</div>
   <div class="task-container" style="display: flex;">
     <mat-card *ngFor="let task of release.tasks">
       <mat-card-title>{{ task.name }}</mat-card-title>
       <mat-card-subtitle>Erstellt am: {{ task.created | date}}</mat-card-subtitle>
       <mat-footer>
-        <button mat-raised-button color="accent">Aufgabe bearbeiten</button>
+        <button mat-raised-button color="accent" (click)="openTaskDialog(task)">
+          <mat-icon>edit</mat-icon>
+          Bearbeiten
+        </button>
       </mat-footer>
     </mat-card>
   </div><br>
@@ -57,7 +60,9 @@
 
 
   <br><mat-divider></mat-divider><br>
-  <button mat-raised-button color="primary" (click)="clearRelease()">Schließen</button>
+  <button mat-raised-button color="primary" (click)="clearRelease()">
+    <mat-icon>close</mat-icon>
+    Schließen</button>
 
 
 </div>

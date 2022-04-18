@@ -2,6 +2,9 @@ import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild, 
 import { Release } from 'src/app/model/release';
 import * as BpmnJS from 'bpmn-js/dist/bpmn-viewer.production.min.js';
 import { CamundaApiConnectorService } from 'src/app/services/releasemanagement/camunda-api-connector.service';
+import { MatDialog } from '@angular/material/dialog';
+import { EditTaskComponent } from "src/app/components/release-management/edit-task/edit-task.component";
+import { CamundaTask } from 'src/app/model/camunda-task';
 
 @Component({
   selector: 'app-release-detail',
@@ -15,7 +18,7 @@ export class ReleaseDetailComponent implements OnInit, AfterViewInit {
   @Input() release: Release = null;
   @Output() emitRelease = new EventEmitter<Release>()
 
-  constructor(private camunda: CamundaApiConnectorService) { }
+  constructor(private camunda: CamundaApiConnectorService, public taskDialog: MatDialog) { }
 
   ngOnInit(): void {
     this.camunda.getReleaseTasksByInstanceId(this.release.processInstanceId)
@@ -44,6 +47,16 @@ export class ReleaseDetailComponent implements OnInit, AfterViewInit {
           console.error(error)
         }
       })
+  }
+
+  openTaskDialog(task: CamundaTask) {
+    const dialogReference = this.taskDialog.open(EditTaskComponent, {
+      data: task
+    });
+
+    dialogReference.afterClosed().subscribe(result => {
+      console.log("Dialog closed, result: ", result)
+    })
   }
 
   clearRelease() {

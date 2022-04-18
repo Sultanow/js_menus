@@ -67,6 +67,7 @@ import { MaterialPasswordFieldComponent } from './components/material-password-f
 import { ReleaseManagementComponent } from './components/release-management/release-management.component';
 import { CreateNewReleaseComponent } from './components/release-management/create-new-release/create-new-release.component';
 import { ReleaseDetailComponent } from './components/release-management/release-detail/release-detail.component';
+import { EditTaskComponent } from './components/release-management/edit-task/edit-task.component';
 
 const appRoutes: Routes = [
   {
@@ -137,6 +138,7 @@ const appRoutes: Routes = [
     ReleaseManagementComponent,
     CreateNewReleaseComponent,
     ReleaseDetailComponent,
+    EditTaskComponent,
   ],
   imports: [
     BrowserModule,
