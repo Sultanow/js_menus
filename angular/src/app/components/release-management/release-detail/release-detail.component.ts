@@ -5,6 +5,7 @@ import { CamundaApiConnectorService } from 'src/app/services/releasemanagement/c
 import { MatDialog } from '@angular/material/dialog';
 import { EditTaskComponent } from "src/app/components/release-management/edit-task/edit-task.component";
 import { CamundaTask } from 'src/app/model/camunda-task';
+import { ReleaseVariable } from 'src/app/model/release-variable';
 
 @Component({
   selector: 'app-release-detail',
@@ -18,19 +19,40 @@ export class ReleaseDetailComponent implements OnInit, AfterViewInit {
   @Input() release: Release = null;
   @Output() emitRelease = new EventEmitter<Release>()
 
-  constructor(private camunda: CamundaApiConnectorService, public taskDialog: MatDialog) { }
+  public isLoading: boolean = false;
+
+  constructor(private camunda: CamundaApiConnectorService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.camunda.getReleaseTasksByInstanceId(this.release.processInstanceId)
-      .subscribe(tasks => {
-        this.release.tasks = tasks;
-      })
+    this.loadReleaseTasks()
   }
 
   ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
     this.loadBpmnDiagram()
+  }
+
+  loadReleaseTasks() {
+    this.camunda.getReleaseTasksByInstanceId(this.release.processInstanceId)
+      .subscribe(tasks => {
+        this.release.tasks = tasks;
+      })
+  }
+
+  updateReleaseVariables() {
+    this.isLoading = true;
+
+    this.camunda.getAllReleaseVariablesByInstanceId(this.release.processInstanceId)
+      .subscribe(
+        updatedVariables => {
+        this.release.variables = updatedVariables;
+        this.isLoading = false;
+        },
+        error => {
+          console.warn("Keine Variablen gefunden, Instanz womöglich gelöscht", error)
+          this.closeDetailView()
+        })
   }
 
   loadBpmnDiagram() {
@@ -50,17 +72,58 @@ export class ReleaseDetailComponent implements OnInit, AfterViewInit {
   }
 
   openTaskDialog(task: CamundaTask) {
-    const dialogReference = this.taskDialog.open(EditTaskComponent, {
+    const dialogReference = this.dialog.open(EditTaskComponent, {
       data: task
     });
 
-    dialogReference.afterClosed().subscribe(result => {
-      console.log("Dialog closed, result: ", result)
+    dialogReference.afterClosed().subscribe(() => {
+        this.loadReleaseTasks();
+        this.updateReleaseVariables();
     })
   }
 
-  clearRelease() {
+  closeDetailView() {
     this.emitRelease.emit(null)
   }
 
+  updateVariable(variableName: string, newValue: string) {
+    this.isLoading = true;
+
+    this.camunda.updateVariableByName(this.release.processInstanceId, variableName, newValue)
+      .subscribe(() => {
+        let newReleaseVariable: ReleaseVariable = { type: "String", value: newValue, valueInfo: null };
+        this.release.variables.set(variableName, newReleaseVariable);
+        this.isLoading = false;
+      },
+        error => {
+        console.error("Variable konnte nicht aktualisiert werden", error)
+      })
+  }
+
+  confirmDeletionDialog(templateRef) {
+    let dialogRef = this.dialog.open(templateRef, {
+      width: '250px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result == "delete") {
+        this.deleteProcessInstance()
+      }
+    });
+  }
+
+  deleteProcessInstance() {
+    this.camunda.deleteProcessInstanceById(this.release.processInstanceId)
+      .subscribe(
+        success => {
+          //TODO: Success notification
+          console.info("Prozessinstanz gelöscht", success)
+          this.closeDetailView()
+        },
+        error => {
+          console.error("Prozessinstanz konnte nicht gelöscht werden.", error);
+
+        }
+      )
+  }
 }

@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CamundaApiConnectorService } from '../../../services/releasemanagement/camunda-api-connector.service';
 import { Router } from '@angular/router';
 import { VersionDataMockService } from 'src/app/services/releasemanagement/version-data-mock.service';
+import { ReleaseVariable } from 'src/app/model/release-variable';
 
 @Component({
   selector: 'app-create-new-release',
@@ -25,8 +26,17 @@ export class CreateNewReleaseComponent implements OnInit {
     private versions: VersionDataMockService
   ) { }
 
+  startVariables: Map<string, ReleaseVariable> = new Map();
 
   ngOnInit(): void {
+    this.currentVersions = this.versions.getVersions();
+
+    this.startVariables.set("prv_release", { type: "String", value: "", valueInfo: null})
+    this.startVariables.set("entwicklungsbranch", { type: "String", value: "", valueInfo: null})
+    this.startVariables.set("branch_bezeichnung", { type: "String", value: "", valueInfo: null})
+    this.startVariables.set("geplanter_lieferzeitpunkt_an_test", { type: "String", value: "", valueInfo: null})
+    this.startVariables.set("notizen", { type: "String", value: "", valueInfo: null })
+
     this.newReleaseForm = this.formbuilder.group({ //idea: pull default parameters dynamically from external data source / camunda?
       prv_release: ['', Validators.required],
       entwicklungsbranch: ['', Validators.required],
@@ -35,17 +45,24 @@ export class CreateNewReleaseComponent implements OnInit {
       notizen: ''
     })
 
-    this.currentVersions = this.versions.getVersions();
 
     //this.newReleaseForm.valueChanges.subscribe(console.log)
 
   }
 
   submitNewReleaseForm() {
+
     if (this.newReleaseForm.valid) {
       this.loading = true;
 
-      this.camunda.createNewReleaseWithVariables(this.newReleaseForm.value)
+      //convert input variables to ReleaseVariables
+      for (let key of this.startVariables.keys()) {
+        let updatedVariable = this.startVariables.get(key)
+        updatedVariable.value = this.newReleaseForm.value[key]
+        this.startVariables.set(key, updatedVariable)
+      }
+
+      this.camunda.createNewReleaseWithVariables(this.startVariables)
         .subscribe(response => {
           if (response.ok) {
             this.loading = false;

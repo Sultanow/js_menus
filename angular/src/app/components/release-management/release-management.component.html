@@ -1,5 +1,8 @@
 <div class="grid-container" *ngIf="detailedRelease == null">
-  <h1 class="mat-h1"><b>Releasemanagement</b></h1><mat-divider></mat-divider><br>
+  <h1 class="mat-h1"><b>Releasemanagement</b></h1>
+  <mat-divider *ngIf="!isLoading"></mat-divider>
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+  <br>
   <button mat-raised-button color="primary" routerLink="/releases/create-new-release">
     <mat-icon>note_add</mat-icon> Neue Lieferung anlegen
   </button>
@@ -19,12 +22,13 @@
       <mat-card-content>
 
         <ng-container *ngFor="let release of currentReleases">
-          <mat-card *ngIf="version.id == release.variables.prv_release.value" (click)="detailedRelease = release" style="cursor: pointer;">
+          <mat-card class="release-card" *ngIf="release.variables.get('prv_release') != null && version.id == release.variables.get('prv_release').value" (click)="detailedRelease = release" style="cursor: pointer;">
               <mat-card-title>Release</mat-card-title>
-              <mat-card-subtitle></mat-card-subtitle>
+              <mat-card-subtitle><hr></mat-card-subtitle>
               <mat-card-content>
-                <span>PRV-Release: {{ release.variables.prv_release.value }}</span><br>
-                <span>Branch: {{ release.variables.entwicklungsbranch.value }}</span><br>
+                <span>Typ: {{ release.variables.get('branch_bezeichnung').value || "---" }} </span><br>
+                <span>Status: <b>{{ release.variables.get('status').value || "---" }}</b></span><br>
+                <span>Branch: {{ release.variables.get('entwicklungsbranch').value || "---" }}</span><br>
               </mat-card-content>
           </mat-card>
         </ng-container>

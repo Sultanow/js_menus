@@ -14,25 +14,30 @@ export class ReleaseManagementComponent implements OnInit {
   currentVersions = []
   currentReleases: Release[] = [];
   detailedRelease: Release = null;
+  isLoading: boolean = false;
 
   constructor(private versions: VersionDataMockService, private camunda: CamundaApiConnectorService) {   }
 
   ngOnInit() {
     this.currentVersions = this.versions.getVersions();
-    this.loadReleaseData()
+    this.loadReleaseData();
   }
 
   loadReleaseData() {
-    this.currentReleases = []
+    this.isLoading = true;
+    this.currentReleases = [];
     this.camunda.getAllReleases()
       .subscribe(releases => {
-        //console.info("RECEIVED SERVICE RESPONSE: ", releases)
-        this.currentReleases.push(releases)
-    })
+        this.currentReleases = releases;
+        this.isLoading = false;
+      },
+        error => {
+        console.error(error)
+      })
   }
 
   onReleaseDetailEmit(release: Release) {
     this.detailedRelease = release;
-    console.log("set detailed release to " + release)
+    this.loadReleaseData();
   }
 }
