@@ -27,12 +27,14 @@ export class ReleaseManagementComponent implements OnInit {
     this.isLoading = true;
     this.currentReleases = [];
     this.camunda.getAllReleases()
-      .subscribe(releases => {
+      .subscribe(
+        releases => {
         this.currentReleases = releases;
         this.isLoading = false;
       },
-        error => {
+      error => {
         console.error(error)
+        this.isLoading = false;
       })
   }
 

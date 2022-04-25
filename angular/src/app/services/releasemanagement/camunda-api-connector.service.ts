@@ -35,7 +35,6 @@ export class CamundaApiConnectorService {
         mergeMap(release => this.getProcessInstanceVariables(release.processInstanceId).pipe(
           map(variables => {
             release.variables = new Map<string, ReleaseVariable>(Object.entries(variables));
-            console.log("returning release", release)
             return release;
           })
         )),

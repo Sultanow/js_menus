@@ -5,11 +5,18 @@
 
 <mat-divider></mat-divider><br>
 
-<ng-container mat-dialog-title *ngIf="submitError">
+<ng-container mat-dialog-title *ngIf="submitFormError">
   <h3><mat-icon>warning</mat-icon>Fehler</h3>
   <span>Bitte stellen Sie sicher, dass alle Felder ordnungsgemäß befüllt worden sind.</span><br>
   <span>Leere Felder sind mit <mat-icon color="primary">info</mat-icon> markiert.</span>
-  <br><button (click)="submitError = false; isLoading = false" mat-mini-fab color="accent" ><mat-icon>clear</mat-icon></button><br>
+  <br><button (click)="submitFormError = false" mat-mini-fab color="accent" ><mat-icon>clear</mat-icon></button><br>
+  <br><mat-divider></mat-divider><br>
+</ng-container>
+
+<ng-container mat-dialog-title *ngIf="submitVariableError">
+  <h3><mat-icon>warning</mat-icon>Fehler</h3>
+  <span>Die Variable konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.</span><br>
+  <br><button (click)="submitVariableError = false" mat-mini-fab color="accent" ><mat-icon>clear</mat-icon></button><br>
   <br><mat-divider></mat-divider><br>
 </ng-container>
 

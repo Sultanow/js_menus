@@ -9,7 +9,7 @@ import { map, shareReplay } from 'rxjs/operators';
   styleUrls: ['./navigation.component.css']
 })
 export class NavigationComponent {
-  title: String = "***REMOVED***-Cockpit";
+  title: String = "IT-Cockpit";
 
   menuItems: Array<object> = [
     {

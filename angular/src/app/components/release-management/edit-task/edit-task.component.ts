@@ -15,7 +15,8 @@ export class EditTaskComponent implements OnInit {
   // @ViewChild('taskFormHtml') taskFormHtml: ElementRef;
 
   isLoading: boolean = true;
-  submitError: boolean = false;
+  submitFormError: boolean = false;
+  submitVariableError: boolean = false;
 
   constructor(
     public dialogReference: MatDialogRef<EditTaskComponent>,
@@ -47,7 +48,9 @@ export class EditTaskComponent implements OnInit {
         this.isLoading = false;
       },
         error => {
-        console.error("Variable konnte nicht aktualisiert werden", error)
+          this.isLoading = false;
+          this.submitVariableError = true;
+          console.error("Variable konnte nicht aktualisiert werden", error)
       })
   }
 
@@ -64,8 +67,9 @@ export class EditTaskComponent implements OnInit {
         },
         error => {
           //TODO: Add error notification
+          this.isLoading = false;
+          this.submitFormError = true;
           console.error("Fehler beim Abschließen des Prozessschritts", error)
-          this.submitError = true;
         }
       )
   }

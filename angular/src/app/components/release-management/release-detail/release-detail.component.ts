@@ -50,6 +50,7 @@ export class ReleaseDetailComponent implements OnInit, AfterViewInit {
         this.isLoading = false;
         },
         error => {
+          this.isLoading = false;
           console.warn("Keine Variablen gefunden, Instanz womöglich gelöscht", error)
           this.closeDetailView()
         })

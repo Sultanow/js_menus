@@ -5,6 +5,7 @@ import { CamundaApiConnectorService } from '../../../services/releasemanagement/
 import { Router } from '@angular/router';
 import { VersionDataMockService } from 'src/app/services/releasemanagement/version-data-mock.service';
 import { ReleaseVariable } from 'src/app/model/release-variable';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-create-new-release',
@@ -14,7 +15,7 @@ import { ReleaseVariable } from 'src/app/model/release-variable';
 export class CreateNewReleaseComponent implements OnInit {
 
   newReleaseForm: FormGroup;
-  loading = false;
+  isLoading = false;
   camundaProcessInstanceId = ''
   currentVersions = []
 
@@ -52,47 +53,56 @@ export class CreateNewReleaseComponent implements OnInit {
 
   submitNewReleaseForm() {
 
-    if (this.newReleaseForm.valid) {
-      this.loading = true;
-
-      //convert input variables to ReleaseVariables
-      for (let key of this.startVariables.keys()) {
-        let updatedVariable = this.startVariables.get(key)
-        updatedVariable.value = this.newReleaseForm.value[key]
-        this.startVariables.set(key, updatedVariable)
-      }
-
-      this.camunda.createNewReleaseWithVariables(this.startVariables)
-        .subscribe(response => {
-          if (response.ok) {
-            this.loading = false;
-
-            console.log("Sie haben eine neue Lieferung erstellt.", this.newReleaseForm.value)
-
-            this.notify.open(`Lieferung PRV${this.newReleaseForm.value.prv_release}.${this.newReleaseForm.value.entwicklungsbranch} ${this.newReleaseForm.value.branch_bezeichnung} erstellt!`,
-              null,
-              {
-              duration: 3000,
-              verticalPosition: 'bottom',
-              horizontalPosition: 'center'
-              })
-
-
-            this.router.navigateByUrl("/releases")
-
-          } else {
-
-            console.error("Lieferung konnte nicht erstellt werden.")
-
-            this.notify.open(`Lieferung koonnnte nicht erstellt werden, bitte prüfen Sie die eingegebenen Werte. ${response.statusText}`,
-              null,
-              {
-              duration: 3000,
-              verticalPosition: 'bottom',
-              horizontalPosition: 'center'
-              })
-          }
-        })
+    if (!this.newReleaseForm.valid) {
+      return
     }
+
+    this.isLoading = true;
+
+    //convert input variables to ReleaseVariables
+    for (let key of this.startVariables.keys()) {
+      let updatedVariable = this.startVariables.get(key)
+      updatedVariable.value = this.newReleaseForm.value[key]
+      this.startVariables.set(key, updatedVariable)
+    }
+
+    this.camunda.createNewReleaseWithVariables(this.startVariables)
+      .subscribe(
+        response => {
+          if (response.ok)
+            this.handleSubmitSuccess();
+        },
+        error => {
+          this.handleSubmitError(error)
+        })
+  }
+
+  private handleSubmitError(response: HttpErrorResponse) {
+    console.error("Lieferung konnte nicht erstellt werden.", response);
+    this.isLoading = false;
+
+    this.notify.open(`Lieferung konnte nicht erstellt werden, Fehler: ${response.statusText}`,
+      null,
+      {
+        duration: 3000,
+        verticalPosition: 'bottom',
+        horizontalPosition: 'center'
+      });
+  }
+
+  private handleSubmitSuccess() {
+    this.isLoading = false;
+
+    console.log("Sie haben eine neue Lieferung erstellt.", this.newReleaseForm.value);
+
+    this.notify.open(`Lieferung PRV${this.newReleaseForm.value.prv_release}.${this.newReleaseForm.value.entwicklungsbranch} ${this.newReleaseForm.value.branch_bezeichnung} erstellt!`,
+      null,
+      {
+        duration: 3000,
+        verticalPosition: 'bottom',
+        horizontalPosition: 'center'
+      });
+
+    this.router.navigateByUrl("/releases");
   }
 }
