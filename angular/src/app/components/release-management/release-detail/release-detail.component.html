@@ -48,12 +48,33 @@
                   <mat-form-field><input #newValue matInput type="text" placeholder="Neuer Wert.."></mat-form-field>
                   <button mat-raised-button color="accent" (click)="updateVariable(variable.key, newValue.value)">Speichern</button>
                 </ng-container>
-
                </td>
             </tr>
           </ng-container>
+
+            <tr #addNewVariable>
+              <td>
+                <mat-icon>library_add</mat-icon>
+                <mat-form-field>
+                  <mat-label>Neuer Variablenname</mat-label>
+                  <input #newVariableName matInput placeholder="Variablenname..">
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-icon>library_add</mat-icon>
+                <mat-form-field>
+                  <mat-label>Neuer Inhalt</mat-label>
+                  <input #newVariableValue matInput placeholder="Inhalt..">
+                </mat-form-field>
+              </td>
+              <td>
+                <button mat-raised-button color="accent" (click)="updateVariable(newVariableName.value, newVariableValue.value); newVariableName.value=''; newVariableValue.value=''">Speichern</button>
+              </td>
+            </tr>
+
         </tbody>
       </table>
+
     </mat-tab>
 
     <mat-tab label="Externe Links">
@@ -72,6 +93,27 @@
               </td>
             </tr>
           </ng-container>
+
+          <tr #addNewLink>
+            <td>
+              <mat-icon>library_add</mat-icon>
+              <mat-form-field>
+                <mat-label>Neuer Variablenname</mat-label>
+                <input #newLinkName matInput placeholder="Variablenname">
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-icon>library_add</mat-icon>
+              <mat-form-field>
+                <mat-label>Neuer Link</mat-label>
+                <input #newLinkValue matInput placeholder="Link">
+              </mat-form-field>
+            </td>
+            <td>
+              <button mat-raised-button color="accent" (click)="updateVariable(newLinkName.value, newLinkValue.value); newLinkName.value=''; newLinkValue.value=''">Speichern</button>
+            </td>
+          </tr>
+
         </tbody>
       </table>
     </mat-tab>
@@ -123,8 +165,6 @@
   </mat-tab-group>
 
   <ng-template #noDataAvailable>Keine Daten vorhanden.</ng-template>
-
-
 
   <br>
   <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
