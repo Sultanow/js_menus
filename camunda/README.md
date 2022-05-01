@@ -14,21 +14,23 @@ Dieser Ordner enthält eine Instanz von Camunda Platform 7, die im Release-Manag
 
 ## Installation
 
-    1. Eclipse öffnen und das Projekt aus /camunda über "File -> Open Projects From File System or Archive" hinzufügen\
+    1. Eclipse öffnen und das Projekt aus /camunda über "File -> Open Projects From File System or Archive" hinzufügen<br/>
 WICHTIG: Darauf achten, im richtigen Unterordner zu sein und dass das Projekt als Maven-Projekt erkannt wird.
 (HIER BILD EINFÜGEN)
 
-    2. Nachdem die Quellen aktualisiert wurden, im Package Explorer einen Rechtsklick auf pom.xml ausführen und "Run As -> Maven build.." klicken
+    2. Nachdem die Quellen aktualisiert wurden, im Package Explorer einen Rechtsklick auf pom.xml ausführen  
+       und "Run As -> Maven build.." klicken
     3. In den Build-Optionen unter "Goals" eingeben: "clean install" (ohne Anführungsstriche) und bestätigen
     4. Warten bis Abhängigkeiten heruntergeladen wurden, fertig!
 ## Start
 
-Um die Workflow-Engine zu starten:\
+Um die Workflow-Engine zu starten:  
 
-- Im Package-Explorer: Rechtsklick auf "/src/main/java/com/example/workflow/Application.java" und "Run As -> Java Application" wählen.\
+- Im Package-Explorer: Rechtsklick auf "/src/main/java/com/example/workflow/Application.java"
+- "Run As -> Java Application" wählen.  
 HINWEIS: Firewall-Freigaben bestätigen
 
-- Nach erfolgreichem Start sollte das Camunda-eigene Cockpit über [localhost:8081](localhost:8081) in einem Browser aufgerufen werden können
+- Nach erfolgreichem Start sollte das Camunda-eigene Cockpit über [http://localhost:8081](http://localhost:8081) in einem Browser aufgerufen werden können
 
 ## Authors
 
@@ -37,5 +39,5 @@ HINWEIS: Firewall-Freigaben bestätigen
 
 ## Appendix
 
-Bei Fragen oder Problemen bitte @jandestiny konntaktieren.
+Bei Fragen oder Problemen bitte @jandestiny kontaktieren.
 
