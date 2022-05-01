@@ -5,7 +5,7 @@ Dieser Ordner enthält eine Instanz von Camunda Platform 7, die im Release-Manag
 
 ## Requirements
 
-- [Node.js with npm](https://nodejs.org/en/download/) (Verison im Projekt: 16.14.2)
+- [Node.js with npm](https://nodejs.org/en/download/) (Version im Projekt: 16.14.2)
 - [Java 15 64-bit](https://www.oracle.com/java/technologies/javase/jdk15-archive-downloads.html) (Limitiert durch Camunda)
 - [Git](https://git-scm.com/download)
 - [Eclipse](https://www.eclipse.org/downloads/packages/) (Oder eine andere Java-IDE)
