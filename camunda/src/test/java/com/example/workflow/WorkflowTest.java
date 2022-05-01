@@ -21,7 +21,7 @@ public class WorkflowTest extends AbstractProcessEngineRuleTest {
   @Test
   public void shouldExecuteHappyPath() {
     // given
-    String processDefinitionKey = "wfms-for-release-management-process";
+    String processDefinitionKey = "default-release-management";
 
     // when
     ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey);
@@ -29,8 +29,7 @@ public class WorkflowTest extends AbstractProcessEngineRuleTest {
     // then
     assertThat(processInstance).isStarted()
         .task()
-        .hasDefinitionKey("say-hello")
-        .hasCandidateUser("demo")
+        .hasDefinitionKey("entwicklung_lieferung_anlegen")
         .isNotAssigned();
   }
 
