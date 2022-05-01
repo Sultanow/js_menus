@@ -19,8 +19,8 @@ Dieser Ordner enthält die Entwicklungsumgebung des Angular-Cockpits
 
 ## Lokalen Server in der Entwicklungsumgebung starten
 
-In js_menus/angular, run ```ng serve```.  
-Application should be available via Browser at [http://localhost:4200/](http://localhost:4200/).
+In js_menus/angular, Befehl ```ng serve``` ausführen.  
+Webanwendung sollte unter [http://localhost:4200/](http://localhost:4200/) erreichbar sein.
 
 ## Weitere Informationen über die Angular-CLI
 
