@@ -13,7 +13,7 @@ Dieser Ordner enthält die Entwicklungsumgebung des Angular-Cockpits
 
 ## Installation
 
-  1\. In lokaler Git-Repo, zu Subordner /angular navigieren und Konsole öffnen  
+  1\. In lokaler Git-Repo zum Subordner /angular navigieren und Konsole öffnen  
   2\. Angular-Framework installieren mit ```npm install -g @angular/cli```  
   3\. In js_menus/angular, npm-Abhängigkeiten installieren ```npm install```
 
