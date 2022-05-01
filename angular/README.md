@@ -1,27 +1,29 @@
-# AngularRadialMenu
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.9.
+# Angular Radial Menu / Information-Cockpit-Frontend
 
-## Development server
+Dieser Ordner enthält die Entwicklungsumgebung des Angular-Cockpits
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Code scaffolding
+## Requirements
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- [Git](https://git-scm.com/download)
+- [Node.js mit npm](https://nodejs.org/en/download/) (Verison im Projekt: 16.14.2)
+- Geklontes Repository
+    ```git clone https://github.com/Sultanow/js_menus.git```
 
-## Build
+## Installation
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+  1\. In lokaler Git-Repo, zu Subordner /angular navigieren und Konsole öffnen  
+  2\. Angular-Framework installieren mit ```npm install -g @angular/cli```  
+  3\. In js_menus/angular, npm-Abhängigkeiten installieren ```npm install```
 
-## Running unit tests
+## Lokalen Server in der Entwicklungsumgebung starten
 
-Run `npm run test` to execute the unit tests via [Jest](https://jestjs.io/).
+In js_menus/angular, run ```ng serve```.  
+Application should be available via Browser at [http://localhost:4200/](http://localhost:4200/).
 
-## Running end-to-end tests
+## Weitere Informationen über die Angular-CLI
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+Befehl ```ng help``` nutzen oder die Dokumentation unter [Angular CLI Readme](https://github.com/angular/angular-cli/blob/master/README.md) abrufen.
 
-## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
