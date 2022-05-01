@@ -39,6 +39,12 @@ HINWEIS: Firewall-Freigaben bestätigen
 
 - Nach erfolgreichem Start sollte das Camunda-eigene Cockpit über [http://localhost:8081](http://localhost:8081) in einem Browser aufgerufen werden können und ein Login mit den Daten demo:demo möglich sein.
 
+## BPMN-Prozess ändern
+
+Im Subordner camunda/src/main/resources/custom-release-management-process können neue BPMN-Diagramme eingefügt werden. Alternativ kann das bestehende "default-release-management"-Diagramm abgeändert werden. Bspw. mit Camunda Modeler.  
+  
+Beim Einfügen eines neuen Diagrammes sollte darauf geachtet werden, den neuen Prozess-Key in den Umgebungsvariablen der Angular-Anwendung zu hinterlegen.
+
 ## Authors
 
 - [@jandestiny (Jan Echebiri)](https://www.github.com/jandestiny)
