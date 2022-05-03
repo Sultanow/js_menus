@@ -7,7 +7,7 @@ Dieser Ordner enthält die Entwicklungsumgebung des Angular-Cockpits
 ## Requirements
 
 - [Git](https://git-scm.com/download)
-- [Node.js mit npm](https://nodejs.org/en/download/) (Verison im Projekt: 16.14.2)
+- [Node.js mit npm](https://nodejs.org/en/download/) (Version im Projekt: 16.14.2)
 - Geklontes Repository
     ```git clone https://github.com/Sultanow/js_menus.git```
 
