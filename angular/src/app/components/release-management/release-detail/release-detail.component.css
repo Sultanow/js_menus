@@ -1,0 +1,16 @@
+.grid-container{
+  margin: 20px;
+}
+
+table, td{
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+td{
+  padding: 5px;
+}
+
+table{
+  width: 100%;
+}

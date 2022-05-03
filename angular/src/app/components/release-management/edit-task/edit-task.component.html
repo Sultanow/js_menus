@@ -1,0 +1,71 @@
+<div class="grid-container">
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+  <h1 mat-dialog-title class="mat-h1">{{ task.name }}</h1>
+  <h3 mat-dialog-title class="mat-h3">Bitte die nachfolgenden Felder ausfüllen, um die Bearbeitung abzuschließen.</h3>
+
+<mat-divider></mat-divider><br>
+
+<ng-container mat-dialog-title *ngIf="submitFormError">
+  <h3><mat-icon>warning</mat-icon>Fehler</h3>
+  <span>Bitte stellen Sie sicher, dass alle Pflichtfelder ordnungsgemäß befüllt worden sind.</span><br>
+  <span>Leere Felder sind mit <mat-icon color="primary">info</mat-icon> markiert.</span>
+  <br><button (click)="submitFormError = false" mat-mini-fab color="accent" ><mat-icon>clear</mat-icon></button><br>
+  <br><mat-divider></mat-divider><br>
+</ng-container>
+
+<ng-container mat-dialog-title *ngIf="submitVariableError">
+  <h3><mat-icon>warning</mat-icon>Fehler</h3>
+  <span>Die Variable konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.</span><br>
+  <br><button (click)="submitVariableError = false" mat-mini-fab color="accent" ><mat-icon>clear</mat-icon></button><br>
+  <br><mat-divider></mat-divider><br>
+</ng-container>
+
+  <mat-dialog-content class="mat-typography">
+    <table *ngIf="task.variables != null && task.variables.size > 0; else noVariablesToFill">
+      <!-- <table> -->
+        <tbody>
+          <ng-container *ngFor="let variable of task.variables | keyvalue">
+            <tr *ngIf="!variable.key.includes('notizen')">
+              <td>
+                <mat-icon *ngIf="variable.value.value == null" color="primary">info</mat-icon>
+                <b>{{ variable.key }}</b>
+              </td>
+              <td>
+                <span>{{ variable.value.value }}</span>
+              </td>
+              <td>
+                <ng-container #editArea>
+                  <div class="stringEdit" *ngIf="variable.value.type == 'String'">
+                    <mat-form-field><input #stringValue matInput type="text" placeholder="Neuer Wert.."></mat-form-field>
+                    <button mat-raised-button color="accent" (click)="updateVariable(variable.key, 'String', stringValue.value)">Speichern</button>
+                  </div>
+
+                  <div class="booleanEdit" *ngIf="variable.value.type == 'Boolean'" style="text-align: right;">
+                    <mat-slide-toggle #booleanValue checked="{{variable.value.value}}" style="margin-right: 5px;"></mat-slide-toggle>
+                    <button mat-raised-button color="accent" (click)="updateVariable(variable.key, 'Boolean', booleanValue.checked)">Speichern</button>
+                  </div>
+                </ng-container>
+
+               </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+
+      <ng-template #noVariablesToFill>Keine Variablen vorhanden.</ng-template>
+
+  </mat-dialog-content>
+
+  <br><mat-divider></mat-divider><br>
+
+  <mat-dialog-actions align="center">
+    <button mat-raised-button matDialogClose>
+      <mat-icon>close</mat-icon>Abbrechen
+    </button>
+
+    <button mat-raised-button color="accent" (click)="submitForm()" cdkFocusInitial>
+      <mat-icon>check</mat-icon>Abschließen
+    </button>
+  </mat-dialog-actions>
+</div>
+

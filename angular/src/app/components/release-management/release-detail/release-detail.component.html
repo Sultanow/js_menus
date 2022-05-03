@@ -1,0 +1,178 @@
+<div class="grid-container">
+
+  <h2>
+    <button (click)="closeDetailView()" color="primary" mat-mini-fab><mat-icon>arrow_back</mat-icon></button>
+    Release-Detailsicht:
+      <span>
+          {{
+            "PRV" +
+            release.variables.get("prv_release").value + "." +
+            release.variables.get("entwicklungsbranch").value + " " +
+            release.variables.get("branch_bezeichnung").value
+          }}
+      </span>
+  </h2><br>
+  <mat-divider></mat-divider><br>
+
+
+  <h3>Aktuelle Prozessschritte</h3><br>
+  <div *ngIf="release.tasks== null || release.tasks.length == 0">Keine Prozessschritte vorhanden.</div>
+  <div class="task-container" style="display: flex;">
+    <mat-card *ngFor="let task of release.tasks">
+      <mat-card-title>{{ task.name }}</mat-card-title>
+      <mat-card-subtitle>Erstellt am: {{ task.created | date}}</mat-card-subtitle>
+      <mat-footer>
+        <button mat-raised-button color="accent" (click)="openTaskDialog(task)">
+          <mat-icon>edit</mat-icon>
+          Bearbeiten
+        </button>
+      </mat-footer>
+    </mat-card>
+  </div><br>
+
+  <mat-tab-group mat-stretch-tabs>
+
+    <mat-tab label="Basisinformationen">
+      <br>
+      <table *ngIf="release.variables.size > 0; else noDataAvailable">
+      <!-- <table> -->
+        <tbody>
+          <ng-container *ngFor="let variable of release.variables | keyvalue">
+            <tr *ngIf="variable.value.type == 'String' && !variable.key.includes('notizen') && ((variable.value.value != null && !variable.value.value.includes('http')) || variable.value.value == null)">
+              <td><b>{{ variable.key }}</b></td>
+              <td>
+                <span>{{ variable.value.value }}</span>
+              </td>
+              <td>
+                <ng-container #editArea *ngIf="variable.value.type == 'String'">
+                  <mat-form-field><input #newValue matInput type="text" placeholder="Neuer Wert.."></mat-form-field>
+                  <button mat-raised-button color="accent" (click)="updateVariable(variable.key, newValue.value)">Speichern</button>
+                </ng-container>
+               </td>
+            </tr>
+          </ng-container>
+
+            <tr #addNewVariable>
+              <td>
+                <mat-icon>library_add</mat-icon>
+                <mat-form-field>
+                  <mat-label>Neuer Variablenname</mat-label>
+                  <input #newVariableName matInput placeholder="Variablenname..">
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-icon>library_add</mat-icon>
+                <mat-form-field>
+                  <mat-label>Neuer Inhalt</mat-label>
+                  <input #newVariableValue matInput placeholder="Inhalt..">
+                </mat-form-field>
+              </td>
+              <td>
+                <button mat-raised-button color="accent" (click)="updateVariable(newVariableName.value, newVariableValue.value); newVariableName.value=''; newVariableValue.value=''">Speichern</button>
+              </td>
+            </tr>
+
+        </tbody>
+      </table>
+
+    </mat-tab>
+
+    <mat-tab label="Externe Links">
+      <br>
+      <table *ngIf="release.variables.size > 0; else noDataAvailable">
+        <tbody>
+          <ng-container *ngFor="let variable of release.variables | keyvalue">
+            <tr *ngIf="variable.value.type == 'String' && variable.value.value != null && variable.value.value.includes('http')">
+              <td><b>{{ variable.key }}</b></td>
+              <td>
+                <a href="{{ variable.value.value }}" target="_blank">Link öffnen</a>
+              </td>
+              <td>
+                <mat-form-field><input #newValue matInput type="text" placeholder="Neuer Link.."></mat-form-field>
+                <button mat-raised-button color="accent" (click)="updateVariable(variable.key, newValue.value)">Speichern</button>
+              </td>
+            </tr>
+          </ng-container>
+
+          <tr #addNewLink>
+            <td>
+              <mat-icon>library_add</mat-icon>
+              <mat-form-field>
+                <mat-label>Neuer Variablenname</mat-label>
+                <input #newLinkName matInput placeholder="Variablenname">
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-icon>library_add</mat-icon>
+              <mat-form-field>
+                <mat-label>Neuer Link</mat-label>
+                <input #newLinkValue matInput placeholder="Link">
+              </mat-form-field>
+            </td>
+            <td>
+              <button mat-raised-button color="accent" (click)="updateVariable(newLinkName.value, newLinkValue.value); newLinkName.value=''; newLinkValue.value=''">Speichern</button>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </mat-tab>
+
+    <mat-tab label="Notizen">
+      <br>
+      <ng-container *ngIf="release.variables.get('notizen') != null; else noDataAvailable">
+        <mat-form-field style="width: 100%;">
+          <textarea #notes matInput [value]="release.variables.get('notizen').value"placeholder="Notizen"
+                    style="width: 100%;" rows="10"></textarea>
+        </mat-form-field><br>
+        <button mat-raised-button color="accent" (click)="updateVariable('notizen', notes.value)">Änderungen speichern</button>
+      </ng-container>
+
+    </mat-tab>
+
+    <mat-tab label="Workflow">
+      <!-- <button mat-raised-button (click)="loadBpmnDiagram()">Workflowdiagramm laden</button> -->
+      <div class="md-padding" fxLayout="row" style="display:block; height: 200vh;" #bpmncontainer flex></div>
+    </mat-tab>
+
+    <mat-tab label="Optionen">
+      <mat-list>
+
+        <mat-list-item>
+          <button mat-raised-button color="warn" (click)="confirmDeletionDialog(confirmDeletion)"><mat-icon>delete</mat-icon> Prozessinstanz löschen</button>
+          <ng-template #confirmDeletion>
+            <span>Möchten Sie die Instanz wirklich löschen?</span>
+            <button mat-raised-button color="accent" matDialogClose="abort">Abbrechen</button>
+            <button  mat-raised-button color="primary" matDialogClose="delete">Löschen</button>
+          </ng-template>
+        </mat-list-item>
+
+        <mat-list-item>
+          <button mat-raised-button color="accent" (click)="this.dialog.open(aboutProcess)"><mat-icon>info</mat-icon> Technische Daten zu Prozessinstanz anzeigen</button>
+          <ng-template #aboutProcess>
+            <h1>Informationen zu Prozess</h1>
+            <mat-divider></mat-divider><br>
+            <span>Instance-Id: {{ release.processInstanceId }}</span><br>
+            <span>Definition-Id: {{ release.processDefinitionId }}</span><br>
+            <br><mat-divider></mat-divider><br>
+            <button mat-raised-button color="accent" matDialogClose>Schließen</button>
+          </ng-template>
+        </mat-list-item>
+
+      </mat-list>
+    </mat-tab>
+
+  </mat-tab-group>
+
+  <ng-template #noDataAvailable>Keine Daten vorhanden.</ng-template>
+
+  <br>
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+  <mat-divider></mat-divider>
+  <br>
+  <button mat-raised-button color="primary" (click)="closeDetailView()">
+    <mat-icon>close</mat-icon>
+    Schließen</button>
+
+
+</div>

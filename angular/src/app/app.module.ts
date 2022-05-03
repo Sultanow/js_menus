@@ -1,5 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
@@ -61,6 +64,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { Routes, RouterModule } from '@angular/router';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MaterialPasswordFieldComponent } from './components/material-password-field/material-password-field.component';
+import { ReleaseManagementComponent } from './components/release-management/release-management.component';
+import { CreateNewReleaseComponent } from './components/release-management/create-new-release/create-new-release.component';
+import { ReleaseDetailComponent } from './components/release-management/release-detail/release-detail.component';
+import { EditTaskComponent } from './components/release-management/edit-task/edit-task.component';
 
 const appRoutes: Routes = [
   {
@@ -78,6 +85,14 @@ const appRoutes: Routes = [
   {
     path: 'legacy',
     component: AppComponent,
+  },
+  {
+    path: 'releases',
+    component: ReleaseManagementComponent,
+  },
+  {
+    path: 'releases/create-new-release',
+    component: CreateNewReleaseComponent,
   },
   // TODO: add paths for other routes described on the sidebar here.
 ]
@@ -120,6 +135,10 @@ const appRoutes: Routes = [
     NavigationComponent,
     DashboardComponent,
     MaterialPasswordFieldComponent,
+    ReleaseManagementComponent,
+    CreateNewReleaseComponent,
+    ReleaseDetailComponent,
+    EditTaskComponent,
   ],
   imports: [
     BrowserModule,
@@ -144,6 +163,9 @@ const appRoutes: Routes = [
     MatCardModule,
     MatMenuModule,
     MatBadgeModule,
+    CommonModule,
+    MatProgressBarModule,
+    MatTabsModule
   ],
   providers: [
     DetailsComponent,

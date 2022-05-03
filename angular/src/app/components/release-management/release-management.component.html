@@ -1,0 +1,51 @@
+<div class="grid-container" *ngIf="detailedRelease == null">
+  <h1 class="mat-h1"><b>Releasemanagement</b></h1>
+  <mat-divider *ngIf="!isLoading"></mat-divider>
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+  <br>
+  <button mat-raised-button color="primary" routerLink="/releases/create-new-release">
+    <mat-icon>note_add</mat-icon> Neue Lieferung anlegen
+  </button>
+
+  <button mat-raised-button color="accent" style="margin-left: 5px;" (click)="loadReleaseData()">
+    <mat-icon>autorenew</mat-icon> Aktualisieren
+  </button>
+
+  <div class="version-container">
+
+    <mat-card *ngFor="let version of currentVersions">
+      <mat-card-title>{{ version.rank }}</mat-card-title>
+      <mat-card-subtitle>PRV-Release: {{ version.id }}</mat-card-subtitle>
+
+      <mat-divider></mat-divider><br>
+
+      <mat-card-content>
+
+        <ng-container *ngFor="let release of currentReleases">
+          <mat-card class="release-card" *ngIf="release.variables.get('prv_release') != null && version.id == release.variables.get('prv_release').value" (click)="detailedRelease = release" style="cursor: pointer;">
+              <mat-card-title>
+                <span>
+                  {{
+                    "PRV" +
+                    release.variables.get("prv_release").value + "." +
+                    release.variables.get("entwicklungsbranch").value + " " +
+                    release.variables.get("branch_bezeichnung").value
+                  }}
+                </span>
+              </mat-card-title>
+              <mat-card-subtitle><hr></mat-card-subtitle>
+              <mat-card-content>
+                <span>Typ: {{ release.variables.get('branch_bezeichnung').value || "---" }} </span><br>
+                <span>Status: <b>{{ release.variables.get('status').value || "---" }}</b></span><br>
+                <span>Branch: {{ release.variables.get('entwicklungsbranch').value || "---" }}</span><br>
+              </mat-card-content>
+          </mat-card>
+        </ng-container>
+
+      </mat-card-content>
+
+    </mat-card>
+
+  </div>
+</div>
+<app-release-detail (emitRelease)="onReleaseDetailEmit($event)" *ngIf="detailedRelease != null" [release]="detailedRelease" ></app-release-detail>

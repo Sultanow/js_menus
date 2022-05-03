@@ -16,6 +16,8 @@ TODO neues Bild generieren
 # Interface Beschreibungen
 [Python Interface für Statistik Chart Erzeugung](docs/PythonInterfaceAnpassung.md")
 
+[Release-Management-System: Quickstart](docs/Release-Management-System-README.md)
+
 # Technologienstack
 
 ## Application Server

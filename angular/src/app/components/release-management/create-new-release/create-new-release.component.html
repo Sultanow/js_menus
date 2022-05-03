@@ -1,0 +1,47 @@
+
+<div class="grid-container">
+  <button mat-raised-button color="accent" routerLink="/releases">
+    <mat-icon>reply</mat-icon> Zurück
+  </button><br><br>
+  <h1 class="mat-h2">Neue Lieferung anlegen</h1>
+
+<div class="form-container">
+
+  <form [formGroup]="newReleaseForm" (ngSubmit)="submitNewReleaseForm()">
+    <hr><br>
+
+    <mat-form-field>
+      <mat-label>PRV-Release wählen..</mat-label>
+      <mat-select matInput formControlName="prv_release">
+        <mat-option *ngFor="let version of currentVersions" [value]="version.id">
+          {{ version.id }}
+        </mat-option>
+      </mat-select>
+      <!-- <input matInput placeholder="PRV-Release" formControlName="prv_release"> -->
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Entwicklungsbranch" formControlName="entwicklungsbranch">
+    </mat-form-field><br>
+
+    <mat-form-field>
+      <input matInput placeholder="Branchbezeichnung" formControlName="branch_bezeichnung">
+    </mat-form-field>
+
+     <mat-form-field>
+      <input matInput placeholder="Geplanter Lieferzeitpunkt an Test" formControlName="geplanter_lieferzeitpunkt_an_test" type="date">
+    </mat-form-field><br>
+
+    <mat-form-field>
+      <textarea matInput placeholder="Notizen" formControlName="notizen" cols="30" rows="10"></textarea>
+    </mat-form-field><br>
+
+    <button mat-raised-button color="primary" type="submit">Erstellen</button>
+
+  </form><br>
+
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+
+</div>
+
+</div>

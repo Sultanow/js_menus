@@ -1,0 +1,27 @@
+.grid-container{
+  margin: 20px;
+}
+
+.version-container{
+  display: flex;
+}
+
+.version-container > mat-card{
+  margin-right: 20px;
+  margin-top: 20px;
+}
+
+.mat-card-content > mat-card{
+  margin-bottom: 15px;
+}
+
+.release-card{
+/* -webkit-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
+-moz-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
+box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75); */
+border: 1px solid black;
+}
+
+.release-card > mat-card-title {
+  font-size: medium;
+}
