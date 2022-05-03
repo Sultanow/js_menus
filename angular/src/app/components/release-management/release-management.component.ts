@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { VersionDataMockService } from '../../services/releasemanagement/version-data-mock.service'
-// import { CamundaApiMockService } from '../../services/releasemanagement/camunda-api-mock.service'
 import { CamundaApiConnectorService } from 'src/app/services/releasemanagement/camunda-api-connector.service';
 import { Release } from 'src/app/model/release';
 

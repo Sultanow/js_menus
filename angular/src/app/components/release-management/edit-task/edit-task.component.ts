@@ -26,11 +26,6 @@ export class EditTaskComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // this.camunda.getTaskFormByTaskId(this.task.id)
-    //   .subscribe(text => {
-    //     this.taskFormHtml.nativeElement.innerHTML = text;
-    //   })
-
     this.camunda.getTaskVariablesById(this.task.id)
       .subscribe(variables => {
         this.task.variables = variables

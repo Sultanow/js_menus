@@ -1,7 +1,7 @@
 
 # Release-Management-System: Workflow Engine
 
-Dieser Ordner enthält eine Instanz von Camunda Platform 7, die im Release-Management-System des Informations-Cockpits genutzt wird.
+Dieser Ordner enthält eine Instanz von Camunda Platform 7, die im Release-Management-System des IT-Cockpits genutzt wird.
 
 ## Requirements
 

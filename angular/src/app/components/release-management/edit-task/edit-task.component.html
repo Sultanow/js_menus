@@ -1,13 +1,13 @@
 <div class="grid-container">
   <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
   <h1 mat-dialog-title class="mat-h1">{{ task.name }}</h1>
-  <h3 mat-dialog-title class="mat-h3">Bitte die nachfolgenden Felder ausfüllen, um die Bearbeitung abschließen.</h3>
+  <h3 mat-dialog-title class="mat-h3">Bitte die nachfolgenden Felder ausfüllen, um die Bearbeitung abzuschließen.</h3>
 
 <mat-divider></mat-divider><br>
 
 <ng-container mat-dialog-title *ngIf="submitFormError">
   <h3><mat-icon>warning</mat-icon>Fehler</h3>
-  <span>Bitte stellen Sie sicher, dass alle Felder ordnungsgemäß befüllt worden sind.</span><br>
+  <span>Bitte stellen Sie sicher, dass alle Pflichtfelder ordnungsgemäß befüllt worden sind.</span><br>
   <span>Leere Felder sind mit <mat-icon color="primary">info</mat-icon> markiert.</span>
   <br><button (click)="submitFormError = false" mat-mini-fab color="accent" ><mat-icon>clear</mat-icon></button><br>
   <br><mat-divider></mat-divider><br>

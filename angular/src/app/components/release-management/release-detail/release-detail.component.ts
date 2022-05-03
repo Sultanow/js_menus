@@ -98,6 +98,7 @@ export class ReleaseDetailComponent implements OnInit, AfterViewInit {
       },
         error => {
         console.error("Variable konnte nicht aktualisiert werden", error)
+        this.isLoading = false;
       })
   }
 

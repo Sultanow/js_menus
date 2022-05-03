@@ -126,11 +126,6 @@ export class CamundaApiConnectorService {
 
     //Task methods
 
-  // private getCurrentTasks(): Observable<CamundaTask[]> {
-  //   let url = this.baseUrl + "/task/";
-  //   return this.http.get<CamundaTask[]>(url)
-  // }
-
   private getTaskVariablesFromTaskId(taskId: string): Observable<Map<string, ReleaseVariable>> {
     let url = this.baseUrl + `/task/${taskId}/form-variables`;
     return this.http.get<Map<string, ReleaseVariable>>(url)
