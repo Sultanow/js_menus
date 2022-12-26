@@ -1,4 +1,4 @@
-wheel==0.35.1
+wheel==0.38.1
 gunicorn==20.0.4
 Flask==1.1.2
 xlrd==1.2.0
